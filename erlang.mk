@@ -34,6 +34,7 @@ DEPS_DIR ?= $(CURDIR)/deps
 export DEPS_DIR
 
 ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(DEPS))
+ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
 
 # Application.
 
@@ -94,7 +95,12 @@ clean-docs:
 
 # Tests.
 
-build-tests:
+$(foreach dep,$(TEST_DEPS),$(eval $(call dep_target,$(dep))))
+
+build-test-deps: $(ALL_TEST_DEPS_DIRS)
+	@for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
+
+build-tests: build-test-deps
 	$(gen_verbose) erlc -v $(ERLC_OPTS) -o test/ \
 		$(wildcard test/*.erl test/*/*.erl) -pa ebin/
 

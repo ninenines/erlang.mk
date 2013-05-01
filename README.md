@@ -33,6 +33,18 @@ dep_bullet = https://github.com/extend/bullet.git 0.4.1
 
 They will always be compiled using the command `make`.
 
+You can also specify test-only dependencies. These dependencies will only
+be downloaded when running `make tests`. The format is the same as above,
+except the variable `TEST_DEPS` holds the list of test-only dependencies.
+
+``` erlang
+TEST_DEPS = ct_helper
+dep_ct_helper = https://github.com/extend/ct_helper.git master
+```
+
+Please note that the test dependencies will only be compiled once
+when they are fetched, unlike the normal dependencies.
+
 Commands
 --------
 
