@@ -33,6 +33,37 @@ dep_bullet = https://github.com/extend/bullet.git 0.4.1
 
 They will always be compiled using the command `make`.
 
+Commands
+--------
+
+The following targets are defined:
+
+| Targets      | Description                                  |
+| ------------ | -------------------------------------------- |
+| `all`        | Compile the application and all dependencies |
+| `clean-all`  | Clean the application and all dependencies   |
+| `app`        | Compile the application                      |
+| `clean`      | Clean the application                        |
+| `deps`       | Compile the dependencies                     |
+| `clean-deps` | Clean the dependencies                       |
+| `docs`       | Generate the Edoc documentation              |
+| `clean-docs` | Clean the Edoc documentation                 |
+| `tests`      | Run the common_test suites                   |
+| `build-plt`  | Generate the PLT needed by Dialyzer          |
+| `dialyze`    | Run Dialyzer on the application              |
+
+Cleaning means removing all generated and temporary files.
+
+Dependencies are fetched as soon as a command involving them is
+invoked. This means that most of the targets will trigger a
+dependency fetch. It is only done once per dependency.
+
+The default target when calling `make` is `all`.
+
+You can combine targets to perform many operations. For example, the
+shell command `make clean app` will have the effect of recompiling
+the application fully, without touching the dependencies.
+
 Options
 -------
 
@@ -68,6 +99,9 @@ Extra targets
 
 If you need more functionality out of your Makefile, you can add extra
 targets after the include line.
+
+Defining a target before the include line will override the default
+target `all`.
 
 Support
 -------
