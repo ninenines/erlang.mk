@@ -123,7 +123,7 @@ DIALYZER_OPTS ?= -Werror_handling -Wrace_conditions \
 
 build-plt: deps app
 	@dialyzer --build_plt --output_plt .$(PROJECT).plt \
-		--apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIR)
+		--apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
 
 dialyze:
 	@dialyzer --src src --plt .$(PROJECT).plt --no_native $(DIALYZER_OPTS)
