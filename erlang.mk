@@ -56,7 +56,7 @@ app: ebin/$(PROJECT).app
 
 ebin/$(PROJECT).app: src/*.erl
 	@mkdir -p ebin/
-	$(erlc_verbose) erlc -v $(ERLC_OPTS) -o ebin/ -pa ebin/ \
+	$(erlc_verbose) ERL_LIBS=deps erlc -v $(ERLC_OPTS) -o ebin/ -pa ebin/ \
 		$(COMPILE_FIRST_PATHS) $?
 
 clean:
