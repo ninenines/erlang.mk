@@ -76,6 +76,12 @@ You can combine targets to perform many operations. For example, the
 shell command `make clean app` will have the effect of recompiling
 the application fully, without touching the dependencies.
 
+A common workflow when editing a file would be to run `make` regularly
+to see if it compiles (or less often `make clean app` if you want to
+recompile everything), followed by `make dialyze` to see if there are
+any type errors and then `make tests` to run the test suites. The
+result of the test runs can be browsed from the `logs/index.html` file.
+
 Options
 -------
 
