@@ -48,14 +48,15 @@ all: deps app
 clean-all: clean clean-deps clean-docs
 	$(gen_verbose) rm -rf .$(PROJECT).plt $(DEPS_DIR) logs
 
-MODULES = $(shell ls src/*.erl | sed 's/src\///;s/\.erl/,/' | sed '$$s/.$$//')
+MODULES = $(shell ls src/*.erl $(wildcard src/*.core) \
+	| sed 's/src\///;s/\.core/,/;s/\.erl/,/' | sed '$$s/.$$//')
 
 app: ebin/$(PROJECT).app
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
 		| sed 's/{modules, \[\]}/{modules, \[$(MODULES)\]}/' \
 		> ebin/$(PROJECT).app
 
-ebin/$(PROJECT).app: src/*.erl
+ebin/$(PROJECT).app: src/*.erl $(wildcard src/*.core)
 	@mkdir -p ebin/
 	$(erlc_verbose) ERL_LIBS=deps erlc -v $(ERLC_OPTS) -o ebin/ -pa ebin/ \
 		$(COMPILE_FIRST_PATHS) $?
