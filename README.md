@@ -45,6 +45,20 @@ dep_ct_helper = https://github.com/extend/ct_helper.git master
 Please note that the test dependencies will only be compiled once
 when they are fetched, unlike the normal dependencies.
 
+Compiled files
+--------------
+
+The following files will be automatically compiled:
+
+| Wildcard           | Description                   |
+| ------------------ | ----------------------------- |
+| `src/*.app.src     | OTP application resource file |
+| `src/*.erl`        | Erlang source files           |
+| `src/*.core`       | Core Erlang source files      |
+| `templates/*.dtl`  | ErlyDTL template files        |
+
+Only the `.app.src` file and at least one `.erl` file are required.
+
 Commands
 --------
 
