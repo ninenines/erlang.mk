@@ -50,12 +50,12 @@ Compiled files
 
 The following files will be automatically compiled:
 
-| Wildcard           | Description                   |
-| ------------------ | ----------------------------- |
-| `src/*.app.src`    | OTP application resource file |
-| `src/*.erl`        | Erlang source files           |
-| `src/*.core`       | Core Erlang source files      |
-| `templates/*.dtl`  | ErlyDTL template files        |
+| Wildcard                 | Description                   |
+| ------------------------ | ----------------------------- |
+| `src/$(PROJECT).app.src` | OTP application resource file |
+| `src/*.erl`              | Erlang source files           |
+| `src/*.core`             | Core Erlang source files      |
+| `templates/*.dtl`        | ErlyDTL template files        |
 
 Only the `.app.src` file and at least one `.erl` file are required.
 
