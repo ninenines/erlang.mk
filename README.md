@@ -55,7 +55,7 @@ The following files will be automatically compiled:
 | `src/$(PROJECT).app.src` | OTP application resource file |
 | `src/*.erl`              | Erlang source files           |
 | `src/*.core`             | Core Erlang source files      |
-| `templates/*.dtl`        | ErlyDTL template files        |
+| `$(TEMPLATES_DIR)/*.dtl` | ErlyDTL template files        |
 
 Only the `.app.src` file and at least one `.erl` file are required.
 
@@ -114,6 +114,9 @@ compiled before all others.
 downloaded to. It defaults to `deps`. It will be propagated into
 all the subsequent make calls, allowing all dependencies to use
 the same folder as expected.
+
+`TEMPLATES_DIR` is the path to the directory with ErlyDTL templates.
+Default value is `templates`.
 
 `CT_SUITES` is the list of common_test suites to run when you use
 the `make tests` command. If your suite module is named `ponies_SUITE`

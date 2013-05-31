@@ -46,6 +46,8 @@ ERLC_OPTS ?= -Werror +debug_info +warn_export_all +warn_export_vars \
 COMPILE_FIRST ?=
 COMPILE_FIRST_PATHS = $(addprefix src/,$(addsuffix .erl,$(COMPILE_FIRST)))
 
+TEMPLATES_DIR ?= $(CURDIR)/templates
+
 all: deps app
 
 clean-all: clean clean-deps clean-docs
@@ -74,7 +76,7 @@ define compile_dtl =
 		init:stop()'
 endef
 
-ebin/$(PROJECT).app: src/*.erl $(wildcard src/*.core) $(wildcard templates/*.dtl)
+ebin/$(PROJECT).app: src/*.erl $(wildcard src/*.core) $(wildcard $(TEMPLATES_DIR)/*.dtl)
 	@mkdir -p ebin/
 	$(if $(strip $(filter-out %.dtl,$?)), \
 		$(call compile_erl,$(filter-out %.dtl,$?)))
