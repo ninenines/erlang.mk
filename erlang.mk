@@ -58,12 +58,12 @@ app: ebin/$(PROJECT).app
 		| sed 's/{modules, \[\]}/{modules, \[$(MODULES)\]}/' \
 		> ebin/$(PROJECT).app
 
-define compile_erl =
+define compile_erl
 	$(erlc_verbose) ERL_LIBS=deps erlc -v $(ERLC_OPTS) -o ebin/ -pa ebin/ \
 		$(COMPILE_FIRST_PATHS) $(1)
 endef
 
-define compile_dtl =
+define compile_dtl
 	$(dtl_verbose) erl -noshell -pa ebin/ deps/erlydtl/ebin/ -eval ' \
 		Compile = fun(F) -> \
 			Module = list_to_atom( \
@@ -86,13 +86,13 @@ clean:
 
 # Dependencies.
 
-define get_dep =
+define get_dep
 	@mkdir -p $(DEPS_DIR)
 	git clone -n -- $(word 1,$(dep_$(1))) $(DEPS_DIR)/$(1)
 	cd $(DEPS_DIR)/$(1) ; git checkout -q $(word 2,$(dep_$(1)))
 endef
 
-define dep_target =
+define dep_target
 $(DEPS_DIR)/$(1):
 	$(call get_dep,$(1))
 endef
