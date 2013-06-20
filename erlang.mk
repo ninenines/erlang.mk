@@ -59,7 +59,7 @@ app: ebin/$(PROJECT).app
 		> ebin/$(PROJECT).app
 
 define compile_erl
-	$(erlc_verbose) ERL_LIBS=deps erlc -v $(ERLC_OPTS) -o ebin/ -pa ebin/ \
+	$(erlc_verbose) ERL_LIBS=deps erlc -v $(ERLC_OPTS) -o ebin/ -pa ebin/ -I include/ \
 		$(COMPILE_FIRST_PATHS) $(1)
 endef
 
