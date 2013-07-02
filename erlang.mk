@@ -90,7 +90,7 @@ define get_dep
 	@mkdir -p $(DEPS_DIR)
 	git clone -n -- $(word 1,$(dep_$(1))) $(DEPS_DIR)/$(1)
 	cd $(DEPS_DIR)/$(1) ; git checkout -q $(word 2,$(dep_$(1)))
-	cd $(DEPS_DIR)/$(1) ; if [ -n $(word 3,$(dep_$(1))) ]; then $(word 3,$(dep_$(1))); fi  
+	cd $(DEPS_DIR)/$(1) ; if [ -n $(word 3,$(dep_$(1))) ]; then eval $(word 3,$(dep_$(1))); fi  
 endef
 
 define dep_target
