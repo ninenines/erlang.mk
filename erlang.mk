@@ -36,6 +36,9 @@ gen_verbose = $(gen_verbose_$(V))
 DEPS_DIR ?= $(CURDIR)/deps
 export DEPS_DIR
 
+REBAR_DEPS_DIR = $(DEPS_DIR)
+export REBAR_DEPS_DIR
+
 ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(DEPS))
 ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
 
