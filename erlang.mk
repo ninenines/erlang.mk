@@ -36,6 +36,9 @@ gen_verbose = $(gen_verbose_$(V))
 DEPS_DIR ?= $(CURDIR)/deps
 export DEPS_DIR
 
+REBAR_DEPS_DIR = $(DEPS_DIR)
+export REBAR_DEPS_DIR
+
 ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(DEPS))
 ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
 
@@ -60,7 +63,7 @@ app: ebin/$(PROJECT).app
 
 define compile_erl
 	$(erlc_verbose) ERL_LIBS=deps erlc -v $(ERLC_OPTS) -o ebin/ -pa ebin/ \
-		$(COMPILE_FIRST_PATHS) $(1)
+		-I include/ $(COMPILE_FIRST_PATHS) $(1)
 endef
 
 define compile_dtl
@@ -123,7 +126,7 @@ build-test-deps: $(ALL_TEST_DEPS_DIRS)
 	@for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
 
 build-tests: build-test-deps
-	$(gen_verbose) erlc -v $(ERLC_OPTS) -o test/ \
+	$(gen_verbose) ERL_LIBS=deps erlc -v $(ERLC_OPTS) -o test/ \
 		$(wildcard test/*.erl test/*/*.erl) -pa ebin/
 
 CT_RUN = ct_run \
