@@ -55,6 +55,8 @@ The following files will be automatically compiled:
 | `src/$(PROJECT).app.src` | OTP application resource file |
 | `src/*.erl`              | Erlang source files           |
 | `src/*.core`             | Core Erlang source files      |
+| `src/*.xrl`              | Leex source files             |
+| `src/*.yrl`              | Yecc source files             |
 | `templates/*.dtl`        | ErlyDTL template files        |
 
 Only the `.app.src` file and at least one `.erl` file are required.
