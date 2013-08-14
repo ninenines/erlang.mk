@@ -12,6 +12,10 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+# Project.
+
+PROJECT ?= $(notdir $(CURDIR))
+
 # Verbosity and tweaks.
 
 V ?= 0
@@ -116,7 +120,13 @@ endef
 $(foreach dep,$(DEPS),$(eval $(call dep_target,$(dep))))
 
 deps: $(ALL_DEPS_DIRS)
-	@for dep in $(ALL_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
+	@for dep in $(ALL_DEPS_DIRS) ; do \
+		if [ -f $$dep/Makefile ] ; then \
+			$(MAKE) -C $$dep ; \
+		else \
+			echo "include $(CURDIR)/erlang.mk" | $(MAKE) -f - -C $$dep ; \
+		fi ; \
+	done
 
 clean-deps:
 	@for dep in $(ALL_DEPS_DIRS) ; do $(MAKE) -C $$dep clean; done
