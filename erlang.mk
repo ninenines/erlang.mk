@@ -76,7 +76,7 @@ define compile_xyrl
 endef
 
 define compile_dtl
-	$(dtl_verbose) erl -noshell -pa ebin/ deps/erlydtl/ebin/ -eval ' \
+	$(dtl_verbose) erl -noshell -pa ebin/ $(DEPS_DIR)/erlydtl/ebin/ -eval ' \
 		Compile = fun(F) -> \
 			Module = list_to_atom( \
 				string:to_lower(filename:basename(F, ".dtl")) ++ "_dtl"), \
