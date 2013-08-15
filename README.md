@@ -3,6 +3,8 @@ erlang.mk
 
 Common Makefile rules for building and testing Erlang applications.
 
+Also features support for dependencies and a package index.
+
 Usage
 -----
 
@@ -31,7 +33,8 @@ dep_cowboy = https://github.com/extend/cowboy.git 0.8.4
 dep_bullet = https://github.com/extend/bullet.git 0.4.1
 ```
 
-They will always be compiled using the command `make`.
+They will always be compiled using the command `make`. If the dependency
+does not feature a Makefile, then erlang.mk will be used for building.
 
 You can also specify test-only dependencies. These dependencies will only
 be downloaded when running `make tests`. The format is the same as above,
@@ -44,6 +47,31 @@ dep_ct_helper = https://github.com/extend/ct_helper.git master
 
 Please note that the test dependencies will only be compiled once
 when they are fetched, unlike the normal dependencies.
+
+Package index
+-------------
+
+A very basic package index is included with erlang.mk. You can list
+all known packages with the `make pkg-list` command. You can search
+a package with the `make pkg-search q=STRING` command, replacing
+`STRING` with what you want to search. Use quotes around the string
+if needed.
+
+In addition, it is possible to specify dependencies in a simplified
+manner if they exist in the package index. The above example could
+instead read as:
+
+``` Makefile
+DEPS = cowboy bullet
+dep_cowboy = pkg://cowboy 0.8.4
+dep_bullet = pkg://bullet 0.4.1
+```
+
+erlang.mk will look inside the index for the proper URL and use it
+for fetching the dependency.
+
+All packages featured in the index are compatible with erlang.mk
+with no extra work required.
 
 Compiled files
 --------------
@@ -79,6 +107,8 @@ The following targets are defined:
 | `tests`      | Run the common_test suites                   |
 | `build-plt`  | Generate the PLT needed by Dialyzer          |
 | `dialyze`    | Run Dialyzer on the application              |
+| `pkg-list`   | List packages in the index                   |
+| `pkg-search` | Search for packages in the index             |
 
 Cleaning means removing all generated and temporary files.
 
@@ -127,6 +157,12 @@ then you only need to put `ponies` in the list.
 the project depends on will also be included.
 
 `DIALYZER_OPTS` allows you to change the `dialyzer` options.
+
+`PKG_FILE` allows you to change the location of the package index file
+on your system.
+
+`PKG_FILE_URL` allows you to change the URL from which the package index
+file is fetched.
 
 Extra targets
 -------------
