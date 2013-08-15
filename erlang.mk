@@ -16,6 +16,15 @@
 
 PROJECT ?= $(notdir $(CURDIR))
 
+# Packages database file.
+
+PKG_FILE ?= $(CURDIR)/.erlang.mk.packages.v1
+PKG_FILE_URL ?= https://raw.github.com/extend/erlang.mk/master/packages.v1.txt
+
+define get_pkg_file
+	wget -O $(PKG_FILE) $(PKG_FILE_URL)
+endef
+
 # Verbosity and tweaks.
 
 V ?= 0
@@ -108,7 +117,14 @@ clean:
 
 define get_dep
 	@mkdir -p $(DEPS_DIR)
+ifeq (,$(findstring pkg://,$(word 1,$(dep_$(1)))))
 	git clone -n -- $(word 1,$(dep_$(1))) $(DEPS_DIR)/$(1)
+else
+	$(if $(wildcard $(PKG_FILE)),,$(call get_pkg_file))
+	git clone -n -- `awk 'BEGIN { FS = "\t" }; \
+		$$$$1 == "$(subst pkg://,,$(word 1,$(dep_$(1))))" { print $$$$2 }' \
+		$(PKG_FILE)` $(DEPS_DIR)/$(1)
+endif
 	cd $(DEPS_DIR)/$(1) ; git checkout -q $(word 2,$(dep_$(1)))
 endef
 
@@ -180,3 +196,27 @@ build-plt: deps app
 
 dialyze:
 	@dialyzer --src src --plt .$(PROJECT).plt --no_native $(DIALYZER_OPTS)
+
+# Packages.
+
+$(PKG_FILE):
+	$(call get_pkg_file)
+
+pkg-list: $(PKG_FILE)
+	@cat $(PKG_FILE) | awk 'BEGIN { FS = "\t" }; { print \
+		"Name:\t\t" $$1 "\n" \
+		"Repository:\t" $$2 "\n" \
+		"Website:\t" $$3 "\n" \
+		"Description:\t" $$4 "\n" }'
+
+ifdef q
+pkg-search: $(PKG_FILE)
+	@cat $(PKG_FILE) | grep -i ${q} | awk 'BEGIN { FS = "\t" }; { print \
+		"Name:\t\t" $$1 "\n" \
+		"Repository:\t" $$2 "\n" \
+		"Website:\t" $$3 "\n" \
+		"Description:\t" $$4 "\n" }'
+else
+pkg-search:
+	@echo "Usage: make pkg-search q=STRING"
+endif
