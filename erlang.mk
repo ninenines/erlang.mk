@@ -173,7 +173,7 @@ build-tests: build-test-deps
 CT_RUN = ct_run \
 	-no_auto_compile \
 	-noshell \
-	-pa ebin $(DEPS_DIR)/*/ebin \
+	-pa $(realpath ebin) $(DEPS_DIR)/*/ebin \
 	-dir test \
 	-logdir logs
 #	-cover test/cover.spec
