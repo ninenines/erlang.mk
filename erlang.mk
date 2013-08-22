@@ -62,6 +62,9 @@ ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
 
 # Application.
 
+ERL_LIBS ?= $(DEPS)
+export ERL_LIBS
+
 ERLC_OPTS ?= -Werror +debug_info +warn_export_all +warn_export_vars \
 	+warn_shadow_vars +warn_obsolete_guard # +bin_opt_info +warn_missing_spec
 COMPILE_FIRST ?=
@@ -80,7 +83,7 @@ app: ebin/$(PROJECT).app
 		> ebin/$(PROJECT).app
 
 define compile_erl
-	$(erlc_verbose) ERL_LIBS=$(DEPS_DIR) erlc -v $(ERLC_OPTS) -o ebin/ \
+	$(erlc_verbose) erlc -v $(ERLC_OPTS) -o ebin/ \
 		-pa ebin/ -I include/ $(COMPILE_FIRST_PATHS) $(1)
 endef
 
@@ -168,13 +171,13 @@ build-test-deps: $(ALL_TEST_DEPS_DIRS)
 	@for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
 
 build-tests: build-test-deps
-	$(gen_verbose) ERL_LIBS=$(DEPS_DIR) erlc -v $(ERLC_OPTS) -o test/ \
+	$(gen_verbose) erlc -v $(ERLC_OPTS) -o test/ \
 		$(wildcard test/*.erl test/*/*.erl) -pa ebin/
 
 CT_RUN = ct_run \
 	-no_auto_compile \
 	-noshell \
-	-pa ebin $(DEPS_DIR)/*/ebin \
+	-pa $(realpath ebin) $(DEPS_DIR)/*/ebin \
 	-dir test \
 	-logdir logs
 #	-cover test/cover.spec
@@ -184,8 +187,11 @@ CT_SUITES_FULL = $(addsuffix _SUITE,$(CT_SUITES))
 
 tests: ERLC_OPTS += -DTEST=1 +'{parse_transform, eunit_autoexport}'
 tests: clean deps app build-tests
-	@mkdir -p logs/
-	@$(CT_RUN) -suite $(CT_SUITES_FULL)
+	@if [ -d "test" ] ; \
+	then \
+		mkdir -p logs/ ; \
+		$(CT_RUN) -suite $(CT_SUITES_FULL) ; \
+	fi
 	$(gen_verbose) rm -f test/*.beam
 
 # Dialyzer.
