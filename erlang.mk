@@ -19,6 +19,8 @@ PROJECT ?= $(notdir $(CURDIR))
 # Packages database file.
 
 PKG_FILE ?= $(CURDIR)/.erlang.mk.packages.v1
+export PKG_FILE
+
 PKG_FILE_URL ?= https://raw.github.com/extend/erlang.mk/master/packages.v1.txt
 
 define get_pkg_file
