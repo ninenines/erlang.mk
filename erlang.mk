@@ -76,7 +76,7 @@ clean-all: clean clean-deps clean-docs
 	$(gen_verbose) rm -rf .$(PROJECT).plt $(DEPS_DIR) logs
 
 app: ebin/$(PROJECT).app
-	$(eval MODULES := $(shell find ebin -name \*.beam \
+	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed 's/ebin\///;s/\.beam/,/' | sed '$$s/.$$//'))
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
 		| sed 's/{modules, \[\]}/{modules, \[$(MODULES)\]}/' \
@@ -104,11 +104,11 @@ define compile_dtl
 		init:stop()'
 endef
 
-ebin/$(PROJECT).app: $(shell find src -name \*.erl) \
-		$(shell find src -name \*.core) \
-		$(shell find src -name \*.xrl) \
-		$(shell find src -name \*.yrl) \
-		$(shell find templates -name \*.dtl 2>/dev/null)
+ebin/$(PROJECT).app: $(shell find src -type f -name \*.erl) \
+		$(shell find src -type f -name \*.core) \
+		$(shell find src -type f -name \*.xrl) \
+		$(shell find src -type f -name \*.yrl) \
+		$(shell find templates -type f -name \*.dtl 2>/dev/null)
 	@mkdir -p ebin/
 	$(if $(strip $(filter %.erl %.core,$?)), \
 		$(call compile_erl,$(filter %.erl %.core,$?)))
