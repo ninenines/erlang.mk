@@ -1,0 +1,9 @@
+bullet	https://github.com/extend/bullet	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
+cowboy	https://github.com/extend/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
+cowlib	https://github.com/extend/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
+erlydtl	https://github.com/evanmiller/erlydtl	https://code.google.com/p/erlydtl/	ErlyDTL compiles Django Template Language to Erlang bytecode.
+farwest_core	https://github.com/extend/farwest_core	http//ninenines.eu	Modern web application development platform.
+farwest_ui	https://github.com/extend/farwest_ui	http://ninenines.eu	Development and administration UI for Farwest.
+jsx	https://github.com/talentdeficit/jsx	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
+ranch	https://github.com/extend/ranch	http://ninenines.eu	Socket acceptor pool for TCP protocols.
+sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform for type based validation.
