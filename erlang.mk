@@ -101,9 +101,11 @@ define compile_dtl
 		init:stop()'
 endef
 
-ebin/$(PROJECT).app: src/*.erl $(wildcard src/*.core) \
-		$(wildcard src/*.xrl) $(wildcard src/*.yrl) \
-		$(wildcard templates/*.dtl)
+ebin/$(PROJECT).app: $(shell find src -name \*.erl) \
+		$(shell find src -name \*.core) \
+		$(shell find src -name \*.xrl) \
+		$(shell find src -name \*.yrl) \
+		$(shell find templates -name \*.dtl 2>/dev/null)
 	@mkdir -p ebin/
 	$(if $(strip $(filter %.erl %.core,$?)), \
 		$(call compile_erl,$(filter %.erl %.core,$?)))
