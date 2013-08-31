@@ -104,7 +104,8 @@ The following targets are defined:
 | `clean-deps` | Clean the dependencies                       |
 | `docs`       | Generate the Edoc documentation              |
 | `clean-docs` | Clean the Edoc documentation                 |
-| `tests`      | Run the common_test suites                   |
+| `test_*`     | Run the common_test suite `*`                |
+| `tests`      | Run all the common_test suites               |
 | `build-plt`  | Generate the PLT needed by Dialyzer          |
 | `dialyze`    | Run Dialyzer on the application              |
 | `pkg-list`   | List packages in the index                   |
@@ -115,6 +116,11 @@ Cleaning means removing all generated and temporary files.
 Dependencies are fetched as soon as a command involving them is
 invoked. This means that most of the targets will trigger a
 dependency fetch. It is only done once per dependency.
+
+You can run an individual test suite by using the special `test_*`
+targets. For example if you have a common_test suite named `spdy`
+and you want to run only this suite and not the others, you can
+use the `make test_spdy` command.
 
 The default target when calling `make` is `all`.
 
