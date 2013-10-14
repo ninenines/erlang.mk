@@ -61,7 +61,7 @@ export RELX
 RELX_URL ?= https://github.com/erlware/relx/releases/download/0.4.0/relx
 
 define get_relx
-	wget -O $(RELX) $(RELX_URL)
+	wget -O $(RELX) $(RELX_URL) || rm $(RELX)
 	chmod +x $(RELX)
 endef
 
