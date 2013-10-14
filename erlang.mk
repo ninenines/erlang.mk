@@ -46,8 +46,35 @@ dtl_verbose = $(dtl_verbose_$(V))
 gen_verbose_0 = @echo " GEN   " $@;
 gen_verbose = $(gen_verbose_$(V))
 
-.PHONY: all clean-all app clean deps clean-deps docs clean-docs \
-	build-tests tests build-plt dialyze
+.PHONY: rel clean-rel all clean-all app clean deps clean-deps \
+	docs clean-docs build-tests tests build-plt dialyze
+
+# Release.
+
+RELX_CONFIG ?= $(CURDIR)/relx.config
+
+ifneq ($(wildcard $(RELX_CONFIG)),)
+
+RELX ?= $(CURDIR)/relx
+export RELX
+
+RELX_URL ?= https://github.com/erlware/relx/releases/download/0.4.0/relx
+
+define get_relx
+	wget -O $(RELX) $(RELX_URL)
+	chmod +x $(RELX)
+endef
+
+rel: clean-rel all $(RELX)
+	$(RELX)
+
+$(RELX):
+	@$(call get_relx)
+
+clean-rel:
+	rm -rf _rel
+
+endif
 
 # Deps directory.
 

@@ -73,6 +73,15 @@ for fetching the dependency.
 All packages featured in the index are compatible with erlang.mk
 with no extra work required.
 
+Releases
+--------
+
+If a `relx.config` file is present, erlang.mk will download `relx`
+automatically and build the release into the `_rel` folder. This
+is the default command when the file exists.
+
+No special configuration is required for this to work.
+
 Compiled files
 --------------
 
@@ -110,6 +119,8 @@ The following targets are defined:
 | `dialyze`    | Run Dialyzer on the application              |
 | `pkg-list`   | List packages in the index                   |
 | `pkg-search` | Search for packages in the index             |
+| `rel`        | Builds a release                             |
+| `clean-rel`  | Delete the previously built release          |
 
 Cleaning means removing all generated and temporary files.
 
@@ -122,7 +133,8 @@ targets. For example if you have a common_test suite named `spdy`
 and you want to run only this suite and not the others, you can
 use the `make test_spdy` command.
 
-The default target when calling `make` is `all`.
+The default target when calling `make` is `all` when no `relx.config`
+exists, and `rel` when it does exist.
 
 You can combine targets to perform many operations. For example, the
 shell command `make clean app` will have the effect of recompiling
@@ -169,6 +181,13 @@ on your system.
 
 `PKG_FILE_URL` allows you to change the URL from which the package index
 file is fetched.
+
+`RELX_CONFIG` is the location of the `relx.config` file, if any.
+
+`RELX` is the location of the `relx` executable for building releases.
+
+`RELX_URL` is the location where `relx` can be downloaded if it is
+not found locally.
 
 Extra targets
 -------------
