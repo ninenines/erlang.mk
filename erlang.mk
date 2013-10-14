@@ -103,9 +103,9 @@ clean-all: clean clean-deps clean-docs
 	$(gen_verbose) rm -rf .$(PROJECT).plt $(DEPS_DIR) logs
 
 app: ebin/$(PROJECT).app
-	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
+	@$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed 's/ebin\///;s/\.beam/,/' | sed '$$s/.$$//'))
-	$(appsrc_verbose) cat src/$(PROJECT).app.src \
+	@$(appsrc_verbose) cat src/$(PROJECT).app.src \
 		| sed 's/{modules,\s*\[\]}/{modules, \[$(MODULES)\]}/' \
 		> ebin/$(PROJECT).app
 
