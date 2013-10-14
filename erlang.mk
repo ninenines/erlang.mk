@@ -66,13 +66,13 @@ define get_relx
 endef
 
 rel: clean-rel all $(RELX)
-	$(RELX)
+	@$(RELX)
 
 $(RELX):
 	@$(call get_relx)
 
 clean-rel:
-	rm -rf _rel
+	@rm -rf _rel
 
 endif
 

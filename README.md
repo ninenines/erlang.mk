@@ -119,7 +119,7 @@ The following targets are defined:
 | `dialyze`    | Run Dialyzer on the application              |
 | `pkg-list`   | List packages in the index                   |
 | `pkg-search` | Search for packages in the index             |
-| `rel`        | Builds a release                             |
+| `rel`        | Build a release                              |
 | `clean-rel`  | Delete the previously built release          |
 
 Cleaning means removing all generated and temporary files.
