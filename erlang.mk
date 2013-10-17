@@ -97,6 +97,10 @@ ERLC_OPTS ?= -Werror +debug_info +warn_export_all +warn_export_vars \
 COMPILE_FIRST ?=
 COMPILE_FIRST_PATHS = $(addprefix src/,$(addsuffix .erl,$(COMPILE_FIRST)))
 
+# If any .hrl files change, touch all .erls to force recompile
+ALLHRLS := $(shell find . -type f -name '*.hrl')
+%.erl: $(ALLHRLS); @touch $@
+
 all: deps app
 
 clean-all: clean clean-deps clean-docs
