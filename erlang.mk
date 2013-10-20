@@ -98,7 +98,7 @@ COMPILE_FIRST ?=
 COMPILE_FIRST_PATHS = $(addprefix src/,$(addsuffix .erl,$(COMPILE_FIRST)))
 
 # If any .hrl files change, touch all .erls to force recompile
-ALLHRLS := $(shell find . -type f -name '*.hrl')
+ALLHRLS := $(shell find -E . -type f -regex '^\.\/(apps|src|include)\/.*\.hrl$')
 %.erl: $(ALLHRLS); @touch $@
 
 all: deps app
