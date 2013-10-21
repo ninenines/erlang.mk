@@ -106,7 +106,7 @@ app: ebin/$(PROJECT).app
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed 's/ebin\///;s/\.beam/,/' | sed '$$s/.$$//'))
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
-		| sed 's/{modules, \[\]}/{modules, \[$(MODULES)\]}/' \
+		| sed 's/{modules,\s*\[\]}/{modules, \[$(MODULES)\]}/' \
 		> ebin/$(PROJECT).app
 
 define compile_erl
