@@ -5,6 +5,8 @@ Common Makefile rules for building and testing Erlang applications.
 
 Also features support for dependencies and a package index.
 
+This Makefile is for GNU Make only and will not work on BSD Make.
+
 Usage
 -----
 
