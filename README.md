@@ -5,6 +5,15 @@ Common Makefile rules for building and testing Erlang applications.
 
 Also features support for dependencies and a package index.
 
+Requirements
+------------
+
+`erlang.mk` requires GNU Make and expects to be ran in a standard
+unix environment with Erlang installed and in the `$PATH`.
+
+`erlang.mk` uses `wget` for downloading the package index file
+when the `pkg://` scheme is used.
+
 Usage
 -----
 
