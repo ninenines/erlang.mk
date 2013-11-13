@@ -198,6 +198,8 @@ file is fetched.
 `RELX_URL` is the location where `relx` can be downloaded if it is
 not found locally.
 
+`RELX_OPTS` is for setting relx in-line options, if any.
+
 Extra targets
 -------------
 
