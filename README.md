@@ -174,6 +174,12 @@ downloaded to. It defaults to `deps`. It will be propagated into
 all the subsequent make calls, allowing all dependencies to use
 the same folder as expected.
 
+`EDOC_OPTS` allows you to specify
+[options](http://www.erlang.org/doc/man/edoc.html#run-3) to pass to
+`edoc` when building the documentation. Notice: not all options are
+documented in one place; follow the links to get to the options for
+the various operations of the documentation generation.
+
 `CT_SUITES` is the list of common_test suites to run when you use
 the `make tests` command. If your suite module is named `ponies_SUITE`
 then you only need to put `ponies` in the list.
