@@ -89,7 +89,14 @@ ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
 
 # Application.
 
-ERL_LIBS = $(shell echo $(ERL_LIBS)):$(DEPS_DIR)
+ifeq ($(shell echo $(ERL_LIBS)),)
+# Avoid appending things to the var if we don't need them.
+	ERL_LIBS = $(DEPS_DIR)
+else
+# An existing ERL_LIBS setting should be included.
+	ERL_LIBS := $(addsuffix $(shell echo $(ERL_LIBS)):,$(ALL_DEPS_DIRS))
+endif
+
 export ERL_LIBS
 
 ERLC_OPTS ?= -Werror +debug_info +warn_export_all +warn_export_vars \
