@@ -58,7 +58,7 @@ ifneq ($(wildcard $(RELX_CONFIG)),)
 RELX ?= $(CURDIR)/relx
 export RELX
 
-RELX_URL ?= https://github.com/erlware/relx/releases/download/v0.5.0/relx
+RELX_URL ?= https://github.com/erlware/relx/releases/download/v0.5.2/relx
 RELX_OPTS ?=
 
 define get_relx
