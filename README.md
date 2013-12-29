@@ -184,6 +184,8 @@ the various operations of the documentation generation.
 the `make tests` command. If your suite module is named `ponies_SUITE`
 then you only need to put `ponies` in the list.
 
+`CT_OPTS` allows you to specify extra common_test options.
+
 `PLT_APPS` is the list of applications to include when building the
 `.plt` file for Dialyzer. You do not need to put `erts`, `kernel` or
 `stdlib` in there because they will always be included. The applications
