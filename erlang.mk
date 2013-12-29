@@ -111,9 +111,9 @@ clean-all: clean clean-deps clean-docs
 
 app: ebin/$(PROJECT).app
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
-		| sed 's/ebin\///;s/\.beam/,/' | sed '$$s/.$$//'))
+		| sed -E 's/ebin\///;s/\.beam/,/' | sed -E '$$s/.$$//'))
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
-		| sed 's/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/' \
+		| sed -E 's/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/' \
 		> ebin/$(PROJECT).app
 
 define compile_erl
