@@ -251,16 +251,18 @@ tests: clean deps app build-tests
 
 # Dialyzer.
 
+DIALYZER_PLT ?= $(CURDIR)/.$(PROJECT).plt
+export DIALYZER_PLT
+
 PLT_APPS ?=
 DIALYZER_OPTS ?= -Werror_handling -Wrace_conditions \
 	-Wunmatched_returns # -Wunderspecs
 
 build-plt: deps app
-	@dialyzer --build_plt --output_plt .$(PROJECT).plt \
-		--apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
+	@dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
 
 dialyze:
-	@dialyzer --src src --plt .$(PROJECT).plt --no_native $(DIALYZER_OPTS)
+	@dialyzer --src src --no_native $(DIALYZER_OPTS)
 
 # Packages.
 
