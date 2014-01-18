@@ -16,6 +16,17 @@
 
 PROJECT ?= $(notdir $(CURDIR))
 
+# Fallback for wget.
+
+OS = $(shell uname)
+
+WGET_DASH_O = wget -O
+WGET_INSECURE_DASH_O = wget --no-check-certificate -O
+ifeq ($(OS), Darwin)
+WGET_DASH_O = curl -Lo
+WGET_INSECURE_DASH_O = curl --insecure -Lo
+endif
+
 # Packages database file.
 
 PKG_FILE ?= $(CURDIR)/.erlang.mk.packages.v1
@@ -24,7 +35,7 @@ export PKG_FILE
 PKG_FILE_URL ?= https://raw.github.com/extend/erlang.mk/master/packages.v1.tsv
 
 define get_pkg_file
-	wget --no-check-certificate -O $(PKG_FILE) $(PKG_FILE_URL) || rm $(PKG_FILE)
+	$(WGET_INSECURE_DASH_O) $(PKG_FILE) $(PKG_FILE_URL) || rm $(PKG_FILE)
 endef
 
 # Verbosity and tweaks.
@@ -62,7 +73,7 @@ RELX_URL ?= https://github.com/erlware/relx/releases/download/v0.5.2/relx
 RELX_OPTS ?=
 
 define get_relx
-	wget -O $(RELX) $(RELX_URL) || rm $(RELX)
+	$(WGET_DASH_O) $(RELX) $(RELX_URL) || rm $(RELX)
 	chmod +x $(RELX)
 endef
 
