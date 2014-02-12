@@ -124,6 +124,7 @@ The following targets are defined:
 | `clean-docs` | Clean the Edoc documentation                 |
 | `test_*`     | Run the common_test suite `*`                |
 | `tests`      | Run all the common_test suites               |
+| `eunit`      | Run EUnit tests                              |
 | `build-plt`  | Generate the PLT needed by Dialyzer          |
 | `dialyze`    | Run Dialyzer on the application              |
 | `pkg-list`   | List packages in the index                   |
@@ -207,6 +208,9 @@ file is fetched.
 not found locally.
 
 `RELX_OPTS` is for setting relx in-line options, if any.
+
+`EUNIT_OPTS` is for setting EUnit options. So far, the only valid non-empty
+value is ```[verbose]``` (without quotes).
 
 Extra targets
 -------------
