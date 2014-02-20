@@ -132,7 +132,7 @@ define compile_dtl
 		Compile = fun(F) -> \
 			Module = list_to_atom( \
 				string:to_lower(filename:basename(F, ".dtl")) ++ "_dtl"), \
-			erlydtl_compiler:compile(F, Module, [{out_dir, "ebin/"}]) \
+			erlydtl:compile(F, Module, [{out_dir, "ebin/"}]) \
 		end, \
 		_ = [Compile(F) || F <- string:tokens("$(1)", " ")], \
 		init:stop()'
