@@ -191,6 +191,8 @@ then you only need to put `ponies` in the list.
 `stdlib` in there because they will always be included. The applications
 the project depends on will also be included.
 
+`DIALYZER_PLT` allows you to change the PLT file used by dialyzer.
+
 `DIALYZER_OPTS` allows you to change the `dialyzer` options.
 
 `PKG_FILE` allows you to change the location of the package index file
