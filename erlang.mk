@@ -257,12 +257,13 @@ export DIALYZER_PLT
 PLT_APPS ?=
 DIALYZER_OPTS ?= -Werror_handling -Wrace_conditions \
 	-Wunmatched_returns # -Wunderspecs
-PROJECT_PLT ?= .$(PROJECT).plt
 
-build-plt: deps app
+$(DIALYZER_PLT): deps app
 	@dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
 
-dialyze:
+build-plt: $(DIALYZER_PLT)
+
+dialyze: $(DIALYZER_PLT)
 	@dialyzer --src src --no_native $(DIALYZER_OPTS)
 
 # Packages.
