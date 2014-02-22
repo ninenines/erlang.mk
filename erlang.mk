@@ -250,6 +250,7 @@ tests: clean deps app build-tests
 	$(gen_verbose) rm -f test/*.beam
 
 # Dialyzer.
+
 DIALYZER_PLT ?= $(CURDIR)/.$(PROJECT).plt
 export DIALYZER_PLT
 
