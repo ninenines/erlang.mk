@@ -1,4 +1,4 @@
-# Copyright (c) 2013, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -58,7 +58,7 @@ ifneq ($(wildcard $(RELX_CONFIG)),)
 RELX ?= $(CURDIR)/relx
 export RELX
 
-RELX_URL ?= https://github.com/erlware/relx/releases/download/v0.5.2/relx
+RELX_URL ?= https://github.com/erlware/relx/releases/download/v0.6.0/relx
 RELX_OPTS ?=
 
 define get_relx
@@ -132,7 +132,7 @@ define compile_dtl
 		Compile = fun(F) -> \
 			Module = list_to_atom( \
 				string:to_lower(filename:basename(F, ".dtl")) ++ "_dtl"), \
-			erlydtl_compiler:compile(F, Module, [{out_dir, "ebin/"}]) \
+			erlydtl:compile(F, Module, [{out_dir, "ebin/"}]) \
 		end, \
 		_ = [Compile(F) || F <- string:tokens("$(1)", " ")], \
 		init:stop()'
@@ -251,21 +251,19 @@ tests: clean deps app build-tests
 
 # Dialyzer.
 
+DIALYZER_PLT ?= $(CURDIR)/.$(PROJECT).plt
+export DIALYZER_PLT
+
 PLT_APPS ?=
 DIALYZER_OPTS ?= -Werror_handling -Wrace_conditions \
 	-Wunmatched_returns # -Wunderspecs
 PROJECT_PLT ?= .$(PROJECT).plt
 
 build-plt: deps app
-	@dialyzer --build_plt --output_plt $(PROJECT_PLT) \
-		--apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
+	@dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
 
-ifneq ($(wildcard $(PROJECT_PLT)),)
 dialyze:
-else
-dialyze: build-plt
-endif
-	@dialyzer --src src --plt $(PROJECT_PLT) --no_native $(DIALYZER_OPTS)
+	@dialyzer --src src --no_native $(DIALYZER_OPTS)
 
 # Packages.
 
