@@ -250,7 +250,6 @@ tests: clean deps app build-tests
 	$(gen_verbose) rm -f test/*.beam
 
 # Dialyzer.
-
 DIALYZER_PLT ?= $(CURDIR)/.$(PROJECT).plt
 export DIALYZER_PLT
 
@@ -263,7 +262,11 @@ $(DIALYZER_PLT): deps app
 
 build-plt: $(DIALYZER_PLT)
 
+ifneq ($(wildcard $(DIALYZER_PLT)),)
+dialyze:
+else
 dialyze: $(DIALYZER_PLT)
+endif
 	@dialyzer --src src --no_native $(DIALYZER_OPTS)
 
 # Packages.
