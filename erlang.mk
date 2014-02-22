@@ -60,6 +60,11 @@ export RELX
 
 RELX_URL ?= https://github.com/erlware/relx/releases/download/v0.6.0/relx
 RELX_OPTS ?=
+RELX_OUTPUT_DIR ?= _rel
+
+ifneq ($(firstword $(subst -o,,$(RELX_OPTS))),)
+	RELX_OUTPUT_DIR = $(firstword $(subst -o,,$(RELX_OPTS)))
+endif
 
 define get_relx
 	wget -O $(RELX) $(RELX_URL) || rm $(RELX)
@@ -73,7 +78,7 @@ $(RELX):
 	@$(call get_relx)
 
 clean-rel:
-	@rm -rf _rel
+	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)
 
 endif
 
