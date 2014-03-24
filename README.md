@@ -180,6 +180,11 @@ the same folder as expected.
 documented in one place; follow the links to get to the options for
 the various operations of the documentation generation.
 
+`TEST_ERLC_OPTS` allows you to change the `erlc` compilation
+options that are used for building the project for testing, but
+also the tests themselves. Unlike `ERLC_OPTS` it doesn't consider
+warnings to be errors and does not warn when `export_all` is used.
+
 `CT_SUITES` is the list of common_test suites to run when you use
 the `make tests` command. If your suite module is named `ponies_SUITE`
 then you only need to put `ponies` in the list.
