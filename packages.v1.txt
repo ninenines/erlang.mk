@@ -8,3 +8,4 @@ gun	https://github.com/extend/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and
 jsx	https://github.com/talentdeficit/jsx	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 ranch	https://github.com/extend/ranch	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform for type based validation.
+proper	https://github.com/manopapad/proper	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
