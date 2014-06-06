@@ -230,8 +230,7 @@ CT_RUN = ct_run \
 	-noshell \
 	-pa $(realpath ebin) $(DEPS_DIR)/*/ebin \
 	-dir test \
-	-logdir logs \
-	$(CT_OPTS)
+	-logdir logs
 
 CT_SUITES ?=
 
@@ -241,7 +240,7 @@ test_$(1): clean deps app build-tests
 	@if [ -d "test" ] ; \
 	then \
 		mkdir -p logs/ ; \
-		$(CT_RUN) -suite $(addsuffix _SUITE,$(1)) ; \
+		$(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_OPTS) ; \
 	fi
 	$(gen_verbose) rm -f test/*.beam
 endef
@@ -253,7 +252,7 @@ tests: clean deps app build-tests
 	@if [ -d "test" ] ; \
 	then \
 		mkdir -p logs/ ; \
-		$(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) ; \
+		$(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS) ; \
 	fi
 	$(gen_verbose) rm -f test/*.beam
 

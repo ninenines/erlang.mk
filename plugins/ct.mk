@@ -33,8 +33,7 @@ CT_RUN = ct_run \
 	-noshell \
 	-pa $(realpath ebin) $(DEPS_DIR)/*/ebin \
 	-dir test \
-	-logdir logs \
-	$(CT_OPTS)
+	-logdir logs
 
 $(foreach dep,$(TEST_DEPS),$(eval $(call dep_target,$(dep))))
 
@@ -50,7 +49,7 @@ tests-ct: clean deps app build-ct-suites
 	@if [ -d "test" ] ; \
 	then \
 		mkdir -p logs/ ; \
-		$(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) ; \
+		$(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS) ; \
 	fi
 	$(gen_verbose) rm -f test/*.beam
 
@@ -60,7 +59,7 @@ ct-$(1): clean deps app build-tests
 	@if [ -d "test" ] ; \
 	then \
 		mkdir -p logs/ ; \
-		$(CT_RUN) -suite $(addsuffix _SUITE,$(1)) ; \
+		$(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_OPTS) ; \
 	fi
 	$(gen_verbose) rm -f test/*.beam
 endef
