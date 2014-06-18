@@ -47,7 +47,7 @@ define dep_fetch
 ifeq (,$(findstring pkg://,$(word 1,$(dep_$(1)))))
 	git clone -n -- $(word 1,$(dep_$(1))) $(DEPS_DIR)/$(1)
 else
-	@if [ ! -f $(PKG_FILE) ]; then $(call get_pkg_file); fi
+	@if [ ! -f $(PKG_FILE) ]; then $(call core_http_get,$(PKG_FILE),$(PKG_FILE_URL)); fi
 	git clone -n -- `awk 'BEGIN { FS = "\t" }; \
 		$$$$1 == "$(subst pkg://,,$(word 1,$(dep_$(1))))" { print $$$$2 }' \
 		$(PKG_FILE)` $(DEPS_DIR)/$(1)
