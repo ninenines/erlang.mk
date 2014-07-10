@@ -186,8 +186,9 @@ also the tests themselves. Unlike `ERLC_OPTS` it doesn't consider
 warnings to be errors and does not warn when `export_all` is used.
 
 `CT_SUITES` is the list of common_test suites to run when you use
-the `make tests` command. If your suite module is named `ponies_SUITE`
-then you only need to put `ponies` in the list.
+the `make tests` command. The default behaviour is to autodetect your
+common_test suites. If you only want to run the tests in `ponies_SUITE`
+you should set this variable to `ponies`.
 
 `CT_OPTS` allows you to specify extra common_test options.
 

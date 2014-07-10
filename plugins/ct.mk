@@ -6,7 +6,7 @@
 # Configuration.
 
 CT_OPTS ?=
-CT_SUITES ?=
+CT_SUITES ?= $(sort $(subst _SUITE.erl,,$(shell find test -type f -name \*_SUITE.erl -exec basename {} \;)))
 
 TEST_ERLC_OPTS ?= +debug_info +warn_export_vars +warn_shadow_vars +warn_obsolete_guard
 TEST_ERLC_OPTS += -DTEST=1 -DEXTRA=1 +'{parse_transform, eunit_autoexport}'
