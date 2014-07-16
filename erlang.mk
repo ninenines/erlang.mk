@@ -269,7 +269,7 @@ build-plt: deps app
 	@dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
 
 dialyze:
-	@dialyzer --src src --no_native $(DIALYZER_OPTS)
+	@dialyzer --no_native --src src $(DIALYZER_OPTS)
 
 # Packages.
 
