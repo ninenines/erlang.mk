@@ -16,8 +16,8 @@ RELX_URL ?= https://github.com/erlware/relx/releases/download/v1.0.2/relx
 RELX_OPTS ?=
 RELX_OUTPUT_DIR ?= _rel
 
-ifneq ($(firstword $(subst -o,,$(RELX_OPTS))),)
-	RELX_OUTPUT_DIR = $(firstword $(subst -o,,$(RELX_OPTS)))
+ifeq ($(firstword $(RELX_OPTS)),-o)
+	RELX_OUTPUT_DIR = $(word 2,$(RELX_OPTS))
 endif
 
 # Core targets.
