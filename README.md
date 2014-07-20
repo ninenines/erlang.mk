@@ -123,7 +123,7 @@ The following targets are defined:
 | `docs`       | Generate the Edoc documentation              |
 | `clean-docs` | Clean the Edoc documentation                 |
 | `test_*`     | Run the common_test suite `*`                |
-| `tests`      | Run all the common_test suites               |
+| `tests`      | Run all the common\_test suites. Note that the CT\_SUITES variable must be defined. |
 | `build-plt`  | Generate the PLT needed by Dialyzer          |
 | `dialyze`    | Run Dialyzer on the application              |
 | `pkg-list`   | List packages in the index                   |
