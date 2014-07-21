@@ -31,7 +31,7 @@ PKG_FILE_URL ?= https://raw.githubusercontent.com/extend/erlang.mk/master/packag
 
 deps:: $(ALL_DEPS_DIRS)
 	@for dep in $(ALL_DEPS_DIRS) ; do \
-		if [ -f $$dep/Makefile ] ; then \
+		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile || [ -f $$dep/Makefile ] ; then \
 			$(MAKE) -C $$dep ; \
 		else \
 			echo "include $(CURDIR)/erlang.mk" | $(MAKE) -f - -C $$dep ; \
