@@ -11,6 +11,20 @@ C_SRC_ENV ?= $(C_SRC_DIR)/env.mk
 C_SRC_OPTS ?=
 C_SRC_OUTPUT ?= $(CURDIR)/priv/$(PROJECT).so
 
+# System type and C compiler/flags.
+
+UNAME_SYS := $(shell uname -s)
+ifeq ($(UNAME_SYS), Darwin)
+	CC ?= cc
+	CFLAGS ?= -O3 -std=c99 -arch x86_64 -flat_namespace -undefined suppress -finline-functions -Wall -Wmissing-prototypes
+else ifeq ($(UNAME_SYS), FreeBSD)
+	CC ?= cc
+	CFLAGS ?= -O3 -std=c99 -finline-functions -Wall -Wmissing-prototypes
+else ifeq ($(UNAME_SYS), Linux)
+	CC ?= gcc
+	CFLAGS ?= -O3 -std=c99 -finline-functions -Wall -Wmissing-prototypes
+endif
+
 # Verbosity.
 
 c_src_verbose_0 = @echo " C_SRC " $(?F);
@@ -22,7 +36,7 @@ ifeq ($(wildcard $(C_SRC_DIR)/Makefile),)
 
 app:: $(C_SRC_ENV)
 	@mkdir -p priv/
-	$(c_src_verbose) gcc $(C_SRC_DIR)/*.c -fPIC -shared -o $(C_SRC_OUTPUT) \
+	$(c_src_verbose) $(CC) $(CFLAGS) $(C_SRC_DIR)/*.c -fPIC -shared -o $(C_SRC_OUTPUT) \
 		-I $(ERTS_INCLUDE_DIR) $(C_SRC_OPTS)
 
 $(C_SRC_ENV):
