@@ -183,7 +183,7 @@ $(foreach dep,$(DEPS),$(eval $(call dep_target,$(dep))))
 
 deps: $(ALL_DEPS_DIRS)
 	@for dep in $(ALL_DEPS_DIRS) ; do \
-		if [ -f $$dep/Makefile ] ; then \
+		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
 			$(MAKE) -C $$dep ; \
 		else \
 			echo "include $(CURDIR)/erlang.mk" | $(MAKE) -f - -C $$dep ; \
@@ -192,7 +192,7 @@ deps: $(ALL_DEPS_DIRS)
 
 clean-deps:
 	@for dep in $(ALL_DEPS_DIRS) ; do \
-		if [ -f $$dep/Makefile ] ; then \
+		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
 			$(MAKE) -C $$dep clean ; \
 		else \
 			echo "include $(CURDIR)/erlang.mk" | $(MAKE) -f - -C $$dep clean ; \
@@ -269,7 +269,7 @@ build-plt: deps app
 	@dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
 
 dialyze:
-	@dialyzer --src src --no_native $(DIALYZER_OPTS)
+	@dialyzer --no_native --src src $(DIALYZER_OPTS)
 
 # Packages.
 
