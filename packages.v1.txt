@@ -2,6 +2,7 @@ bullet	https://github.com/extend/bullet	http://ninenines.eu	Simple, reliable, ef
 cowboy	https://github.com/extend/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	https://github.com/extend/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
+eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlang Performance and debugging tools.
 farwest_core	https://github.com/extend/farwest_core	http//ninenines.eu	Modern web application development platform.
 farwest_ui	https://github.com/extend/farwest_ui	http://ninenines.eu	Development and administration UI for Farwest.
 gun	https://github.com/extend/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
