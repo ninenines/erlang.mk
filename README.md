@@ -14,6 +14,9 @@ unix environment with Erlang installed and in the `$PATH`.
 `erlang.mk` uses `wget` for downloading the package index file
 when the `pkg://` scheme is used.
 
+`erlang.mk` will NOT work if the path contains spaces. This is a
+limitation of POSIX compatible make build tools.
+
 Usage
 -----
 
