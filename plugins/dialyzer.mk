@@ -31,4 +31,4 @@ distclean-plt:
 	$(gen_verbose) rm -f $(DIALYZER_PLT)
 
 dialyze:
-	@dialyzer --no_native --src src $(DIALYZER_OPTS)
+	@dialyzer --no_native --src -r src $(DIALYZER_OPTS)
