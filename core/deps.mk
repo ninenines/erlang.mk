@@ -89,7 +89,7 @@ pkg-search: $(PKG_FILE)
 		"Description:\t" $$6 "\n" }'
 else
 pkg-search:
-	@echo "Usage: make pkg-search q=STRING"
+	$(error Usage: make pkg-search q=STRING)
 endif
 
 distclean-pkg:
