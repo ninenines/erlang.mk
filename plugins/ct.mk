@@ -55,7 +55,7 @@ tests-ct: clean deps app build-ct-suites
 
 define ct_suite_target
 ct-$(1): ERLC_OPTS = $(TEST_ERLC_OPTS)
-ct-$(1): clean deps app build-tests
+ct-$(1): clean deps app build-ct-suites
 	@if [ -d "test" ] ; \
 	then \
 		mkdir -p logs/ ; \
