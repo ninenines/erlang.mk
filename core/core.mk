@@ -19,6 +19,7 @@ ERLANG_MK_VERSION = 1
 # Core configuration.
 
 PROJECT ?= $(notdir $(CURDIR))
+PROJECT := $(strip $(PROJECT))
 
 # Verbosity.
 

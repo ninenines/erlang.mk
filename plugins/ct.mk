@@ -6,7 +6,7 @@
 # Configuration.
 
 CT_OPTS ?=
-CT_SUITES ?=
+CT_SUITES ?= $(sort $(subst _SUITE.erl,,$(shell find test -type f -name \*_SUITE.erl -exec basename {} \;)))
 
 TEST_ERLC_OPTS ?= +debug_info +warn_export_vars +warn_shadow_vars +warn_obsolete_guard
 TEST_ERLC_OPTS += -DTEST=1 -DEXTRA=1 +'{parse_transform, eunit_autoexport}'
@@ -55,7 +55,7 @@ tests-ct: clean deps app build-ct-suites
 
 define ct_suite_target
 ct-$(1): ERLC_OPTS = $(TEST_ERLC_OPTS)
-ct-$(1): clean deps app build-tests
+ct-$(1): clean deps app build-ct-suites
 	@if [ -d "test" ] ; \
 	then \
 		mkdir -p logs/ ; \

@@ -232,7 +232,7 @@ CT_RUN = ct_run \
 	-dir test \
 	-logdir logs
 
-CT_SUITES ?=
+CT_SUITES ?= $(sort $(subst _SUITE.erl,,$(shell find test -type f -name \*_SUITE.erl -exec basename {} \;)))
 
 define test_target
 test_$(1): ERLC_OPTS = $(TEST_ERLC_OPTS)
@@ -269,7 +269,7 @@ build-plt: deps app
 	@dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
 
 dialyze:
-	@dialyzer --no_native --src src $(DIALYZER_OPTS)
+	@dialyzer --no_native --src -r src $(DIALYZER_OPTS)
 
 # Packages.
 
