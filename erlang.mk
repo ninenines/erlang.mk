@@ -232,7 +232,11 @@ CT_RUN = ct_run \
 	-dir test \
 	-logdir logs
 
-CT_SUITES ?= $(sort $(subst _SUITE.erl,,$(shell find test -type f -name \*_SUITE.erl -exec basename {} \;)))
+ifneq ($(wildcard test/),)
+	CT_SUITES ?= $(sort $(subst _SUITE.erl,,$(shell find test -type f -name \*_SUITE.erl -exec basename {} \;)))
+else
+	CT_SUITES ?=
+endif
 
 define test_target
 test_$(1): ERLC_OPTS = $(TEST_ERLC_OPTS)
