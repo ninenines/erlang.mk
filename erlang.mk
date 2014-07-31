@@ -179,6 +179,8 @@ $(DEPS_DIR)/$(1):
 	$(call get_dep,$(1))
 endef
 
+ERLANG_MK = $(abspath $(lastword $(MAKEFILE_LIST)))
+
 $(foreach dep,$(DEPS),$(eval $(call dep_target,$(dep))))
 
 deps: $(ALL_DEPS_DIRS)
@@ -186,7 +188,7 @@ deps: $(ALL_DEPS_DIRS)
 		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
 			$(MAKE) -C $$dep ; \
 		else \
-			echo "include $(CURDIR)/erlang.mk" | $(MAKE) -f - -C $$dep ; \
+			echo "include $(ERLANG_MK)" | $(MAKE) -f - -C $$dep ; \
 		fi ; \
 	done
 
@@ -195,7 +197,7 @@ clean-deps:
 		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
 			$(MAKE) -C $$dep clean ; \
 		else \
-			echo "include $(CURDIR)/erlang.mk" | $(MAKE) -f - -C $$dep clean ; \
+			echo "include $(ERLANG_MK)" | $(MAKE) -f - -C $$dep clean ; \
 		fi ; \
 	done
 
