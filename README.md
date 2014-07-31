@@ -11,8 +11,7 @@ Requirements
 `erlang.mk` requires GNU Make and expects to be ran in a standard
 unix environment with Erlang installed and in the `$PATH`.
 
-`erlang.mk` uses `wget` for downloading the package index file
-when the `pkg://` scheme is used.
+`erlang.mk` uses `wget` for downloading the package index file.
 
 `erlang.mk` will NOT work if the path contains spaces. This is a
 limitation of POSIX compatible make build tools.
@@ -25,24 +24,71 @@ Makefile:
 
 ``` Makefile
 PROJECT = my_project
-
 include erlang.mk
 ```
 
-Dependencies
+Alternatively you can use the following command to generate a skeleton
+of an OTP application:
+
+``` bash
+$ make -f erlang.mk bootstrap
+```
+
+To generate a skeleton of an OTP library:
+
+``` bash
+$ make -f erlang.mk bootstrap-lib
+```
+
+Finally if you are going to create a release of this project you may
+want to also use the `bootstrap-rel` target.
+
+You can combine targets to perform many operations. For example, the
+shell command `make clean app` will have the effect of recompiling
+the application fully, without touching the dependencies.
+
+A common workflow when editing a file would be to run `make` regularly
+to see if it compiles (or less often `make clean app` if you want to
+recompile everything), followed by `make dialyze` to see if there are
+any type errors and then `make tests` to run the test suites. The
+result of the test runs can be browsed from the `logs/index.html` file.
+
+Getting help
 ------------
 
-Erlang projects often depend on other projects to run. Adding dependencies
-to the Makefile is easy. You need to create the variable `DEPS` listing
-the names of all the dependencies, along with one `dep_$(NAME)` variable
-per dependency giving the git repository and commit to retrieve.
+You can use `make help` to get help about erlang.mk or its plugins.
 
-These variables should be defined before the include line.
+Packages
+--------
+
+A package index functionality is included with erlang.mk.
+
+To use a package, you simply have to add it to the `DEPS` variable
+in your Makefile. For example this depends on Cowboy:
 
 ``` Makefile
-DEPS = cowboy bullet
-dep_cowboy = https://github.com/extend/cowboy.git 0.8.4
-dep_bullet = https://github.com/extend/bullet.git 0.4.1
+PROJECT = my_project
+DEPS = cowboy
+include erlang.mk
+```
+
+If the project you want is not included in the package index, or if
+you want a different version, a few options are available. You can
+edit the package file and contribute to it by opening a pull request.
+You can use a custom package file, in which case you will probably
+want to set the `PKG_FILE2` variable to its location. Or you can
+put the project information directly in the Makefile.
+
+In the latter case you need to create a variable `dep_*` with the
+asterisk replaced by the project name, for example `cowboy`. This
+variable must contain three things: the fetching method used, the
+URL and the version requested.
+
+The following snippet overrides the Cowboy version required:
+
+``` Makefile
+DEPS = cowboy
+dep_cowboy = git https://github.com/extend/cowboy 1.0.0
 ```
 
 They will always be compiled using the command `make`. If the dependency
@@ -60,31 +106,6 @@ dep_ct_helper = https://github.com/extend/ct_helper.git master
 Please note that the test dependencies will only be compiled once
 when they are fetched, unlike the normal dependencies.
 
-Package index
--------------
-
-A very basic package index is included with erlang.mk. You can list
-all known packages with the `make pkg-list` command. You can search
-a package with the `make pkg-search q=STRING` command, replacing
-`STRING` with what you want to search. Use quotes around the string
-if needed.
-
-In addition, it is possible to specify dependencies in a simplified
-manner if they exist in the package index. The above example could
-instead read as:
-
-``` Makefile
-DEPS = cowboy bullet
-dep_cowboy = pkg://cowboy 0.8.4
-dep_bullet = pkg://bullet 0.4.1
-```
-
-erlang.mk will look inside the index for the proper URL and use it
-for fetching the dependency.
-
-All packages featured in the index are compatible with erlang.mk
-with no extra work required.
-
 Releases
 --------
 
@@ -94,139 +115,211 @@ is the default command when the file exists.
 
 No special configuration is required for this to work.
 
-Compiled files
---------------
-
-The following files will be automatically compiled:
-
-| Wildcard                 | Description                   |
-| ------------------------ | ----------------------------- |
-| `src/$(PROJECT).app.src` | OTP application resource file |
-| `src/*.erl`              | Erlang source files           |
-| `src/*.core`             | Core Erlang source files      |
-| `src/*.xrl`              | Leex source files             |
-| `src/*.yrl`              | Yecc source files             |
-| `templates/*.dtl`        | ErlyDTL template files        |
-
-Only the `.app.src` file and at least one `.erl` file are required.
-
-Commands
---------
-
-The following targets are defined:
-
-| Targets      | Description                                  |
-| ------------ | -------------------------------------------- |
-| `all`        | Compile the application and all dependencies |
-| `clean-all`  | Clean the application and all dependencies   |
-| `app`        | Compile the application                      |
-| `clean`      | Clean the application                        |
-| `deps`       | Compile the dependencies                     |
-| `clean-deps` | Clean the dependencies                       |
-| `docs`       | Generate the Edoc documentation              |
-| `clean-docs` | Clean the Edoc documentation                 |
-| `test_*`     | Run the common_test suite `*`                |
-| `tests`      | Run all the common_test suites               |
-| `build-plt`  | Generate the PLT needed by Dialyzer          |
-| `dialyze`    | Run Dialyzer on the application              |
-| `pkg-list`   | List packages in the index                   |
-| `pkg-search` | Search for packages in the index             |
-| `rel`        | Build a release                              |
-| `clean-rel`  | Delete the previously built release          |
-
-Cleaning means removing all generated and temporary files.
-
-Dependencies are fetched as soon as a command involving them is
-invoked. This means that most of the targets will trigger a
-dependency fetch. It is only done once per dependency.
-
-You can run an individual test suite by using the special `test_*`
-targets. For example if you have a common_test suite named `spdy`
-and you want to run only this suite and not the others, you can
-use the `make test_spdy` command.
-
-The default target when calling `make` is `all` when no `relx.config`
-exists, and `rel` when it does exist.
-
-You can combine targets to perform many operations. For example, the
-shell command `make clean app` will have the effect of recompiling
-the application fully, without touching the dependencies.
-
-A common workflow when editing a file would be to run `make` regularly
-to see if it compiles (or less often `make clean app` if you want to
-recompile everything), followed by `make dialyze` to see if there are
-any type errors and then `make tests` to run the test suites. The
-result of the test runs can be browsed from the `logs/index.html` file.
-
-Options
--------
-
-The following variables can be overriden:
-
-`V` defines the verbosity of the commands. You can set it
-to an empty value to make commands verbose.
-
-`ERLC_OPTS` allows you to change the `erlc` compilation
-options. You should always compile with at least the `+debug_info` set.
-
-`COMPILE_FIRST` is a list of modules (not filenames) that should be
-compiled before all others.
-
-`DEPS_DIR` is the path to the directory where the dependencies are
-downloaded to. It defaults to `deps`. It will be propagated into
-all the subsequent make calls, allowing all dependencies to use
-the same folder as expected.
-
-`EDOC_OPTS` allows you to specify
-[options](http://www.erlang.org/doc/man/edoc.html#run-3) to pass to
-`edoc` when building the documentation. Notice: not all options are
-documented in one place; follow the links to get to the options for
-the various operations of the documentation generation.
-
-`TEST_ERLC_OPTS` allows you to change the `erlc` compilation
-options that are used for building the project for testing, but
-also the tests themselves. Unlike `ERLC_OPTS` it doesn't consider
-warnings to be errors and does not warn when `export_all` is used.
-
-`CT_SUITES` is the list of common_test suites to run when you use
-the `make tests` command. The default behaviour is to autodetect your
-common_test suites. If you only want to run the tests in `ponies_SUITE`
-you should set this variable to `ponies`.
-
-`CT_OPTS` allows you to specify extra common_test options.
-
-`PLT_APPS` is the list of applications to include when building the
-`.plt` file for Dialyzer. You do not need to put `erts`, `kernel` or
-`stdlib` in there because they will always be included. The applications
-the project depends on will also be included.
-
-`DIALYZER_PLT` allows you to change the PLT file used by dialyzer.
-
-`DIALYZER_OPTS` allows you to change the `dialyzer` options.
-
-`PKG_FILE` allows you to change the location of the package index file
-on your system.
-
-`PKG_FILE_URL` allows you to change the URL from which the package index
-file is fetched.
-
-`RELX_CONFIG` is the location of the `relx.config` file, if any.
-
-`RELX` is the location of the `relx` executable for building releases.
-
-`RELX_URL` is the location where `relx` can be downloaded if it is
-not found locally.
-
-`RELX_OPTS` is for setting relx in-line options, if any.
-
-Extra targets
+Customization
 -------------
 
+A custom erlang.mk may be created by editing the `build.config`
+file and then running `make`. Only the core package handling
+and erlc support are required.
+
 If you need more functionality out of your Makefile, you can add extra
-targets after the include line.
+targets after the include line, or create an erlang.mk plugin.
 
 Defining a target before the include line will override the default
 target `all`.
+
+The rest of this README starts by listing the core functionality
+and then details each plugin individually.
+
+Core functionality
+------------------
+
+The following targets are standard:
+
+`all` is equivalent to `deps app rel`.
+
+`deps` fetches and compiles the dependencies.
+
+`app` compiles the application.
+
+`rel` builds the release.
+
+`docs` generates the documentation.
+
+`tests` runs the test suites.
+
+`clean` deletes the output files.
+
+`distclean` deletes the output files but also any intermediate
+files that are usually worth keeping around to save time,
+and any other files needed by plugins (for example the Dialyzer
+PLT file).
+
+`help` gives some help about using erlang.mk.
+
+You may add additional operations to them by using the double
+colons. Make will run all targets sharing the same name when
+invoked.
+
+``` Makefile
+clean::
+	@rm anotherfile
+```
+
+You can enable verbose mode by calling Make with the variable
+`V` set to 1.
+
+``` bash
+$ V=1 make
+
+Core package functionality
+--------------------------
+
+The following targets are specific to packages:
+
+`pkg-list` lists all packages in the index.
+
+`pkg-search n=STRING` searches the index for STRING.
+
+Packages are downloaded into `DEPS_DIR` (`./deps/` by default).
+
+The package index file is downloaded from `PKG_FILE_URL`
+and saved in `PKG_FILE2`.
+```
+Core compiler functionality
+---------------------------
+
+erlang.mk will automatically compile the OTP application
+resource file found in `src/$(PROJECT).app.src` (do note it
+requires an empty `modules` line); Erlang source files found
+in `src/*.erl` or any subdirectory; Core Erlang source files
+found in `src/*.core` or any subdirectory; Leex source files
+found in `src/*.xrl` or any subdirectory; and Yecc source
+files found in `src/*.yrl` or any subdirectory.
+
+You can change compilation options by setting the `ERLC_OPTS`
+variable. It takes the arguments that will then be passed to
+`erlc`. For more information, please see `erl -man erlc`.
+
+You can specify a list of modules to be compiled first using
+the `COMPILE_FIRST` variable.
+
+Bootstrap plugin
+----------------
+
+This plugin is available by default. It adds the following
+targets:
+
+`bootstrap` generates a skeleton of an OTP application.
+
+`bootstrap-lib` generates a skeleton of an OTP library.
+
+`bootstrap-rel` generates the files needed to build a release.
+
+`new` generate a skeleton module based on one of the available
+templates.
+
+`list-templates` lists the available templates.
+
+C compiler plugin
+-----------------
+
+This plugin is not included by default. It is meant to
+simplify the management of projects that include C source
+code, like NIFs.
+
+If the file `$(C_SRC_DIR)/Makefile` exists, then the plugin
+simply calls it when needed. Otherwise it tries to compile
+it directly.
+
+You can use a different directory than `./c_src` by setting
+the `C_SRC_DIR` variable.
+
+You can override the output file by setting the `C_SRC_OUTPUT`
+variable.
+
+You can override the temporary file containing information
+about Erlang's environment by setting the `C_SRC_ENV` variable.
+This file is automatically generated on first run.
+
+Finally you can add extra compiler options using the
+`C_SRC_OPTS` variable. You can also override the defaults
+`CC` and `CFLAGS` if required.
+
+Common_test plugin
+------------------
+
+This plugin is available by default.
+
+There is nothing to configure to use it, simply create your
+test suites in the `./test/` directory and erlang.mk will
+figure everything out automatically.
+
+You can override the list of suites that will run when using
+`make tests` by setting the `CT_SUITES` variable.
+
+You can add extra `ct_run` options by defining the `CT_OPTS`
+variable. For more information please see `erl -man ct_run`.
+
+You can run an individual test suite by using the special `ct-*`
+targets. For example if you have a common_test suite named `spdy`
+and you want to run only this suite and not the others, you can
+use the `make ct-spdy` command.
+
+Dialyzer plugin
+---------------
+
+This plugin is available by default. It adds the following
+targets:
+
+`plt` builds the PLT file for this application.
+
+`dialyze` runs Dialyzer.
+
+The PLT file is built in `./$(PROJECT).plt` by default.
+You can override this location by setting the `DIALYZER_PLT`
+variable.
+
+The `PLT_APPS` variable lists the applications that will be
+included in the PLT file. There is no need to specify `erts`,
+`kernel`, `stdlib` or the project's dependencies here, as they
+are automatically added.
+
+Dialyzer options can be modified by defining the `DIALYZER_OPTS`
+variable. For more information please see `erl -man dialyzer`.
+
+EDoc plugin
+-----------
+
+This plugin is available by default.
+
+EDoc options can be specified in Erlang format by defining
+the `EDOC_OPTS` variable. For more information please see
+`erl -man edoc`.
+
+ErlyDTL plugin
+--------------
+
+This plugin is available by default. It adds automatic
+compilation of ErlyDTL templates found in `templates/*.dtl`
+or any subdirectory.
+
+Relx plugin
+-----------
+
+This plugin is available by default.
+
+You can change the location of the `relx` executable
+(downloaded automatically) by defining the `RELX` variable,
+and the location of the configuration file by defining
+the `RELX_CONFIG` variable.
+
+The URL used to download `relx` can be overriden by setting
+the `RELX_URL` variable.
+
+You can change the generated releases location by setting
+the `RELX_OUTPUT_DIR` variable. Any other option should go
+in the `RELX_OPTS` variable.
 
 Support
 -------
