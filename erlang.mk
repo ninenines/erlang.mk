@@ -47,7 +47,7 @@ gen_verbose_0 = @echo " GEN   " $@;
 gen_verbose = $(gen_verbose_$(V))
 
 .PHONY: rel clean-rel all clean-all app clean deps clean-deps \
-	docs clean-docs build-tests tests build-plt dialyze
+	docs clean-docs build-tests tests build-plt dialyze eunit
 
 # Release.
 
@@ -157,7 +157,7 @@ ebin/$(PROJECT).app: $(shell find src -type f -name \*.erl) \
 		$(call compile_dtl,$(filter %.dtl,$?)))
 
 clean:
-	$(gen_verbose) rm -rf ebin/ test/*.beam erl_crash.dump
+	$(gen_verbose) rm -rf ebin/ test/*.beam erl_crash.dump .eunit
 
 # Dependencies.
 
@@ -274,6 +274,23 @@ build-plt: deps app
 
 dialyze:
 	@dialyzer --no_native --src -r src $(DIALYZER_OPTS)
+
+eunit: deps .eunit
+	@export EUNIT=$(EUNIT_OPTS) && erl \
+		-pa .eunit -pa $(DEPS_DIR)/*/ebin/ \
+		-run eunit test .eunit/*.beam \
+		-run init stop \
+		-noshell -noinput
+
+.eunit: $(shell find src -type f -name \*.erl) \
+			$(shell find test -type f -name \*.erl)
+	@mkdir -p .eunit
+	$(erlc_verbose) erlc -v \
+		-o .eunit/ \
+		-I include/ \
+		$(ERLC_OPTS) \
+		-DTEST \
+		$?
 
 # Packages.
 
