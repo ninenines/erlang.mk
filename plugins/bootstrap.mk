@@ -1,4 +1,21 @@
+# Copyright (c) 2014, Loïc Hoguin <essen@ninenines.eu>
+# This file is part of erlang.mk and subject to the terms of the ISC License.
+
+.PHONY: bootstrap bootstrap-lib bootstrap-rel new list-templates
+
+# Core targets.
+
+help::
+	@printf "%s\n" "" \
+		"Bootstrap targets:" \
+		"  bootstrap          Generate a skeleton of an OTP application" \
+		"  bootstrap-lib      Generate a skeleton of an OTP library" \
+		"  bootstrap-rel      Generate the files needed to build a release" \
+		"  new t=TPL n=NAME   Generate a module NAME based on the template TPL" \
+		"  bootstrap-lib      List available templates"
+
 # Bootstrap templates.
+
 bs_appsrc = "{application, $(PROJECT), [" \
 	"	{description, \"\"}," \
 	"	{vsn, \"0.1.0\"}," \
@@ -205,6 +222,8 @@ tpl_ranch_protocol = "-module($(n))." \
 	"" \
 	"loop(State) ->" \
 	"	loop(State)."
+
+# Plugin-specific targets.
 
 bootstrap:
 ifneq ($(wildcard src/),)
