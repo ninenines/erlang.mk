@@ -1,6 +1,6 @@
 bullet	git	https://github.com/extend/bullet	master	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cowboy	git	https://github.com/extend/cowboy	master	http://ninenines.eu	Small, fast and modular HTTP server.
-cowlib	git	https://github.com/extend/cowlib	master	http://ninenines.eu	Support library for manipulating Web protocols.
+cowlib	git	https://github.com/extend/cowlib	1.0.0	http://ninenines.eu	Support library for manipulating Web protocols.
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 gun	git	https://github.com/extend/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
