@@ -189,7 +189,7 @@ COMPILE_FIRST_PATHS = $(addprefix src/,$(addsuffix .erl,$(COMPILE_FIRST)))
 
 # Verbosity.
 
-appsrc_verbose_0 = @echo " APP   " $(PROJECT).app.src;
+appsrc_verbose_0 = echo " APP   " $(PROJECT).app.src;
 appsrc_verbose = $(appsrc_verbose_$(V))
 
 erlc_verbose_0 = @echo " ERLC  " $(filter %.erl %.core,$(?F));
@@ -203,9 +203,23 @@ xyrl_verbose = $(xyrl_verbose_$(V))
 app:: ebin/$(PROJECT).app
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
-	$(appsrc_verbose) cat src/$(PROJECT).app.src \
-		| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
-		> ebin/$(PROJECT).app
+
+# If the .app.src contains an empty modules tuple, replace it with the module list
+# Else, use an escript to remove any existing modules tuple, add an empty one,
+# and then replace it in the same manner.
+	@if [ -n "$$(egrep '{modules,[[:space:]]*\[\]}' src/$(PROJECT).app.src)" ]; then \
+		$(appsrc_verbose) cat src/$(PROJECT).app.src \
+			| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
+		> ebin/$(PROJECT).app; \
+	else \
+		printf "%s\n" $(module_script) > .module_script.erl; \
+		chmod u+x .module_script.erl; \
+		$(appsrc_verbose) cat src/$(PROJECT).app.src \
+			| ./.module_script.erl "" \
+			| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
+		> ebin/$(PROJECT).app; \
+		rm -f .module_script.erl; \
+	fi
 
 define compile_erl
 	$(erlc_verbose) erlc -v $(ERLC_OPTS) -o ebin/ \
@@ -462,6 +476,15 @@ tpl_ranch_protocol = "-module($(n))." \
 	"" \
 	"loop(State) ->" \
 	"	loop(State)."
+
+# Escript to set an empty modules list in the file read from stdin
+module_script = "\#!/usr/bin/env escript" \
+	"" \
+	"main([_Args]) ->" \
+	"  {ok, {application, Name, L}} = io:read(\"\")," \
+	"  L2 = proplists:delete(modules, L)," \
+	"  L3 = [{modules, []} | L2]," \
+	"  io:format(\"~p.~n\", [{application, Name, L3}])."
 
 # Plugin-specific targets.
 
