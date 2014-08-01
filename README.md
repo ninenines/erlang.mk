@@ -171,6 +171,7 @@ You can enable verbose mode by calling Make with the variable
 
 ``` bash
 $ V=1 make
+```
 
 Core package functionality
 --------------------------
@@ -185,7 +186,7 @@ Packages are downloaded into `DEPS_DIR` (`./deps/` by default).
 
 The package index file is downloaded from `PKG_FILE_URL`
 and saved in `PKG_FILE2`.
-```
+
 Core compiler functionality
 ---------------------------
 
