@@ -63,8 +63,8 @@ ifeq (,$(dep_$(1)))
 	$(call dep_fetch,$(1))
 else
 	VS=$(word 1,$(dep_$(1))); \
-	REPO=$(word 1,$(dep_$(2))); \
-	COMMIT=$(word 1,$(dep_$(3))); \
+	REPO=$(word 2,$(dep_$(1))); \
+	COMMIT=$(word 3,$(dep_$(1))); \
 	$(call dep_fetch,$(1))
 endif
 endef
