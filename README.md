@@ -100,7 +100,7 @@ except the variable `TEST_DEPS` holds the list of test-only dependencies.
 
 ``` erlang
 TEST_DEPS = ct_helper
-dep_ct_helper = https://github.com/extend/ct_helper.git master
+dep_ct_helper = git https://github.com/extend/ct_helper.git master
 ```
 
 Please note that the test dependencies will only be compiled once
