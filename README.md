@@ -88,7 +88,7 @@ The following snippet overrides the Cowboy version required:
 
 ``` Makefile
 DEPS = cowboy
-dep_cowboy = git https://github.com/extend/cowboy 1.0.0
+dep_cowboy = git https://github.com/ninenines/cowboy 1.0.0
 ```
 
 They will always be compiled using the command `make`. If the dependency
