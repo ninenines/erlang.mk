@@ -252,7 +252,7 @@ help::
 		"  bootstrap-lib      Generate a skeleton of an OTP library" \
 		"  bootstrap-rel      Generate the files needed to build a release" \
 		"  new t=TPL n=NAME   Generate a module NAME based on the template TPL" \
-		"  bootstrap-lib      List available templates"
+		"  list-templates     List available templates"
 
 # Bootstrap templates.
 
