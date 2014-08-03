@@ -199,8 +199,10 @@ xyrl_verbose_0 = @echo " XYRL  " $(filter %.xrl %.yrl,$(?F));
 xyrl_verbose = $(xyrl_verbose_$(V))
 
 # Core targets.
+erlc-include:
+	-@find include/ src/ -type f -name \*.hrl -newer ebin -exec touch $(shell find src/ -type f -name "*.erl") \;
 
-app:: ebin/$(PROJECT).app
+app:: erlc-include ebin/$(PROJECT).app
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
