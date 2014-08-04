@@ -618,13 +618,19 @@ help::
 
 # Plugin-specific targets.
 
-plt: deps app
+$(DIALYZER_PLT): deps app
 	@dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
+
+plt: $(DIALYZER_PLT)
 
 distclean-plt:
 	$(gen_verbose) rm -f $(DIALYZER_PLT)
 
+ifneq ($(wildcard $(DIALYZER_PLT)),)
 dialyze:
+else
+dialyze: $(DIALYZER_PLT)
+endif
 	@dialyzer --no_native --src -r src $(DIALYZER_OPTS)
 
 # Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
