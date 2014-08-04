@@ -38,6 +38,6 @@ $(RELX):
 	@$(call relx_fetch)
 
 distclean-rel:
-	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)
+	$(gen_verbose) rm -rf $(RELX) $(RELX_OUTPUT_DIR)
 
 endif

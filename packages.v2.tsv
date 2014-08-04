@@ -1,10 +1,10 @@
 bullet	git	https://github.com/extend/bullet	master	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
-cowboy	git	https://github.com/extend/cowboy	master	http://ninenines.eu	Small, fast and modular HTTP server.
-cowlib	git	https://github.com/extend/cowlib	master	http://ninenines.eu	Support library for manipulating Web protocols.
+cowboy	git	https://github.com/ninenines/cowboy	1.0.0	http://ninenines.eu	Small, fast and modular HTTP server.
+cowlib	git	https://github.com/ninenines/cowlib	1.0.0	http://ninenines.eu	Support library for manipulating Web protocols.
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 gun	git	https://github.com/extend/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 jsx	git	https://github.com/talentdeficit/jsx	master	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
-ranch	git	https://github.com/extend/ranch	master	http://ninenines.eu	Socket acceptor pool for TCP protocols.
+ranch	git	https://github.com/ninenines/ranch	1.0.0	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse transform for type based validation.
