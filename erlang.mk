@@ -700,6 +700,10 @@ endif
 # Core targets.
 
 rel:: distclean-rel $(RELX)
+	@if [ -z "$$(grep -E '{modules,[[:space:]]*\[\]}' src/$(PROJECT).app.src)" ]; then \
+		echo "WARNING: empty modules entry not found in src/$(PROJECT).app.src. This may result in relx release failure." \
+		"See README for details."; \
+	fi
 	@$(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
 distclean:: distclean-rel distclean-relx
