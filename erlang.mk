@@ -702,7 +702,7 @@ endif
 rel:: distclean-rel $(RELX)
 	@$(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
-distclean:: distclean-rel
+distclean:: distclean-rel distclean-relx
 
 # Plugin-specific targets.
 
@@ -715,6 +715,9 @@ $(RELX):
 	@$(call relx_fetch)
 
 distclean-rel:
-	$(gen_verbose) rm -rf $(RELX) $(RELX_OUTPUT_DIR)
+	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)
+
+distclean-relx:
+	$(gen_verbose) rm -rf $(RELX)
 
 endif
