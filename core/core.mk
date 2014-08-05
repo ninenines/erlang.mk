@@ -62,6 +62,12 @@ help::
 
 # Core functions.
 
+ifeq ($(shell which wget 2>/dev/null | wc -l), 1)
 define core_http_get
 	wget --no-check-certificate -O $(1) $(2)|| rm $(1)
 endef
+else
+define core_http_get
+	erl -noshell -eval  ' ssl:start(), inets:start(), case httpc:request(get, {"$(2)", []}, [{autoredirect, true}], []) of {ok, {{_V, 200, _R}, _H, Body}} -> case file:write_file("$(1)", Body) of ok -> ok ; {error, R1} -> halt(R1) end ; {error, R2} -> halt(R2) end, halt(0). '
+endef
+endif
