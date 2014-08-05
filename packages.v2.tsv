@@ -5,6 +5,8 @@ eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 gun	git	https://github.com/extend/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 jsx	git	https://github.com/talentdeficit/jsx	master	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
+neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
+pegjs	git	https://github.com/dmitriid/pegjs	0.2.1	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
 ranch	git	https://github.com/ninenines/ranch	1.0.0	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse transform for type based validation.
