@@ -22,7 +22,7 @@ endif
 
 # Core targets.
 
-rel:: distclean-rel $(RELX)
+rel:: $(RELX)
 	@$(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
 distclean:: distclean-rel distclean-relx
