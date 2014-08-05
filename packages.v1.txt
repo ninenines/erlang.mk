@@ -5,6 +5,7 @@ eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlan
 epgsql	https://github.com/epgsql/epgsql	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 gun	https://github.com/extend/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
+jiffy	https://github.com/davisp/jiffy	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
 jsx	https://github.com/talentdeficit/jsx	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
