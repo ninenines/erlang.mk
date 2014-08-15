@@ -201,7 +201,7 @@ xyrl_verbose = $(xyrl_verbose_$(V))
 
 # Core targets.
 
-app:: ebin/$(PROJECT).app
+app:: erlc-include ebin/$(PROJECT).app
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
 	@if [ -z "$$(grep -E '^[^%]*{modules,' src/$(PROJECT).app.src)" ]; then \
@@ -239,6 +239,11 @@ endif
 clean:: clean-app
 
 # Extra targets.
+
+erlc-include:
+	-@if [ -d ebin/ ]; then \
+		find include/ src/ -type f -name \*.hrl -newer ebin -exec touch $(shell find src/ -type f -name "*.erl") \; ; \
+	fi
 
 clean-app:
 	$(gen_verbose) rm -rf ebin/
