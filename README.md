@@ -338,6 +338,12 @@ or `plugins/*.mk` files and then run `make` to create an
 updated `erlang.mk`. If you submit a new plugin, you also
 need to add it to the `build.config` file.
 
+Make sure to keep the commit title short, to have a single
+commit per package/feature/fix and you're good to submit
+a pull request! And again, please don't forget to run make
+and to commit the updated erlang.mk or index files along
+with your other changes. Thanks!
+
 Support
 -------
 
