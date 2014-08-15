@@ -26,6 +26,10 @@ xyrl_verbose = $(xyrl_verbose_$(V))
 app:: ebin/$(PROJECT).app
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
+	@if [ -z "$$(grep -E '^[^%]*{modules,[[:space:]]*\[\]}' src/$(PROJECT).app.src)" ]; then \
+		echo "Empty modules entry not found in $(PROJECT).app.src. Please consult the erlang.mk README for instructions." >&2; \
+		exit 1; \
+	fi
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
 		| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
 		> ebin/$(PROJECT).app
