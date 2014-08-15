@@ -115,6 +115,7 @@ define dep_fetch
 		git clone -n -- $$$$REPO $(DEPS_DIR)/$(1); \
 		cd $(DEPS_DIR)/$(1) && git checkout -q $$$$COMMIT; \
 	else \
+		echo "Unknown or invalid dependency: $(1). Please consult the erlang.mk README for instructions." >&2; \
 		exit 78; \
 	fi
 endef
