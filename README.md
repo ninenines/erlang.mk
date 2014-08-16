@@ -322,6 +322,28 @@ You can change the generated releases location by setting
 the `RELX_OUTPUT_DIR` variable. Any other option should go
 in the `RELX_OPTS` variable.
 
+Contributing
+------------
+
+You can contribute by providing feedback, creating patches,
+adding packages to the index or new features as plugins.
+
+For packages, you only need to edit the `packages.v2.tsv`
+file, adding your package (they are sorted alphabetically),
+and then running `make` to update the older files kept for
+compatibility reasons.
+
+For patches or plugins, you have to edit the `core/*.mk`
+or `plugins/*.mk` files and then run `make` to create an
+updated `erlang.mk`. If you submit a new plugin, you also
+need to add it to the `build.config` file.
+
+Make sure to keep the commit title short, to have a single
+commit per package/feature/fix and you're good to submit
+a pull request! And again, please don't forget to run make
+and to commit the updated erlang.mk or index files along
+with your other changes. Thanks!
+
 Support
 -------
 
