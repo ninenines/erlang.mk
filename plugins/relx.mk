@@ -16,6 +16,8 @@ RELX_OUTPUT_DIR ?= _rel
 
 ifeq ($(firstword $(RELX_OPTS)),-o)
 	RELX_OUTPUT_DIR = $(word 2,$(RELX_OPTS))
+else
+	RELX_OPTS += -o $(RELX_OUTPUT_DIR)
 endif
 
 # Core targets.

@@ -322,6 +322,11 @@ You can change the generated releases location by setting
 the `RELX_OUTPUT_DIR` variable. Any other option should go
 in the `RELX_OPTS` variable.
 
+If `RELX_OPTS` includes the `-o` option (instead of using
+`RELX_OUTPUT_DIR`, then that option must be the first in
+the list, otherwise erlang.mk will fail to find it and
+will not be able to clean up the release directory.
+
 Contributing
 ------------
 
