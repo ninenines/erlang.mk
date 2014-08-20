@@ -4,6 +4,7 @@ cowlib	git	https://github.com/ninenines/cowlib	1.0.0	http://ninenines.eu	Support
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
+erwa	git	https://github.com/bwegh/erwa	master	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 gun	git	https://github.com/extend/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 jiffy	git	https://github.com/davisp/jiffy	master	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
 jsx	git	https://github.com/talentdeficit/jsx	master	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.

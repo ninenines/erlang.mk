@@ -125,7 +125,7 @@ $(DEPS_DIR)/$(1):
 	@mkdir -p $(DEPS_DIR)
 	@if [ ! -f $(PKG_FILE2) ]; then $(call core_http_get,$(PKG_FILE2),$(PKG_FILE_URL)); fi
 ifeq (,$(dep_$(1)))
-	DEPPKG=$$$$(awk 'BEGIN { FS = "\t" }; $$$$1 == "$(1)" { print $$$$2 " " $$$$3 " " $$$$4 }' $(PKG_FILE2);) \
+	DEPPKG=$$$$(awk 'BEGIN { FS = "\t" }; $$$$1 == "$(1)" { print $$$$2 " " $$$$3 " " $$$$4 }' $(PKG_FILE2);); \
 	VS=$$$$(echo $$$$DEPPKG | cut -d " " -f1); \
 	REPO=$$$$(echo $$$$DEPPKG | cut -d " " -f2); \
 	COMMIT=$$$$(echo $$$$DEPPKG | cut -d " " -f3); \
@@ -709,6 +709,8 @@ RELX_OUTPUT_DIR ?= _rel
 
 ifeq ($(firstword $(RELX_OPTS)),-o)
 	RELX_OUTPUT_DIR = $(word 2,$(RELX_OPTS))
+else
+	RELX_OPTS += -o $(RELX_OUTPUT_DIR)
 endif
 
 # Core targets.
