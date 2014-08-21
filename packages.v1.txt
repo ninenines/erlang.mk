@@ -1,3 +1,4 @@
+apns4erl	https://github.com/inaka/apns4erl.git	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 bullet	https://github.com/extend/bullet	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Really simple terminal colorization
 cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
