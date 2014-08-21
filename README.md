@@ -333,10 +333,24 @@ Contributing
 You can contribute by providing feedback, creating patches,
 adding packages to the index or new features as plugins.
 
-For packages, you only need to edit the `packages.v2.tsv`
-file, adding your package (they are sorted alphabetically),
-and then running `make` to update the older files kept for
-compatibility reasons.
+To add a package to the index, please use the `pkg_add.sh`
+script. To use it, first fork the repository, then please
+follow the example below:
+
+``` bash
+$ git clone https://github.com/$YOURUSERNAME/erlang.mk
+$ ./pkg_add.sh cowboy git https://github.com/ninenines/cowboy 1.0.0 http://ninenines.eu "Small, fast and modular HTTP server."
+$ git push origin master
+```
+
+Then open a pull request. The arguments given to the script
+are, in order, the project name, the download method used,
+the repository URL, the commit/tag/branch/version to pull,
+a link to the package's website and finally its description.
+Make sure to put double quotes around the description.
+
+You can submit as many packages as you want in one pull
+request as long as you follow the instructions above.
 
 For patches or plugins, you have to edit the `core/*.mk`
 or `plugins/*.mk` files and then run `make` to create an
