@@ -4,6 +4,7 @@ cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Reall
 classifier	https://github.com/inaka/classifier.git	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	https://github.com/ninenines/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
+ebitly	https://github.com/inaka/ebitly.git	http://inaka.github.com/ebitly	Bit.ly API wrapper for Erlang
 eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	https://github.com/epgsql/epgsql	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
