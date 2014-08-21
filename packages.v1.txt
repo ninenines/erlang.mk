@@ -1,4 +1,5 @@
 bullet	https://github.com/extend/bullet	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
+cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Really simple terminal colorization
 cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	https://github.com/ninenines/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
 eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlang performance and debugging tools.
