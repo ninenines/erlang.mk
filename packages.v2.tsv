@@ -1,6 +1,7 @@
 apns4erl	git	https://github.com/inaka/apns4erl.git	1.0	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 bullet	git	https://github.com/extend/bullet	master	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cake	git	https://github.com/darach/cake-erl	v0.1.2	https://github.com/darach/cake-erl	Really simple terminal colorization
+classifier	git	https://github.com/inaka/classifier.git	1	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 cowboy	git	https://github.com/ninenines/cowboy	1.0.0	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	git	https://github.com/ninenines/cowlib	1.0.0	http://ninenines.eu	Support library for manipulating Web protocols.
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
