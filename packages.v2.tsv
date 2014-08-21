@@ -10,6 +10,7 @@ eganglia	git	https://github.com/inaka/eganglia.git	0.9.1	https://github.com/inak
 elvis	git	https://github.com/inaka/elvis.git	0.1.0-alpha	https://github.com/inaka/elvis.git	Erlang Style Reviewer
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
+eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredis	Non-blocking Redis client with focus on performance and robustness
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	git	https://github.com/bwegh/erwa	master	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 gun	git	https://github.com/extend/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
