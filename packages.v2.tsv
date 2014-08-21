@@ -1,7 +1,13 @@
+apns4erl	git	https://github.com/inaka/apns4erl.git	1.0	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 bullet	git	https://github.com/extend/bullet	master	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cake	git	https://github.com/darach/cake-erl	v0.1.2	https://github.com/darach/cake-erl	Really simple terminal colorization
+classifier	git	https://github.com/inaka/classifier.git	1	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 cowboy	git	https://github.com/ninenines/cowboy	1.0.0	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	git	https://github.com/ninenines/cowlib	1.0.0	http://ninenines.eu	Support library for manipulating Web protocols.
+ebitly	git	https://github.com/inaka/ebitly.git	0.0.1	http://inaka.github.com/ebitly	Bit.ly API wrapper for Erlang
+edis	git	https://github.com/inaka/edis.git	0.2.0	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
+eganglia	git	https://github.com/inaka/eganglia.git	0.9.1	https://github.com/inaka/eganglia.git	Erlang library to interact with Ganglia
+elvis	git	https://github.com/inaka/elvis.git	0.1.0-alpha	https://github.com/inaka/elvis.git	Erlang Style Reviewer
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredis	Non-blocking Redis client with focus on performance and robustness
@@ -9,14 +15,20 @@ erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl
 erwa	git	https://github.com/bwegh/erwa	master	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 gun	git	https://github.com/extend/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
+itweet	git	https://github.com/inaka/itweet.git	3.0	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
 jiffy	git	https://github.com/davisp/jiffy	master	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
 jsx	git	https://github.com/talentdeficit/jsx	master	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 katja	git	https://github.com/nifoc/katja	master	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A logging framework for Erlang/OTP.
+lasse	git	https://github.com/inaka/lasse.git	0.1.0	https://github.com/inaka/lasse.git	SSE handler for Cowboy
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 pegjs	git	https://github.com/dmitriid/pegjs	0.2.1	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
+ptrackerl	git	https://github.com/inaka/ptrackerl.git	0.2	https://github.com/inaka/ptrackerl.git	Pivotal Tracker API Client written in Erlang
+pusherman	git	https://github.com/inaka/pusherman.git	1	https://github.com/inaka/pusherman.git	queuing system for push notifications
 ranch	git	https://github.com/ninenines/ranch	1.0.0	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 resource_discovery	git	https://github.com/erlware/resource_discovery	master	http://erlware.org/	An application used to dynamically discover resources present in an Erlang node cluster.
 sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse transform for type based validation.
+shotgun	git	https://github.com/inaka/shotgun.git	0.1	https://github.com/inaka/shotgun.git	better than just a gun
+sumo_db	git	https://github.com/inaka/sumo_db.git	1	https://github.com/inaka/sumo_db.git	Erlang Persistency Framework
 tinymt-erlang	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
