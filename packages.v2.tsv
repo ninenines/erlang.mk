@@ -7,6 +7,7 @@ cowlib	git	https://github.com/ninenines/cowlib	1.0.0	http://ninenines.eu	Support
 ebitly	git	https://github.com/inaka/ebitly.git	0.0.1	http://inaka.github.com/ebitly	Bit.ly API wrapper for Erlang
 edis	git	https://github.com/inaka/edis.git	0.2.0	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
 eganglia	git	https://github.com/inaka/eganglia.git	0.9.1	https://github.com/inaka/eganglia.git	Erlang library to interact with Ganglia
+elvis	git	https://github.com/inaka/elvis.git	0.1.0-alpha	https://github.com/inaka/elvis.git	Erlang Style Reviewer
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
