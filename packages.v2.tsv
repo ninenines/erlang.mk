@@ -5,6 +5,7 @@ classifier	git	https://github.com/inaka/classifier.git	1	https://github.com/inak
 cowboy	git	https://github.com/ninenines/cowboy	1.0.0	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	git	https://github.com/ninenines/cowlib	1.0.0	http://ninenines.eu	Support library for manipulating Web protocols.
 ebitly	git	https://github.com/inaka/ebitly.git	0.0.1	http://inaka.github.com/ebitly	Bit.ly API wrapper for Erlang
+edis	git	https://github.com/inaka/edis.git	0.2.0	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
