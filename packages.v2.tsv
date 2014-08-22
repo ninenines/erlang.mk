@@ -32,3 +32,4 @@ sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse t
 shotgun	git	https://github.com/inaka/shotgun.git	0.1	https://github.com/inaka/shotgun.git	better than just a gun
 sumo_db	git	https://github.com/inaka/sumo_db.git	1	https://github.com/inaka/sumo_db.git	Erlang Persistency Framework
 tinymt-erlang	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+erlang-katana git https://github.com/inaka/erlang-katana.git master https://github.com/inaka/erlang-katana.git  Erlang grab bag of useful functions. it should have been called swiss army knife but katanas are deadlier
