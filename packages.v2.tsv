@@ -32,3 +32,15 @@ sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse t
 shotgun	git	https://github.com/inaka/shotgun.git	0.1	https://github.com/inaka/shotgun.git	better than just a gun
 sumo_db	git	https://github.com/inaka/sumo_db.git	1	https://github.com/inaka/sumo_db.git	Erlang Persistency Framework
 tinymt-erlang	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+apns4erl git https://github.com/inaka/apns4erl.git master https://github.com/inaka/apns4erl.git Apple Push Notification Server for Erlang http://inaka.github.com/apns4erl.
+classifier git https://github.com/inaka/classifier.git master https://github.com/inaka/classifier.git An Erlang Bayesian Filter and Text Classifier.
+ebitly git https://github.com/inaka/ebitly.git master https://github.com/inaka/ebitly.git Bit.ly API wrapper for Erlang http://inaka.github.com/ebitly.
+edis git https://github.com/inaka/edis.git master https://github.com/inaka/edis.git An Erlang implementation of Redis http://inaka.github.com/edis/ .
+eganglia git https://github.com/inaka/eganglia.git master https://github.com/inaka/eganglia.git Erlang library to interact with Ganglia http://elbrujohalcon.github.com/eganglia .
+elvis git https://github.com/inaka/elvis.git master https://github.com/inaka/elvis.git Erlang Style Reviewer.
+itweet git https://github.com/inaka/itweet.git master https://github.com/inaka/itweet.git Twitter Stream API on ibrowse http://inaka.github.com/itweet/ .
+lasse git https://github.com/inaka/lasse.git master https://github.com/inaka/lasse.git SSE handler for Cowboy.
+ptrackerl git https://github.com/inaka/ptrackerl.git master https://github.com/inaka/ptrackerl.git Pivotal Tracker API Client written in Erlang.
+pusherman git https://github.com/inaka/pusherman.git master https://github.com/inaka/pusherman.git queuing system for push notifications.
+shotgun git https://github.com/inaka/shotgun.git master https://github.com/inaka/shotgun.git better than just a gun.
+sumo_db git https://github.com/inaka/sumo_db.git master https://github.com/inaka/sumo_db.git Erlang Persistency Framework.
