@@ -60,13 +60,13 @@ $(DEPS_DIR)/$(1):
 	@mkdir -p $(DEPS_DIR)
 	@if [ ! -f $(PKG_FILE2) ]; then $(call core_http_get,$(PKG_FILE2),$(PKG_FILE_URL)); fi
 ifeq (,$(dep_$(1)))
-	DEPPKG=$$$$(awk 'BEGIN { FS = "\t" }; $$$$1 == "$(1)" { print $$$$2 " " $$$$3 " " $$$$4 }' $(PKG_FILE2);); \
+	@DEPPKG=$$$$(awk 'BEGIN { FS = "\t" }; $$$$1 == "$(1)" { print $$$$2 " " $$$$3 " " $$$$4 }' $(PKG_FILE2);); \
 	VS=$$$$(echo $$$$DEPPKG | cut -d " " -f1); \
 	REPO=$$$$(echo $$$$DEPPKG | cut -d " " -f2); \
 	COMMIT=$$$$(echo $$$$DEPPKG | cut -d " " -f3); \
 	$(call dep_fetch,$(1))
 else
-	VS=$(word 1,$(dep_$(1))); \
+	@VS=$(word 1,$(dep_$(1))); \
 	REPO=$(word 2,$(dep_$(1))); \
 	COMMIT=$(word 3,$(dep_$(1))); \
 	$(call dep_fetch,$(1))
