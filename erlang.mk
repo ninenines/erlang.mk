@@ -114,6 +114,9 @@ define dep_fetch
 	if [ "$$$$VS" = "git" ]; then \
 		git clone -n -- $$$$REPO $(DEPS_DIR)/$(1); \
 		cd $(DEPS_DIR)/$(1) && git checkout -q $$$$COMMIT; \
+	elif [ "$$$$VS" = "hg" ]; then \
+		hg clone -U $$$$REPO $(DEPS_DIR)/$(1); \
+		cd $(DEPS_DIR)/$(1) && hg update -q $$$$COMMIT; \
 	else \
 		echo "Unknown or invalid dependency: $(1). Please consult the erlang.mk README for instructions." >&2; \
 		exit 78; \
