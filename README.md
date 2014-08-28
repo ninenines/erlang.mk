@@ -82,7 +82,8 @@ put the project information directly in the Makefile.
 In the latter case you need to create a variable `dep_*` with the
 asterisk replaced by the project name, for example `cowboy`. This
 variable must contain three things: the fetching method used, the
-URL and the version requested.
+URL and the version requested. These lines must be defined before
+the erlang.mk include line.
 
 The following snippet overrides the Cowboy version required:
 
