@@ -33,6 +33,9 @@ resource_discovery	https://github.com/erlware/resource_discovery	http://erlware.
 sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform for type based validation.
 shotgun	https://github.com/inaka/shotgun.git	https://github.com/inaka/shotgun.git	better than just a gun
 sumo_db	https://github.com/inaka/sumo_db.git	https://github.com/inaka/sumo_db.git	Erlang Persistency Framework
-swab	https://github.com/crownedgrouse/swab.git	https://github.com/crownedgrouse/swab	General purpose buffer handling module
+<<<<<<< HEAD
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
+=======
+swab	https://github.com/crownedgrouse/swab.git	https://github.com/crownedgrouse/swab	General purpose buffer handling module
+>>>>>>> Add package swab to the index
 tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
