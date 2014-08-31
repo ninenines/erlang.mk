@@ -37,3 +37,4 @@ sumo_db	https://github.com/inaka/sumo_db.git	https://github.com/inaka/sumo_db.gi
 swab	https://github.com/crownedgrouse/swab.git	https://github.com/crownedgrouse/swab	General purpose buffer handling module
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+zeta	https://github.com/s1n4/zeta	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
