@@ -36,3 +36,4 @@ shotgun	git	https://github.com/inaka/shotgun.git	0.1	https://github.com/inaka/sh
 sumo_db	git	https://github.com/inaka/sumo_db.git	1	https://github.com/inaka/sumo_db.git	Erlang Persistency Framework
 swab	git	https://github.com/crownedgrouse/swab.git	master	https://github.com/crownedgrouse/swab	General purpose buffer handling module
 tinymt-erlang	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+zeta	git	https://github.com/s1n4/zeta	 	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
