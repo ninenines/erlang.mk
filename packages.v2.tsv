@@ -23,6 +23,7 @@ jsx	git	https://github.com/talentdeficit/jsx	master	https://github.com/talentdef
 katja	git	https://github.com/nifoc/katja	master	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A logging framework for Erlang/OTP.
 lasse	git	https://github.com/inaka/lasse.git	0.1.0	https://github.com/inaka/lasse.git	SSE handler for Cowboy
+leptus	git	https://github.com/s1n4/leptus	 	https://github.com/s1n4/leptus	Erlang REST framework
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 pegjs	git	https://github.com/dmitriid/pegjs	0.2.1	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
