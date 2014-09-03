@@ -328,6 +328,22 @@ If `RELX_OPTS` includes the `-o` option (instead of using
 the list, otherwise erlang.mk will fail to find it and
 will not be able to clean up the release directory.
 
+Shell plugin
+------------
+
+This plugin is available by default.
+
+`SHELL_DEPS` adds the specified modules only when `make shell`
+or `make build-shell-deps` is run. For example, to include a module
+reloader and TDD test runner, one might add `SHELL_DEPS = tddreloader`
+to the Makefile.
+
+You can add extra `erl` options by defining the `SHELL_OPTS` variable.
+For more information please see `erl -man erl`.
+
+`SHELL_PATH` adds paths to the shell's library search path. By default
+this option sets the path to `-pa ../$(PROJECT)/ebin $(DEPS_DIR)/*/ebin`.
+
 Contributing
 ------------
 
