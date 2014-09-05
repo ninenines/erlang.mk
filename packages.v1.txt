@@ -24,6 +24,7 @@ katja	https://github.com/nifoc/katja	https://github.com/nifoc/katja	A simple Rie
 lager	https://github.com/basho/lager	https://github.com/basho/lager	A logging framework for Erlang/OTP.
 lasse	https://github.com/inaka/lasse.git	https://github.com/inaka/lasse.git	SSE handler for Cowboy
 leptus	https://github.com/s1n4/leptus	https://github.com/s1n4/leptus	Erlang REST framework
+mekao	https://github.com/ddosia/mekao.git	https://github.com/ddosia/mekao	SQL constructor
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 proper	https://github.com/manopapad/proper	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
