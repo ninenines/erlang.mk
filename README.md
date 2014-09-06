@@ -341,8 +341,9 @@ follow the example below:
 ``` bash
 $ git clone https://github.com/$YOURUSERNAME/erlang.mk
 $ cd erlang.mk
+$ git checkout $YOURUSERNAME.new.pkgs
 $ ./pkg_add.sh cowboy git https://github.com/ninenines/cowboy 1.0.0 http://ninenines.eu "Small, fast and modular HTTP server."
-$ git push origin master
+$ git push origin $YOURUSERNAME.new.pkgs --set-upstream
 ```
 
 Then open a pull request. The arguments given to the script
