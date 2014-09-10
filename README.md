@@ -248,6 +248,22 @@ Finally you can add extra compiler options using the
 `C_SRC_OPTS` variable. You can also override the defaults
 `CC` and `CFLAGS` if required.
 
+C env plugin
+-----------------
+
+This plugin is not included by default. It defines the variable
+`ERTS_INCLUDE_DIR` to simplify the compiliation of NIFs and drivers.
+It is useful for situations that cannot be automatically handled by
+the C compiler plugin.  For example:
+
+``` Makefile
+app:: priv/mynif.so
+priv/mynif.so: c_src/mynif.cpp
+	g++ $(CXXFLAGS) -Ic_src -I$(ERTS_INCLUDE_DIR) -o $@ -fpic -shared $^
+clean::
+	rm -f priv/mynif.so
+```
+
 Common_test plugin
 ------------------
 
