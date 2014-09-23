@@ -48,7 +48,7 @@ $(C_SRC_ENV):
 -include $(C_SRC_ENV)
 
 else
-ifneq ($(wildcard $(C_SRC_DIR),))
+ifneq ($(wildcard $(C_SRC_DIR)),)
 
 app::
 	$(MAKE) -C $(C_SRC_DIR)

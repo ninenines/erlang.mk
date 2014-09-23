@@ -62,9 +62,15 @@ help::
 
 # Core functions.
 
+ifeq ($(shell which wget 2>/dev/null | wc -l), 1)
 define core_http_get
 	wget --no-check-certificate -O $(1) $(2)|| rm $(1)
 endef
+else
+define core_http_get
+	erl -noshell -eval 'ssl:start(), inets:start(), case httpc:request(get, {"$(2)", []}, [{autoredirect, true}], []) of {ok, {{_, 200, _}, _, Body}} -> case file:write_file("$(1)", Body) of ok -> ok; {error, R1} -> halt(R1) end; {error, R2} -> halt(R2) end, halt(0).'
+endef
+endif
 
 # Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
@@ -149,7 +155,7 @@ distclean-deps:
 # Packages related targets.
 
 $(PKG_FILE2):
-	$(call core_http_get,$(PKG_FILE2),$(PKG_FILE_URL))
+	@$(call core_http_get,$(PKG_FILE2),$(PKG_FILE_URL))
 
 pkg-list: $(PKG_FILE2)
 	@cat $(PKG_FILE2) | awk 'BEGIN { FS = "\t" }; { print \
@@ -742,3 +748,32 @@ distclean-relx-rel:
 
 distclean-relx:
 	$(gen_verbose) rm -rf $(RELX)
+
+# Copyright (c) 2014, M Robert Martin <rob@version2beta.com>
+# This file is contributed to erlang.mk and subject to the terms of the ISC License.
+
+.PHONY: shell
+
+# Configuration.
+
+SHELL_PATH ?= -pa ../$(PROJECT)/ebin $(DEPS_DIR)/*/ebin
+SHELL_OPTS ?=
+
+ALL_SHELL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(SHELL_DEPS))
+
+# Core targets
+
+help::
+	@printf "%s\n" "" \
+		"Shell targets:" \
+		"  shell              Run an erlang shell with SHELL_OPTS or reasonable default"
+
+# Plugin-specific targets.
+
+$(foreach dep,$(SHELL_DEPS),$(eval $(call dep_target,$(dep))))
+
+build-shell-deps: $(ALL_SHELL_DEPS_DIRS)
+	@for dep in $(ALL_SHELL_DEPS_DIRS) ; do $(MAKE) -C $$dep ; done
+
+shell: build-shell-deps
+	$(gen_verbose) erl $(SHELL_PATH) $(SHELL_OPTS)

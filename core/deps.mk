@@ -81,7 +81,7 @@ distclean-deps:
 # Packages related targets.
 
 $(PKG_FILE2):
-	$(call core_http_get,$(PKG_FILE2),$(PKG_FILE_URL))
+	@$(call core_http_get,$(PKG_FILE2),$(PKG_FILE_URL))
 
 pkg-list: $(PKG_FILE2)
 	@cat $(PKG_FILE2) | awk 'BEGIN { FS = "\t" }; { print \
