@@ -421,7 +421,7 @@ tpl_cowboy_rest = "-module($(n))." \
 	"	{upgrade, protocol, cowboy_rest}." \
 	"" \
 	"content_types_provided(Req, State) ->" \
-	"	{[{{<<\"text\">>, <<\"html\">>, '_'}, get_html}], Req, State}." \
+	"	{[{{<<\"text\">>, <<\"html\">>, '*'}, get_html}], Req, State}." \
 	"" \
 	"get_html(Req, State) ->" \
 	"	{<<\"<html><body>This is REST!</body></html>\">>, Req, State}."
