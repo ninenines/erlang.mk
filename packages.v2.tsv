@@ -15,9 +15,9 @@ eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredi
 erldb	git	https://github.com/erldb/erldb.git	master	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	git	https://github.com/bwegh/erwa	master	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
-esx1024	git	https://github.com/jj1bdx/esx1024	master	https://github.com/jj1bdx/esx1024	Xorshift1024star pseudo random number generator for Erlang.
-esx64	git	https://github.com/jj1bdx/esx64	master	https://github.com/jj1bdx/esx64	Xorshift64star pseudo random number generator for Erlang.
-esxplus	git	https://github.com/jj1bdx/esxplus	master	https://github.com/jj1bdx/esxplus	Xorshift128plus pseudo random number generator for Erlang.
+exs1024	git	https://github.com/jj1bdx/exs1024	master	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
+exs64	git	https://github.com/jj1bdx/exs64	master	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
+exsplus	git	https://github.com/jj1bdx/exsplus	master	https://github.com/jj1bdx/exsplus	Xorshift128plus pseudo random number generator for Erlang.
 gun	git	https://github.com/extend/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 itweet	git	https://github.com/inaka/itweet.git	3.0	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
