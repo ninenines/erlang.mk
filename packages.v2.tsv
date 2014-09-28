@@ -5,8 +5,10 @@ classifier	git	https://github.com/inaka/classifier.git	1	https://github.com/inak
 cowboy	git	https://github.com/ninenines/cowboy	1.0.0	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	git	https://github.com/ninenines/cowlib	1.0.0	http://ninenines.eu	Support library for manipulating Web protocols.
 czmq	git	https://github.com/gar1t/erlang-czmq.git	master	https://github.com/gar1t/erlang-czmq	External port bindings for CZMQ.
+debbie	git	https://github.com/crownedgrouse/debbie.git	master	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
 e2	git	https://github.com/gar1t/e2.git	master	http://e2project.org	Library to simply writing correct OTP applications.
 ebitly	git	https://github.com/inaka/ebitly.git	0.0.1	http://inaka.github.com/ebitly	Bit.ly API wrapper for Erlang
+edgar	git	https://github.com/crownedgrouse/edgar.git	master	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 edis	git	https://github.com/inaka/edis.git	0.2.0	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
 eganglia	git	https://github.com/inaka/eganglia.git	0.9.1	https://github.com/inaka/eganglia.git	Erlang library to interact with Ganglia
 ehsa	hg	https://bitbucket.org/a12n/ehsa	2.0.4	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
