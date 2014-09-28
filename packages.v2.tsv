@@ -4,6 +4,7 @@ cake	git	https://github.com/darach/cake-erl	v0.1.2	https://github.com/darach/cak
 classifier	git	https://github.com/inaka/classifier.git	1	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 cowboy	git	https://github.com/ninenines/cowboy	1.0.0	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	git	https://github.com/ninenines/cowlib	1.0.0	http://ninenines.eu	Support library for manipulating Web protocols.
+debbie	git	https://github.com/crownedgrouse/debbie.git	master	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
 ebitly	git	https://github.com/inaka/ebitly.git	0.0.1	http://inaka.github.com/ebitly	Bit.ly API wrapper for Erlang
 edgar	git	https://github.com/crownedgrouse/edgar.git	master	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 edis	git	https://github.com/inaka/edis.git	0.2.0	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
