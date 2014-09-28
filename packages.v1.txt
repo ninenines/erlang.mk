@@ -5,6 +5,7 @@ classifier	https://github.com/inaka/classifier.git	https://github.com/inaka/clas
 cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	https://github.com/ninenines/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
 ebitly	https://github.com/inaka/ebitly.git	http://inaka.github.com/ebitly	Bit.ly API wrapper for Erlang
+edgar	https://github.com/crownedgrouse/edgar.git	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 edis	https://github.com/inaka/edis.git	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
 eganglia	https://github.com/inaka/eganglia.git	https://github.com/inaka/eganglia.git	Erlang library to interact with Ganglia
 ehsa	https://bitbucket.org/a12n/ehsa	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
