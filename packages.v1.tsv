@@ -4,6 +4,8 @@ cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Reall
 classifier	https://github.com/inaka/classifier.git	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	https://github.com/ninenines/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
+czmq	https://github.com/gar1t/erlang-czmq.git	https://github.com/gar1t/erlang-czmq	External port bindings for CZMQ.
+e2	https://github.com/gar1t/e2.git	http://e2project.org	Library to simply writing correct OTP applications.
 ebitly	https://github.com/inaka/ebitly.git	http://inaka.github.com/ebitly	Bit.ly API wrapper for Erlang
 edis	https://github.com/inaka/edis.git	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
 eganglia	https://github.com/inaka/eganglia.git	https://github.com/inaka/eganglia.git	Erlang library to interact with Ganglia
@@ -31,6 +33,7 @@ mekao	https://github.com/ddosia/mekao.git	https://github.com/ddosia/mekao	SQL co
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 proper	https://github.com/manopapad/proper	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
+psycho	https://github.com/gar1t/psycho.git	https://github.com/gar1t/psycho	HTTP server that provides a WSGI-like interface for applications and middleware.
 ptrackerl	https://github.com/inaka/ptrackerl.git	https://github.com/inaka/ptrackerl.git	Pivotal Tracker API Client written in Erlang
 pusherman	https://github.com/inaka/pusherman.git	https://github.com/inaka/pusherman.git	queuing system for push notifications
 ranch	https://github.com/ninenines/ranch	http://ninenines.eu	Socket acceptor pool for TCP protocols.
@@ -40,6 +43,7 @@ sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform fo
 shotgun	https://github.com/inaka/shotgun.git	https://github.com/inaka/shotgun.git	better than just a gun
 sumo_db	https://github.com/inaka/sumo_db.git	https://github.com/inaka/sumo_db.git	Erlang Persistency Framework
 swab	https://github.com/crownedgrouse/swab.git	https://github.com/crownedgrouse/swab	General purpose buffer handling module
+sync	https://github.com/rustyio/sync.git	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
 zeta	https://github.com/s1n4/zeta	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
