@@ -13,6 +13,7 @@ edis	https://github.com/inaka/edis.git	http://inaka.github.com/edis/	An Erlang i
 eganglia	https://github.com/inaka/eganglia.git	https://github.com/inaka/eganglia.git	Erlang library to interact with Ganglia
 ehsa	https://bitbucket.org/a12n/ehsa	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
 elvis	https://github.com/inaka/elvis.git	https://github.com/inaka/elvis.git	Erlang Style Reviewer
+emysql	https://github.com/Eonblast/Emysql.git	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
 eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	https://github.com/epgsql/epgsql	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 eredis	https://github.com/wooga/eredis	https://github.com/wooga/eredis	Non-blocking Redis client with focus on performance and robustness
