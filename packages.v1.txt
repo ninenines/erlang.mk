@@ -43,6 +43,7 @@ sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform fo
 shotgun	https://github.com/inaka/shotgun.git	https://github.com/inaka/shotgun.git	better than just a gun
 sumo_db	https://github.com/inaka/sumo_db.git	https://github.com/inaka/sumo_db.git	Erlang Persistency Framework
 swab	https://github.com/crownedgrouse/swab.git	https://github.com/crownedgrouse/swab	General purpose buffer handling module
+sync	https://github.com/rustyio/sync.git	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
 zeta	https://github.com/s1n4/zeta	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
