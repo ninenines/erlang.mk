@@ -33,7 +33,7 @@ lasse	git	https://github.com/inaka/lasse.git	0.1.0	https://github.com/inaka/lass
 leptus	git	https://github.com/s1n4/leptus	 	https://github.com/s1n4/leptus	Erlang REST framework
 mekao	git	https://github.com/ddosia/mekao.git	master	https://github.com/ddosia/mekao	SQL constructor
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
-pegjs	git	https://github.com/dmitriid/pegjs	0.2.1	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
+pegjs	git	https://github.com/dmitriid/pegjs	0.3	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
 psycho	git	https://github.com/gar1t/psycho.git	master	https://github.com/gar1t/psycho	HTTP server that provides a WSGI-like interface for applications and middleware.
 ptrackerl	git	https://github.com/inaka/ptrackerl.git	0.2	https://github.com/inaka/ptrackerl.git	Pivotal Tracker API Client written in Erlang
