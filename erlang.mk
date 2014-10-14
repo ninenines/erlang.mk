@@ -178,7 +178,7 @@ pkg-search:
 endif
 
 distclean-pkg:
-	@if [ $(PKG_FILE2) == $(CURDIR)/$(DEFAULT_PKG_FILE) ]; then $(gen_verbose) rm -f $(PKG_FILE2); fi
+	@if [ $(PKG_FILE2) = $(CURDIR)/$(DEFAULT_PKG_FILE) ]; then $(gen_verbose) rm -f $(PKG_FILE2); fi
 
 help::
 	@printf "%s\n" "" \
