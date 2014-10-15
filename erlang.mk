@@ -580,7 +580,7 @@ build-ct-deps: $(ALL_TEST_DEPS_DIRS)
 	@for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
 
 build-ct-suites: build-ct-deps
-	$(gen_verbose) erlc -v $(TEST_ERLC_OPTS) -o test/ \
+	$(gen_verbose) erlc -v $(TEST_ERLC_OPTS) -I include/ -o test/ \
 		$(wildcard test/*.erl test/*/*.erl) -pa ebin/
 
 tests-ct: ERLC_OPTS = $(TEST_ERLC_OPTS)
