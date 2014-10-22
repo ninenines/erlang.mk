@@ -13,6 +13,7 @@ edis	https://github.com/inaka/edis.git	http://inaka.github.com/edis/	An Erlang i
 eganglia	https://github.com/inaka/eganglia.git	https://github.com/inaka/eganglia.git	Erlang library to interact with Ganglia
 ehsa	https://bitbucket.org/a12n/ehsa	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
 elvis	https://github.com/inaka/elvis.git	https://github.com/inaka/elvis.git	Erlang Style Reviewer
+emysql	https://github.com/Eonblast/Emysql.git	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
 eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	https://github.com/epgsql/epgsql	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 eredis	https://github.com/wooga/eredis	https://github.com/wooga/eredis	Non-blocking Redis client with focus on performance and robustness
@@ -22,6 +23,8 @@ erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	A WAMP router a
 exs1024	https://github.com/jj1bdx/exs1024	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
 exs64	https://github.com/jj1bdx/exs64	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
 exsplus	https://github.com/jj1bdx/exsplus	https://github.com/jj1bdx/exsplus	Xorshift128plus pseudo random number generator for Erlang.
+getopt	https://github.com/jcomellas/getopt.git	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
+gproc	https://github.com/uwiger/gproc.git	https://github.com/uwiger/gproc	Extended process registry for Erlang
 gun	https://github.com/extend/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 itweet	https://github.com/inaka/itweet.git	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
@@ -32,6 +35,7 @@ lager	https://github.com/basho/lager	https://github.com/basho/lager	A logging fr
 lasse	https://github.com/inaka/lasse.git	https://github.com/inaka/lasse.git	SSE handler for Cowboy
 leptus	https://github.com/s1n4/leptus	https://github.com/s1n4/leptus	Erlang REST framework
 mekao	https://github.com/ddosia/mekao.git	https://github.com/ddosia/mekao	SQL constructor
+modlib	https://github.com/gar1t/modlib.git	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 proper	https://github.com/manopapad/proper	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.

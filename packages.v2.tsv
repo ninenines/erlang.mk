@@ -13,6 +13,7 @@ edis	git	https://github.com/inaka/edis.git	0.2.0	http://inaka.github.com/edis/	A
 eganglia	git	https://github.com/inaka/eganglia.git	0.9.1	https://github.com/inaka/eganglia.git	Erlang library to interact with Ganglia
 ehsa	hg	https://bitbucket.org/a12n/ehsa	2.0.4	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
 elvis	git	https://github.com/inaka/elvis.git	0.1.0-alpha	https://github.com/inaka/elvis.git	Erlang Style Reviewer
+emysql	git	https://github.com/Eonblast/Emysql.git	master	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredis	Non-blocking Redis client with focus on performance and robustness
@@ -22,6 +23,8 @@ erwa	git	https://github.com/bwegh/erwa	master	https://github.com/bwegh/erwa	A WA
 exs1024	git	https://github.com/jj1bdx/exs1024	master	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
 exs64	git	https://github.com/jj1bdx/exs64	master	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
 exsplus	git	https://github.com/jj1bdx/exsplus	master	https://github.com/jj1bdx/exsplus	Xorshift128plus pseudo random number generator for Erlang.
+getopt	git	https://github.com/jcomellas/getopt.git	master	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
+gproc	git	https://github.com/uwiger/gproc.git	master	https://github.com/uwiger/gproc	Extended process registry for Erlang
 gun	git	https://github.com/extend/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 itweet	git	https://github.com/inaka/itweet.git	3.0	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
@@ -32,6 +35,7 @@ lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A
 lasse	git	https://github.com/inaka/lasse.git	0.1.0	https://github.com/inaka/lasse.git	SSE handler for Cowboy
 leptus	git	https://github.com/s1n4/leptus	 	https://github.com/s1n4/leptus	Erlang REST framework
 mekao	git	https://github.com/ddosia/mekao.git	master	https://github.com/ddosia/mekao	SQL constructor
+modlib	git	https://github.com/gar1t/modlib.git	master	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 pegjs	git	https://github.com/dmitriid/pegjs	0.3	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
