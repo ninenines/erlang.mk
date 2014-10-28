@@ -72,6 +72,15 @@ DEPS = cowboy
 include erlang.mk
 ```
 
+If you need to specify multiple dependencies, you can specify each
+of them separated by spaces:
+
+``` Makefile
+PROJECT = my_project
+DEPS = cowboy gun
+include erlang.mk
+```
+
 If the project you want is not included in the package index, or if
 you want a different version, a few options are available. You can
 edit the package file and contribute to it by opening a pull request.
