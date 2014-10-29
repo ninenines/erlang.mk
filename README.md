@@ -358,6 +358,33 @@ This plugin is available by default. It adds automatic
 compilation of ErlyDTL templates found in `templates/*.dtl`
 or any subdirectory.
 
+Escript plugin
+--------------
+
+This plugin is available by default. It adds the following
+target:
+
+`escript` which creates a shell-executable archive named
+the same as your `$(PROJECT)`, containing the following files
+from your application and its dependencies:
+
+* `*.beam`
+* contents of `priv/`
+* `sys.config` for your application
+
+There are a number of optional configuration parameters:
+
+* `ESCRIPT_NAME` if a different output file is required
+* `ESCRIPT_COMMENT` to alter the comment line in the escript header
+* `ESCRIPT_BEAMS` for the paths searched for `*.beam` files to include
+* `ESCRIPT_SYS_CONFIG` defaults to `rel/sys.config`
+* `ESCRIPT_EMU_ARGS` for the parameters used to start the VM
+* `ESCRIPT_SHEBANG` for the line used by your shell to start `escript`
+* `ESCRIPT_STATIC` for non-beam directories to be included as well
+
+Refer to http://www.erlang.org/doc/man/escript.html for
+more information on `escript` functionality in general.
+
 Relx plugin
 -----------
 
