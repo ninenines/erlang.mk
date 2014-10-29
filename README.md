@@ -215,6 +215,10 @@ variable. It takes the arguments that will then be passed to
 You can specify a list of modules to be compiled first using
 the `COMPILE_FIRST` variable.
 
+If `{id, "git"},` is found in your project's `.app.src`, the
+extended output of `git describe ...` will replace it. This
+can be retrieved at runtime via `application:get_key/2`.
+
 Bootstrap plugin
 ----------------
 
