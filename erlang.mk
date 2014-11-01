@@ -656,6 +656,28 @@ dialyze: $(DIALYZER_PLT)
 endif
 	@dialyzer --no_native --src -r src $(DIALYZER_OPTS)
 
+# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
+# This file is part of erlang.mk and subject to the terms of the ISC License.
+
+.PHONY: distclean-edoc
+
+# Configuration.
+
+EDOC_OPTS ?=
+
+# Core targets.
+
+docs:: distclean-edoc
+	$(gen_verbose) erl -noshell \
+		-eval 'edoc:application($(PROJECT), ".", [$(EDOC_OPTS)]), init:stop().'
+
+distclean:: distclean-edoc
+
+# Plugin-specific targets.
+
+distclean-edoc:
+	$(gen_verbose) rm -f doc/*.css doc/*.html doc/*.png doc/edoc-info
+
 # Copyright (c) 2014, Juan Facorro <juan@inaka.net>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
@@ -723,28 +745,6 @@ ifneq ($(wildcard src/),)
 ebin/$(PROJECT).app:: $(shell find templates -type f -name \*.dtl 2>/dev/null)
 	$(if $(strip $?),$(call compile_erlydtl,$?))
 endif
-
-# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
-# This file is part of erlang.mk and subject to the terms of the ISC License.
-
-.PHONY: distclean-edoc
-
-# Configuration.
-
-EDOC_OPTS ?=
-
-# Core targets.
-
-docs:: distclean-edoc
-	$(gen_verbose) erl -noshell \
-		-eval 'edoc:application($(PROJECT), ".", [$(EDOC_OPTS)]), init:stop().'
-
-distclean:: distclean-edoc
-
-# Plugin-specific targets.
-
-distclean-edoc:
-	$(gen_verbose) rm -f doc/*.css doc/*.html doc/*.png doc/edoc-info
 
 # Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
