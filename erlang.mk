@@ -176,8 +176,10 @@ pkg-search:
 	$(error Usage: make pkg-search q=STRING)
 endif
 
+ifeq ($(PKG_FILE2),$(CURDIR)/.erlang.mk.packages.v2)
 distclean-pkg:
 	$(gen_verbose) rm -f $(PKG_FILE2)
+endif
 
 help::
 	@printf "%s\n" "" \
