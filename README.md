@@ -301,7 +301,10 @@ included in the PLT file. There is no need to specify `erts`,
 are automatically added.
 
 Dialyzer options can be modified by defining the `DIALYZER_OPTS`
-variable. For more information please see `erl -man dialyzer`.
+variable. The directories to be analyzed can be overriden using
+the `DIALYZER_DIRS` variable. It defaults to analyzing source
+files recursively found in `src/`. For more information please
+see `erl -man dialyzer`.
 
 EDoc plugin
 -----------
