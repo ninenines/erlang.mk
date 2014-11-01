@@ -23,7 +23,11 @@ PROJECT := $(strip $(PROJECT))
 
 # Verbosity.
 
+ifneq (,$(findstring s,$(MAKEFLAGS)))
 V ?= 0
+else
+V ?= 1
+endif
 
 gen_verbose_0 = @echo " GEN   " $@;
 gen_verbose = $(gen_verbose_$(V))
