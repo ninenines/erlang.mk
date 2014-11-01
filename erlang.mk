@@ -96,7 +96,8 @@ endif
 endif
 export ERL_LIBS
 
-PKG_FILE2 ?= $(CURDIR)/.erlang.mk.packages.v2
+DEFAULT_PKG_FILE = .erlang.mk.packages.v2
+PKG_FILE2 ?= $(CURDIR)/$(DEFAULT_PKG_FILE)
 export PKG_FILE2
 
 PKG_FILE_URL ?= https://raw.githubusercontent.com/ninenines/erlang.mk/master/packages.v2.tsv
@@ -177,7 +178,7 @@ pkg-search:
 endif
 
 distclean-pkg:
-	$(gen_verbose) rm -f $(PKG_FILE2)
+	@if [ $(PKG_FILE2) = $(CURDIR)/$(DEFAULT_PKG_FILE) ]; then $(gen_verbose) rm -f $(PKG_FILE2); fi
 
 help::
 	@printf "%s\n" "" \
