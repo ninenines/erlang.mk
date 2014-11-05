@@ -26,7 +26,8 @@ distclean:: distclean-ct
 help::
 	@printf "%s\n" "" \
 		"All your common_test suites have their associated targets." \
-		"A suite named http_SUITE can be ran using the ct-http target."
+		"A suite named http_SUITE can be ran using the ct-http target." \
+		"Add test/cover.spec as cover spec for common_test."
 
 # Plugin-specific targets.
 
@@ -38,6 +39,10 @@ CT_RUN = ct_run \
 	-pa $(realpath ebin) $(DEPS_DIR)/*/ebin \
 	-dir test \
 	-logdir logs
+
+ifneq ($(wildcard test/cover.spec),)
+	CT_RUN += -cover test/cover.spec
+endif
 
 $(foreach dep,$(TEST_DEPS),$(eval $(call dep_target,$(dep))))
 
