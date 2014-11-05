@@ -219,6 +219,22 @@ If `{id, "git"},` is found in your project's `.app.src`, the
 extended output of `git describe ...` will replace it. This
 can be retrieved at runtime via `application:get_key/2`.
 
+Updating erlang.mk
+------------------
+
+You can update erlang.mk by running `make erlang-mk`. This automated
+update will always take the latest erlang.mk version, compile it and
+replace the erlang.mk of your project with the updated version.
+
+If your project includes a `build.config`, erlang.mk will use it
+when building the updated version.
+
+The `ERLANG_MK_BUILD_CONFIG` variable can be used to rename the
+`build.config` file.
+
+The `ERLANG_MK_BUILD_DIR` variable contains the path to the
+temporary directory used to build the updated erlang.mk.
+
 Bootstrap plugin
 ----------------
 
