@@ -331,6 +331,21 @@ EDoc options can be specified in Erlang format by defining
 the `EDOC_OPTS` variable. For more information please see
 `erl -man edoc`.
 
+Elvis plugin
+------------
+
+This plugin is available by default. It adds the following
+target:
+
+`elvis` runs Elvis style checker for this application.
+
+The `ELVIS_CONFIG` variable specifies the location of the
+configuration file which holds the rules to be applied.
+If there's no `elvis.config` file the default one will be
+downloaded. When the `ELVIS` variable points to a non-existing
+file then the `elvis` executable will be downloaded as well.
+Any other option should go in the `ELVIS_OPTS` variable.
+
 ErlyDTL plugin
 --------------
 
