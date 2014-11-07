@@ -8,8 +8,9 @@
 CT_OPTS ?=
 CT_SUITES ?=
 
+EXTRA_ERLC_OPTS ?=
 TEST_ERLC_OPTS ?= +debug_info +warn_export_vars +warn_shadow_vars +warn_obsolete_guard
-TEST_ERLC_OPTS += -DTEST=1 -DEXTRA=1 +'{parse_transform, eunit_autoexport}'
+TEST_ERLC_OPTS += -DTEST=1 -DEXTRA=1 +'{parse_transform, eunit_autoexport}' $(EXTRA_ERLC_OPTS)
 
 # Core targets.
 
