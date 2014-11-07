@@ -166,6 +166,11 @@ to an empty value to make commands verbose.
 `ERLC_OPTS` allows you to change the `erlc` compilation
 options. You should always compile with at least the `+debug_info` set.
 
+`EXTRA_ERLC_OPTS` allows you to add items to the basic, standard 
+predefined set of compiler options that erlang.mk provides, for example
+to add +'{parse_transform, lager_transform}' if you use the popular
+lager logging library.
+
 `COMPILE_FIRST` is a list of modules (not filenames) that should be
 compiled before all others.
 
