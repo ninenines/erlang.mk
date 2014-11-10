@@ -49,6 +49,25 @@ define dep_fetch
 	elif [ "$$$$VS" = "hg" ]; then \
 		hg clone -U $$$$REPO $(DEPS_DIR)/$(1); \
 		cd $(DEPS_DIR)/$(1) && hg update -q $$$$COMMIT; \
+	elif [ "$$$$VS" = "svn" ]; then \
+		if [ "$$$$COMMIT" = "-" ]; then \
+			svn co $$$$REPO $(DEPS_DIR)/$(1); \
+		else \
+			echo "For dependency $(1), specify branch or tag as part of repo $$$$REPO, and use '-' for the commit." >&2; \
+			exit 78; \
+		fi; \
+	elif [ "$$$$VS" = "present" ]; then \
+		if [ "$$$$REPO" = "-" -a "$$$$COMMIT" = "-" ]; then \
+			if [ -d $(DEPS_DIR)/$(1) ]; then \
+				true; \
+			else \
+				echo "Missing dependency: $(1). You'll need to fetch this yourself." >&2; \
+				exit 78; \
+			fi; \
+		else \
+			echo "For dependency $(1), specify both REPO and COMMIT as '-'." >&2; \
+			exit 78; \
+		fi; \
 	else \
 		echo "Unknown or invalid dependency: $(1). Please consult the erlang.mk README for instructions." >&2; \
 		exit 78; \
