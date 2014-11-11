@@ -198,13 +198,16 @@ ERLC_OPTS ?= -Werror +debug_info +warn_export_all +warn_export_vars \
 	+warn_shadow_vars +warn_obsolete_guard # +bin_opt_info +warn_missing_spec
 COMPILE_FIRST ?=
 COMPILE_FIRST_PATHS = $(addprefix src/,$(addsuffix .erl,$(COMPILE_FIRST)))
+ERLC_EXCLUDE ?=
+ERLC_EXCLUDE_PATHS = $(addprefix src/,$(addsuffix .erl,$(ERLC_EXCLUDE)))
 
 # Verbosity.
 
 appsrc_verbose_0 = @echo " APP   " $(PROJECT).app.src;
 appsrc_verbose = $(appsrc_verbose_$(V))
 
-erlc_verbose_0 = @echo " ERLC  " $(filter %.erl %.core,$(?F));
+erlc_verbose_0 = @echo " ERLC  " $(filter-out $(patsubst %,%.erl,$(ERLC_EXCLUDE)),\
+	$(filter %.erl %.core,$(?F)));
 erlc_verbose = $(erlc_verbose_$(V))
 
 xyrl_verbose_0 = @echo " XYRL  " $(filter %.xrl %.yrl,$(?F));
@@ -227,7 +230,8 @@ app:: erlc-include ebin/$(PROJECT).app
 
 define compile_erl
 	$(erlc_verbose) erlc -v $(ERLC_OPTS) -o ebin/ \
-		-pa ebin/ -I include/ $(COMPILE_FIRST_PATHS) $(1)
+		-pa ebin/ -I include/ $(filter-out $(ERLC_EXCLUDE_PATHS),\
+		$(COMPILE_FIRST_PATHS) $(1))
 endef
 
 define compile_xyrl
