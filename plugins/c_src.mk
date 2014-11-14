@@ -7,9 +7,12 @@
 # Configuration.
 
 C_SRC_DIR = $(CURDIR)/c_src
-C_SRC_ENV ?= $(C_SRC_DIR)/env.mk
-C_SRC_OPTS ?=
+C_SRC_OPTS ?= -fPIC -shared -I $(ERTS_INCLUDE)
 C_SRC_OUTPUT ?= $(CURDIR)/priv/$(PROJECT).so
+
+ERTS_INCLUDE ?= $(shell erl -noshell -noinput -eval "\
+		io:format(\"~s/erts-~s/include/\", [code:root_dir(), erlang:system_info(version)]),\
+		init:stop()."))
 
 # System type and C compiler/flags.
 
@@ -34,18 +37,10 @@ c_src_verbose = $(appsrc_verbose_$(V))
 
 ifeq ($(wildcard $(C_SRC_DIR)/Makefile),)
 
-app:: $(C_SRC_ENV)
+app::
 	@mkdir -p priv/
-	$(c_src_verbose) $(CC) $(CFLAGS) $(C_SRC_DIR)/*.c -fPIC -shared -o $(C_SRC_OUTPUT) \
-		-I $(ERTS_INCLUDE_DIR) $(C_SRC_OPTS)
-
-$(C_SRC_ENV):
-	erl -noshell -noinput -eval "file:write_file(\"$(C_SRC_ENV)\", \
-		io_lib:format(\"ERTS_INCLUDE_DIR ?= ~s/erts-~s/include/\", \
-			[code:root_dir(), erlang:system_info(version)])), \
-		init:stop()."
-
--include $(C_SRC_ENV)
+	$(c_src_verbose) $(CC) $(CFLAGS) $(C_SRC_DIR)/*.c -o $(C_SRC_OUTPUT) \
+		$(C_SRC_OPTS)
 
 else
 ifneq ($(wildcard $(C_SRC_DIR)),)
@@ -62,4 +57,4 @@ endif
 clean:: clean-c_src
 
 clean-c_src:
-	$(gen_verbose) rm -f $(C_SRC_ENV) $(C_SRC_OUTPUT)
+	$(gen_verbose) rm -f $(C_SRC_OUTPUT)
