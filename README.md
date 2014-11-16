@@ -351,7 +351,14 @@ ErlyDTL plugin
 
 This plugin is available by default. It adds automatic
 compilation of ErlyDTL templates found in `templates/*.dtl`
-or any subdirectory.
+or any subdirectory. 
+
+By default it ignores names of subdirectories and compiles 
+`a/b/templatename.dtl` into `templatename_dtl.beam`. To include 
+subdirectories names in the compiled module name add 
+`DTL_FULL_PATH=1` into your Makefile - `a/b/templatename.dtl`
+will be compiled into `a_b_templatename_dtl.beam`.
+
 
 Relx plugin
 -----------
