@@ -37,8 +37,15 @@ c_src_verbose = $(c_src_verbose_$(V))
 
 # Targets.
 
-ifeq ($(wildcard $(C_SRC_DIR)/Makefile),)
+ifeq ($(wildcard $(C_SRC_DIR)),)
+else ifneq ($(wildcard $(C_SRC_DIR)/Makefile),)
+app::
+	$(MAKE) -C $(C_SRC_DIR)
 
+clean::
+	$(MAKE) -C $(C_SRC_DIR) clean
+
+else
 app:: $(C_SRC_ENV)
 	@mkdir -p priv/
 	$(c_src_verbose) $(CC) $(CFLAGS) $(C_SRC_DIR)/*.c \
@@ -55,21 +62,10 @@ $(C_SRC_ENV):
 			code:lib_dir(erl_interface, lib)])), \
 		erlang:halt()."
 
--include $(C_SRC_ENV)
-
-else
-ifneq ($(wildcard $(C_SRC_DIR)),)
-
-app::
-	$(MAKE) -C $(C_SRC_DIR)
-
-clean::
-	$(MAKE) -C $(C_SRC_DIR) clean
-
-endif
-endif
-
 clean:: clean-c_src
 
 clean-c_src:
 	$(gen_verbose) rm -f $(C_SRC_ENV) $(C_SRC_OUTPUT)
+
+-include $(C_SRC_ENV)
+endif
