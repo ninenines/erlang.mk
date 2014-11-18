@@ -46,9 +46,13 @@ clean::
 	$(MAKE) -C $(C_SRC_DIR) clean
 
 else
-app:: $(C_SRC_ENV)
+SOURCE := $(shell find $(C_SRC_DIR) -type f -name \*.c)
+
+app:: $(C_SRC_ENV) $(C_SRC_OUTPUT)
+
+$(C_SRC_OUTPUT): $(SOURCE)
 	@mkdir -p priv/
-	$(c_src_verbose) $(CC) $(CFLAGS) $(C_SRC_DIR)/*.c \
+	$(c_src_verbose) $(CC) $(CFLAGS) $(SOURCE) \
 		$(LDFLAGS) $(LDLIBS) -o $(C_SRC_OUTPUT) $(C_SRC_OPTS)
 
 $(C_SRC_ENV):
