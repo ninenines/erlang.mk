@@ -1,7 +1,7 @@
 # Copyright (c) 2014, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: clean-c_src
+.PHONY: clean-c_src distclean-c_src-env
 # todo
 
 # Configuration.
@@ -69,7 +69,12 @@ $(C_SRC_ENV):
 clean:: clean-c_src
 
 clean-c_src:
-	$(gen_verbose) rm -f $(C_SRC_ENV) $(C_SRC_OUTPUT)
+	$(gen_verbose) rm -f $(C_SRC_OUTPUT)
+
+distclean:: distclean-c_src-env
+
+distclean-c_src-env:
+	$(gen_verbose) rm -f $(C_SRC_ENV)
 
 -include $(C_SRC_ENV)
 endif
