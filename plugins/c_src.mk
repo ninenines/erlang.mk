@@ -43,7 +43,7 @@ $(C_SRC_ENV):
 	erl -noshell -noinput -eval "file:write_file(\"$(C_SRC_ENV)\", \
 		io_lib:format(\"ERTS_INCLUDE_DIR ?= ~s/erts-~s/include/\", \
 			[code:root_dir(), erlang:system_info(version)])), \
-		init:stop()."
+		erlang:halt()."
 
 -include $(C_SRC_ENV)
 
