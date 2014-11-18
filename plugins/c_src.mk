@@ -25,10 +25,15 @@ else ifeq ($(UNAME_SYS), Linux)
 	CFLAGS ?= -O3 -std=c99 -finline-functions -Wall -Wmissing-prototypes
 endif
 
+CFLAGS += -fPIC -I $(ERTS_INCLUDE_DIR) -I $(ERL_INTERFACE_INCLUDE_DIR)
+
+LDLIBS += -L $(ERL_INTERFACE_LIB_DIR) -lerl_interface -lei
+LDFLAGS += -shared
+
 # Verbosity.
 
 c_src_verbose_0 = @echo " C_SRC " $(?F);
-c_src_verbose = $(appsrc_verbose_$(V))
+c_src_verbose = $(c_src_verbose_$(V))
 
 # Targets.
 
@@ -36,13 +41,18 @@ ifeq ($(wildcard $(C_SRC_DIR)/Makefile),)
 
 app:: $(C_SRC_ENV)
 	@mkdir -p priv/
-	$(c_src_verbose) $(CC) $(CFLAGS) $(C_SRC_DIR)/*.c -fPIC -shared -o $(C_SRC_OUTPUT) \
-		-I $(ERTS_INCLUDE_DIR) $(C_SRC_OPTS)
+	$(c_src_verbose) $(CC) $(CFLAGS) $(C_SRC_DIR)/*.c \
+		$(LDFLAGS) $(LDLIBS) -o $(C_SRC_OUTPUT) $(C_SRC_OPTS)
 
 $(C_SRC_ENV):
-	erl -noshell -noinput -eval "file:write_file(\"$(C_SRC_ENV)\", \
-		io_lib:format(\"ERTS_INCLUDE_DIR ?= ~s/erts-~s/include/\", \
-			[code:root_dir(), erlang:system_info(version)])), \
+	@erl -noshell -noinput -eval "file:write_file(\"$(C_SRC_ENV)\", \
+		io_lib:format( \
+			\"ERTS_INCLUDE_DIR ?= ~s/erts-~s/include/~n\" \
+			\"ERL_INTERFACE_INCLUDE_DIR ?= ~s~n\" \
+			\"ERL_INTERFACE_LIB_DIR ?= ~s~n\", \
+			[code:root_dir(), erlang:system_info(version), \
+			code:lib_dir(erl_interface, include), \
+			code:lib_dir(erl_interface, lib)])), \
 		erlang:halt()."
 
 -include $(C_SRC_ENV)
