@@ -12,6 +12,10 @@ COMPILE_FIRST_PATHS = $(addprefix src/,$(addsuffix .erl,$(COMPILE_FIRST)))
 ERLC_EXCLUDE ?=
 ERLC_EXCLUDE_PATHS = $(addprefix src/,$(addsuffix .erl,$(ERLC_EXCLUDE)))
 
+ERLC_MIB_OPTS ?=
+COMPILE_MIB_FIRST ?=
+COMPILE_MIB_FIRST_PATHS = $(addprefix mibs/,$(addsuffix .mib,$(COMPILE_MIB_FIRST)))
+
 # Verbosity.
 
 appsrc_verbose_0 = @echo " APP   " $(PROJECT).app.src;
@@ -23,6 +27,9 @@ erlc_verbose = $(erlc_verbose_$(V))
 
 xyrl_verbose_0 = @echo " XYRL  " $(filter %.xrl %.yrl,$(?F));
 xyrl_verbose = $(xyrl_verbose_$(V))
+
+mib_verbose_0 = @echo " MIB   " $(filter %.bin %.mib,$(?F));
+mib_verbose = $(mib_verbose_$(V))
 
 # Core targets.
 
@@ -51,9 +58,19 @@ define compile_xyrl
 	@rm ebin/*.erl
 endef
 
+define compile_mib
+	$(mib_verbose) erlc -v $(ERLC_MIB_OPTS) -o priv/mibs/ \
+		-I priv/mibs/ $(COMPILE_MIB_FIRST_PATHS) $(1)
+	$(mib_verbose) erlc -o include/ -- priv/mibs/*.bin
+endef
+
 ifneq ($(wildcard src/),)
 ebin/$(PROJECT).app::
 	@mkdir -p ebin/
+
+ebin/$(PROJECT).app:: $(shell find mibs -type f -name \*.mib)
+	@mkdir -p priv/mibs/ include
+	$(if $(strip $?),$(call compile_mib,$?))
 
 ebin/$(PROJECT).app:: $(shell find src -type f -name \*.erl) \
 		$(shell find src -type f -name \*.core)
@@ -74,4 +91,5 @@ erlc-include:
 	fi
 
 clean-app:
-	$(gen_verbose) rm -rf ebin/
+	$(gen_verbose) rm -rf ebin/ priv/mibs/
+	$(gen_verbose) rm -f $(addprefix include/,$(addsuffix .hrl,$(notdir $(basename $(wildcard mibs/*.mib)))))
