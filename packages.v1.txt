@@ -26,6 +26,7 @@ exsplus	https://github.com/jj1bdx/exsplus	https://github.com/jj1bdx/exsplus	Xors
 getopt	https://github.com/jcomellas/getopt.git	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gproc	https://github.com/uwiger/gproc.git	https://github.com/uwiger/gproc	Extended process registry for Erlang
 gun	https://github.com/extend/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
+hanoidb	https://github.com/krestenkrab/hanoidb	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 itweet	https://github.com/inaka/itweet.git	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
 jiffy	https://github.com/davisp/jiffy	https://github.com/davisp/jiffy	JSON NIFs for Erlang.

@@ -26,6 +26,7 @@ exsplus	git	https://github.com/jj1bdx/exsplus	master	https://github.com/jj1bdx/e
 getopt	git	https://github.com/jcomellas/getopt.git	master	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gproc	git	https://github.com/uwiger/gproc.git	master	https://github.com/uwiger/gproc	Extended process registry for Erlang
 gun	git	https://github.com/extend/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
+hanoidb	git	https://github.com/krestenkrab/hanoidb	master	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 itweet	git	https://github.com/inaka/itweet.git	3.0	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
 jiffy	git	https://github.com/davisp/jiffy	master	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
