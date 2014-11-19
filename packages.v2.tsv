@@ -30,6 +30,7 @@ hanoidb	git	https://github.com/krestenkrab/hanoidb	master	https://github.com/kre
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 itweet	git	https://github.com/inaka/itweet.git	3.0	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
 jiffy	git	https://github.com/davisp/jiffy	master	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
+jiffy_v	git	https://github.com/shizzard/jiffy-v	0.3.3	https://github.com/shizzard/jiffy-v	JSON validation utility
 jsx	git	https://github.com/talentdeficit/jsx	master	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 katja	git	https://github.com/nifoc/katja	master	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A logging framework for Erlang/OTP.
@@ -53,4 +54,5 @@ swab	git	https://github.com/crownedgrouse/swab.git	master	https://github.com/cro
 sync	git	https://github.com/rustyio/sync.git	master	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 tddreloader	git	https://github.com/version2beta/tddreloader	master	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tinymt-erlang	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+unicorn	git	https://github.com/shizzard/unicorn	0.3.0	https://github.com/shizzard/unicorn	Generic configuration server
 zeta	git	https://github.com/s1n4/zeta	 	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
