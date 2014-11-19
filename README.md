@@ -260,7 +260,7 @@ templates.
 C compiler plugin
 -----------------
 
-This plugin is not included by default. It is meant to
+This plugin is available by default. It is meant to
 simplify the management of projects that include C source
 code, like NIFs.
 
