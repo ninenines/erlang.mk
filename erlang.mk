@@ -269,9 +269,11 @@ ifneq ($(wildcard src/),)
 ebin/$(PROJECT).app::
 	@mkdir -p ebin/
 
+ifneq ($(wildcard mibs/),)
 ebin/$(PROJECT).app:: $(shell find mibs -type f -name \*.mib)
 	@mkdir -p priv/mibs/ include
 	$(if $(strip $?),$(call compile_mib,$?))
+endif
 
 ebin/$(PROJECT).app:: $(shell find src -type f -name \*.erl) \
 		$(shell find src -type f -name \*.core)
