@@ -53,4 +53,5 @@ swab	https://github.com/crownedgrouse/swab.git	https://github.com/crownedgrouse/
 sync	https://github.com/rustyio/sync.git	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+unicorn	https://github.com/shizzard/unicorn	https://github.com/shizzard/unicorn	Generic configuration server
 zeta	https://github.com/s1n4/zeta	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
