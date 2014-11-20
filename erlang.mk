@@ -585,7 +585,6 @@ list-templates:
 
 C_SRC_DIR = $(CURDIR)/c_src
 C_SRC_ENV ?= $(C_SRC_DIR)/env.mk
-C_SRC_OPTS ?=
 C_SRC_OUTPUT ?= $(CURDIR)/priv/$(PROJECT).so
 
 # System type and C compiler/flags.
@@ -636,8 +635,8 @@ else
 SOURCES := $(shell find $(C_SRC_DIR) -type f -regex ".*\.\(C\|cc?\|cpp\)")
 OBJECTS = $(addsuffix .o, $(basename $(SOURCES)))
 
-COMPILE_C = $(c_verbose) $(CC) $(CFLAGS) $(CPPFLAGS) $(C_SRC_OPTS) -c
-COMPILE_CPP = $(cpp_verbose) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(C_SRC_OPTS) -c
+COMPILE_C = $(c_verbose) $(CC) $(CFLAGS) $(CPPFLAGS) -c
+COMPILE_CPP = $(cpp_verbose) $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c
 
 app:: $(C_SRC_ENV) $(C_SRC_OUTPUT)
 
