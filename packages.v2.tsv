@@ -36,6 +36,7 @@ katja	git	https://github.com/nifoc/katja	master	https://github.com/nifoc/katja	A
 lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A logging framework for Erlang/OTP.
 lasse	git	https://github.com/inaka/lasse.git	0.1.0	https://github.com/inaka/lasse.git	SSE handler for Cowboy
 leptus	git	https://github.com/s1n4/leptus	 	https://github.com/s1n4/leptus	Erlang REST framework
+live	git	https://github.com/ninenines/live	master	http://ninenines.eu	Automated module and configuration reloader.
 mekao	git	https://github.com/ddosia/mekao.git	master	https://github.com/ddosia/mekao	SQL constructor
 modlib	git	https://github.com/gar1t/modlib.git	master	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.

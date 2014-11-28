@@ -36,6 +36,7 @@ katja	https://github.com/nifoc/katja	https://github.com/nifoc/katja	A simple Rie
 lager	https://github.com/basho/lager	https://github.com/basho/lager	A logging framework for Erlang/OTP.
 lasse	https://github.com/inaka/lasse.git	https://github.com/inaka/lasse.git	SSE handler for Cowboy
 leptus	https://github.com/s1n4/leptus	https://github.com/s1n4/leptus	Erlang REST framework
+live	https://github.com/ninenines/live	http://ninenines.eu	Automated module and configuration reloader.
 mekao	https://github.com/ddosia/mekao.git	https://github.com/ddosia/mekao	SQL constructor
 modlib	https://github.com/gar1t/modlib.git	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
