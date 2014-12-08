@@ -901,14 +901,14 @@ endif
 ESCRIPT_NAME ?= $(PROJECT)
 ESCRIPT_COMMENT ?= This is an -*- erlang -*- file
 
-ESCRIPT_BEAMS ?= "ebin/*", "deps/*/ebin/*"
+ESCRIPT_BEAMS ?= "$(realpath ebin)/*", "$(DEPS_DIR)/*/ebin/*"
 ESCRIPT_SYS_CONFIG ?= "rel/sys.config"
 ESCRIPT_EMU_ARGS ?= -pa . \
 	-noshell -noinput  \
 	-sasl errlog_type error \
 	-escript main $(ESCRIPT_NAME)
 ESCRIPT_SHEBANG ?= /usr/bin/env escript
-ESCRIPT_STATIC ?= "deps/*/priv/**", "priv/**"
+ESCRIPT_STATIC ?= "$(DEPS_DIR)/*/priv/**", "$(realpath priv)/**"
 
 # Core targets.
 
