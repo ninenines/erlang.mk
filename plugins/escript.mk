@@ -6,6 +6,7 @@
 # Configuration.
 
 ESCRIPT_NAME ?= $(PROJECT)
+ESCRIPT_MAIN_MODULE ?= $(PROJECT)
 ESCRIPT_COMMENT ?= This is an -*- erlang -*- file
 
 ESCRIPT_BEAMS ?= "$(realpath ebin)/*", "$(DEPS_DIR)/*/ebin/*"
@@ -13,7 +14,7 @@ ESCRIPT_SYS_CONFIG ?= "rel/sys.config"
 ESCRIPT_EMU_ARGS ?= -pa . \
 	-noshell -noinput  \
 	-sasl errlog_type error \
-	-escript main $(ESCRIPT_NAME)
+	-escript main $(ESCRIPT_MAIN_MODULE)
 ESCRIPT_SHEBANG ?= /usr/bin/env escript
 ESCRIPT_STATIC ?= "$(DEPS_DIR)/*/priv/**", "$(realpath priv)/**"
 
