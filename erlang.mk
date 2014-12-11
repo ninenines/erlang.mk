@@ -290,7 +290,9 @@ clean:: clean-app
 
 erlc-include:
 	-@if [ -d ebin/ ]; then \
-		find include/ src/ -type f -name \*.hrl -newer ebin -exec touch $(shell find src/ -type f -name "*.erl") \; 2>/dev/null || printf ''; \
+		if [ ! -z "`find include/ src/ -type f -name \*.hrl -newer ebin 2> /dev/null`" ]; then \
+			touch -t 0001010000 ebin/*.app; \
+		fi \
 	fi
 
 clean-app:
@@ -1010,7 +1012,7 @@ distclean-relx:
 
 # Configuration.
 
-SHELL_PATH ?= -pa ../$(PROJECT)/ebin $(DEPS_DIR)/*/ebin
+SHELL_PATH ?= -pa ./ebin $(DEPS_DIR)/*/ebin
 SHELL_OPTS ?=
 
 ALL_SHELL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(SHELL_DEPS))
