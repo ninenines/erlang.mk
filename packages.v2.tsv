@@ -23,6 +23,7 @@ erwa	git	https://github.com/bwegh/erwa	master	https://github.com/bwegh/erwa	A WA
 exs1024	git	https://github.com/jj1bdx/exs1024	master	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
 exs64	git	https://github.com/jj1bdx/exs64	master	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
 exsplus	git	https://github.com/jj1bdx/exsplus	master	https://github.com/jj1bdx/exsplus	Xorshift128plus pseudo random number generator for Erlang.
+feeder	git	https://github.com/michaelnisi/feeder	1.4.2	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
 getopt	git	https://github.com/jcomellas/getopt.git	master	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gproc	git	https://github.com/uwiger/gproc.git	master	https://github.com/uwiger/gproc	Extended process registry for Erlang
 gun	git	https://github.com/extend/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
