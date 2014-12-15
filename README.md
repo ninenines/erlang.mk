@@ -385,6 +385,23 @@ There are a number of optional configuration parameters:
 Refer to http://www.erlang.org/doc/man/escript.html for
 more information on `escript` functionality in general.
 
+EUnit plugin
+------------
+
+This plugin is available by default. It adds the following
+target:
+
+`eunit` which runs all the EUnit tests found in `ebin` and
+any of the additional EUnit directories specified in
+`EUNIT_DIR`.
+
+`EUNIT_OPTS` can be used to specify EUnit-specific options
+(e.g. `verbose`) that will be used when calling
+`eunit:test/2`. This configuration parameter defaults to
+`verbose`. Note
+that EUnit options are specified as a comma-separated
+list of options.
+
 Relx plugin
 -----------
 
