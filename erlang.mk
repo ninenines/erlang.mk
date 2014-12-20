@@ -244,6 +244,7 @@ app:: erlc-include ebin/$(PROJECT).app
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
 
 ebin/$(PROJECT).app:: src/$(PROJECT).app.src
+	@mkdir -p ebin
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
 		| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
 		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(GITDESCRIBE)\"}/" \
@@ -636,7 +637,7 @@ clean::
 
 else
 SOURCES := $(shell find $(C_SRC_DIR) -type f \( -name "*.c" -o -name "*.C" -o -name "*.cc" -o -name "*.cpp" \))
-OBJECTS = $(addsuffix .o, $(basename $(SOURCES)))
+OBJECTS = $(addsuffix .o, $(basename $(filter-out $(C_SRC_EXCLUDE),$(SOURCES))))
 
 COMPILE_C = $(c_verbose) $(CC) $(CFLAGS) $(CPPFLAGS) -c
 COMPILE_CPP = $(cpp_verbose) $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c
