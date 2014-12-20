@@ -5,6 +5,17 @@ Common Makefile rules for building and testing Erlang applications.
 
 Also features support for dependencies and a package index.
 
+Why erlang.mk?
+--------------
+
+A number of reasons might push someone to use erlang.mk instead of
+an Erlang-based build tool, including but not limited to the following:
+
+ *  You want a very fast compilation and test cycle
+ *  You want the full power of Unix at your disposal when hooking into your build tool
+ *  You want to use the deps mechanism with non-Erlang Makefile-based projects
+ *  Your project will be part of a larger make or automake based environment
+
 Requirements
 ------------
 
