@@ -232,6 +232,9 @@ xyrl_verbose = $(xyrl_verbose_$(V))
 mib_verbose_0 = @echo " MIB   " $(filter %.bin %.mib,$(?F));
 mib_verbose = $(mib_verbose_$(V))
 
+mkdir_verbose_0 = @echo " MKDIR " $@;
+mkdir_verbose = $(mkdir_verbose_$(V))
+
 # Core targets.
 
 app:: erlc-include ebin/$(PROJECT).app
@@ -271,12 +274,10 @@ define compile_mib
 endef
 
 ifneq ($(wildcard src/),)
-ebin/$(PROJECT).app::
-	@mkdir -p ebin/
+ebin/$(PROJECT).app:: ebin
 
 ifneq ($(wildcard mibs/),)
-ebin/$(PROJECT).app:: $(shell find mibs -type f -name \*.mib)
-	@mkdir -p priv/mibs/ include
+ebin/$(PROJECT).app:: $(shell find mibs -type f -name \*.mib) priv/mibs include
 	$(if $(strip $?),$(call compile_mib,$?))
 endif
 
@@ -288,6 +289,9 @@ ebin/$(PROJECT).app:: $(shell find src -type f -name \*.xrl) \
 		$(shell find src -type f -name \*.yrl)
 	$(if $(strip $?),$(call compile_xyrl,$?))
 endif
+
+ebin include priv/mibs:
+	$(mkdir_verbose) mkdir -p $@
 
 clean:: clean-app
 
@@ -646,8 +650,7 @@ COMPILE_CPP = $(cpp_verbose) $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c
 
 app:: $(C_SRC_ENV) $(C_SRC_OUTPUT)
 
-$(C_SRC_OUTPUT): $(OBJECTS)
-	@mkdir -p priv/
+$(C_SRC_OUTPUT): $(OBJECTS) priv
 	$(link_verbose) $(CC) $(OBJECTS) $(LDFLAGS) $(LDLIBS) -o $(C_SRC_OUTPUT)
 
 %.o: %.c
