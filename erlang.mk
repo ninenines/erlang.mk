@@ -242,6 +242,8 @@ app:: erlc-include ebin/$(PROJECT).app
 		exit 1; \
 	fi
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
+
+ebin/$(PROJECT).app:: src/$(PROJECT).app.src
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
 		| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
 		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(GITDESCRIBE)\"}/" \
