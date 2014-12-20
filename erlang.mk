@@ -219,7 +219,7 @@ COMPILE_MIB_FIRST_PATHS = $(addprefix mibs/,$(addsuffix .mib,$(COMPILE_MIB_FIRST
 
 # Verbosity.
 
-appsrc_verbose_0 = @echo " APP   " $(PROJECT).app.src;
+appsrc_verbose_0 = echo " APP   " $(PROJECT).app.src;
 appsrc_verbose = $(appsrc_verbose_$(V))
 
 erlc_verbose_0 = @echo " ERLC  " $(filter-out $(patsubst %,%.erl,$(ERLC_EXCLUDE)),\
@@ -235,17 +235,22 @@ mib_verbose = $(mib_verbose_$(V))
 # Core targets.
 
 app:: erlc-include ebin/$(PROJECT).app
+	$(eval APP := $(word 2,$^))
+	$(eval SRC := src/$(PROJECT).app.src)
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
-	@if [ -z "$$(grep -E '^[^%]*{modules,' src/$(PROJECT).app.src)" ]; then \
-		echo "Empty modules entry not found in $(PROJECT).app.src. Please consult the erlang.mk README for instructions." >&2; \
+	@if [ -z "$$(grep -E '^[^%]*{modules,' $(SRC))" ]; then \
+		echo "Empty modules entry not found in $(SRC). Please consult the erlang.mk README for instructions." >&2; \
 		exit 1; \
 	fi
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
-	$(appsrc_verbose) cat src/$(PROJECT).app.src \
+	$(eval OLD_MODULES := $(shell [ ! -f $(APP) ] || sed -n 's/[[:space:]]*{modules,[[:space:]]*\[\(.*\)\]}.*$$/\1/p' $(APP)))
+	@if [ ! -f "$(APP)" -o "$(MODULES)" != "$(OLD_MODULES)" ]; then \
+		$(appsrc_verbose) cat $(SRC) \
 		| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
 		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(GITDESCRIBE)\"}/" \
-		> ebin/$(PROJECT).app
+		> $(APP); \
+	fi
 
 define compile_erl
 	$(erlc_verbose) erlc -v $(ERLC_OPTS) -o ebin/ \
