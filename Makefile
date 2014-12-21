@@ -17,7 +17,7 @@ BUILD_CONFIG = $(shell sed "s/\#.*//" $(BUILD_CONFIG_FILE))
 
 ERLANG_MK = erlang.mk
 
-.PHONY: all
+.PHONY: all check
 
 all: pkg
 	awk 'FNR==1 && NR!=1{print ""}1' $(patsubst %,%.mk,$(BUILD_CONFIG)) > $(ERLANG_MK)
@@ -25,3 +25,6 @@ all: pkg
 pkg:
 	cat packages.v2.tsv | awk 'BEGIN { FS = "\t" }; { print $$1 "\t" $$3 "\t" $$5 "\t" $$6 }' > packages.v1.tsv
 	cp packages.v1.tsv packages.v1.txt
+
+check:
+	make -C test
