@@ -14,7 +14,7 @@
 
 .PHONY: all deps app rel docs tests clean distclean help erlang-mk
 
-ERLANG_MK_VERSION = 1
+ERLANG_MK_VERSION = 1.2.0-37-g5fef667-dirty
 
 # Core configuration.
 
