@@ -23,17 +23,21 @@ erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	A WAMP router a
 exs1024	https://github.com/jj1bdx/exs1024	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
 exs64	https://github.com/jj1bdx/exs64	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
 exsplus	https://github.com/jj1bdx/exsplus	https://github.com/jj1bdx/exsplus	Xorshift128plus pseudo random number generator for Erlang.
+feeder	https://github.com/michaelnisi/feeder	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
 getopt	https://github.com/jcomellas/getopt.git	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gproc	https://github.com/uwiger/gproc.git	https://github.com/uwiger/gproc	Extended process registry for Erlang
 gun	https://github.com/extend/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
+hanoidb	https://github.com/krestenkrab/hanoidb	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 itweet	https://github.com/inaka/itweet.git	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
 jiffy	https://github.com/davisp/jiffy	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
+jiffy_v	https://github.com/shizzard/jiffy-v	https://github.com/shizzard/jiffy-v	JSON validation utility
 jsx	https://github.com/talentdeficit/jsx	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 katja	https://github.com/nifoc/katja	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 lager	https://github.com/basho/lager	https://github.com/basho/lager	A logging framework for Erlang/OTP.
 lasse	https://github.com/inaka/lasse.git	https://github.com/inaka/lasse.git	SSE handler for Cowboy
 leptus	https://github.com/s1n4/leptus	https://github.com/s1n4/leptus	Erlang REST framework
+live	https://github.com/ninenines/live	http://ninenines.eu	Automated module and configuration reloader.
 mekao	https://github.com/ddosia/mekao.git	https://github.com/ddosia/mekao	SQL constructor
 modlib	https://github.com/gar1t/modlib.git	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
@@ -52,4 +56,5 @@ swab	https://github.com/crownedgrouse/swab.git	https://github.com/crownedgrouse/
 sync	https://github.com/rustyio/sync.git	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+unicorn	https://github.com/shizzard/unicorn	https://github.com/shizzard/unicorn	Generic configuration server
 zeta	https://github.com/s1n4/zeta	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
