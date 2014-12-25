@@ -115,17 +115,6 @@ dep_cowboy = git https://github.com/ninenines/cowboy 1.0.0
 They will always be compiled using the command `make`. If the dependency
 does not feature a Makefile, then erlang.mk will be used for building.
 
-For subversion dependencies, the url specifies trunk, branch or
-tag. To specify a particular revision, use `@revision` at the end of
-the url. No separate specification of branch, tag, or revision is
-required or possible.
-
-``` erlang
-DEPS = ex1 ex2
-dep_ex1 = svn https://example.com/svn/trunk/project/ex1
-dep_ex2 = svn svn://example.com/svn/branches/erlang-proj/ex2@264
-```
-
 You can also specify test-only dependencies. These dependencies will only
 be downloaded when running `make tests`. The format is the same as above,
 except the variable `TEST_DEPS` holds the list of test-only dependencies.

@@ -49,9 +49,6 @@ define dep_fetch
 	elif [ "$$$$VS" = "hg" ]; then \
 		hg clone -U $$$$REPO $(DEPS_DIR)/$(1); \
 		cd $(DEPS_DIR)/$(1) && hg update -q $$$$COMMIT; \
-	elif [ "$$$$VS" = "svn" ]; then \
-		svn checkout $$$$REPO $(DEPS_DIR)/$(1); \
-		: for svn, revision/branch/tag are part of REPO; \
 	else \
 		echo "Unknown or invalid dependency: $(1). Please consult the erlang.mk README for instructions." >&2; \
 		exit 78; \
