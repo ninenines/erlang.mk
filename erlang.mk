@@ -783,7 +783,7 @@ build-ct-suites: build-ct-deps
 
 tests-ct: ERLC_OPTS = $(TEST_ERLC_OPTS)
 tests-ct: clean deps app build-ct-suites
-	@if [ -d "test" ] ; \
+	@if [ -d "test" ] && [ -n "$(CT_SUITES)" ] ; \
 	then \
 		mkdir -p logs/ ; \
 		$(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS) ; \
@@ -793,7 +793,7 @@ tests-ct: clean deps app build-ct-suites
 define ct_suite_target
 ct-$(1): ERLC_OPTS = $(TEST_ERLC_OPTS)
 ct-$(1): clean deps app build-ct-suites
-	@if [ -d "test" ] ; \
+	@if [ -d "test" ] && [ -n "$(1)" ] ; \
 	then \
 		mkdir -p logs/ ; \
 		$(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_OPTS) ; \
