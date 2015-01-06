@@ -38,7 +38,7 @@ endef
 $(RELX):
 	@$(call relx_fetch)
 
-relx-rel: $(RELX)
+relx-rel: $(RELX) | deps app
 	@$(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
 distclean-relx-rel:

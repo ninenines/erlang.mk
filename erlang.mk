@@ -278,11 +278,11 @@ ebin/$(PROJECT).app:: $(shell find mibs -type f -name \*.mib)
 endif
 
 ebin/$(PROJECT).app:: $(shell find src -type f -name \*.erl) \
-		$(shell find src -type f -name \*.core)
+		$(shell find src -type f -name \*.core) | deps
 	$(if $(strip $?),$(call compile_erl,$?))
 
 ebin/$(PROJECT).app:: $(shell find src -type f -name \*.xrl) \
-		$(shell find src -type f -name \*.yrl)
+		$(shell find src -type f -name \*.yrl) | deps
 	$(if $(strip $?),$(call compile_xyrl,$?))
 endif
 
@@ -1124,7 +1124,7 @@ endef
 $(RELX):
 	@$(call relx_fetch)
 
-relx-rel: $(RELX)
+relx-rel: $(RELX) | deps app
 	@$(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
 distclean-relx-rel:
