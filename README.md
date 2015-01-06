@@ -205,6 +205,24 @@ You can enable verbose mode by calling Make with the variable
 $ V=1 make
 ```
 
+Parallel execution can be enabled through the use of the
+`-j` option. The following output showcases concurrent
+downloading of dependencies.
+
+``` bash
+$ make -j32
+Cloning into '/home/essen/ninenines/cowboy/deps/ranch'...
+Cloning into '/home/essen/ninenines/cowboy/deps/cowlib'...
+```
+
+The``MAKEFLAGS` variable can be used to set it permanently
+on your system. It can be set in your `.zshrc`, `.bashrc`
+or equivalent file.
+
+``` bash
+MAKEFLAGS=-j32
+```
+
 Core package functionality
 --------------------------
 

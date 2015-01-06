@@ -42,7 +42,7 @@ help::
 		"erlang.mk (version $(ERLANG_MK_VERSION)) is distributed under the terms of the ISC License." \
 		"Copyright (c) 2013-2014 Loïc Hoguin <essen@ninenines.eu>" \
 		"" \
-		"Usage: [V=1] make [target]" \
+		"Usage: [V=1] make [-jNUM] [target]" \
 		"" \
 		"Core targets:" \
 		"  all         Run deps, app and rel targets in that order" \
@@ -58,7 +58,8 @@ help::
 		"The target clean only removes files that are commonly removed." \
 		"Dependencies and releases are left untouched." \
 		"" \
-		"Setting V=1 when calling make enables verbose mode."
+		"Setting V=1 when calling make enables verbose mode." \
+		"Parallel execution is supported through the -j Make flag."
 
 # Core functions.
 
