@@ -30,7 +30,14 @@ gen_verbose = $(gen_verbose_$(V))
 
 # Core targets.
 
-all:: deps app rel
+ifneq ($(words $(MAKECMDGOALS)),1)
+.NOTPARALLEL:
+endif
+
+all::
+	@$(MAKE) --no-print-directory deps
+	@$(MAKE) --no-print-directory app
+	@$(MAKE) --no-print-directory rel
 
 clean::
 	$(gen_verbose) rm -f erl_crash.dump
@@ -279,11 +286,11 @@ ebin/$(PROJECT).app:: $(shell find mibs -type f -name \*.mib)
 endif
 
 ebin/$(PROJECT).app:: $(shell find src -type f -name \*.erl) \
-		$(shell find src -type f -name \*.core) | deps
+		$(shell find src -type f -name \*.core)
 	$(if $(strip $?),$(call compile_erl,$?))
 
 ebin/$(PROJECT).app:: $(shell find src -type f -name \*.xrl) \
-		$(shell find src -type f -name \*.yrl) | deps
+		$(shell find src -type f -name \*.yrl)
 	$(if $(strip $?),$(call compile_xyrl,$?))
 endif
 
@@ -1125,7 +1132,7 @@ endef
 $(RELX):
 	@$(call relx_fetch)
 
-relx-rel: $(RELX) | deps app
+relx-rel: $(RELX)
 	@$(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
 distclean-relx-rel:

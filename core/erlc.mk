@@ -75,11 +75,11 @@ ebin/$(PROJECT).app:: $(shell find mibs -type f -name \*.mib)
 endif
 
 ebin/$(PROJECT).app:: $(shell find src -type f -name \*.erl) \
-		$(shell find src -type f -name \*.core) | deps
+		$(shell find src -type f -name \*.core)
 	$(if $(strip $?),$(call compile_erl,$?))
 
 ebin/$(PROJECT).app:: $(shell find src -type f -name \*.xrl) \
-		$(shell find src -type f -name \*.yrl) | deps
+		$(shell find src -type f -name \*.yrl)
 	$(if $(strip $?),$(call compile_xyrl,$?))
 endif
 

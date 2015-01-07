@@ -30,7 +30,14 @@ gen_verbose = $(gen_verbose_$(V))
 
 # Core targets.
 
-all:: deps app rel
+ifneq ($(words $(MAKECMDGOALS)),1)
+.NOTPARALLEL:
+endif
+
+all::
+	@$(MAKE) --no-print-directory deps
+	@$(MAKE) --no-print-directory app
+	@$(MAKE) --no-print-directory rel
 
 clean::
 	$(gen_verbose) rm -f erl_crash.dump
