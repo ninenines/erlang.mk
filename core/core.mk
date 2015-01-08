@@ -41,7 +41,10 @@ endif
 all::
 	@$(MAKE) --no-print-directory deps
 	@$(MAKE) --no-print-directory app
+# @todo Plugin stuff creeping inside Core, not good.
+ifneq ($(wildcard $(RELX_CONFIG)),)
 	@$(MAKE) --no-print-directory rel
+endif
 
 clean::
 	$(gen_verbose) rm -f erl_crash.dump
