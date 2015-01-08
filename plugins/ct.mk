@@ -34,7 +34,7 @@ ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
 
 CT_RUN = ct_run \
 	-no_auto_compile \
-	-noshell \
+	-noinput \
 	-pa $(realpath ebin) $(DEPS_DIR)/*/ebin \
 	-dir test \
 	-logdir logs
