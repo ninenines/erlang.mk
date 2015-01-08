@@ -81,7 +81,7 @@ $(C_SRC_OUTPUT): $(OBJECTS)
 	$(COMPILE_CPP) $(OUTPUT_OPTION) $<
 
 $(C_SRC_ENV):
-	@erl -noshell -noinput -eval "file:write_file(\"$(C_SRC_ENV)\", \
+	@$(ERL) -eval "file:write_file(\"$(C_SRC_ENV)\", \
 		io_lib:format( \
 			\"ERTS_INCLUDE_DIR ?= ~s/erts-~s/include/~n\" \
 			\"ERL_INTERFACE_INCLUDE_DIR ?= ~s~n\" \
@@ -89,7 +89,7 @@ $(C_SRC_ENV):
 			[code:root_dir(), erlang:system_info(version), \
 			code:lib_dir(erl_interface, include), \
 			code:lib_dir(erl_interface, lib)])), \
-		erlang:halt()."
+		halt()."
 
 clean:: clean-c_src
 

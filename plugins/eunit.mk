@@ -41,12 +41,11 @@ clean:: clean-eunit
 
 # Plugin-specific targets.
 
-EUNIT_RUN = erl \
+EUNIT_RUN = $(ERL) \
 	-no_auto_compile \
-	-noshell \
 	-pa $(realpath $(EUNIT_DIR)) $(DEPS_DIR)/*/ebin \
 	-pz $(realpath ebin) \
-	-eval 'case eunit:test([$(call str-join,$(TAGGED_EUNIT_TESTS))], [$(EUNIT_OPTS)]) of ok -> erlang:halt(0); error -> erlang:halt(1) end.'
+	-eval 'case eunit:test([$(call str-join,$(TAGGED_EUNIT_TESTS))], [$(EUNIT_OPTS)]) of ok -> halt(0); error -> halt(1) end.'
 
 help-eunit:
 	@printf "%s\n" "" \

@@ -11,7 +11,6 @@ ESCRIPT_COMMENT ?= This is an -*- erlang -*- file
 ESCRIPT_BEAMS ?= "ebin/*", "deps/*/ebin/*"
 ESCRIPT_SYS_CONFIG ?= "rel/sys.config"
 ESCRIPT_EMU_ARGS ?= -pa . \
-	-noshell -noinput  \
 	-sasl errlog_type error \
 	-escript main $(ESCRIPT_NAME)
 ESCRIPT_SHEBANG ?= /usr/bin/env escript
@@ -33,6 +32,7 @@ help::
 # Modified MIT License, https://github.com/synrc/mad/blob/master/LICENSE :
 # Software may only be used for the great good and the true happiness of all
 # sentient beings.
+
 define ESCRIPT_RAW
 'Read = fun(F) -> {ok, B} = file:read_file(filename:absname(F)), B end,'\
 'Files = fun(L) -> A = lists:concat([filelib:wildcard(X)||X<- L ]),'\
@@ -51,12 +51,14 @@ define ESCRIPT_RAW
 '  ]),'\
 '  file:change_mode(Escript, 8#755)'\
 'end,'\
-'Ez("$(ESCRIPT_NAME)").'
+'Ez("$(ESCRIPT_NAME)"),'\
+'halt().'
 endef
+
 ESCRIPT_COMMAND = $(subst ' ',,$(ESCRIPT_RAW))
 
 escript:: distclean-escript deps app
-	$(gen_verbose) erl -noshell -eval $(ESCRIPT_COMMAND) -s init stop
+	$(gen_verbose) $(ERL) -eval $(ESCRIPT_COMMAND)
 
 distclean-escript:
 	$(gen_verbose) rm -f $(ESCRIPT_NAME)

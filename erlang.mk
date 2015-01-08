@@ -28,6 +28,10 @@ V ?= 0
 gen_verbose_0 = @echo " GEN   " $@;
 gen_verbose = $(gen_verbose_$(V))
 
+# "erl" command.
+
+ERL = erl +A0 -noinput -boot start_clean
+
 # Core targets.
 
 ifneq ($(words $(MAKECMDGOALS)),1)
@@ -76,7 +80,7 @@ define core_http_get
 endef
 else
 define core_http_get
-	erl -noshell -eval 'ssl:start(), inets:start(), case httpc:request(get, {"$(2)", []}, [{autoredirect, true}], []) of {ok, {{_, 200, _}, _, Body}} -> case file:write_file("$(1)", Body) of ok -> ok; {error, R1} -> halt(R1) end; {error, R2} -> halt(R2) end, halt(0).'
+	$(ERL) -eval 'ssl:start(), inets:start(), case httpc:request(get, {"$(2)", []}, [{autoredirect, true}], []) of {ok, {{_, 200, _}, _, Body}} -> case file:write_file("$(1)", Body) of ok -> ok; {error, R1} -> halt(R1) end; {error, R2} -> halt(R2) end, halt(0).'
 endef
 endif
 
@@ -718,7 +722,7 @@ $(C_SRC_OUTPUT): $(OBJECTS)
 	$(COMPILE_CPP) $(OUTPUT_OPTION) $<
 
 $(C_SRC_ENV):
-	@erl -noshell -noinput -eval "file:write_file(\"$(C_SRC_ENV)\", \
+	@$(ERL) -eval "file:write_file(\"$(C_SRC_ENV)\", \
 		io_lib:format( \
 			\"ERTS_INCLUDE_DIR ?= ~s/erts-~s/include/~n\" \
 			\"ERL_INTERFACE_INCLUDE_DIR ?= ~s~n\" \
@@ -726,7 +730,7 @@ $(C_SRC_ENV):
 			[code:root_dir(), erlang:system_info(version), \
 			code:lib_dir(erl_interface, include), \
 			code:lib_dir(erl_interface, lib)])), \
-		erlang:halt()."
+		halt()."
 
 clean:: clean-c_src
 
@@ -873,8 +877,7 @@ EDOC_OPTS ?=
 # Core targets.
 
 docs:: distclean-edoc
-	$(gen_verbose) erl -noshell \
-		-eval 'edoc:application($(PROJECT), ".", [$(EDOC_OPTS)]), init:stop().'
+	$(gen_verbose) $(ERL) -eval 'edoc:application($(PROJECT), ".", [$(EDOC_OPTS)]), halt().'
 
 distclean:: distclean-edoc
 
@@ -940,7 +943,7 @@ dtl_verbose = $(dtl_verbose_$(V))
 # Core targets.
 
 define compile_erlydtl
-	$(dtl_verbose) erl -noshell -pa ebin/ $(DEPS_DIR)/erlydtl/ebin/ -eval ' \
+	$(dtl_verbose) $(ERL) -pa ebin/ $(DEPS_DIR)/erlydtl/ebin/ -eval ' \
 		Compile = fun(F) -> \
 			S = fun (1) -> re:replace(filename:rootname(string:sub_string(F, 11), ".dtl"), "/",  "_",  [{return, list}, global]); \
 				(0) -> filename:basename(F, ".dtl") \
@@ -949,7 +952,7 @@ define compile_erlydtl
 			{ok, _} = erlydtl:compile(F, Module, [{out_dir, "ebin/"}, return_errors, {doc_root, "templates"}]) \
 		end, \
 		_ = [Compile(F) || F <- string:tokens("$(1)", " ")], \
-		init:stop()'
+		halt().'
 endef
 
 ifneq ($(wildcard src/),)
@@ -970,7 +973,6 @@ ESCRIPT_COMMENT ?= This is an -*- erlang -*- file
 ESCRIPT_BEAMS ?= "ebin/*", "deps/*/ebin/*"
 ESCRIPT_SYS_CONFIG ?= "rel/sys.config"
 ESCRIPT_EMU_ARGS ?= -pa . \
-	-noshell -noinput  \
 	-sasl errlog_type error \
 	-escript main $(ESCRIPT_NAME)
 ESCRIPT_SHEBANG ?= /usr/bin/env escript
@@ -992,6 +994,7 @@ help::
 # Modified MIT License, https://github.com/synrc/mad/blob/master/LICENSE :
 # Software may only be used for the great good and the true happiness of all
 # sentient beings.
+
 define ESCRIPT_RAW
 'Read = fun(F) -> {ok, B} = file:read_file(filename:absname(F)), B end,'\
 'Files = fun(L) -> A = lists:concat([filelib:wildcard(X)||X<- L ]),'\
@@ -1010,12 +1013,14 @@ define ESCRIPT_RAW
 '  ]),'\
 '  file:change_mode(Escript, 8#755)'\
 'end,'\
-'Ez("$(ESCRIPT_NAME)").'
+'Ez("$(ESCRIPT_NAME)"),'\
+'halt().'
 endef
+
 ESCRIPT_COMMAND = $(subst ' ',,$(ESCRIPT_RAW))
 
 escript:: distclean-escript deps app
-	$(gen_verbose) erl -noshell -eval $(ESCRIPT_COMMAND) -s init stop
+	$(gen_verbose) $(ERL) -eval $(ESCRIPT_COMMAND)
 
 distclean-escript:
 	$(gen_verbose) rm -f $(ESCRIPT_NAME)
@@ -1063,12 +1068,11 @@ clean:: clean-eunit
 
 # Plugin-specific targets.
 
-EUNIT_RUN = erl \
+EUNIT_RUN = $(ERL) \
 	-no_auto_compile \
-	-noshell \
 	-pa $(realpath $(EUNIT_DIR)) $(DEPS_DIR)/*/ebin \
 	-pz $(realpath ebin) \
-	-eval 'case eunit:test([$(call str-join,$(TAGGED_EUNIT_TESTS))], [$(EUNIT_OPTS)]) of ok -> erlang:halt(0); error -> erlang:halt(1) end.'
+	-eval 'case eunit:test([$(call str-join,$(TAGGED_EUNIT_TESTS))], [$(EUNIT_OPTS)]) of ok -> halt(0); error -> halt(1) end.'
 
 help-eunit:
 	@printf "%s\n" "" \

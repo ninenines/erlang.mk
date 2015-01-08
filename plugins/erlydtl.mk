@@ -13,7 +13,7 @@ dtl_verbose = $(dtl_verbose_$(V))
 # Core targets.
 
 define compile_erlydtl
-	$(dtl_verbose) erl -noshell -pa ebin/ $(DEPS_DIR)/erlydtl/ebin/ -eval ' \
+	$(dtl_verbose) $(ERL) -pa ebin/ $(DEPS_DIR)/erlydtl/ebin/ -eval ' \
 		Compile = fun(F) -> \
 			S = fun (1) -> re:replace(filename:rootname(string:sub_string(F, 11), ".dtl"), "/",  "_",  [{return, list}, global]); \
 				(0) -> filename:basename(F, ".dtl") \
@@ -22,7 +22,7 @@ define compile_erlydtl
 			{ok, _} = erlydtl:compile(F, Module, [{out_dir, "ebin/"}, return_errors, {doc_root, "templates"}]) \
 		end, \
 		_ = [Compile(F) || F <- string:tokens("$(1)", " ")], \
-		init:stop()'
+		halt().'
 endef
 
 ifneq ($(wildcard src/),)
