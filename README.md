@@ -215,12 +215,18 @@ Cloning into '/home/essen/ninenines/cowboy/deps/ranch'...
 Cloning into '/home/essen/ninenines/cowboy/deps/cowlib'...
 ```
 
+The `-O` option will ensure that output from different
+targets is grouped, which is particularly useful when
+running tests with different frameworks at the same time.
+The disadvantage of this option however is that there is
+no output until the target is completed.
+
 The``MAKEFLAGS` variable can be used to set it permanently
 on your system. It can be set in your `.zshrc`, `.bashrc`
 or equivalent file.
 
 ``` bash
-MAKEFLAGS=-j32
+MAKEFLAGS="-j32 -O"
 ```
 
 Core package functionality
