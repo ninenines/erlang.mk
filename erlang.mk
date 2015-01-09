@@ -921,11 +921,13 @@ distclean:: distclean-elvis
 # Plugin-specific targets.
 
 $(ELVIS):
-	@$(call core_http_get,$(ELVIS_CONFIG),$(ELVIS_CONFIG_URL))
 	@$(call core_http_get,$(ELVIS),$(ELVIS_URL))
 	@chmod +x $(ELVIS)
 
-elvis: $(ELVIS)
+$(ELVIS_CONFIG):
+	@$(call core_http_get,$(ELVIS_CONFIG),$(ELVIS_CONFIG_URL))
+
+elvis: $(ELVIS) $(ELVIS_CONFIG)
 	@$(ELVIS) rock -c $(ELVIS_CONFIG) $(ELVIS_OPTS)
 
 distclean-elvis:
