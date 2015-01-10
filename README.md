@@ -450,9 +450,8 @@ EUnit plugin
 This plugin is available by default. It adds the following
 target:
 
-`eunit` which runs all the EUnit tests found in `ebin` and
-any of the additional EUnit directories specified in
-`TEST_DIR`.
+`eunit` which runs all the EUnit tests found in `ebin` or
+the test directory specified in `TEST_DIR`.
 
 `EUNIT_OPTS` can be used to specify EUnit-specific options
 (e.g. `verbose`) that will be used when calling
@@ -498,6 +497,28 @@ For more information please see `erl -man erl`.
 
 `SHELL_PATH` adds paths to the shell's library search path. By default
 this option sets the paths to `-pa ../$(PROJECT)/ebin $(DEPS_DIR)/*/ebin`.
+
+Triq plugin
+-----------
+
+This plugin is available by default. It adds the following
+target:
+
+`triq` will check all the properties found in `ebin` or
+the test directory specified in `TEST_DIR`.
+
+You can use the `t` variable to give a specific module
+or function to run, for example:
+
+``` bash
+$ make triq t=cow_http_hd
+```
+
+Or:
+
+``` bash
+$ make triq t=cow_http_hd:prop_parse_accept
+```
 
 Contributing
 ------------
