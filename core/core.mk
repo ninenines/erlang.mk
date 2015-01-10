@@ -38,13 +38,13 @@ ifneq ($(words $(MAKECMDGOALS)),1)
 .NOTPARALLEL:
 endif
 
-all::
-	@$(MAKE) --no-print-directory deps
+all:: deps
 	@$(MAKE) --no-print-directory app
-# @todo Plugin stuff creeping inside Core, not good.
-ifneq ($(wildcard $(RELX_CONFIG)),)
 	@$(MAKE) --no-print-directory rel
-endif
+
+# Noop to avoid a Make warning when there's nothing to do.
+rel::
+	@echo -n
 
 clean::
 	$(gen_verbose) rm -f erl_crash.dump
