@@ -46,8 +46,12 @@ all:: deps
 rel::
 	@echo -n
 
-clean::
+clean:: clean-crashdump
+
+clean-crashdump:
+ifneq ($(wildcard erl_crash.dump),)
 	$(gen_verbose) rm -f erl_crash.dump
+endif
 
 distclean:: clean
 

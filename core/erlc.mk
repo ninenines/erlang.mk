@@ -31,9 +31,15 @@ xyrl_verbose = $(xyrl_verbose_$(V))
 mib_verbose_0 = @echo " MIB   " $(filter %.bin %.mib,$(?F));
 mib_verbose = $(mib_verbose_$(V))
 
-# Core targets.
+# Targets.
 
-app:: erlc-include ebin/$(PROJECT).app
+ifeq ($(wildcard ebin/test),)
+app:: app-build
+else
+app:: clean app-build
+endif
+
+app-build: erlc-include ebin/$(PROJECT).app
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
 	@if [ -z "$$(grep -E '^[^%]*{modules,' src/$(PROJECT).app.src)" ]; then \
@@ -45,6 +51,11 @@ app:: erlc-include ebin/$(PROJECT).app
 		| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
 		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(GITDESCRIBE)\"}/" \
 		> ebin/$(PROJECT).app
+
+erlc-include:
+	-@if [ -d ebin/ ]; then \
+		find include/ src/ -type f -name \*.hrl -newer ebin -exec touch $(shell find src/ -type f -name "*.erl") \; 2>/dev/null || printf ''; \
+	fi
 
 define compile_erl
 	$(erlc_verbose) erlc -v $(ERLC_OPTS) -o ebin/ \
@@ -84,13 +95,6 @@ ebin/$(PROJECT).app:: $(shell find src -type f -name \*.xrl) \
 endif
 
 clean:: clean-app
-
-# Extra targets.
-
-erlc-include:
-	-@if [ -d ebin/ ]; then \
-		find include/ src/ -type f -name \*.hrl -newer ebin -exec touch $(shell find src/ -type f -name "*.erl") \; 2>/dev/null || printf ''; \
-	fi
 
 clean-app:
 	$(gen_verbose) rm -rf ebin/ priv/mibs/ \

@@ -62,7 +62,7 @@ app: app1
 	$i "Test 'app' passed."
 
 ct: app1
-	$i "ct: Testing tests-ct and related targets."
+	$i "ct: Testing ct and related targets."
 	$i "Setting up test suite."
 	$t mkdir -p app1/test
 	$t printf "%s\n" \
@@ -71,17 +71,17 @@ ct: app1
 		"all() -> [testcase1]." \
 		"testcase1(_) -> 2 = m:succ(1)." \
 	 > app1/test/m_SUITE.erl
-	$t make -C app1 tests-ct $v
-	$i "Checking files created by 'make tests-ct'."
-	$t [ ! -e app1/test/m_SUITE.beam ]
+	$t make -C app1 ct $v
+	$i "Checking files created by 'make ct'."
+	$t [ -e app1/test/m_SUITE.beam ]
 	$t [ -e app1/ebin/m.beam ]
 	$t [ -e app1/logs ]
-	$i "Checking that 'make clean-ct' does not delete logs."
-	$t make -C app1 clean-ct $v
+	$i "Checking that 'make clean' does not delete logs."
+	$t make -C app1 clean $v
 	$t [ -e app1/logs ]
 	$i "Testing target 'ct-mysuite' where mysuite_SUITE is a test suite."
 	$t make -C app1 ct-m $v
-	$i "Checking that 'make tests-ct' returns non-zero for a failing suite."
+	$i "Checking that 'make ct' returns non-zero for a failing suite."
 	$t printf "%s\n" \
 		"-module(failing_SUITE)." \
 		"-export([all/0, testcase1/1])." \
@@ -89,7 +89,7 @@ ct: app1
 		"testcase1(_) -> 42 = m:succ(1)." \
 	 > app1/test/failing_SUITE.erl
 	$t if make -C app1 ct-failing $v ; then false ; fi
-	$i "Checking that 'make ct-distclean' deletes logs."
+	$i "Checking that 'make distclean-ct' deletes logs."
 	$t make -C app1 distclean-ct $v
 	$t [ ! -e app1/logs ]
 	$t [ -e app1/ebin/m.beam ]
@@ -99,7 +99,6 @@ ct: app1
 
 eunit: app1
 	$i "eunit: Testing the 'eunit' target."
-	$t mkdir -p eunit
 	$i "Running eunit test case inside module src/t.erl"
 	$t printf '%s\n' \
 		'-module(t).' \
@@ -132,7 +131,7 @@ eunit: app1
 		'	?assertEqual(2, t:succ(1)),' \
 		'	os:cmd("echo x_tests >> test-eunit.log").' \
 		> app1/eunit/x_tests.erl
-	$t make -C app1 eunit EUNIT_DIR=eunit $v
+	$t make -C app1 eunit TEST_DIR=eunit $v
 	$i "Checking that 'make eunit' didn't run the tests in t_tests twice, etc."
 	$t printf "%s\n" t t_tests x_tests | cmp app1/test-eunit.log -
 	$t rm app1/test-eunit.log
@@ -144,7 +143,7 @@ eunit: app1
 		"succ_test() ->" \
 		"	?assertEqual(42, t:succ(1))." \
 		> app1/eunit/t_tests.erl
-	$t if make -C app1 eunit EUNIT_DIR=eunit $v ; then false ; fi
+	$t if make -C app1 eunit TEST_DIR=eunit $v ; then false ; fi
 	$t rm -rf app1/eunit app1/src/t.erl app1/test-eunit.log
 	$i "Test 'eunit' passed."
 

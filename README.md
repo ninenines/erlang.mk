@@ -258,6 +258,9 @@ You can change compilation options by setting the `ERLC_OPTS`
 variable. It takes the arguments that will then be passed to
 `erlc`. For more information, please see `erl -man erlc`.
 
+Test target compilation options can be specified in `TEST_ERLC_OPTS`.
+It will override `ERLC_OPTS`.
+
 You can specify a list of modules to be compiled first using
 the `COMPILE_FIRST` variable.
 
@@ -331,7 +334,10 @@ The defaults are system dependent.
 Common_test plugin
 ------------------
 
-This plugin is available by default.
+This plugin is available by default. It adds the following
+target:
+
+`ct` runs all test suites for this application.
 
 There is nothing to configure to use it, simply create your
 test suites in the `./test/` directory and erlang.mk will
@@ -446,7 +452,7 @@ target:
 
 `eunit` which runs all the EUnit tests found in `ebin` and
 any of the additional EUnit directories specified in
-`EUNIT_DIR`.
+`TEST_DIR`.
 
 `EUNIT_OPTS` can be used to specify EUnit-specific options
 (e.g. `verbose`) that will be used when calling

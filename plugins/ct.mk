@@ -1,77 +1,55 @@
 # Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: build-ct-deps build-ct-suites tests-ct clean-ct distclean-ct
+.PHONY: ct distclean-ct
 
 # Configuration.
 
 CT_OPTS ?=
-ifneq ($(wildcard test/),)
-	CT_SUITES ?= $(sort $(subst _SUITE.erl,,$(shell find test -type f -name \*_SUITE.erl -exec basename {} \;)))
+ifneq ($(wildcard $(TEST_DIR)),)
+	CT_SUITES ?= $(sort $(subst _SUITE.erl,,$(shell find $(TEST_DIR) -type f -name \*_SUITE.erl -exec basename {} \;)))
 else
 	CT_SUITES ?=
 endif
 
-TEST_ERLC_OPTS ?= +debug_info +warn_export_vars +warn_shadow_vars +warn_obsolete_guard
-TEST_ERLC_OPTS += -DTEST=1 -DEXTRA=1 +'{parse_transform, eunit_autoexport}'
-
 # Core targets.
 
-tests:: tests-ct
-
-clean:: clean-ct
+tests:: ct
 
 distclean:: distclean-ct
 
 help::
 	@printf "%s\n" "" \
+		"Common_test targets:" \
+		"  ct          Run all the common_test suites for this project" \
+		"" \
 		"All your common_test suites have their associated targets." \
 		"A suite named http_SUITE can be ran using the ct-http target."
 
 # Plugin-specific targets.
 
-ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
-
 CT_RUN = ct_run \
 	-no_auto_compile \
 	-noinput \
-	-pa $(realpath ebin) $(DEPS_DIR)/*/ebin \
-	-dir test \
+	-pa ebin $(DEPS_DIR)/*/ebin \
+	-dir $(TEST_DIR) \
 	-logdir logs
 
-$(foreach dep,$(TEST_DEPS),$(eval $(call dep_target,$(dep))))
-
-build-ct-deps: $(ALL_TEST_DEPS_DIRS)
-	@for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
-
-build-ct-suites: build-ct-deps
-	$(gen_verbose) erlc -v $(TEST_ERLC_OPTS) -I include/ -o test/ \
-		$(wildcard test/*.erl test/*/*.erl) -pa ebin/
-
-tests-ct: ERLC_OPTS = $(TEST_ERLC_OPTS)
-tests-ct: clean deps app build-ct-suites
-	@if [ -d "test" ] ; \
-	then \
-		mkdir -p logs/ ; \
-		$(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS) ; \
-	fi
-	$(gen_verbose) rm -f test/*.beam
+ifeq ($(CT_SUITES),)
+ct:
+else
+ct: test-build
+	@mkdir -p logs/
+	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS)
+endif
 
 define ct_suite_target
-ct-$(1): ERLC_OPTS = $(TEST_ERLC_OPTS)
-ct-$(1): clean deps app build-ct-suites
-	@if [ -d "test" ] ; \
-	then \
-		mkdir -p logs/ ; \
-		$(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_OPTS) ; \
-	fi
-	$(gen_verbose) rm -f test/*.beam
+ct-$(1): test-build
+	@mkdir -p logs/
+	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_OPTS)
 endef
 
 $(foreach test,$(CT_SUITES),$(eval $(call ct_suite_target,$(test))))
-
-clean-ct:
-	$(gen_verbose) rm -rf test/*.beam
 
 distclean-ct:
 	$(gen_verbose) rm -rf logs/

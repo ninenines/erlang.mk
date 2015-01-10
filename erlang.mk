@@ -46,8 +46,12 @@ all:: deps
 rel::
 	@echo -n
 
-clean::
+clean:: clean-crashdump
+
+clean-crashdump:
+ifneq ($(wildcard erl_crash.dump),)
 	$(gen_verbose) rm -f erl_crash.dump
+endif
 
 distclean:: clean
 
@@ -249,9 +253,15 @@ xyrl_verbose = $(xyrl_verbose_$(V))
 mib_verbose_0 = @echo " MIB   " $(filter %.bin %.mib,$(?F));
 mib_verbose = $(mib_verbose_$(V))
 
-# Core targets.
+# Targets.
 
-app:: erlc-include ebin/$(PROJECT).app
+ifeq ($(wildcard ebin/test),)
+app:: app-build
+else
+app:: clean app-build
+endif
+
+app-build: erlc-include ebin/$(PROJECT).app
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
 	@if [ -z "$$(grep -E '^[^%]*{modules,' src/$(PROJECT).app.src)" ]; then \
@@ -263,6 +273,11 @@ app:: erlc-include ebin/$(PROJECT).app
 		| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
 		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(GITDESCRIBE)\"}/" \
 		> ebin/$(PROJECT).app
+
+erlc-include:
+	-@if [ -d ebin/ ]; then \
+		find include/ src/ -type f -name \*.hrl -newer ebin -exec touch $(shell find src/ -type f -name "*.erl") \; 2>/dev/null || printf ''; \
+	fi
 
 define compile_erl
 	$(erlc_verbose) erlc -v $(ERLC_OPTS) -o ebin/ \
@@ -303,16 +318,54 @@ endif
 
 clean:: clean-app
 
-# Extra targets.
-
-erlc-include:
-	-@if [ -d ebin/ ]; then \
-		find include/ src/ -type f -name \*.hrl -newer ebin -exec touch $(shell find src/ -type f -name "*.erl") \; 2>/dev/null || printf ''; \
-	fi
-
 clean-app:
 	$(gen_verbose) rm -rf ebin/ priv/mibs/ \
 		$(addprefix include/,$(addsuffix .hrl,$(notdir $(basename $(wildcard mibs/*.mib)))))
+
+# Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
+# This file is part of erlang.mk and subject to the terms of the ISC License.
+
+.PHONY: test-deps test-dir test-build clean-test-dir
+
+# Configuration.
+
+TEST_DIR ?= test
+
+ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
+
+TEST_ERLC_OPTS ?= +debug_info +warn_export_vars +warn_shadow_vars +warn_obsolete_guard
+TEST_ERLC_OPTS += -DTEST=1
+
+# Targets.
+
+$(foreach dep,$(TEST_DEPS),$(eval $(call dep_target,$(dep))))
+
+test-deps: $(ALL_TEST_DEPS_DIRS)
+	@for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
+
+ifneq ($(strip $(TEST_DIR)),)
+test-dir:
+	$(gen_verbose) erlc -v $(TEST_ERLC_OPTS) -I include/ -o $(TEST_DIR) \
+		$(wildcard $(TEST_DIR)/*.erl $(TEST_DIR)/*/*.erl) -pa ebin/
+endif
+
+ifeq ($(wildcard ebin/test),)
+test-build: ERLC_OPTS=$(TEST_ERLC_OPTS)
+test-build: clean deps test-deps
+	@$(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
+	$(gen_verbose) touch ebin/test
+else
+test-build: ERLC_OPTS=$(TEST_ERLC_OPTS)
+test-build: deps test-deps
+	@$(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
+endif
+
+clean:: clean-test-dir
+
+clean-test-dir:
+ifneq ($(wildcard $(TEST_DIR)/*.beam),)
+	$(gen_verbose) rm -f $(TEST_DIR)/*.beam
+endif
 
 # Copyright (c) 2014, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
@@ -751,77 +804,55 @@ endif
 # Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: build-ct-deps build-ct-suites tests-ct clean-ct distclean-ct
+.PHONY: ct distclean-ct
 
 # Configuration.
 
 CT_OPTS ?=
-ifneq ($(wildcard test/),)
-	CT_SUITES ?= $(sort $(subst _SUITE.erl,,$(shell find test -type f -name \*_SUITE.erl -exec basename {} \;)))
+ifneq ($(wildcard $(TEST_DIR)),)
+	CT_SUITES ?= $(sort $(subst _SUITE.erl,,$(shell find $(TEST_DIR) -type f -name \*_SUITE.erl -exec basename {} \;)))
 else
 	CT_SUITES ?=
 endif
 
-TEST_ERLC_OPTS ?= +debug_info +warn_export_vars +warn_shadow_vars +warn_obsolete_guard
-TEST_ERLC_OPTS += -DTEST=1 -DEXTRA=1 +'{parse_transform, eunit_autoexport}'
-
 # Core targets.
 
-tests:: tests-ct
-
-clean:: clean-ct
+tests:: ct
 
 distclean:: distclean-ct
 
 help::
 	@printf "%s\n" "" \
+		"Common_test targets:" \
+		"  ct          Run all the common_test suites for this project" \
+		"" \
 		"All your common_test suites have their associated targets." \
 		"A suite named http_SUITE can be ran using the ct-http target."
 
 # Plugin-specific targets.
 
-ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
-
 CT_RUN = ct_run \
 	-no_auto_compile \
 	-noinput \
-	-pa $(realpath ebin) $(DEPS_DIR)/*/ebin \
-	-dir test \
+	-pa ebin $(DEPS_DIR)/*/ebin \
+	-dir $(TEST_DIR) \
 	-logdir logs
 
-$(foreach dep,$(TEST_DEPS),$(eval $(call dep_target,$(dep))))
-
-build-ct-deps: $(ALL_TEST_DEPS_DIRS)
-	@for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
-
-build-ct-suites: build-ct-deps
-	$(gen_verbose) erlc -v $(TEST_ERLC_OPTS) -I include/ -o test/ \
-		$(wildcard test/*.erl test/*/*.erl) -pa ebin/
-
-tests-ct: ERLC_OPTS = $(TEST_ERLC_OPTS)
-tests-ct: clean deps app build-ct-suites
-	@if [ -d "test" ] ; \
-	then \
-		mkdir -p logs/ ; \
-		$(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS) ; \
-	fi
-	$(gen_verbose) rm -f test/*.beam
+ifeq ($(CT_SUITES),)
+ct:
+else
+ct: test-build
+	@mkdir -p logs/
+	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS)
+endif
 
 define ct_suite_target
-ct-$(1): ERLC_OPTS = $(TEST_ERLC_OPTS)
-ct-$(1): clean deps app build-ct-suites
-	@if [ -d "test" ] ; \
-	then \
-		mkdir -p logs/ ; \
-		$(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_OPTS) ; \
-	fi
-	$(gen_verbose) rm -f test/*.beam
+ct-$(1): test-build
+	@mkdir -p logs/
+	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_OPTS)
 endef
 
 $(foreach test,$(CT_SUITES),$(eval $(call ct_suite_target,$(test))))
-
-clean-ct:
-	$(gen_verbose) rm -rf test/*.beam
 
 distclean-ct:
 	$(gen_verbose) rm -rf logs/
@@ -1031,25 +1062,20 @@ distclean-escript:
 # Copyright (c) 2014, Enrique Fernandez <enrique.fernandez@erlang-solutions.com>
 # This file is contributed to erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: help-eunit build-eunit eunit distclean-eunit
+.PHONY: eunit
 
 # Configuration
 
-EUNIT_ERLC_OPTS ?= +debug_info +warn_export_vars +warn_shadow_vars +warn_obsolete_guard -DTEST=1 -DEXTRA=1
-
-EUNIT_DIR ?=
-EUNIT_DIRS = $(sort $(EUNIT_DIR) ebin)
-
-ifeq ($(strip $(EUNIT_DIR)),)
+ifeq ($(strip $(TEST_DIR)),)
 TAGGED_EUNIT_TESTS = {dir,"ebin"}
 else
-# All modules in EUNIT_DIR
-EUNIT_DIR_MODS = $(notdir $(basename $(shell find $(EUNIT_DIR) -type f -name *.beam)))
+# All modules in TEST_DIR
+TEST_DIR_MODS = $(notdir $(basename $(shell find $(TEST_DIR) -type f -name *.beam)))
 # All modules in 'ebin'
 EUNIT_EBIN_MODS = $(notdir $(basename $(shell find ebin -type f -name *.beam)))
-# Only those modules in EUNIT_DIR with no matching module in 'ebin'.
+# Only those modules in TEST_DIR with no matching module in 'ebin'.
 # This is done to avoid some tests being executed twice.
-EUNIT_MODS = $(filter-out $(patsubst %,%_tests,$(EUNIT_EBIN_MODS)),$(EUNIT_DIR_MODS))
+EUNIT_MODS = $(filter-out $(patsubst %,%_tests,$(EUNIT_EBIN_MODS)),$(TEST_DIR_MODS))
 TAGGED_EUNIT_TESTS = {dir,"ebin"} $(foreach mod,$(EUNIT_MODS),$(shell echo $(mod) | sed -e 's/\(.*\)/{module,\1}/g'))
 endif
 
@@ -1063,41 +1089,22 @@ endef
 
 # Core targets.
 
-help:: help-eunit
-
 tests:: eunit
 
-clean:: clean-eunit
-
-# Plugin-specific targets.
-
-EUNIT_RUN = $(ERL) \
-	-no_auto_compile \
-	-pa $(realpath $(EUNIT_DIR)) $(DEPS_DIR)/*/ebin \
-	-pz $(realpath ebin) \
-	-eval 'case eunit:test([$(call str-join,$(TAGGED_EUNIT_TESTS))], [$(EUNIT_OPTS)]) of ok -> halt(0); error -> halt(1) end.'
-
-help-eunit:
+help::
 	@printf "%s\n" "" \
 		"EUnit targets:" \
 		"  eunit       Run all the EUnit tests for this project"
 
-ifeq ($(strip $(EUNIT_DIR)),)
-build-eunit:
-else ifeq ($(strip $(EUNIT_DIR)),ebin)
-build-eunit:
-else
-build-eunit:
-	$(gen_verbose) erlc -v $(EUNIT_ERLC_OPTS) -I include/ -o $(EUNIT_DIR) \
-		$(wildcard $(EUNIT_DIR)/*.erl $(EUNIT_DIR)/*/*.erl) -pa ebin/
-endif
+# Plugin-specific targets.
 
-eunit: ERLC_OPTS = $(EUNIT_ERLC_OPTS)
-eunit: clean deps app build-eunit
+EUNIT_RUN = $(ERL) \
+	-pa $(TEST_DIR) $(DEPS_DIR)/*/ebin \
+	-pz ebin \
+	-eval 'case eunit:test([$(call str-join,$(TAGGED_EUNIT_TESTS))], [$(EUNIT_OPTS)]) of ok -> halt(0); error -> halt(1) end.'
+
+eunit: test-build
 	$(gen_verbose) $(EUNIT_RUN)
-
-clean-eunit:
-	$(gen_verbose) $(foreach dir,$(EUNIT_DIRS),rm -rf $(dir)/*.beam)
 
 # Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
