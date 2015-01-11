@@ -21,10 +21,6 @@ help::
 		"Elvis targets:" \
 		"  elvis       Run Elvis using the local elvis.config or download the default otherwise"
 
-ifneq ($(wildcard $(ELVIS_CONFIG)),)
-rel:: distclean-elvis
-endif
-
 distclean:: distclean-elvis
 
 # Plugin-specific targets.
