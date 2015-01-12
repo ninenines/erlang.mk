@@ -138,6 +138,24 @@ dep_ct_helper = git https://github.com/extend/ct_helper.git master
 Please note that the test dependencies will only be compiled once
 when they are fetched, unlike the normal dependencies.
 
+Autopatch
+---------
+
+The autopatch features allows you to automatically fix packages
+that are not compatible with erlang.mk. It can also be used to
+convert compatible packages to use erlang.mk itself for building
+when used as dependency.
+
+The patching occurs only once, immediately after the package has
+been fetched.
+
+erlang.mk defines a number of packages to be patched. You can add
+more packages to the list by appending the `AUTOPATCH` variable.
+
+``` Makefile
+AUTOPATCH += gproc
+```
+
 Releases
 --------
 
