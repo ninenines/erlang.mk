@@ -33,9 +33,9 @@ else
 	i = @echo ==
 endif
 
-.PHONY: all clean app ct eunit
+.PHONY: all clean app ct eunit docs
 
-all: app ct eunit clean
+all: app ct eunit docs clean
 	$i '+---------------------+'
 	$i '|  All tests passed.  |'
 	$i '+---------------------+'
@@ -146,6 +146,29 @@ eunit: app1
 	$t if make -C app1 eunit TEST_DIR=eunit $v ; then false ; fi
 	$t rm -rf app1/eunit app1/src/t.erl app1/test-eunit.log
 	$i "Test 'eunit' passed."
+
+docs: app1
+	$i "docs: Testing EDoc including DOC_DEPS."
+	$t printf "%s\n" \
+		"PROJECT = app1" \
+		"DOC_DEPS = edown" \
+		"dep_edown = git https://github.com/uwiger/edown.git 0.5" \
+		"EDOC_OPTS = {doclet, edown_doclet}" \
+		"include erlang.mk" \
+		"distclean:: distclean-doc-md" \
+		"distclean-doc-md:" \
+		"	rm -rf doc/*.md" \
+		> app1/Makefile-doc
+	$i "Downloading doc deps (edown) and building docs."
+	$t make -C app1 -f Makefile-doc docs $v
+	$i "Checking that 'make docs' using edown generated a markdown file."
+	$t [ -e app1/doc/m.md ]
+	$i "Checking that 'make distclean' deletes all generated doc files."
+	$t make -C app1 -f Makefile-doc distclean $v
+	$t [ "`ls app1/doc/`" == "" ]
+	$i "Cleaning up test data."
+	$t rm app1/Makefile-doc
+	$i "Test 'docs' passed."
 
 # Test application used for testing.
 app1:
