@@ -1,4 +1,4 @@
-# Copyright (c) 2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2014-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: bootstrap bootstrap-lib bootstrap-rel new list-templates

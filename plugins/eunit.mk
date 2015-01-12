@@ -1,4 +1,5 @@
 # Copyright (c) 2014, Enrique Fernandez <enrique.fernandez@erlang-solutions.com>
+# Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is contributed to erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: eunit
