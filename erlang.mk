@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -103,7 +103,7 @@ erlang-mk:
 	cp $(ERLANG_MK_BUILD_DIR)/erlang.mk ./erlang.mk
 	rm -rf $(ERLANG_MK_BUILD_DIR)
 
-# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: distclean-deps distclean-pkg pkg-list pkg-search
@@ -267,7 +267,7 @@ help::
 		"  pkg-list              List all known packages" \
 		"  pkg-search q=STRING   Search for STRING in the package index"
 
-# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: clean-app
@@ -397,13 +397,13 @@ test-dir:
 endif
 
 ifeq ($(wildcard ebin/test),)
-test-build: ERLC_OPTS=$(TEST_ERLC_OPTS)
-test-build: clean deps test-deps
+test-build:: ERLC_OPTS=$(TEST_ERLC_OPTS)
+test-build:: clean deps test-deps
 	@$(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
 	$(gen_verbose) touch ebin/test
 else
-test-build: ERLC_OPTS=$(TEST_ERLC_OPTS)
-test-build: deps test-deps
+test-build:: ERLC_OPTS=$(TEST_ERLC_OPTS)
+test-build:: deps test-deps
 	@$(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
 endif
 
@@ -414,7 +414,7 @@ ifneq ($(wildcard $(TEST_DIR)/*.beam),)
 	$(gen_verbose) rm -f $(TEST_DIR)/*.beam
 endif
 
-# Copyright (c) 2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2014-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: bootstrap bootstrap-lib bootstrap-rel new list-templates
@@ -742,7 +742,7 @@ endif
 list-templates:
 	@echo Available templates: $(sort $(patsubst tpl_%,%,$(filter tpl_%,$(.VARIABLES))))
 
-# Copyright (c) 2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2014-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: clean-c_src distclean-c_src-env
@@ -848,7 +848,7 @@ distclean-c_src-env:
 -include $(C_SRC_ENV)
 endif
 
-# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: ct distclean-ct
@@ -904,7 +904,7 @@ $(foreach test,$(CT_SUITES),$(eval $(call ct_suite_target,$(test))))
 distclean-ct:
 	$(gen_verbose) rm -rf logs/
 
-# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: plt distclean-plt dialyze
@@ -946,7 +946,7 @@ dialyze: $(DIALYZER_PLT)
 endif
 	@dialyzer --no_native $(DIALYZER_DIRS) $(DIALYZER_OPTS)
 
-# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # Copyright (c) 2015, Viktor Söderqvist <viktor@zuiderkwast.se>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
@@ -1015,7 +1015,7 @@ elvis: $(ELVIS) $(ELVIS_CONFIG)
 distclean-elvis:
 	$(gen_verbose) rm -rf $(ELVIS)
 
-# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 # Configuration.
@@ -1113,24 +1113,26 @@ distclean-escript:
 	$(gen_verbose) rm -f $(ESCRIPT_NAME)
 
 # Copyright (c) 2014, Enrique Fernandez <enrique.fernandez@erlang-solutions.com>
+# Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is contributed to erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: eunit
 
 # Configuration
 
-ifeq ($(strip $(TEST_DIR)),)
-TAGGED_EUNIT_TESTS = {dir,"ebin"}
-else
 # All modules in TEST_DIR
+ifeq ($(strip $(TEST_DIR)),)
+TEST_DIR_MODS = 
+else
 TEST_DIR_MODS = $(notdir $(basename $(shell find $(TEST_DIR) -type f -name *.beam)))
+endif
+
 # All modules in 'ebin'
 EUNIT_EBIN_MODS = $(notdir $(basename $(shell find ebin -type f -name *.beam)))
 # Only those modules in TEST_DIR with no matching module in 'ebin'.
 # This is done to avoid some tests being executed twice.
 EUNIT_MODS = $(filter-out $(patsubst %,%_tests,$(EUNIT_EBIN_MODS)),$(TEST_DIR_MODS))
-TAGGED_EUNIT_TESTS = {dir,"ebin"} $(foreach mod,$(EUNIT_MODS),$(shell echo $(mod) | sed -e 's/\(.*\)/{module,\1}/g'))
-endif
+TAGGED_EUNIT_TESTS = $(foreach mod,$(EUNIT_EBIN_MODS) $(EUNIT_MODS),{module,$(mod)})
 
 EUNIT_OPTS ?= verbose
 
@@ -1151,15 +1153,21 @@ help::
 
 # Plugin-specific targets.
 
+EUNIT_RUN_BEFORE ?=
+EUNIT_RUN_AFTER ?=
 EUNIT_RUN = $(ERL) \
 	-pa $(TEST_DIR) $(DEPS_DIR)/*/ebin \
 	-pz ebin \
-	-eval 'case eunit:test([$(call str-join,$(TAGGED_EUNIT_TESTS))], [$(EUNIT_OPTS)]) of ok -> halt(0); error -> halt(1) end.'
+	$(EUNIT_RUN_BEFORE) \
+	-eval 'case eunit:test([$(call str-join,$(TAGGED_EUNIT_TESTS))],\
+		[$(EUNIT_OPTS)]) of ok -> ok; error -> halt(1) end.' \
+	$(EUNIT_RUN_AFTER) \
+	-eval 'halt(0).'
 
 eunit: test-build
 	$(gen_verbose) $(EUNIT_RUN)
 
-# Copyright (c) 2013-2014, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: relx-rel distclean-relx-rel distclean-relx
@@ -1266,3 +1274,133 @@ triq: test-build
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
 	$(gen_verbose) $(call triq_run,[true] =:= lists:usort([triq:check(M) || M <- [$(MODULES)]]))
 endif
+
+# Copyright 2015, Viktor Söderqvist <viktor@zuiderkwast.se>
+# This file is part of erlang.mk and subject to the terms of the ISC License.
+
+COVER_DIR = cover
+
+# utility variables for representing special symbols
+empty :=
+space := $(empty) $(empty)
+comma := ,
+
+# Hook in coverage to eunit
+
+ifdef COVER
+ifdef EUNIT_RUN
+EUNIT_RUN_BEFORE += -eval \
+	'case cover:compile_beam_directory("ebin") of \
+		{error, _} -> halt(1); \
+		_ -> ok \
+	end.'
+EUNIT_RUN_AFTER += -eval 'cover:export("eunit.coverdata").'
+endif
+endif
+
+# Hook in coverage to ct
+
+ifdef COVER
+ifdef CT_RUN
+
+# All modules in 'ebin'
+COVER_MODS = $(notdir $(basename $(shell echo ebin/*.beam)))
+
+test-build:: ct.cover.spec
+
+ct.cover.spec:
+	@echo Cover mods: $(COVER_MODS)
+	$(gen_verbose) printf "%s\n" \
+		'{incl_mods,[$(subst $(space),$(comma),$(COVER_MODS))]}.' \
+		'{export,"$(CURDIR)/ct.coverdata"}.' > $@
+
+CT_RUN += -cover ct.cover.spec
+endif
+endif
+
+# Core targets
+
+ifdef COVER
+ifneq ($(COVER_DIR),)
+tests::
+	@$(MAKE) make --no-print-directory cover-report
+endif
+endif
+
+clean:: coverdata-clean
+
+ifneq ($(COVER_DIR),)
+distclean:: cover-clean
+endif
+
+help::
+	@printf "%s\n" "" \
+		"Cover targets:" \
+		"  cover-report  Generate a HTML coverage report from previously collected" \
+		"                cover data." \
+		"" \
+		"Cover-report is included in the 'tests' target by setting COVER=1." \
+		"If you run 'ct' or 'eunit' separately with COVER=1, cover data is" \
+		"collected but to generate a report you have to run 'cover-report'" \
+		"afterwards."
+
+# Plugin specific targets
+
+.PHONY: coverdata-clean
+coverdata-clean:
+	$(gen_verbose) rm -f *.coverdata ct.cover.spec
+
+# These are only defined if COVER_DIR is non-empty
+
+ifneq ($(COVER_DIR),)
+
+.PHONY: cover-clean cover-report
+
+cover-clean: coverdata-clean
+	$(gen_verbose) rm -rf $(COVER_DIR)
+
+COVERDATA = $(wildcard *.coverdata)
+
+ifeq ($(COVERDATA),)
+cover-report:
+else
+
+# Modules which include eunit.hrl always contain one line without coverage
+# because eunit defines test/0 which is never called. We compensate for this.
+EUNIT_HRL_MODS = $(subst $(space),$(comma),$(shell \
+	grep -e '^\s*-include.*include/eunit\.hrl"' src/*.erl \
+	| sed 's/\.erl:.*//;s/^src\///' | uniq))
+
+cover-report:
+	$(gen_verbose) mkdir -p $(COVER_DIR)
+	$(gen_verbose) $(ERL) -eval ' \
+	$(foreach f,$(COVERDATA),cover:import("$(f)") == ok orelse halt(1),) \
+	Ms = cover:imported_modules(), \
+	[cover:analyse_to_file(M, "$(COVER_DIR)/" ++ atom_to_list(M) \
+		++ ".COVER.html", [html])  || M <- Ms], \
+	Report = [begin {ok, R} = cover:analyse(M, module), R end || M <- Ms], \
+	EunitHrlMods = [$(EUNIT_HRL_MODS)], \
+	Report1 = [{M, {Y, case lists:member(M, EunitHrlMods) of \
+		true -> N - 1; false -> N end}} || {M, {Y, N}} <- Report], \
+	TotalY = lists:sum([Y || {_, {Y, _}} <- Report1]), \
+	TotalN = lists:sum([N || {_, {_, N}} <- Report1]), \
+	TotalPerc = round(100 * TotalY / (TotalY + TotalN)), \
+	{ok, F} = file:open("$(COVER_DIR)/index.html", [write]), \
+	io:format(F, "<!DOCTYPE html><html>~n" \
+		"<head><meta charset=\"UTF-8\">~n" \
+		"<title>Coverage report</title></head>~n" \
+		"<body>~n", []), \
+	io:format(F, "<h1>Coverage</h1>~n<p>Total: ~p%</p>~n", [TotalPerc]),\
+	io:format(F, "<table><tr><th>Module</th><th>Coverage</th></tr>~n", []), \
+	[io:format(F, "<tr><td><a href=\"~p.COVER.html\">~p</a></td>" \
+		"<td>~p%</td></tr>~n", \
+		[M, M, round(100 * Y / (Y + N))]) || {M, {Y, N}} <- Report1], \
+	How = "$(subst $(space),$(comma)$(space),$(basename $(COVERDATA)))", \
+	Date = "$(shell date -u "+%Y-%m-%dT%H:%M:%SZ")", \
+	io:format(F, "</table>~n" \
+		"<p>Generated using ~s and erlang.mk on ~s.</p>~n" \
+		"</body></html>", [How, Date]), \
+	halt().'
+
+endif
+endif # ifneq ($(COVER_DIR),)
