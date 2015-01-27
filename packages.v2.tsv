@@ -19,6 +19,7 @@ epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epg
 eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredis	Non-blocking Redis client with focus on performance and robustness
 erldb	git	https://github.com/erldb/erldb.git	master	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
+erwa	git	https://github.com/bwegh/erwa	0.1.0	https://github.com/bwegh/erwa	Simple WAMP.ws peer and router
 erwa	git	https://github.com/bwegh/erwa	master	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 exs1024	git	https://github.com/jj1bdx/exs1024	master	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
 exs64	git	https://github.com/jj1bdx/exs64	master	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
