@@ -20,6 +20,7 @@ eredis	https://github.com/wooga/eredis	https://github.com/wooga/eredis	Non-block
 erldb	https://github.com/erldb/erldb.git	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	Simple WAMP.ws peer and router
+erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	Simple WAMP.ws peer and router.
 erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 exs1024	https://github.com/jj1bdx/exs1024	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
 exs64	https://github.com/jj1bdx/exs64	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
