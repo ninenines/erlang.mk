@@ -20,6 +20,7 @@ eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredi
 erldb	git	https://github.com/erldb/erldb.git	master	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	git	https://github.com/bwegh/erwa	0.1.0	https://github.com/bwegh/erwa	Simple WAMP.ws peer and router.
+erwa	git	https://github.com/bwegh/erwa	0.1.0	https://github.com/bwegh/erwa	Simple WAMP.ws peer and router.
 exs1024	git	https://github.com/jj1bdx/exs1024	master	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
 exs64	git	https://github.com/jj1bdx/exs64	master	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
 exsplus	git	https://github.com/jj1bdx/exsplus	master	https://github.com/jj1bdx/exsplus	Xorshift128plus pseudo random number generator for Erlang.
