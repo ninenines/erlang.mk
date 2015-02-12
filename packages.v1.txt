@@ -33,6 +33,7 @@ ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/
 itweet	https://github.com/inaka/itweet.git	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
 jiffy	https://github.com/davisp/jiffy	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
 jiffy_v	https://github.com/shizzard/jiffy-v	https://github.com/shizzard/jiffy-v	JSON validation utility
+jobs	https://github.com/esl/jobs	https://github.com/esl/jobs	a Job scheduler for load regulation
 jsx	https://github.com/talentdeficit/jsx	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 katja	https://github.com/nifoc/katja	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 lager	https://github.com/basho/lager	https://github.com/basho/lager	A logging framework for Erlang/OTP.
