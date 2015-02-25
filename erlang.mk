@@ -194,6 +194,8 @@ define dep_fetch
 		cd $(DEPS_DIR)/$(1) && hg update -q $$$$COMMIT; \
 	elif [ "$$$$VS" = "svn" ]; then \
 		svn checkout $$$$REPO $(DEPS_DIR)/$(1); \
+	elif [ "$$$$VS" = "cp" ]; then \
+		cp -R $$$$REPO $(DEPS_DIR)/$(1); \
 	else \
 		echo "Unknown or invalid dependency: $(1). Please consult the erlang.mk README for instructions." >&2; \
 		exit 78; \
