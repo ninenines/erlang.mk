@@ -59,4 +59,5 @@ sync	git	https://github.com/rustyio/sync.git	master	https://github.com/rustyio/s
 tddreloader	git	https://github.com/version2beta/tddreloader	master	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tinymt-erlang	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
 unicorn	git	https://github.com/shizzard/unicorn	0.3.0	https://github.com/shizzard/unicorn	Generic configuration server
+uuid	git	https://github.com/okeuday/uuid	v1.4.0	https://github.com/okeuday/uuid	Erlang UUID Implementation
 zeta	git	https://github.com/s1n4/zeta	 	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
