@@ -1123,6 +1123,9 @@ distclean-escript:
 ifeq ($(strip $(TEST_DIR)),)
 TAGGED_EUNIT_TESTS = {dir,"ebin"}
 else
+ifeq ($(wildcard $(TEST_DIR)),)
+TAGGED_EUNIT_TESTS = {dir,"ebin"}
+else
 # All modules in TEST_DIR
 TEST_DIR_MODS = $(notdir $(basename $(shell find $(TEST_DIR) -type f -name *.beam)))
 # All modules in 'ebin'
@@ -1131,6 +1134,7 @@ EUNIT_EBIN_MODS = $(notdir $(basename $(shell find ebin -type f -name *.beam)))
 # This is done to avoid some tests being executed twice.
 EUNIT_MODS = $(filter-out $(patsubst %,%_tests,$(EUNIT_EBIN_MODS)),$(TEST_DIR_MODS))
 TAGGED_EUNIT_TESTS = {dir,"ebin"} $(foreach mod,$(EUNIT_MODS),$(shell echo $(mod) | sed -e 's/\(.*\)/{module,\1}/g'))
+endif
 endif
 
 EUNIT_OPTS ?= verbose
