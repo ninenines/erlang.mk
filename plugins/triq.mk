@@ -1,6 +1,7 @@
 # Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifneq ($(wildcard $(DEPS_DIR)/triq),)
 .PHONY: triq
 
 # Targets.
@@ -26,4 +27,5 @@ triq: test-build
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
 	$(gen_verbose) $(call triq_run,[true] =:= lists:usort([triq:check(M) || M <- [$(MODULES)]]))
+endif
 endif
