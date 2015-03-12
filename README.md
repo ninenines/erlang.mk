@@ -473,10 +473,9 @@ the test directory specified in `TEST_DIR`.
 
 `EUNIT_OPTS` can be used to specify EUnit-specific options
 (e.g. `verbose`) that will be used when calling
-`eunit:test/2`. This configuration parameter defaults to
-`verbose`. Note
-that EUnit options are specified as a comma-separated
-list of options.
+`eunit:test/2`. This configuration parameter is empty
+by default.. Note that EUnit options are specified as
+a comma-separated list of options.
 
 Relx plugin
 -----------

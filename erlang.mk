@@ -1137,7 +1137,7 @@ TAGGED_EUNIT_TESTS = {dir,"ebin"} $(foreach mod,$(EUNIT_MODS),$(shell echo $(mod
 endif
 endif
 
-EUNIT_OPTS ?= verbose
+EUNIT_OPTS ?=
 
 # Utility functions
 
