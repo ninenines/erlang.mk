@@ -13,6 +13,7 @@ an Erlang-based build tool, including but not limited to the following:
 
  *  You want a very fast compilation and test cycle
  *  You want the full power of Unix at your disposal when hooking into your build tool
+ *  You want to be able to easily edit the damn build tool and fix it when it fails
  *  You want to use the deps mechanism with non-Erlang Makefile-based projects
  *  Your project will be part of a larger make or automake based environment
 
