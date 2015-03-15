@@ -186,7 +186,9 @@ endef
 endif
 
 define dep_fetch
-	if [ "$$$$VS" = "git" ]; then \
+	if [ "$$$$VS" = "git" -a "$$$$REPO" = "submodule" ]; then \
+		git submodule update --init -- $(DEPS_DIR)/$(1); \
+	elif [ "$$$$VS" = "git" ]; then \
 		git clone -n -- $$$$REPO $(DEPS_DIR)/$(1); \
 		cd $(DEPS_DIR)/$(1) && git checkout -q $$$$COMMIT; \
 	elif [ "$$$$VS" = "hg" ]; then \
