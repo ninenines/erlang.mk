@@ -49,7 +49,8 @@ define dep_autopatch
 	$(ERL) -eval " \
 DepDir = \"$(DEPS_DIR)/$(1)/\", \
 fun() -> \
-	{ok, Conf} = file:consult(DepDir ++ \"rebar.config\"), \
+	{ok, Conf} = case file:consult(DepDir ++ \"rebar.config\") of \
+		{error, enoent} -> {ok, []}; Res -> Res end, \
 	File = case lists:keyfind(deps, 1, Conf) of false -> []; {_, Deps} -> \
 		[begin {Method, Repo, Commit} = case Repos of \
 			{git, R} -> {git, R, master}; \
@@ -60,7 +61,12 @@ fun() -> \
 		io_lib:format(\"DEPS += ~s\ndep_~s = ~s ~s ~s~n\", [Name, Name, Method, Repo, Commit]) \
 		end || {Name, _, Repos} <- Deps] \
 	end, \
-	ok = file:write_file(\"$(DEPS_DIR)/$(1)/Makefile\", [\"ERLC_OPTS = +debug_info\n\n\", File, \"\ninclude erlang.mk\"]) \
+	First = case lists:keyfind(erl_first_files, 1, Conf) of false -> []; {_, Files} -> \
+		Names = [[\" \", begin \"lre.\" ++ R = lists:reverse(F), lists:reverse(R) end] \
+			 || \"src/\" ++ F <- Files], \
+		io_lib:format(\"COMPILE_FIRST +=~s\n\", [Names]) \
+	end, \
+	ok = file:write_file(\"$(DEPS_DIR)/$(1)/Makefile\", [\"ERLC_OPTS = +debug_info\n\n\", File, First, \"\ninclude erlang.mk\"]) \
 end(), \
 AppSrcOut = \"$(DEPS_DIR)/$(1)/src/$(1).app.src\", \
 AppSrcIn = case filelib:is_regular(AppSrcOut) of false -> \"$(DEPS_DIR)/$(1)/ebin/$(1).app\"; true -> AppSrcOut end, \
@@ -112,13 +118,9 @@ else
 	$(call dep_fetch,$(1))
 endif
 ifneq ($(filter $(1),$(AUTOPATCH)),)
-	$(call dep_autopatch_verbose,$(1)) if [ -f $(DEPS_DIR)/$(1)/rebar.config ]; then \
+	$(call dep_autopatch_verbose,$(1)) \
 		$(call dep_autopatch,$(1)); \
-		cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk; \
-	elif [ ! -f $(DEPS_DIR)/$(1)/Makefile ]; then \
-		echo "ERLC_OPTS = +debug_info\ninclude erlang.mk" > $(DEPS_DIR)/$(1)/Makefile; \
-		cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk; \
-	fi
+		cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk
 endif
 endef
 
