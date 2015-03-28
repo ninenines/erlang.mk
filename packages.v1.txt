@@ -12,6 +12,7 @@ edgar	https://github.com/crownedgrouse/edgar.git	https://github.com/crownedgrous
 edis	https://github.com/inaka/edis.git	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
 eganglia	https://github.com/inaka/eganglia.git	https://github.com/inaka/eganglia.git	Erlang library to interact with Ganglia
 ehsa	https://bitbucket.org/a12n/ehsa	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
+elixir	https://github.com/elixir-lang/elixir.git	http://elixir-lang.org	 Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
 elvis	https://github.com/inaka/elvis.git	https://github.com/inaka/elvis.git	Erlang Style Reviewer
 emysql	https://github.com/Eonblast/Emysql.git	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
 eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlang performance and debugging tools.
