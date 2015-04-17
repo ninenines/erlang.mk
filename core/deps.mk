@@ -35,7 +35,7 @@ PKG_FILE_URL ?= https://raw.githubusercontent.com/ninenines/erlang.mk/master/pac
 deps:: $(ALL_DEPS_DIRS)
 	@for dep in $(ALL_DEPS_DIRS) ; do \
 		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
-			$(MAKE) -C $$dep ; \
+			$(MAKE) -C $$dep || exit $$? ; \
 		else \
 			echo "ERROR: No makefile to build dependency $$dep. Consider adding it to AUTOPATCH." ; \
 			exit 1 ; \
