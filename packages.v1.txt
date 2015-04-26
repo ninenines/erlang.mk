@@ -25,6 +25,7 @@ exs1024	https://github.com/jj1bdx/exs1024	https://github.com/jj1bdx/exs1024	Xors
 exs64	https://github.com/jj1bdx/exs64	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
 exsplus	https://github.com/jj1bdx/exsplus	https://github.com/jj1bdx/exsplus	Xorshift128plus pseudo random number generator for Erlang.
 feeder	https://github.com/michaelnisi/feeder	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
+geas	https://github.com/crownedgrouse/geas.git	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
 getopt	https://github.com/jcomellas/getopt.git	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gproc	https://github.com/uwiger/gproc.git	https://github.com/uwiger/gproc	Extended process registry for Erlang
 gun	https://github.com/extend/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
