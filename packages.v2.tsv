@@ -61,4 +61,5 @@ tddreloader	git	https://github.com/version2beta/tddreloader	master	https://githu
 tinymt-erlang	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
 unicorn	git	https://github.com/shizzard/unicorn	0.3.0	https://github.com/shizzard/unicorn	Generic configuration server
 uuid	git	https://github.com/okeuday/uuid	v1.4.0	https://github.com/okeuday/uuid	Erlang UUID Implementation
+wpool	git	https://github.com/inaka/worker_pool.git	1.0.2	https://github.com/inaka/worker_pool	a simple erlang worker pool
 zeta	git	https://github.com/s1n4/zeta	 	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
