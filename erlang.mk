@@ -138,6 +138,8 @@ PKG_FILE_URL ?= https://raw.githubusercontent.com/ninenines/erlang.mk/master/pac
 # Core targets.
 
 deps:: $(ALL_DEPS_DIRS)
+ifeq ($(SKIP_DEPS),true)
+else
 	@for dep in $(ALL_DEPS_DIRS) ; do \
 		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
 			$(MAKE) -C $$dep ; \
@@ -145,6 +147,7 @@ deps:: $(ALL_DEPS_DIRS)
 			echo "include $(CURDIR)/erlang.mk" | ERLC_OPTS=+debug_info $(MAKE) -f - -C $$dep ; \
 		fi ; \
 	done
+endif
 
 distclean:: distclean-deps distclean-pkg
 
