@@ -63,4 +63,5 @@ tinymt-erlang	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.
 unicorn	git	https://github.com/shizzard/unicorn	0.3.0	https://github.com/shizzard/unicorn	Generic configuration server
 uuid	git	https://github.com/okeuday/uuid	v1.4.0	https://github.com/okeuday/uuid	Erlang UUID Implementation
 wpool	git	https://github.com/inaka/worker_pool.git	1.0.2	https://github.com/inaka/worker_pool	a simple erlang worker pool
+xref_runner	git	https://github.com/inaka/xref_runner.git	0.2.0	https://github.com/inaka/xref_runner.git	Erlang Xref Runner (inspired in rebar xref)
 zeta	git	https://github.com/s1n4/zeta	 	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
