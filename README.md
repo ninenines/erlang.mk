@@ -453,6 +453,7 @@ from your application and its dependencies:
 There are a number of optional configuration parameters:
 
 * `ESCRIPT_NAME` if a different output file is required
+* `ESCRIPT_MAIN_MODULE` to specify the module which contains the `main/1` function
 * `ESCRIPT_COMMENT` to alter the comment line in the escript header
 * `ESCRIPT_BEAMS` for the paths searched for `*.beam` files to include
 * `ESCRIPT_SYS_CONFIG` defaults to `rel/sys.config`
