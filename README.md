@@ -255,7 +255,7 @@ The following targets are specific to packages:
 
 `pkg-list` lists all packages in the index.
 
-`pkg-search n=STRING` searches the index for STRING.
+`pkg-search q=STRING` searches the index for STRING.
 
 Packages are downloaded into `DEPS_DIR` (`./deps/` by default).
 
