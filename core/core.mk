@@ -12,7 +12,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-.PHONY: all deps app rel docs install-docs tests clean distclean help erlang-mk
+.PHONY: all deps app rel docs install-docs tests check clean distclean help erlang-mk
 
 ERLANG_MK_VERSION = 1
 
@@ -46,6 +46,8 @@ all:: deps
 rel::
 	@echo -n
 
+check:: clean app tests
+
 clean:: clean-crashdump
 
 clean-crashdump:
@@ -70,6 +72,7 @@ help::
 		"  docs          Build the documentation for this project" \
 		"  install-docs  Install the man pages for this project" \
 		"  tests         Run the tests for this project" \
+		"  check         Compile and run all tests and analysis for this project" \
 		"  clean         Delete temporary and output files from most targets" \
 		"  distclean     Delete all temporary and output files" \
 		"  help          Display this help and exit" \

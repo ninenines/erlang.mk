@@ -15,6 +15,8 @@ DIALYZER_OPTS ?= -Werror_handling -Wrace_conditions \
 
 # Core targets.
 
+check:: dialyze
+
 distclean:: distclean-plt
 
 help::
