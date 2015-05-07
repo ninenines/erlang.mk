@@ -12,7 +12,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-.PHONY: all deps app rel docs tests clean distclean help erlang-mk
+.PHONY: all deps app rel docs install-docs tests clean distclean help erlang-mk
 
 ERLANG_MK_VERSION = 1
 
@@ -63,15 +63,16 @@ help::
 		"Usage: [V=1] make [-jNUM] [target]" \
 		"" \
 		"Core targets:" \
-		"  all         Run deps, app and rel targets in that order" \
-		"  deps        Fetch dependencies (if needed) and compile them" \
-		"  app         Compile the project" \
-		"  rel         Build a release for this project, if applicable" \
-		"  docs        Build the documentation for this project" \
-		"  tests       Run the tests for this project" \
-		"  clean       Delete temporary and output files from most targets" \
-		"  distclean   Delete all temporary and output files" \
-		"  help        Display this help and exit" \
+		"  all           Run deps, app and rel targets in that order" \
+		"  deps          Fetch dependencies (if needed) and compile them" \
+		"  app           Compile the project" \
+		"  rel           Build a release for this project, if applicable" \
+		"  docs          Build the documentation for this project" \
+		"  install-docs  Install the man pages for this project" \
+		"  tests         Run the tests for this project" \
+		"  clean         Delete temporary and output files from most targets" \
+		"  distclean     Delete all temporary and output files" \
+		"  help          Display this help and exit" \
 		"" \
 		"The target clean only removes files that are commonly removed." \
 		"Dependencies and releases are left untouched." \
