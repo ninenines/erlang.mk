@@ -578,8 +578,7 @@ You can submit as many packages as you want in one pull
 request as long as you follow the instructions above.
 
 For patches or plugins, you have to edit the `core/*.mk`
-or `plugins/*.mk` files and then run `make` to create an
-updated `erlang.mk`. If you submit a new plugin, you also
+or `plugins/*.mk` files. If you submit a new plugin, you also
 need to add it to the `build.config` file.
 
 Make sure to keep the commit title short, to have a single
