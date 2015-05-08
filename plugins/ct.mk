@@ -31,25 +31,25 @@ help::
 CT_RUN = ct_run \
 	-no_auto_compile \
 	-noinput \
-	-pa ebin $(DEPS_DIR)/*/ebin \
+	-pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin $(TEST_DIR) \
 	-dir $(TEST_DIR) \
-	-logdir logs
+	-logdir $(CURDIR)/logs
 
 ifeq ($(CT_SUITES),)
 ct:
 else
 ct: test-build
-	@mkdir -p logs/
+	@mkdir -p $(CURDIR)/logs/
 	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS)
 endif
 
 define ct_suite_target
 ct-$(1): test-build
-	@mkdir -p logs/
+	@mkdir -p $(CURDIR)/logs/
 	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_OPTS)
 endef
 
 $(foreach test,$(CT_SUITES),$(eval $(call ct_suite_target,$(test))))
 
 distclean-ct:
-	$(gen_verbose) rm -rf logs/
+	$(gen_verbose) rm -rf $(CURDIR)/logs/

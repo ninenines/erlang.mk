@@ -5,7 +5,7 @@
 
 # Configuration.
 
-TEST_DIR ?= test
+TEST_DIR ?= $(CURDIR)/test
 
 ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
 
