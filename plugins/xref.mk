@@ -21,7 +21,7 @@ XREFR_URL ?= https://github.com/inaka/xref_runner/releases/download/0.2.0/xrefr
 help::
 	@printf "%s\n" "" \
 		"Xref targets:" \
-		"	xref				Run Xrefr using $XREF_CONFIG as config file if defined"
+		"  xref        Run Xrefr using $XREF_CONFIG as config file if defined"
 
 distclean:: distclean-xref
 

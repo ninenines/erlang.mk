@@ -15,7 +15,7 @@ ALL_SHELL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(SHELL_DEPS))
 help::
 	@printf "%s\n" "" \
 		"Shell targets:" \
-		"  shell              Run an erlang shell with SHELL_OPTS or reasonable default"
+		"  shell       Run an erlang shell with SHELL_OPTS or reasonable default"
 
 # Plugin-specific targets.
 
