@@ -10,7 +10,7 @@ RELX_CONFIG ?= $(CURDIR)/relx.config
 RELX ?= $(CURDIR)/relx
 export RELX
 
-RELX_URL ?= https://github.com/erlware/relx/releases/download/v1.3.1/relx
+RELX_URL ?= https://github.com/erlware/relx/releases/download/v2.0.0/relx
 RELX_OPTS ?=
 RELX_OUTPUT_DIR ?= _rel
 
