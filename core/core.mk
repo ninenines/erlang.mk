@@ -85,6 +85,15 @@ help::
 
 # Core functions.
 
+define newline
+
+
+endef
+
+define erlang
+$(ERL) -eval "$(subst $(newline),,$(subst ",\\",$(1)))"
+endef
+
 ifeq ($(shell which wget 2>/dev/null | wc -l), 1)
 define core_http_get
 	wget --no-check-certificate -O $(1) $(2)|| rm $(1)

@@ -1,7 +1,7 @@
 # Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: relx-rel distclean-relx-rel distclean-relx
+.PHONY: relx-rel distclean-relx-rel distclean-relx run
 
 # Configuration.
 
@@ -46,3 +46,20 @@ distclean-relx-rel:
 
 distclean-relx:
 	$(gen_verbose) rm -rf $(RELX)
+
+ifeq ($(wildcard $(RELX_CONFIG)),)
+run:
+else
+
+define get_relx_release.erl
+{ok, Config} = file:consult("$(RELX_CONFIG)"),
+{release, {Name, _}, _} = lists:keyfind(release, 1, Config),
+io:format("~s", [Name]),
+halt(0).
+endef
+
+RELX_RELEASE = `$(call erlang,$(get_relx_release.erl))`
+
+run: all
+	@$(RELX_OUTPUT_DIR)/$(RELX_RELEASE)/bin/$(RELX_RELEASE) console
+endif
