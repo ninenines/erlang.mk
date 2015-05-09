@@ -30,6 +30,11 @@ export PKG_FILE2
 
 PKG_FILE_URL ?= https://raw.githubusercontent.com/ninenines/erlang.mk/master/packages.v2.tsv
 
+# Verbosity.
+
+dep_verbose_0 = @echo " DEP   " $(1);
+dep_verbose = $(dep_verbose_$(V))
+
 # Core targets.
 
 deps:: $(ALL_DEPS_DIRS)
@@ -89,13 +94,13 @@ endif
 
 define dep_fetch
 	if [ "$$$$VS" = "git" ]; then \
-		git clone -n -- $$$$REPO $(DEPS_DIR)/$(1); \
+		git clone -q -n -- $$$$REPO $(DEPS_DIR)/$(1); \
 		cd $(DEPS_DIR)/$(1) && git checkout -q $$$$COMMIT; \
 	elif [ "$$$$VS" = "hg" ]; then \
-		hg clone -U $$$$REPO $(DEPS_DIR)/$(1); \
+		hg clone -q -U $$$$REPO $(DEPS_DIR)/$(1); \
 		cd $(DEPS_DIR)/$(1) && hg update -q $$$$COMMIT; \
 	elif [ "$$$$VS" = "svn" ]; then \
-		svn checkout $$$$REPO $(DEPS_DIR)/$(1); \
+		svn checkout -q $$$$REPO $(DEPS_DIR)/$(1); \
 	elif [ "$$$$VS" = "cp" ]; then \
 		cp -R $$$$REPO $(DEPS_DIR)/$(1); \
 	else \
@@ -109,13 +114,13 @@ $(DEPS_DIR)/$(1):
 	@mkdir -p $(DEPS_DIR)
 ifeq (,$(dep_$(1)))
 	@if [ ! -f $(PKG_FILE2) ]; then $(call core_http_get,$(PKG_FILE2),$(PKG_FILE_URL)); fi
-	@DEPPKG=$$$$(awk 'BEGIN { FS = "\t" }; $$$$1 == "$(1)" { print $$$$2 " " $$$$3 " " $$$$4 }' $(PKG_FILE2);); \
+	$(dep_verbose) DEPPKG=$$$$(awk 'BEGIN { FS = "\t" }; $$$$1 == "$(1)" { print $$$$2 " " $$$$3 " " $$$$4 }' $(PKG_FILE2);); \
 	VS=$$$$(echo $$$$DEPPKG | cut -d " " -f1); \
 	REPO=$$$$(echo $$$$DEPPKG | cut -d " " -f2); \
 	COMMIT=$$$$(echo $$$$DEPPKG | cut -d " " -f3); \
 	$(call dep_fetch,$(1))
 else
-	@VS=$(word 1,$(dep_$(1))); \
+	$(dep_verbose) VS=$(word 1,$(dep_$(1))); \
 	REPO=$(word 2,$(dep_$(1))); \
 	COMMIT=$(word 3,$(dep_$(1))); \
 	$(call dep_fetch,$(1))
