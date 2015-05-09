@@ -16,8 +16,12 @@ TEST_ERLC_OPTS += -DTEST=1
 
 $(foreach dep,$(TEST_DEPS),$(eval $(call dep_target,$(dep))))
 
+ifneq ($(SKIP_DEPS),)
+test-deps:
+else
 test-deps: $(ALL_TEST_DEPS_DIRS)
 	@for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
+endif
 
 ifneq ($(strip $(TEST_DIR)),)
 test-dir:

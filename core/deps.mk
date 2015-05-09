@@ -37,6 +37,9 @@ dep_verbose = $(dep_verbose_$(V))
 
 # Core targets.
 
+ifneq ($(SKIP_DEPS),)
+deps::
+else
 deps:: $(ALL_DEPS_DIRS)
 	@for dep in $(ALL_DEPS_DIRS) ; do \
 		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
@@ -46,6 +49,7 @@ deps:: $(ALL_DEPS_DIRS)
 			exit 1 ; \
 		fi ; \
 	done
+endif
 
 distclean:: distclean-deps distclean-pkg
 

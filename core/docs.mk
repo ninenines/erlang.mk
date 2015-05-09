@@ -11,5 +11,9 @@ ALL_DOC_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(DOC_DEPS))
 
 $(foreach dep,$(DOC_DEPS),$(eval $(call dep_target,$(dep))))
 
+ifneq ($(SKIP_DEPS),)
+doc-deps:
+else
 doc-deps: $(ALL_DOC_DEPS_DIRS)
 	@for dep in $(ALL_DOC_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
+endif
