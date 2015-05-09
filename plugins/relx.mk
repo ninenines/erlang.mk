@@ -47,6 +47,8 @@ distclean-relx-rel:
 distclean-relx:
 	$(gen_verbose) rm -rf $(RELX)
 
+# Run target.
+
 ifeq ($(wildcard $(RELX_CONFIG)),)
 run:
 else
@@ -62,4 +64,10 @@ RELX_RELEASE = `$(call erlang,$(get_relx_release.erl))`
 
 run: all
 	@$(RELX_OUTPUT_DIR)/$(RELX_RELEASE)/bin/$(RELX_RELEASE) console
+
+help::
+	@printf "%s\n" "" \
+		"Relx targets:" \
+		"  run         Compile the project, build the release and run it"
+
 endif
