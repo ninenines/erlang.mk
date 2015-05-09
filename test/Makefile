@@ -33,9 +33,9 @@ else
 	i = @echo ==
 endif
 
-.PHONY: all clean app ct eunit docs
+.PHONY: all clean app ct eunit tests-cover docs
 
-all: app ct eunit docs clean
+all: app ct eunit tests-cover docs clean
 	$i '+---------------------+'
 	$i '|  All tests passed.  |'
 	$i '+---------------------+'
@@ -100,17 +100,7 @@ ct: app1
 eunit: app1
 	$i "eunit: Testing the 'eunit' target."
 	$i "Running eunit test case inside module src/t.erl"
-	$t printf '%s\n' \
-		'-module(t).' \
-		'-export([succ/1]).' \
-		'succ(N) -> N + 1.' \
-		'-ifdef(TEST).' \
-		'-include_lib("eunit/include/eunit.hrl").' \
-		'succ_test() ->' \
-		'	?assertEqual(2, succ(1)),' \
-		'	os:cmd("echo t >> test-eunit.log").' \
-		'-endif.' \
-		> app1/src/t.erl
+	$t $(call create-module-t)
 	$t make -C app1 eunit $v
 	$i "Checking that the eunit test in module t."
 	$t echo t | cmp app1/test-eunit.log -
@@ -147,6 +137,38 @@ eunit: app1
 	$t rm -rf app1/eunit app1/src/t.erl app1/test-eunit.log
 	$i "Test 'eunit' passed."
 
+# TODO: do coverage for 'tests' instead of 'eunit ct' when triq is fixed
+tests-cover: app1
+	$i "tests-cover: Testing 'eunit' and 'ct' with COVER=1"
+	$i "Setting up eunit and ct suites."
+	$t $(call create-module-t)
+	$t mkdir -p app1/test
+	$t printf "%s\n" \
+		"-module(m_SUITE)." \
+		"-export([all/0, testcase1/1])." \
+		"all() -> [testcase1]." \
+		"testcase1(_) -> 2 = m:succ(1)." \
+	 > app1/test/m_SUITE.erl
+	$i "Running tests with coverage analysis."
+	$t make -C app1 eunit ct COVER=1 $v
+	$t [ -e app1/test-eunit.log ]
+	$t [ -e app1/eunit.coverdata ]
+	$t [ -e app1/ct.coverdata ]
+	$i "Generating coverage report."
+	$t make -C app1 cover-report COVER=1 $v
+	$t [ -e app1/cover/m.COVER.html ]
+	$t [ -e app1/cover/t.COVER.html ]
+	$t [ -e app1/cover/index.html ]
+	$i "Checking combined coverage from eunit and ct."
+	$t [ `grep 'Total: 100%' app1/cover/index.html | wc -l` -eq 1 ]
+	$i "Checking that cover-clean removes cover data and report."
+	$t make -C app1 cover-clean $v
+	$t [ ! -e app1/cover ] && [ ! -e app1/eunit.coverdata ]
+	@# clean up
+	$t rm -rf app1/src/t.erl app1/test app1/test-eunit.log
+	$t make -C app1 clean $v
+	$i "Test 'tests-cover' passed."
+
 docs: app1
 	$i "docs: Testing EDoc including DOC_DEPS."
 	$t printf "%s\n" \
@@ -181,3 +203,18 @@ app1:
 		"-export([succ/1])." \
 		"succ(N) -> N + 1." \
 		> app1/src/m.erl
+
+# Extra module in app1 used for testing eunit
+define create-module-t
+printf '%s\n' \
+	'-module(t).' \
+	'-export([succ/1]).' \
+	'succ(N) -> N + 1.' \
+	'-ifdef(TEST).' \
+	'-include_lib("eunit/include/eunit.hrl").' \
+	'succ_test() ->' \
+	'	?assertEqual(2, succ(1)),' \
+	'	os:cmd("echo t >> test-eunit.log").' \
+	'-endif.' \
+	> app1/src/t.erl
+endef
