@@ -99,8 +99,23 @@ define core_http_get
 	wget --no-check-certificate -O $(1) $(2)|| rm $(1)
 endef
 else
+define core_http_get.erl
+	ssl:start(),
+	inets:start(),
+	case httpc:request(get, {"$(2)", []}, [{autoredirect, true}], []) of
+		{ok, {{_, 200, _}, _, Body}} ->
+			case file:write_file("$(1)", Body) of
+				ok -> ok;
+				{error, R1} -> halt(R1)
+			end;
+		{error, R2} ->
+			halt(R2)
+	end,
+	halt(0).
+endef
+
 define core_http_get
-	$(ERL) -eval 'ssl:start(), inets:start(), case httpc:request(get, {"$(2)", []}, [{autoredirect, true}], []) of {ok, {{_, 200, _}, _, Body}} -> case file:write_file("$(1)", Body) of ok -> ok; {error, R1} -> halt(R1) end; {error, R2} -> halt(R2) end, halt(0).'
+	$(call erlang,$(call core_http_get.erl,$(1),$(2)))
 endef
 endif
 
