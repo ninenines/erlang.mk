@@ -55,39 +55,38 @@ distclean:: distclean-deps distclean-pkg
 
 # Deps related targets.
 
-define dep_autopatch
-	$(ERL) -eval " \
-DepDir = \"$(DEPS_DIR)/$(1)/\", \
-fun() -> \
-	{ok, Conf} = case file:consult(DepDir ++ \"rebar.config\") of \
-		{error, enoent} -> {ok, []}; Res -> Res end, \
-	File = case lists:keyfind(deps, 1, Conf) of false -> []; {_, Deps} -> \
-		[begin {Method, Repo, Commit} = case Repos of \
-			{git, R} -> {git, R, master}; \
-			{M, R, {branch, C}} -> {M, R, C}; \
-			{M, R, {tag, C}} -> {M, R, C}; \
-			{M, R, C} -> {M, R, C} \
-		end, \
-		io_lib:format(\"DEPS += ~s\ndep_~s = ~s ~s ~s~n\", [Name, Name, Method, Repo, Commit]) \
-		end || {Name, _, Repos} <- Deps] \
-	end, \
-	First = case lists:keyfind(erl_first_files, 1, Conf) of false -> []; {_, Files} -> \
-		Names = [[\" \", begin \"lre.\" ++ R = lists:reverse(F), lists:reverse(R) end] \
-			 || \"src/\" ++ F <- Files], \
-		io_lib:format(\"COMPILE_FIRST +=~s\n\", [Names]) \
-	end, \
-	ok = file:write_file(\"$(DEPS_DIR)/$(1)/Makefile\", [\"ERLC_OPTS = +debug_info\n\n\", File, First, \"\ninclude erlang.mk\"]) \
-end(), \
-AppSrcOut = \"$(DEPS_DIR)/$(1)/src/$(1).app.src\", \
-AppSrcIn = case filelib:is_regular(AppSrcOut) of false -> \"$(DEPS_DIR)/$(1)/ebin/$(1).app\"; true -> AppSrcOut end, \
-fun() -> \
-	{ok, [{application, $(1), L}]} = file:consult(AppSrcIn), \
-	L2 = case lists:keyfind(modules, 1, L) of {_, _} -> L; false -> [{modules, []}|L] end, \
-	L3 = case lists:keyfind(vsn, 1, L2) of {vsn, git} -> lists:keyreplace(vsn, 1, L2, {vsn, \"git\"}); _ -> L2 end, \
-	ok = file:write_file(AppSrcOut, io_lib:format(\"~p.~n\", [{application, $(1), L3}])) \
-end(), \
-case AppSrcOut of AppSrcIn -> ok; _ -> ok = file:delete(AppSrcIn) end, \
-halt()."
+define dep_autopatch.erl
+	DepDir = "$(DEPS_DIR)/$(1)/",
+	fun() ->
+		{ok, Conf} = case file:consult(DepDir ++ "rebar.config") of
+			{error, enoent} -> {ok, []}; Res -> Res end,
+		File = case lists:keyfind(deps, 1, Conf) of false -> []; {_, Deps} ->
+			[begin {Method, Repo, Commit} = case Repos of
+				{git, R} -> {git, R, master};
+				{M, R, {branch, C}} -> {M, R, C};
+				{M, R, {tag, C}} -> {M, R, C};
+				{M, R, C} -> {M, R, C}
+			end,
+			io_lib:format("DEPS += ~s\ndep_~s = ~s ~s ~s~n", [Name, Name, Method, Repo, Commit]) 
+			end || {Name, _, Repos} <- Deps]
+		end,
+		First = case lists:keyfind(erl_first_files, 1, Conf) of false -> []; {_, Files} ->
+			Names = [[" ", begin "lre." ++ R = lists:reverse(F), lists:reverse(R) end]
+				 || "src/" ++ F <- Files],
+			io_lib:format("COMPILE_FIRST +=~s\n", [Names])
+		end,
+		ok = file:write_file("$(DEPS_DIR)/$(1)/Makefile", ["ERLC_OPTS = +debug_info\n\n", File, First, "\ninclude erlang.mk"])
+	end(),
+	AppSrcOut = "$(DEPS_DIR)/$(1)/src/$(1).app.src",
+	AppSrcIn = case filelib:is_regular(AppSrcOut) of false -> "$(DEPS_DIR)/$(1)/ebin/$(1).app"; true -> AppSrcOut end,
+	fun() ->
+		{ok, [{application, $(1), L}]} = file:consult(AppSrcIn),
+		L2 = case lists:keyfind(modules, 1, L) of {_, _} -> L; false -> [{modules, []}|L] end,
+		L3 = case lists:keyfind(vsn, 1, L2) of {vsn, git} -> lists:keyreplace(vsn, 1, L2, {vsn, "git"}); _ -> L2 end,
+		ok = file:write_file(AppSrcOut, io_lib:format("~p.~n", [{application, $(1), L3}]))
+	end(),
+	case AppSrcOut of AppSrcIn -> ok; _ -> ok = file:delete(AppSrcIn) end,
+	halt().
 endef
 
 ifeq ($(V),0)
@@ -131,7 +130,7 @@ else
 endif
 ifneq ($(filter $(1),$(AUTOPATCH)),)
 	$(call dep_autopatch_verbose,$(1)) \
-		$(call dep_autopatch,$(1)); \
+		$(call erlang,$(call dep_autopatch.erl,$(1))); \
 		cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk
 endif
 endef
