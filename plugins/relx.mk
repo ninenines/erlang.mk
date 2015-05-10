@@ -54,10 +54,10 @@ run:
 else
 
 define get_relx_release.erl
-{ok, Config} = file:consult("$(RELX_CONFIG)"),
-{release, {Name, _}, _} = lists:keyfind(release, 1, Config),
-io:format("~s", [Name]),
-halt(0).
+	{ok, Config} = file:consult("$(RELX_CONFIG)"),
+	{release, {Name, _}, _} = lists:keyfind(release, 1, Config),
+	io:format("~s", [Name]),
+	halt(0).
 endef
 
 RELX_RELEASE = `$(call erlang,$(get_relx_release.erl))`
