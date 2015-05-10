@@ -8,24 +8,36 @@ ifneq ($(wildcard $(DEPS_DIR)/triq),)
 
 tests:: triq
 
-define triq_run
-$(ERL) -pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin \
-	-eval "try $(1) of true -> halt(0); _ -> halt(1) catch error:undef -> io:format(\"Undefined property or module~n\"), halt() end."
+define triq_check.erl
+	code:add_pathsa(["$(CURDIR)/ebin", "$(DEPS_DIR)/*/ebin"]),
+	try
+		case $(1) of
+			all -> [true] =:= lists:usort([triq:check(M) || M <- [$(MODULES)]]);
+			module -> triq:check($(2));
+			function -> triq:check($(2))
+		end
+	of
+		true -> halt(0);
+		_ -> halt(1)
+	catch error:undef ->
+		io:format("Undefined property or module~n"),
+		halt(0)
+	end.
 endef
 
 ifdef t
 ifeq (,$(findstring :,$(t)))
 triq: test-build
-	@$(call triq_run,triq:check($(t)))
+	@$(call erlang,$(call triq_check.erl,module,$(t)))
 else
 triq: test-build
 	@echo Testing $(t)/0
-	@$(call triq_run,triq:check($(t)()))
+	@$(call erlang,$(call triq_check.erl,function,$(t)()))
 endif
 else
 triq: test-build
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
-	$(gen_verbose) $(call triq_run,[true] =:= lists:usort([triq:check(M) || M <- [$(MODULES)]]))
+	$(gen_verbose) $(call erlang,$(call triq_check.erl,all,undefined))
 endif
 endif
