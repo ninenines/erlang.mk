@@ -91,7 +91,7 @@ define newline
 endef
 
 define erlang
-$(ERL) -eval "$(subst $(newline),,$(subst ",\\",$(1)))"
+$(ERL) -eval "$(subst $(newline),,$(subst ",\",$(1)))"
 endef
 
 ifeq ($(shell which wget 2>/dev/null | wc -l), 1)
