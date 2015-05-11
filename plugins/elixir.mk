@@ -17,8 +17,3 @@ ifneq ($(wildcard src/),)
 ebin/$(PROJECT).app:: $(shell find src -type f -name \*.ex 2>/dev/null)
 	$(if $(strip $?),$(call compile_elixir,$?))
 endif
-
-ifneq ($(wildcard lib/),)
-ebin/$(PROJECT).app:: $(shell find lib -type f -name \*.ex 2>/dev/null)
-	$(if $(strip $?),$(call compile_elixir,$?))
-endif
