@@ -35,7 +35,7 @@ endif
 
 .PHONY: all clean app ct eunit tests-cover docs
 
-all: app ct eunit tests-cover docs clean
+all: clean app ct eunit tests-cover docs
 	$i '+---------------------+'
 	$i '|  All tests passed.  |'
 	$i '+---------------------+'
@@ -161,9 +161,12 @@ tests-cover: app1
 	$t [ -e app1/cover/index.html ]
 	$i "Checking combined coverage from eunit and ct."
 	$t [ `grep 'Total: 100%' app1/cover/index.html | wc -l` -eq 1 ]
-	$i "Checking that cover-clean removes cover data and report."
-	$t make -C app1 cover-clean $v
-	$t [ ! -e app1/cover ] && [ ! -e app1/eunit.coverdata ]
+	$i "Checking that cover-report-clean removes cover report."
+	$t make -C app1 cover-report-clean $v
+	$t [ ! -e app1/cover ]
+	$i "Checking that coverdata-clean removes cover data."
+	$t make -C app1 coverdata-clean $v
+	$t [ ! -e app1/eunit.coverdata ]
 	@# clean up
 	$t rm -rf app1/src/t.erl app1/test app1/test-eunit.log
 	$t make -C app1 clean $v
@@ -196,6 +199,7 @@ docs: app1
 app1:
 	$i "Setting up app."
 	$t mkdir -p app1
+	$t cd .. && make
 	$t cp ../erlang.mk app1/
 	$t make -C app1 -f erlang.mk bootstrap-lib
 	$t printf "%s\n" \
