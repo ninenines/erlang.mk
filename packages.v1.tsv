@@ -22,7 +22,7 @@ eganglia	https://github.com/inaka/eganglia	https://github.com/inaka/eganglia	Erl
 ehsa	https://bitbucket.org/a12n/ehsa	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
 ej	https://github.com/seth/ej	https://github.com/seth/ej	Helper module for working with Erlang terms representing JSON
 eleveldb	https://github.com/basho/eleveldb	https://github.com/basho/eleveldb	Erlang LevelDB API
-elixir	https://github.com/elixir-lang/elixir.git	http://elixir-lang.org Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
+elixir	https://github.com/elixir-lang/elixir.git	http://elixir-lang.org	Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
 elli	https://github.com/knutin/elli	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
 elvis	https://github.com/inaka/elvis	https://github.com/inaka/elvis	Erlang Style Reviewer
 emysql	https://github.com/Eonblast/Emysql	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
