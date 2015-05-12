@@ -43,6 +43,7 @@ nodefinder	git	https://github.com/erlanger/nodefinder	0.2.3	https://github.com/e
 pegjs	git	https://github.com/dmitriid/pegjs	0.3	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 poolboy	git	https://github.com/devinus/poolboy	master	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 ptrackerl	git	https://github.com/inaka/ptrackerl	master	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
+qdate	git	https://github.com/choptastic/qdate	0.4.0	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
 ranch	git	https://github.com/ninenines/ranch	1.1.0	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 rec2json	git	https://github.com/lordnull/rec2json	master	https://github.com/lordnull/rec2json	Compile erlang record definitions into modules to convert them to/from json easily.
 record_info	git	https://github.com/bipthelin/erlang-record_info	master	https://github.com/bipthelin/erlang-record_info	Convert between record and proplist
