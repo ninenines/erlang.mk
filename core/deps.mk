@@ -140,14 +140,18 @@ endef
 define dep_autopatch_appsrc.erl
 	AppSrcOut = "$(DEPS_DIR)/$(1)/src/$(1).app.src",
 	AppSrcIn = case filelib:is_regular(AppSrcOut) of false -> "$(DEPS_DIR)/$(1)/ebin/$(1).app"; true -> AppSrcOut end,
-	fun() ->
-		{ok, [{application, $(1), L}]} = file:consult(AppSrcIn),
-		L2 = case lists:keyfind(modules, 1, L) of {_, _} -> L; false -> [{modules, []}|L] end,
-		L3 = case lists:keyfind(vsn, 1, L2) of {vsn, git} -> lists:keyreplace(vsn, 1, L2, {vsn, "git"}); _ -> L2 end,
-		ok = file:write_file(AppSrcOut, io_lib:format("~p.~n", [{application, $(1), L3}]))
-	end(),
-	case AppSrcOut of AppSrcIn -> ok; _ -> ok = file:delete(AppSrcIn) end,
-	halt().
+	case filelib:is_regular(AppSrcIn) of
+		false -> ok;
+		true ->
+			fun() ->
+				{ok, [{application, $(1), L}]} = file:consult(AppSrcIn),
+				L2 = case lists:keyfind(modules, 1, L) of {_, _} -> L; false -> [{modules, []}|L] end,
+				L3 = case lists:keyfind(vsn, 1, L2) of {vsn, git} -> lists:keyreplace(vsn, 1, L2, {vsn, "git"}); _ -> L2 end,
+				ok = file:write_file(AppSrcOut, io_lib:format("~p.~n", [{application, $(1), L3}]))
+			end(),
+			case AppSrcOut of AppSrcIn -> ok; _ -> ok = file:delete(AppSrcIn) end
+	end,
+	halt()
 endef
 
 define dep_fetch
@@ -197,6 +201,10 @@ else
 endif
 endif
 endif
+	@if [ -f $(DEPS_DIR)/$(1)/configure.ac ]; then \
+		echo " AUTO  " $(1); \
+		cd $(DEPS_DIR)/$(1) && autoreconf -vif; \
+	fi
 	-@if [ -f $(DEPS_DIR)/$(1)/configure ]; then \
 		echo " CONF  " $(1); \
 		cd $(DEPS_DIR)/$(1) && ./configure; \
