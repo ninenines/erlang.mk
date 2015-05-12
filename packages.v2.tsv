@@ -19,6 +19,7 @@ erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl
 erwa	git	https://github.com/bwegh/erwa	0.1.1	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 exs1024	git	https://github.com/jj1bdx/exs1024	master	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
 exs64	git	https://github.com/jj1bdx/exs64	master	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
+exsplus116	git	https://github.com/jj1bdx/exsplus116	master	https://github.com/jj1bdx/exsplus116	Xorshift116plus for Erlang
 exsplus128	git	https://github.com/jj1bdx/exsplus128	master	https://github.com/jj1bdx/exsplus128	Xorshift128plus pseudo random number generator for Erlang.
 feeder	git	https://github.com/michaelnisi/feeder	v1.4.6	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
 geas	git	https://github.com/crownedgrouse/geas	master	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
