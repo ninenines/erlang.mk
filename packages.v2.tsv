@@ -21,6 +21,7 @@ exs64	git	https://github.com/jj1bdx/exs64	master	https://github.com/jj1bdx/exs64
 exsplus128	git	https://github.com/jj1bdx/exsplus128	master	https://github.com/jj1bdx/exsplus128	Xorshift128plus pseudo random number generator for Erlang.
 feeder	git	https://github.com/michaelnisi/feeder	v1.4.6	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
 geas	git	https://github.com/crownedgrouse/geas	master	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
+gen_smtp	git	https://github.com/Vagabond/gen_smtp	master	https://github.com/Vagabond/gen_smtp	A generic Erlang SMTP server and client that can be extended via callback modules
 getopt	git	https://github.com/jcomellas/getopt	master	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gproc	git	https://github.com/uwiger/gproc	master	https://github.com/uwiger/gproc	Extended process registry for Erlang
 gun	git	https://github.com/ninenines/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
