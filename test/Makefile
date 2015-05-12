@@ -35,7 +35,9 @@ endif
 
 .PHONY: all clean app ct eunit tests-cover docs
 
-all: clean app ct eunit tests-cover docs
+.NOTPARALLEL:
+
+all: clean app ct eunit tests-cover docs pkgs
 	$i '+---------------------+'
 	$i '|  All tests passed.  |'
 	$i '+---------------------+'
@@ -195,8 +197,7 @@ docs: app1
 	$t rm app1/Makefile-doc
 	$i "Test 'docs' passed."
 
-# Test application used for testing.
-app1:
+define app1_setup
 	$i "Setting up app."
 	$t mkdir -p app1
 	$t cd .. && make
@@ -207,6 +208,35 @@ app1:
 		"-export([succ/1])." \
 		"succ(N) -> N + 1." \
 		> app1/src/m.erl
+endef
+
+define pkg_test_target
+pkg-$(1)-clean:
+	$t rm -rf app1
+
+pkg-$(1)-app1:
+	$(call app1_setup)
+
+pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
+	$i
+	$i "  pkgs: Checking that '$(1)' builds correctly"
+	$i
+	$t printf "%s\n" \
+		"PROJECT = app1" \
+		"DEPS = $(1)" \
+		"include erlang.mk" \
+		> app1/Makefile
+	cp ../packages.v2.tsv app1/.erlang.mk.packages.v2
+	$t make -C app1
+endef
+
+$(foreach pkg,$(shell awk '{print $$1}' ../packages.v2.tsv),$(eval $(call pkg_test_target,$(pkg))))
+
+pkgs: $(foreach pkg,$(shell awk '{print $$1}' ../packages.v2.tsv),pkg-$(pkg))
+
+# Test application used for testing.
+app1:
+	$(call app1_setup)
 
 # Extra module in app1 used for testing eunit
 define create-module-t

@@ -55,11 +55,55 @@ distclean:: distclean-deps distclean-pkg
 
 # Deps related targets.
 
-define dep_autopatch.erl
+# @todo rename GNUmakefile and makefile into Makefile first, if they exist
+# While Makefile file could be GNUmakefile or makefile,
+# in practice only Makefile is needed so far.
+define dep_autopatch
+	if [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
+		if [ 0 != `grep -c rebar $(DEPS_DIR)/$(1)/Makefile` ]; then \
+			$(call dep_autopatch2,$(1)); \
+		else \
+			$(call dep_autopatch_erlang_mk,$(1)); \
+		fi \
+	else \
+		$(call dep_autopatch2,$(1)); \
+	fi
+endef
+
+define dep_autopatch2
+	if [ ! -f $(DEPS_DIR)/$(1)/rebar.config ]; then \
+		$(call dep_autopatch_gen,$(1)); \
+	else \
+		$(call dep_autopatch_rebar,$(1)); \
+	fi
+endef
+
+# Overwrite erlang.mk with the current file by default.
+ifeq ($(NO_AUTOPATCH_ERLANG_MK),)
+define dep_autopatch_erlang_mk
+	rm -f $(DEPS_DIR)/$(1)/erlang.mk; \
+	cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk
+endef
+else
+define dep_autopatch_erlang_mk
+	echo -n
+endef
+endif
+
+define dep_autopatch_gen
+	printf "%s\n" \
+		"ERLC_OPTS = +debug_info" \
+		"include ../../erlang.mk" > $(DEPS_DIR)/$(1)/Makefile
+endef
+
+define dep_autopatch_rebar
+	$(call erlang,$(call dep_autopatch_rebar.erl,$(1)))
+endef
+
+define dep_autopatch_rebar.erl
 	DepDir = "$(DEPS_DIR)/$(1)/",
 	fun() ->
-		{ok, Conf} = case file:consult(DepDir ++ "rebar.config") of
-			{error, enoent} -> {ok, []}; Res -> Res end,
+		{ok, Conf} = file:consult(DepDir ++ "rebar.config"),
 		File = case lists:keyfind(deps, 1, Conf) of false -> []; {_, Deps} ->
 			[begin {Method, Repo, Commit} = case Repos of
 				{git, R} -> {git, R, master};
@@ -68,14 +112,14 @@ define dep_autopatch.erl
 				{M, R, C} -> {M, R, C}
 			end,
 			io_lib:format("DEPS += ~s\ndep_~s = ~s ~s ~s~n", [Name, Name, Method, Repo, Commit]) 
-			end || {Name, _, Repos} <- Deps]
+			end || {Name, _, Repos} <- Deps, {Name, _, Repos, [raw]} <- Deps]
 		end,
 		First = case lists:keyfind(erl_first_files, 1, Conf) of false -> []; {_, Files} ->
 			Names = [[" ", begin "lre." ++ R = lists:reverse(F), lists:reverse(R) end]
 				 || "src/" ++ F <- Files],
 			io_lib:format("COMPILE_FIRST +=~s\n", [Names])
 		end,
-		ok = file:write_file("$(DEPS_DIR)/$(1)/Makefile", ["ERLC_OPTS = +debug_info\n\n", File, First, "\ninclude erlang.mk"])
+		ok = file:write_file("$(DEPS_DIR)/$(1)/Makefile", ["ERLC_OPTS = +debug_info\n\n", File, First, "\ninclude ../../erlang.mk"])
 	end(),
 	AppSrcOut = "$(DEPS_DIR)/$(1)/src/$(1).app.src",
 	AppSrcIn = case filelib:is_regular(AppSrcOut) of false -> "$(DEPS_DIR)/$(1)/ebin/$(1).app"; true -> AppSrcOut end,
@@ -88,12 +132,6 @@ define dep_autopatch.erl
 	case AppSrcOut of AppSrcIn -> ok; _ -> ok = file:delete(AppSrcIn) end,
 	halt().
 endef
-
-ifeq ($(V),0)
-define dep_autopatch_verbose
-	@echo " PATCH " $(1);
-endef
-endif
 
 define dep_fetch
 	if [ "$$$$VS" = "git" ]; then \
@@ -123,15 +161,31 @@ ifeq (,$(dep_$(1)))
 	COMMIT=$$$$(echo $$$$DEPPKG | cut -d " " -f3); \
 	$(call dep_fetch,$(1))
 else
+ifeq (1,$(words $(dep_$(1))))
+	$(dep_verbose) VS=git; \
+	REPO=$(dep_$(1)); \
+	COMMIT=master; \
+	$(call dep_fetch,$(1))
+else
+ifeq (2,$(words $(dep_$(1))))
+	$(dep_verbose) VS=git; \
+	REPO=$(word 1,$(dep_$(1))); \
+	COMMIT=$(word 2,$(dep_$(1))); \
+	$(call dep_fetch,$(1))
+else
 	$(dep_verbose) VS=$(word 1,$(dep_$(1))); \
 	REPO=$(word 2,$(dep_$(1))); \
 	COMMIT=$(word 3,$(dep_$(1))); \
 	$(call dep_fetch,$(1))
 endif
-ifneq ($(filter $(1),$(AUTOPATCH)),)
-	$(call dep_autopatch_verbose,$(1)) \
-		$(call erlang,$(call dep_autopatch.erl,$(1))); \
-		cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk
+endif
+endif
+	-@if [ -f $(DEPS_DIR)/$(1)/configure ]; then \
+		echo " CONF  " $(1); \
+		cd $(DEPS_DIR)/$(1) && ./configure; \
+	fi
+ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
+	@$(call dep_autopatch,$(1))
 endif
 endef
 
