@@ -2,7 +2,6 @@
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: clean-c_src distclean-c_src-env
-# todo
 
 # Configuration.
 
@@ -50,7 +49,11 @@ link_verbose = $(link_verbose_$(V))
 ifeq ($(wildcard $(C_SRC_DIR)),)
 else ifneq ($(wildcard $(C_SRC_DIR)/Makefile),)
 app::
-	$(MAKE) -C $(C_SRC_DIR)
+	$(MAKE) -C $(C_SRC_DIR) \
+		CFLAGS="$(CFLAGS)" \
+		CXXFLAGS="$(CXXFLAGS)" \
+		LDLIBS="$(LDLIBS)" \
+		LDFLAGS="$(LDFLAGS)"
 
 clean::
 	$(MAKE) -C $(C_SRC_DIR) clean
@@ -80,6 +83,14 @@ $(C_SRC_OUTPUT): $(OBJECTS)
 %.o: %.cpp
 	$(COMPILE_CPP) $(OUTPUT_OPTION) $<
 
+clean:: clean-c_src
+
+clean-c_src:
+	$(gen_verbose) rm -f $(C_SRC_OUTPUT) $(OBJECTS)
+
+endif
+
+ifneq ($(wildcard $(C_SRC_DIR)),)
 $(C_SRC_ENV):
 	@$(ERL) -eval "file:write_file(\"$(C_SRC_ENV)\", \
 		io_lib:format( \
@@ -90,11 +101,6 @@ $(C_SRC_ENV):
 			code:lib_dir(erl_interface, include), \
 			code:lib_dir(erl_interface, lib)])), \
 		halt()."
-
-clean:: clean-c_src
-
-clean-c_src:
-	$(gen_verbose) rm -f $(C_SRC_OUTPUT) $(OBJECTS)
 
 distclean:: distclean-c_src-env
 

@@ -82,45 +82,62 @@ endef
 ifeq ($(NO_AUTOPATCH_ERLANG_MK),)
 define dep_autopatch_erlang_mk
 	rm -f $(DEPS_DIR)/$(1)/erlang.mk; \
-	cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk
+	cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk; \
+	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
 endef
 else
 define dep_autopatch_erlang_mk
-	echo -n
+	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
 endef
 endif
 
 define dep_autopatch_gen
 	printf "%s\n" \
 		"ERLC_OPTS = +debug_info" \
-		"include ../../erlang.mk" > $(DEPS_DIR)/$(1)/Makefile
+		"include ../../erlang.mk" > $(DEPS_DIR)/$(1)/Makefile; \
+	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
 endef
 
 define dep_autopatch_rebar
-	$(call erlang,$(call dep_autopatch_rebar.erl,$(1)))
+	rm -f $(DEPS_DIR)/$(1)/Makefile; \
+	$(call erlang,$(call dep_autopatch_rebar.erl,$(1))); \
+	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
 endef
 
 define dep_autopatch_rebar.erl
-	DepDir = "$(DEPS_DIR)/$(1)/",
+	{ok, Conf} = file:consult("$(DEPS_DIR)/$(1)/rebar.config"),
+	Write = fun (Text) ->
+		file:write_file("$(DEPS_DIR)/$(1)/Makefile", Text, [append])
+	end,
+	Write("ERLC_OPTS = +debug_info\n\n"),
 	fun() ->
-		{ok, Conf} = file:consult(DepDir ++ "rebar.config"),
-		File = case lists:keyfind(deps, 1, Conf) of false -> []; {_, Deps} ->
-			[begin {Method, Repo, Commit} = case Repos of
-				{git, R} -> {git, R, master};
-				{M, R, {branch, C}} -> {M, R, C};
-				{M, R, {tag, C}} -> {M, R, C};
-				{M, R, C} -> {M, R, C}
-			end,
-			io_lib:format("DEPS += ~s\ndep_~s = ~s ~s ~s~n", [Name, Name, Method, Repo, Commit]) 
-			end || {Name, _, Repos} <- Deps, {Name, _, Repos, [raw]} <- Deps]
-		end,
-		First = case lists:keyfind(erl_first_files, 1, Conf) of false -> []; {_, Files} ->
-			Names = [[" ", begin "lre." ++ R = lists:reverse(F), lists:reverse(R) end]
-				 || "src/" ++ F <- Files],
-			io_lib:format("COMPILE_FIRST +=~s\n", [Names])
-		end,
-		ok = file:write_file("$(DEPS_DIR)/$(1)/Makefile", ["ERLC_OPTS = +debug_info\n\n", File, First, "\ninclude ../../erlang.mk"])
+		File = case lists:keyfind(deps, 1, Conf) of
+			false -> [];
+			{_, Deps} ->
+				[begin
+					Name = element(1, Dep),
+					{Method, Repo, Commit} = case element(3, Dep) of
+						{git, R} -> {git, R, master};
+						{M, R, {branch, C}} -> {M, R, C};
+						{M, R, {tag, C}} -> {M, R, C};
+						{M, R, C} -> {M, R, C}
+					end,
+					Write(io_lib:format("DEPS += ~s\ndep_~s = ~s ~s ~s~n", [Name, Name, Method, Repo, Commit]))
+				end || Dep <- Deps, tuple_size(Dep) > 2]
+		end
 	end(),
+	fun() ->
+		First = case lists:keyfind(erl_first_files, 1, Conf) of false -> []; {_, Files} ->
+			Names = [[" ", begin "lre." ++ Elif = lists:reverse(F), lists:reverse(Elif) end]
+				 || "src/" ++ F <- Files],
+			Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
+		end
+	end(),
+	Write("\ninclude ../../erlang.mk"),
+	halt()
+endef
+
+define dep_autopatch_appsrc.erl
 	AppSrcOut = "$(DEPS_DIR)/$(1)/src/$(1).app.src",
 	AppSrcIn = case filelib:is_regular(AppSrcOut) of false -> "$(DEPS_DIR)/$(1)/ebin/$(1).app"; true -> AppSrcOut end,
 	fun() ->
