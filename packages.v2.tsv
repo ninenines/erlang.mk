@@ -60,4 +60,5 @@ unicorn	git	https://github.com/shizzard/unicorn	0.3.0	https://github.com/shizzar
 uuid	git	https://github.com/okeuday/uuid	v1.4.0	https://github.com/okeuday/uuid	Erlang UUID Implementation
 worker_pool	git	https://github.com/inaka/worker_pool	1.0.2	https://github.com/inaka/worker_pool	a simple erlang worker pool
 xref_runner	git	https://github.com/inaka/xref_runner	0.2.0	https://github.com/inaka/xref_runner	Erlang Xref Runner (inspired in rebar xref)
+yamler	git	https://github.com/goertzenator/yamler	master	https://github.com/goertzenator/yamler	libyaml-based yaml loader for Erlang
 zeta	git	https://github.com/s1n4/zeta	 	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
