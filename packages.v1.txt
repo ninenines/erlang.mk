@@ -52,6 +52,7 @@ hackney	https://github.com/benoitc/hackney	https://github.com/benoitc/hackney	si
 hanoidb	https://github.com/krestenkrab/hanoidb	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 itweet	https://github.com/inaka/itweet	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
+jesse	https://github.com/klarna/jesse	https://github.com/klarna/jesse	jesse (JSon Schema Erlang) is an implementation of a json schema validator for Erlang.
 jiffy	https://github.com/davisp/jiffy	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
 jiffy_v	https://github.com/shizzard/jiffy-v	https://github.com/shizzard/jiffy-v	JSON validation utility
 jobs	https://github.com/esl/jobs	https://github.com/esl/jobs	a Job scheduler for load regulation
