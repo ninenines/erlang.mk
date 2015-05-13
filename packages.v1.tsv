@@ -115,6 +115,7 @@ twitter_erlang	https://github.com/ngerakines/erlang_twitter	https://github.com/n
 unicorn	https://github.com/shizzard/unicorn	https://github.com/shizzard/unicorn	Generic configuration server
 uuid	https://github.com/okeuday/uuid	https://github.com/okeuday/uuid	Erlang UUID Implementation
 ux	https://github.com/erlang-unicode/ux	https://github.com/erlang-unicode/ux	Unicode eXtention for Erlang (Strings, Collation)
+webmachine	https://github.com/basho/webmachine	https://github.com/basho/webmachine	A REST-based system for building web applications.
 worker_pool	https://github.com/inaka/worker_pool	https://github.com/inaka/worker_pool	a simple erlang worker pool
 xref_runner	https://github.com/inaka/xref_runner	https://github.com/inaka/xref_runner	Erlang Xref Runner (inspired in rebar xref)
 yamler	https://github.com/goertzenator/yamler	https://github.com/goertzenator/yamler	libyaml-based yaml loader for Erlang
