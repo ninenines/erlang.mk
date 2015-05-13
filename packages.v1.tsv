@@ -14,6 +14,7 @@ eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlan
 epgsql	https://github.com/epgsql/epgsql	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 eredis	https://github.com/wooga/eredis	https://github.com/wooga/eredis	Non-blocking Redis client with focus on performance and robustness
 erlcron	https://github.com/erlware/erlcron	https://github.com/erlware/erlcron	Erlang cronish system
+erldb	https://github.com/erldb/erldb	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 exmpp	https://github.com/processone/exmpp	https://github.com/processone/exmpp	Erlang XMPP library
