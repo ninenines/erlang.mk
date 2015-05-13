@@ -12,6 +12,7 @@ debbie	https://github.com/crownedgrouse/debbie	https://github.com/crownedgrouse/
 dispcount	https://github.com/ferd/dispcount	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
 e2	https://github.com/gar1t/e2	http://e2project.org	Library to simply writing correct OTP applications.
 edgar	https://github.com/crownedgrouse/edgar	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
+eep	https://github.com/virtan/eep	https://github.com/virtan/eep	Erlang Easy Profiling (eep) application provides a way to analyze application performance and call hierarchy
 eganglia	https://github.com/inaka/eganglia	https://github.com/inaka/eganglia	Erlang library to interact with Ganglia
 ehsa	https://bitbucket.org/a12n/ehsa	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
 elvis	https://github.com/inaka/elvis	https://github.com/inaka/elvis	Erlang Style Reviewer
