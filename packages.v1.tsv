@@ -74,6 +74,7 @@ mekao	https://github.com/ddosia/mekao	https://github.com/ddosia/mekao	SQL constr
 mochiweb	https://github.com/mochi/mochiweb	https://github.com/mochi/mochiweb	MochiWeb is an Erlang library for building lightweight HTTP servers.
 modlib	https://github.com/gar1t/modlib	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 mongodb	https://github.com/comtihon/mongodb-erlang	https://github.com/comtihon/mongodb-erlang	MongoDB driver for Erlang
+msgpack	https://github.com/msgpack/msgpack-erlang	https://github.com/msgpack/msgpack-erlang	MessagePack (de)serializer implementation for Erlang
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 nodefinder	https://github.com/erlanger/nodefinder	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
