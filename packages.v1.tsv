@@ -43,6 +43,7 @@ exsplus128	https://github.com/jj1bdx/exsplus128	https://github.com/jj1bdx/exsplu
 feeder	https://github.com/michaelnisi/feeder	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
 folsom	https://github.com/boundary/folsom	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
 geas	https://github.com/crownedgrouse/geas	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
+gen_nb_server	https://github.com/kevsmith/gen_nb_server	https://github.com/kevsmith/gen_nb_server	OTP behavior for writing non-blocking servers
 gen_smtp	https://github.com/Vagabond/gen_smtp	https://github.com/Vagabond/gen_smtp	A generic Erlang SMTP server and client that can be extended via callback modules
 getopt	https://github.com/jcomellas/getopt	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gproc	https://github.com/uwiger/gproc	https://github.com/uwiger/gproc	Extended process registry for Erlang
