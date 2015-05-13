@@ -67,6 +67,7 @@ ling	git	https://github.com/cloudozer/ling	master	https://github.com/cloudozer/l
 live	git	https://github.com/ninenines/live	master	http://ninenines.eu	Automated module and configuration reloader.
 locks	git	https://github.com/uwiger/locks	master	https://github.com/uwiger/locks	A scalable, deadlock-resolving resource locker
 log4erl	git	https://github.com/ahmednawras/log4erl	master	https://github.com/ahmednawras/log4erl	A logger for erlang in the spirit of Log4J.
+luerl	git	https://github.com/rvirding/luerl	master	https://github.com/rvirding/luerl	Lua in Erlang
 mekao	git	https://github.com/ddosia/mekao	master	https://github.com/ddosia/mekao	SQL constructor
 modlib	git	https://github.com/gar1t/modlib	master	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
