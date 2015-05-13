@@ -31,6 +31,7 @@ erldb	git	https://github.com/erldb/erldb	master	http://erldb.org	ORM (Object-rel
 erlog	git	https://github.com/rvirding/erlog	master	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlport	git	https://github.com/hdima/erlport	master	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
 erlsom	git	https://github.com/willemdj/erlsom	master	https://github.com/willemdj/erlsom	XML parser for Erlang
+erlware_commons	git	https://github.com/erlware/erlware_commons	master	https://github.com/erlware/erlware_commons	Erlware Commons is an Erlware project focused on all aspects of reusable Erlang components.
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	git	https://github.com/bwegh/erwa	0.1.1	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 exmpp	git	https://github.com/processone/exmpp	master	https://github.com/processone/exmpp	Erlang XMPP library
