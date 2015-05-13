@@ -106,6 +106,7 @@ sfmt	https://github.com/jj1bdx/sfmt-erlang	https://github.com/jj1bdx/sfmt-erlang
 sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform for type based validation.
 shotgun	https://github.com/inaka/shotgun	https://github.com/inaka/shotgun	better than just a gun
 sqerl	https://github.com/hairyhum/sqerl	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
+statebox	https://github.com/mochi/statebox	https://github.com/mochi/statebox	Erlang state monad with merge/conflict-resolution capabilities. Useful for Riak.
 swab	https://github.com/crownedgrouse/swab	https://github.com/crownedgrouse/swab	General purpose buffer handling module
 switchboard	https://github.com/thusfresh/switchboard	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
 sync	https://github.com/rustyio/sync	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.

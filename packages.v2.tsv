@@ -106,6 +106,7 @@ sfmt	git	https://github.com/jj1bdx/sfmt-erlang	master	https://github.com/jj1bdx/
 sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse transform for type based validation.
 shotgun	git	https://github.com/inaka/shotgun	0.1.0	https://github.com/inaka/shotgun	better than just a gun
 sqerl	git	https://github.com/hairyhum/sqerl	master	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
+statebox	git	https://github.com/mochi/statebox	master	https://github.com/mochi/statebox	Erlang state monad with merge/conflict-resolution capabilities. Useful for Riak.
 swab	git	https://github.com/crownedgrouse/swab	master	https://github.com/crownedgrouse/swab	General purpose buffer handling module
 switchboard	git	https://github.com/thusfresh/switchboard	master	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
 sync	git	https://github.com/rustyio/sync	master	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
