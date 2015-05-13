@@ -25,6 +25,7 @@ epgsql	https://github.com/epgsql/epgsql	https://github.com/epgsql/epgsql	Erlang 
 eredis	https://github.com/wooga/eredis	https://github.com/wooga/eredis	Erlang Redis client
 eredis	https://github.com/wooga/eredis	https://github.com/wooga/eredis	Non-blocking Redis client with focus on performance and robustness
 erlang_js	https://github.com/basho/erlang_js	https://github.com/basho/erlang_js	A linked-in driver for Erlang to Mozilla's Spidermonkey Javascript runtime.
+erlcloud	https://github.com/gleber/erlcloud	https://github.com/gleber/erlcloud	Cloud Computing library for erlang (Amazon EC2, S3, SQS, SimpleDB, Mechanical Turk, ELB)
 erlcron	https://github.com/erlware/erlcron	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	https://github.com/erldb/erldb	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
