@@ -1,4 +1,5 @@
 apns	https://github.com/inaka/apns4erl	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
+azdht	https://github.com/arcusfelis/azdht	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
 bullet	https://github.com/extend/bullet	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Really simple terminal colorization
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
