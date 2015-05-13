@@ -62,6 +62,7 @@ kjell	git	https://github.com/karlll/kjell	master	https://github.com/karlll/kjell
 kraken	git	https://github.com/Asana/kraken	master	https://github.com/Asana/kraken	Distributed Pubsub Server for Realtime Apps
 lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A logging framework for Erlang/OTP.
 lasse	git	https://github.com/inaka/lasse	0.1.0	https://github.com/inaka/lasse	SSE handler for Cowboy
+lfe	git	https://github.com/rvirding/lfe	master	https://github.com/rvirding/lfe	Lisp Flavoured Erlang (LFE)
 live	git	https://github.com/ninenines/live	master	http://ninenines.eu	Automated module and configuration reloader.
 mekao	git	https://github.com/ddosia/mekao	master	https://github.com/ddosia/mekao	SQL constructor
 modlib	git	https://github.com/gar1t/modlib	master	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
