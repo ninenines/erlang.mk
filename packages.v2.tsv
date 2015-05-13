@@ -86,6 +86,7 @@ oauth2	git	https://github.com/kivra/oauth2	master	https://github.com/kivra/oauth
 oauth	git	https://github.com/tim/erlang-oauth	master	https://github.com/tim/erlang-oauth	An Erlang OAuth 1.0 implementation
 openpoker	git	https://github.com/hpyhacking/openpoker	master	https://github.com/hpyhacking/openpoker	Genesis Texas hold'em Game Server
 pegjs	git	https://github.com/dmitriid/pegjs	0.3	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
+pobox	git	https://github.com/ferd/pobox	master	https://github.com/ferd/pobox	External buffer processes to protect against mailbox overflow in Erlang
 poolboy	git	https://github.com/devinus/poolboy	master	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 ptrackerl	git	https://github.com/inaka/ptrackerl	master	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
 push_service	git	https://github.com/hairyhum/push_service	master	https://github.com/hairyhum/push_service	Push service
