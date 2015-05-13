@@ -105,6 +105,7 @@ sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse t
 shotgun	git	https://github.com/inaka/shotgun	0.1.0	https://github.com/inaka/shotgun	better than just a gun
 sqerl	git	https://github.com/hairyhum/sqerl	master	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
 swab	git	https://github.com/crownedgrouse/swab	master	https://github.com/crownedgrouse/swab	General purpose buffer handling module
+switchboard	git	https://github.com/thusfresh/switchboard	master	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
 sync	git	https://github.com/rustyio/sync	master	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 tddreloader	git	https://github.com/version2beta/tddreloader	master	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tinymt	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.

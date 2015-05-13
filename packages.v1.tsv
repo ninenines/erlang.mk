@@ -105,6 +105,7 @@ sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform fo
 shotgun	https://github.com/inaka/shotgun	https://github.com/inaka/shotgun	better than just a gun
 sqerl	https://github.com/hairyhum/sqerl	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
 swab	https://github.com/crownedgrouse/swab	https://github.com/crownedgrouse/swab	General purpose buffer handling module
+switchboard	https://github.com/thusfresh/switchboard	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
 sync	https://github.com/rustyio/sync	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tinymt	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
