@@ -84,6 +84,7 @@ neotoma	https://github.com/seancribbs/neotoma	https://github.com/seancribbs/neot
 nodefinder	https://github.com/erlanger/nodefinder	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
 oauth2	https://github.com/kivra/oauth2	https://github.com/kivra/oauth2	Erlang Oauth2 implementation
 oauth	https://github.com/tim/erlang-oauth	https://github.com/tim/erlang-oauth	An Erlang OAuth 1.0 implementation
+openpoker	https://github.com/hpyhacking/openpoker	https://github.com/hpyhacking/openpoker	Genesis Texas hold'em Game Server
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 poolboy	https://github.com/devinus/poolboy	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 ptrackerl	https://github.com/inaka/ptrackerl	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
