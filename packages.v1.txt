@@ -29,6 +29,7 @@ erlcloud	https://github.com/gleber/erlcloud	https://github.com/gleber/erlcloud	C
 erlcron	https://github.com/erlware/erlcron	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	https://github.com/erldb/erldb	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
 erlog	https://github.com/rvirding/erlog	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
+erlport	https://github.com/hdima/erlport	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 exmpp	https://github.com/processone/exmpp	https://github.com/processone/exmpp	Erlang XMPP library
