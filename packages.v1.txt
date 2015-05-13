@@ -65,6 +65,7 @@ lasse	https://github.com/inaka/lasse	https://github.com/inaka/lasse	SSE handler 
 lfe	https://github.com/rvirding/lfe	https://github.com/rvirding/lfe	Lisp Flavoured Erlang (LFE)
 ling	https://github.com/cloudozer/ling	https://github.com/cloudozer/ling	Erlang on Xen
 live	https://github.com/ninenines/live	http://ninenines.eu	Automated module and configuration reloader.
+locks	https://github.com/uwiger/locks	https://github.com/uwiger/locks	A scalable, deadlock-resolving resource locker
 mekao	https://github.com/ddosia/mekao	https://github.com/ddosia/mekao	SQL constructor
 modlib	https://github.com/gar1t/modlib	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
