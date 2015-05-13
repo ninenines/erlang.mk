@@ -109,6 +109,7 @@ switchboard	git	https://github.com/thusfresh/switchboard	master	https://github.c
 sync	git	https://github.com/rustyio/sync	master	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 tddreloader	git	https://github.com/version2beta/tddreloader	master	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tinymt	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+triq	git	https://github.com/krestenkrab/triq	master	https://github.com/krestenkrab/triq	Trifork QuickCheck
 unicorn	git	https://github.com/shizzard/unicorn	0.3.0	https://github.com/shizzard/unicorn	Generic configuration server
 uuid	git	https://github.com/okeuday/uuid	v1.4.0	https://github.com/okeuday/uuid	Erlang UUID Implementation
 worker_pool	git	https://github.com/inaka/worker_pool	1.0.2	https://github.com/inaka/worker_pool	a simple erlang worker pool
