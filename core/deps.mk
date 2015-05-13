@@ -133,6 +133,31 @@ define dep_autopatch_rebar.erl
 			Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
 		end
 	end(),
+	fun() ->
+		case lists:keyfind(port_env, 1, Conf) of
+			{_, Vars} ->
+				[Write(K ++ " = $$$$\(shell echo " ++ re:replace(V, "\\\\$$$$", "\$$$$$$$$", [global, {return, list}]) ++ "\)\n")
+					|| {K, V} <- Vars],
+				Write("CFLAGS += $$$$\(DRV_CFLAGS\)\n"),
+				Write("CXXFLAGS += $$$$\(DRV_CFLAGS\)\n"),
+				Write("LDFLAGS += $$$$\(DRV_LDFLAGS\)\n");
+			_ -> ok
+		end
+	end(),
+	fun() ->
+		case lists:keyfind(pre_hooks, 1, Conf) of
+			false -> ok;
+			{_, Hooks} ->
+				[case H of
+					{'get-deps', Command} ->
+						Write("\npre::\n\t" ++ Command ++ "\n");
+					{compile, Command} ->
+						Write("\npre::\n\t" ++ Command ++ "\n");
+					_ -> ok
+				end || H <- Hooks],
+				Write("\npre:: deps app\n\n")
+		end
+	end(),
 	case $(1) of
 		proper -> Write("\n# Proper hack.\napp::\n\t./write_compile_flags include/compile_flags.hrl\n");
 		_ -> ok
