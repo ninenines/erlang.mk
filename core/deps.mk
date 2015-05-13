@@ -43,7 +43,7 @@ else
 deps:: $(ALL_DEPS_DIRS)
 	@for dep in $(ALL_DEPS_DIRS) ; do \
 		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
-			$(MAKE) -C $$dep || exit $$? ; \
+			$(MAKE) -C $$dep IS_DEP=1 || exit $$? ; \
 		else \
 			echo "ERROR: No makefile to build dependency $$dep. Consider adding it to AUTOPATCH." ; \
 			exit 1 ; \

@@ -22,8 +22,10 @@ endif
 
 # Core targets.
 
+ifeq ($(IS_DEP),)
 ifneq ($(wildcard $(RELX_CONFIG)),)
 rel:: distclean-relx-rel relx-rel
+endif
 endif
 
 distclean:: distclean-relx-rel distclean-relx
