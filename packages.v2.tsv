@@ -43,6 +43,7 @@ exsplus128	git	https://github.com/jj1bdx/exsplus128	master	https://github.com/jj
 fast_disk_log	git	https://github.com/lpgauth/fast_disk_log	master	https://github.com/lpgauth/fast_disk_log	Pool-based asynchronous Erlang disk logger
 feeder	git	https://github.com/michaelnisi/feeder	v1.4.6	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
 folsom	git	https://github.com/boundary/folsom	master	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
+fuse	git	https://github.com/jlouis/fuse	master	https://github.com/jlouis/fuse	A Circuit Breaker for Erlang
 geas	git	https://github.com/crownedgrouse/geas	master	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
 gen_nb_server	git	https://github.com/kevsmith/gen_nb_server	master	https://github.com/kevsmith/gen_nb_server	OTP behavior for writing non-blocking servers
 gen_smtp	git	https://github.com/Vagabond/gen_smtp	master	https://github.com/Vagabond/gen_smtp	A generic Erlang SMTP server and client that can be extended via callback modules
