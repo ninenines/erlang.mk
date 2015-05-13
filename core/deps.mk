@@ -133,6 +133,10 @@ define dep_autopatch_rebar.erl
 			Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
 		end
 	end(),
+	case $(1) of
+		proper -> Write("\n# Proper hack.\napp::\n\t./write_compile_flags include/compile_flags.hrl\n");
+		_ -> ok
+	end,
 	Write("\ninclude ../../erlang.mk"),
 	halt()
 endef

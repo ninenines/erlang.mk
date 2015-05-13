@@ -89,6 +89,7 @@ openpoker	git	https://github.com/hpyhacking/openpoker	master	https://github.com/
 pegjs	git	https://github.com/dmitriid/pegjs	0.3	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 pobox	git	https://github.com/ferd/pobox	master	https://github.com/ferd/pobox	External buffer processes to protect against mailbox overflow in Erlang
 poolboy	git	https://github.com/devinus/poolboy	master	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
+proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
 protobuffs	git	https://github.com/basho/erlang_protobuffs	master	https://github.com/basho/erlang_protobuffs	An implementation of Google's Protocol Buffers for Erlang, based on ngerakines/erlang_protobuffs.
 ptrackerl	git	https://github.com/inaka/ptrackerl	master	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
 push_service	git	https://github.com/hairyhum/push_service	master	https://github.com/hairyhum/push_service	Push service
