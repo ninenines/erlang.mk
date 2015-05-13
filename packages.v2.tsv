@@ -71,6 +71,7 @@ luerl	git	https://github.com/rvirding/luerl	master	https://github.com/rvirding/l
 mad	git	https://github.com/synrc/mad	master	https://github.com/synrc/mad	Small and Fast Rebar Replacement
 meck	git	https://github.com/eproxus/meck	master	https://github.com/eproxus/meck	A mocking library for Erlang
 mekao	git	https://github.com/ddosia/mekao	master	https://github.com/ddosia/mekao	SQL constructor
+mochiweb	git	https://github.com/mochi/mochiweb	master	https://github.com/mochi/mochiweb	MochiWeb is an Erlang library for building lightweight HTTP servers.
 modlib	git	https://github.com/gar1t/modlib	master	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 nodefinder	git	https://github.com/erlanger/nodefinder	0.2.3	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
