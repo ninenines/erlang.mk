@@ -88,6 +88,7 @@ openpoker	https://github.com/hpyhacking/openpoker	https://github.com/hpyhacking/
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 pobox	https://github.com/ferd/pobox	https://github.com/ferd/pobox	External buffer processes to protect against mailbox overflow in Erlang
 poolboy	https://github.com/devinus/poolboy	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
+protobuffs	https://github.com/basho/erlang_protobuffs	https://github.com/basho/erlang_protobuffs	An implementation of Google's Protocol Buffers for Erlang, based on ngerakines/erlang_protobuffs.
 ptrackerl	https://github.com/inaka/ptrackerl	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
 push_service	https://github.com/hairyhum/push_service	https://github.com/hairyhum/push_service	Push service
 qdate	https://github.com/choptastic/qdate	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
