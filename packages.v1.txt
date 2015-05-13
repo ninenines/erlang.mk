@@ -4,6 +4,7 @@ binpp	https://github.com/jtendo/binpp	https://github.com/jtendo/binpp	Erlang Bin
 bullet	https://github.com/extend/bullet	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Really simple terminal colorization
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
+couchbeam	https://github.com/benoitc/couchbeam	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	https://github.com/ninenines/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
 debbie	https://github.com/crownedgrouse/debbie	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang

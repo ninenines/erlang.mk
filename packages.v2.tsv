@@ -4,6 +4,7 @@ binpp	git	https://github.com/jtendo/binpp	master	https://github.com/jtendo/binpp
 bullet	git	https://github.com/extend/bullet	master	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cake	git	https://github.com/darach/cake-erl	v0.1.2	https://github.com/darach/cake-erl	Really simple terminal colorization
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
+couchbeam	git	https://github.com/benoitc/couchbeam	master	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 cowboy	git	https://github.com/ninenines/cowboy	1.0.1	http://ninenines.eu	Small, fast and modular HTTP server.
 cowlib	git	https://github.com/ninenines/cowlib	1.0.1	http://ninenines.eu	Support library for manipulating Web protocols.
 debbie	git	https://github.com/crownedgrouse/debbie	master	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
