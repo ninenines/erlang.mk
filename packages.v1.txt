@@ -77,6 +77,7 @@ mongodb	https://github.com/comtihon/mongodb-erlang	https://github.com/comtihon/m
 msgpack	https://github.com/msgpack/msgpack-erlang	https://github.com/msgpack/msgpack-erlang	MessagePack (de)serializer implementation for Erlang
 mustache	https://github.com/mojombo/mustache.erl	https://github.com/mojombo/mustache.erl	Mustache template engine for Erlang.
 mysql	https://github.com/dizzyd/erlang-mysql-driver	https://github.com/dizzyd/erlang-mysql-driver	Erlang MySQL Driver (from code.google.com)
+n2o	https://github.com/5HT/n2o	https://github.com/5HT/n2o	WebSocket Application Server
 nat_upnp	https://github.com/benoitc/nat_upnp	https://github.com/benoitc/nat_upnp	Erlang library to map your internal port to an external using UNP IGD
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 nodefinder	https://github.com/erlanger/nodefinder	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
