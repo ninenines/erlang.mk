@@ -22,6 +22,7 @@ emysql	git	https://github.com/Eonblast/Emysql	master	https://github.com/Eonblast
 entop	git	https://github.com/mazenharake/entop	master	https://github.com/mazenharake/entop	A top-like tool for monitoring an Erlang node
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
+eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredis	Erlang Redis client
 eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredis	Non-blocking Redis client with focus on performance and robustness
 erlcron	git	https://github.com/erlware/erlcron	master	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	git	https://github.com/erldb/erldb	master	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
