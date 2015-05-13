@@ -59,6 +59,7 @@ jobs	git	https://github.com/esl/jobs	0.3	https://github.com/esl/jobs	a Job sched
 jsx	git	https://github.com/talentdeficit/jsx	master	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 katja	git	https://github.com/nifoc/katja	master	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 kjell	git	https://github.com/karlll/kjell	master	https://github.com/karlll/kjell	Erlang Shell
+kraken	git	https://github.com/Asana/kraken	master	https://github.com/Asana/kraken	Distributed Pubsub Server for Realtime Apps
 lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A logging framework for Erlang/OTP.
 lasse	git	https://github.com/inaka/lasse	0.1.0	https://github.com/inaka/lasse	SSE handler for Cowboy
 live	git	https://github.com/ninenines/live	master	http://ninenines.eu	Automated module and configuration reloader.
