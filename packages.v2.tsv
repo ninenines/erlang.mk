@@ -73,6 +73,7 @@ meck	git	https://github.com/eproxus/meck	master	https://github.com/eproxus/meck	
 mekao	git	https://github.com/ddosia/mekao	master	https://github.com/ddosia/mekao	SQL constructor
 mochiweb	git	https://github.com/mochi/mochiweb	master	https://github.com/mochi/mochiweb	MochiWeb is an Erlang library for building lightweight HTTP servers.
 modlib	git	https://github.com/gar1t/modlib	master	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
+mongodb	git	https://github.com/comtihon/mongodb-erlang	master	https://github.com/comtihon/mongodb-erlang	MongoDB driver for Erlang
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 nodefinder	git	https://github.com/erlanger/nodefinder	0.2.3	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
 pegjs	git	https://github.com/dmitriid/pegjs	0.3	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
