@@ -92,6 +92,7 @@ protobuffs	git	https://github.com/basho/erlang_protobuffs	master	https://github.
 ptrackerl	git	https://github.com/inaka/ptrackerl	master	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
 push_service	git	https://github.com/hairyhum/push_service	master	https://github.com/hairyhum/push_service	Push service
 qdate	git	https://github.com/choptastic/qdate	0.4.0	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
+rack	git	https://github.com/erlyvideo/rack	master	https://github.com/erlyvideo/rack	Rack handler for erlang
 ranch	git	https://github.com/ninenines/ranch	1.1.0	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 recon	git	https://github.com/ferd/recon	2.2.1	https://github.com/ferd/recon	Collection of functions and scripts to debug Erlang in production.
 record_info	git	https://github.com/bipthelin/erlang-record_info	master	https://github.com/bipthelin/erlang-record_info	Convert between record and proplist
