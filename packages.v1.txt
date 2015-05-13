@@ -82,6 +82,7 @@ nat_upnp	https://github.com/benoitc/nat_upnp	https://github.com/benoitc/nat_upnp
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 neotoma	https://github.com/seancribbs/neotoma	https://github.com/seancribbs/neotoma	Erlang library and packrat parser-generator for parsing expression grammars.
 nodefinder	https://github.com/erlanger/nodefinder	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
+oauth	https://github.com/tim/erlang-oauth	https://github.com/tim/erlang-oauth	An Erlang OAuth 1.0 implementation
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 poolboy	https://github.com/devinus/poolboy	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 ptrackerl	https://github.com/inaka/ptrackerl	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
