@@ -41,6 +41,7 @@ exs64	https://github.com/jj1bdx/exs64	https://github.com/jj1bdx/exs64	Xorshift64
 exsplus116	https://github.com/jj1bdx/exsplus116	https://github.com/jj1bdx/exsplus116	Xorshift116plus for Erlang
 exsplus128	https://github.com/jj1bdx/exsplus128	https://github.com/jj1bdx/exsplus128	Xorshift128plus pseudo random number generator for Erlang.
 feeder	https://github.com/michaelnisi/feeder	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
+folsom	https://github.com/boundary/folsom	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
 geas	https://github.com/crownedgrouse/geas	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
 gen_smtp	https://github.com/Vagabond/gen_smtp	https://github.com/Vagabond/gen_smtp	A generic Erlang SMTP server and client that can be extended via callback modules
 getopt	https://github.com/jcomellas/getopt	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
