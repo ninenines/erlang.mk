@@ -15,6 +15,7 @@ REBAR_DEPS_DIR = $(DEPS_DIR)
 export REBAR_DEPS_DIR
 
 ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(DEPS))
+BUILD_DEPS_DIRS = $(filter-out $(addprefix $(DEPS_DIR)/,$(DEPS_FETCH_ONLY)), $(ALL_DEPS_DIRS))
 
 ifeq ($(filter $(DEPS_DIR),$(subst :, ,$(ERL_LIBS))),)
 ifeq ($(ERL_LIBS),)
@@ -41,7 +42,7 @@ ifneq ($(SKIP_DEPS),)
 deps::
 else
 deps:: $(ALL_DEPS_DIRS)
-	@for dep in $(ALL_DEPS_DIRS) ; do \
+	@for dep in $(BUILD_DEPS_DIRS) ; do \
 		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
 			$(MAKE) -C $$dep IS_DEP=1 || exit $$? ; \
 		else \
@@ -122,7 +123,12 @@ define dep_autopatch_rebar.erl
 						{M, R, {tag, C}} -> {M, R, C};
 						{M, R, C} -> {M, R, C}
 					end,
-					Write(io_lib:format("DEPS += ~s\ndep_~s = ~s ~s ~s~n", [Name, Name, Method, Repo, Commit]))
+					Write(io_lib:format("DEPS += ~s\ndep_~s = ~s ~s ~s~n", [Name, Name, Method, Repo, Commit])),
+					Opts = case size(Dep) of 4 -> element(4, Dep); _ -> [] end,
+					case lists:any(fun(O) -> if O == raw -> true; true -> false end end, Opts) of
+						true -> Write(io_lib:format("DEPS_FETCH_ONLY += ~s~n", [Name]));
+						false -> true
+					end
 				end || Dep <- Deps, tuple_size(Dep) > 2]
 		end
 	end(),
@@ -205,6 +211,7 @@ else
 endif
 endif
 endif
+ifeq ($(filter $(1),$(DEPS_FETCH_ONLY)),)
 	@if [ -f $(DEPS_DIR)/$(1)/configure.ac ]; then \
 		echo " AUTO  " $(1); \
 		cd $(DEPS_DIR)/$(1) && autoreconf -vif; \
@@ -215,6 +222,7 @@ endif
 	fi
 ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 	@$(call dep_autopatch,$(1))
+endif
 endif
 endef
 
