@@ -114,6 +114,7 @@ tsung	git	https://github.com/processone/tsung	master	https://github.com/processo
 twitter_erlang	git	https://github.com/ngerakines/erlang_twitter	master	https://github.com/ngerakines/erlang_twitter	An Erlang twitter client
 unicorn	git	https://github.com/shizzard/unicorn	0.3.0	https://github.com/shizzard/unicorn	Generic configuration server
 uuid	git	https://github.com/okeuday/uuid	v1.4.0	https://github.com/okeuday/uuid	Erlang UUID Implementation
+ux	git	https://github.com/erlang-unicode/ux	master	https://github.com/erlang-unicode/ux	Unicode eXtention for Erlang (Strings, Collation)
 worker_pool	git	https://github.com/inaka/worker_pool	1.0.2	https://github.com/inaka/worker_pool	a simple erlang worker pool
 xref_runner	git	https://github.com/inaka/xref_runner	0.2.0	https://github.com/inaka/xref_runner	Erlang Xref Runner (inspired in rebar xref)
 yamler	git	https://github.com/goertzenator/yamler	master	https://github.com/goertzenator/yamler	libyaml-based yaml loader for Erlang
