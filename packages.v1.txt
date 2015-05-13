@@ -9,6 +9,7 @@ cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and m
 cowlib	https://github.com/ninenines/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
 damocles	https://github.com/lostcolony/damocles	https://github.com/lostcolony/damocles	Erlang library for generating adversarial network conditions for QAing distributed applications/systems on a single Linux box.
 debbie	https://github.com/crownedgrouse/debbie	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
+dispcount	https://github.com/ferd/dispcount	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
 e2	https://github.com/gar1t/e2	http://e2project.org	Library to simply writing correct OTP applications.
 edgar	https://github.com/crownedgrouse/edgar	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 eganglia	https://github.com/inaka/eganglia	https://github.com/inaka/eganglia	Erlang library to interact with Ganglia

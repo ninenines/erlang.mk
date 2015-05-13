@@ -9,6 +9,7 @@ cowboy	git	https://github.com/ninenines/cowboy	1.0.1	http://ninenines.eu	Small, 
 cowlib	git	https://github.com/ninenines/cowlib	1.0.1	http://ninenines.eu	Support library for manipulating Web protocols.
 damocles	git	https://github.com/lostcolony/damocles	master	https://github.com/lostcolony/damocles	Erlang library for generating adversarial network conditions for QAing distributed applications/systems on a single Linux box.
 debbie	git	https://github.com/crownedgrouse/debbie	master	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
+dispcount	git	https://github.com/ferd/dispcount	master	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
 e2	git	https://github.com/gar1t/e2	master	http://e2project.org	Library to simply writing correct OTP applications.
 edgar	git	https://github.com/crownedgrouse/edgar	master	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 eganglia	git	https://github.com/inaka/eganglia	v0.9.1	https://github.com/inaka/eganglia	Erlang library to interact with Ganglia
