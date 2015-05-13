@@ -40,6 +40,7 @@ exs1024	https://github.com/jj1bdx/exs1024	https://github.com/jj1bdx/exs1024	Xors
 exs64	https://github.com/jj1bdx/exs64	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
 exsplus116	https://github.com/jj1bdx/exsplus116	https://github.com/jj1bdx/exsplus116	Xorshift116plus for Erlang
 exsplus128	https://github.com/jj1bdx/exsplus128	https://github.com/jj1bdx/exsplus128	Xorshift128plus pseudo random number generator for Erlang.
+fast_disk_log	https://github.com/lpgauth/fast_disk_log	https://github.com/lpgauth/fast_disk_log	Pool-based asynchronous Erlang disk logger
 feeder	https://github.com/michaelnisi/feeder	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
 folsom	https://github.com/boundary/folsom	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
 geas	https://github.com/crownedgrouse/geas	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
