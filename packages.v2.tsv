@@ -28,6 +28,7 @@ erlang_js	git	https://github.com/basho/erlang_js	master	https://github.com/basho
 erlcloud	git	https://github.com/gleber/erlcloud	master	https://github.com/gleber/erlcloud	Cloud Computing library for erlang (Amazon EC2, S3, SQS, SimpleDB, Mechanical Turk, ELB)
 erlcron	git	https://github.com/erlware/erlcron	master	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	git	https://github.com/erldb/erldb	master	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
+erlog	git	https://github.com/rvirding/erlog	master	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	git	https://github.com/bwegh/erwa	0.1.1	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 exmpp	git	https://github.com/processone/exmpp	master	https://github.com/processone/exmpp	Erlang XMPP library
