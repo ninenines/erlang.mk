@@ -60,7 +60,7 @@ distclean:: distclean-deps distclean-pkg
 # in practice only Makefile is needed so far.
 define dep_autopatch
 	if [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
-		if [ 0 != `grep -c rebar $(DEPS_DIR)/$(1)/Makefile` ]; then \
+		if [ 0 != `grep -ci rebar $(DEPS_DIR)/$(1)/Makefile` ]; then \
 			$(call dep_autopatch2,$(1)); \
 		else \
 			$(call dep_autopatch_erlang_mk,$(1)); \
