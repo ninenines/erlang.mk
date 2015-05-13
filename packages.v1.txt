@@ -75,6 +75,7 @@ mochiweb	https://github.com/mochi/mochiweb	https://github.com/mochi/mochiweb	Moc
 modlib	https://github.com/gar1t/modlib	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 mongodb	https://github.com/comtihon/mongodb-erlang	https://github.com/comtihon/mongodb-erlang	MongoDB driver for Erlang
 msgpack	https://github.com/msgpack/msgpack-erlang	https://github.com/msgpack/msgpack-erlang	MessagePack (de)serializer implementation for Erlang
+mustache	https://github.com/mojombo/mustache.erl	https://github.com/mojombo/mustache.erl	Mustache template engine for Erlang.
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 nodefinder	https://github.com/erlanger/nodefinder	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
