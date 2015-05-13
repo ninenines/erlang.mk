@@ -19,6 +19,7 @@ ehsa	https://bitbucket.org/a12n/ehsa	https://bitbucket.org/a12n/ehsa	Erlang HTTP
 elli	https://github.com/knutin/elli	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
 elvis	https://github.com/inaka/elvis	https://github.com/inaka/elvis	Erlang Style Reviewer
 emysql	https://github.com/Eonblast/Emysql	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
+entop	https://github.com/mazenharake/entop	https://github.com/mazenharake/entop	A top-like tool for monitoring an Erlang node
 eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	https://github.com/epgsql/epgsql	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 eredis	https://github.com/wooga/eredis	https://github.com/wooga/eredis	Non-blocking Redis client with focus on performance and robustness
