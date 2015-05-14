@@ -48,7 +48,11 @@ link_verbose = $(link_verbose_$(V))
 
 ifeq ($(wildcard $(C_SRC_DIR)),)
 else ifneq ($(wildcard $(C_SRC_DIR)/Makefile),)
-app::
+app:: app-c_src
+
+test-build:: app-c_src
+
+app-c_src:
 	$(MAKE) -C $(C_SRC_DIR) \
 		CFLAGS="$(CFLAGS)" \
 		CXXFLAGS="$(CXXFLAGS)" \
@@ -69,6 +73,8 @@ COMPILE_C = $(c_verbose) $(CC) $(CFLAGS) $(CPPFLAGS) -c
 COMPILE_CPP = $(cpp_verbose) $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c
 
 app:: $(C_SRC_ENV) $(C_SRC_OUTPUT)
+
+test-build:: $(C_SRC_ENV) $(C_SRC_OUTPUT)
 
 $(C_SRC_OUTPUT): $(OBJECTS)
 	@mkdir -p priv/
