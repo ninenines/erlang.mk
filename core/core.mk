@@ -32,6 +32,33 @@ gen_verbose = $(gen_verbose_$(V))
 
 ERL = erl +A0 -noinput -boot start_clean
 
+# Platform detection.
+# @todo Add Windows/Cygwin detection eventually.
+
+ifeq ($(PLATFORM),)
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Linux)
+PLATFORM = linux
+else ifeq ($(UNAME_S),Darwin)
+PLATFORM = darwin
+else ifeq ($(UNAME_S),SunOS)
+PLATFORM = solaris
+else ifeq ($(UNAME_S),GNU)
+PLATFORM = gnu
+else ifeq ($(UNAME_S),FreeBSD)
+PLATFORM = freebsd
+else ifeq ($(UNAME_S),NetBSD)
+PLATFORM = netbsd
+else ifeq ($(UNAME_S),OpenBSD)
+PLATFORM = openbsd
+else
+$(error Unable to detect platform. Please open a ticket with the output of uname -a.)
+endif
+
+export PLATFORM
+endif
+
 # Core targets.
 
 ifneq ($(words $(MAKECMDGOALS)),1)

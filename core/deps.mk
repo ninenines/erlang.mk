@@ -99,7 +99,9 @@ define dep_autopatch_gen
 endef
 
 define dep_autopatch_rebar
-	rm -f $(DEPS_DIR)/$(1)/Makefile; \
+	if [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
+		mv $(DEPS_DIR)/$(1)/Makefile $(DEPS_DIR)/$(1)/Makefile.orig.mk; \
+	fi; \
 	$(call erlang,$(call dep_autopatch_rebar.erl,$(1))); \
 	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
 endef
@@ -108,6 +110,9 @@ define dep_autopatch_rebar.erl
 	{ok, Conf} = file:consult("$(DEPS_DIR)/$(1)/rebar.config"),
 	Write = fun (Text) ->
 		file:write_file("$(DEPS_DIR)/$(1)/Makefile", Text, [append])
+	end,
+	Escape = fun (Text) ->
+		re:replace(Text, "\\\\$$$$", "\$$$$$$$$", [global, {return, list}])
 	end,
 	Write("ERLC_OPTS = +debug_info\n\n"),
 	fun() ->
@@ -136,32 +141,43 @@ define dep_autopatch_rebar.erl
 	fun() ->
 		case lists:keyfind(port_env, 1, Conf) of
 			{_, Vars} ->
-				[Write(K ++ " = $$$$\(shell echo " ++ re:replace(V, "\\\\$$$$", "\$$$$$$$$", [global, {return, list}]) ++ "\)\n")
-					|| {K, V} <- Vars],
+				[Write(K ++ " = $$$$\(shell echo " ++ Escape(V) ++ "\)\n") || {K, V} <- Vars],
 				Write("CFLAGS += $$$$\(DRV_CFLAGS\)\n"),
 				Write("CXXFLAGS += $$$$\(DRV_CFLAGS\)\n"),
 				Write("LDFLAGS += $$$$\(DRV_LDFLAGS\)\n");
 			_ -> ok
 		end
 	end(),
+	Write("\n\nrebar_dep: pre-deps deps pre-app app\n"),
+	Write("\npre-deps::\n"),
+	Write("\npre-app::\n"),
 	fun() ->
 		case lists:keyfind(pre_hooks, 1, Conf) of
 			false -> ok;
 			{_, Hooks} ->
 				[case H of
 					{'get-deps', Command} ->
-						Write("\npre::\n\t" ++ Command ++ "\n");
+						Write("\npre-deps::\n\t" ++ Escape(Command) ++ "\n");
 					{compile, Command} ->
-						Write("\npre::\n\t" ++ Command ++ "\n");
+						Write("\npre-app::\n\t" ++ Escape(Command) ++ "\n");
+					{Regex, compile, Command0} ->
+						case re:run("$(PLATFORM)", Regex, [{capture, none}]) of
+							match ->
+								Command = case Command0 of
+									"make -C" ++ _ -> Escape(Command0);
+									"gmake -C" ++ _ -> Escape(Command0);
+									"make " ++ Command1 -> "make -f Makefile.orig.mk " ++ Escape(Command1);
+									"gmake " ++ Command1 -> "gmake -f Makefile.orig.mk " ++ Escape(Command1);
+									_ -> Command0
+								end,
+								Write("\npre-app::\n\t" ++ Command ++ "\n");
+							nomatch ->
+								ok
+						end;
 					_ -> ok
-				end || H <- Hooks],
-				Write("\npre:: deps app\n\n")
+				end || H <- Hooks]
 		end
 	end(),
-	case $(1) of
-		proper -> Write("\n# Proper hack.\napp::\n\t./write_compile_flags include/compile_flags.hrl\n");
-		_ -> ok
-	end,
 	Write("\ninclude ../../erlang.mk"),
 	halt()
 endef
