@@ -12,6 +12,7 @@ debbie	git	https://github.com/crownedgrouse/debbie	master	https://github.com/cro
 dispcount	git	https://github.com/ferd/dispcount	master	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
 e2	git	https://github.com/gar1t/e2	master	http://e2project.org	Library to simply writing correct OTP applications.
 edgar	git	https://github.com/crownedgrouse/edgar	master	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
+edis	git	https://github.com/inaka/edis	master	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
 eep	git	https://github.com/virtan/eep	master	https://github.com/virtan/eep	Erlang Easy Profiling (eep) application provides a way to analyze application performance and call hierarchy
 efene	git	https://github.com/efene/efene	master	https://github.com/efene/efene	Alternative syntax for the Erlang Programming Language focusing on simplicity, ease of use and programmer UX
 eganglia	git	https://github.com/inaka/eganglia	v0.9.1	https://github.com/inaka/eganglia	Erlang library to interact with Ganglia
@@ -25,6 +26,7 @@ epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epg
 epocxy	git	https://github.com/duomark/epocxy	master	https://github.com/duomark/epocxy	Erlang Patterns of Concurrency
 eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredis	Erlang Redis client
 erlang_js	git	https://github.com/basho/erlang_js	master	https://github.com/basho/erlang_js	A linked-in driver for Erlang to Mozilla's Spidermonkey Javascript runtime.
+erlasticsearch	git	https://github.com/dieswaytoofast/erlasticsearch	master	https://github.com/dieswaytoofast/erlasticsearch	Erlang thrift interface to elastic_search
 erlcloud	git	https://github.com/gleber/erlcloud	master	https://github.com/gleber/erlcloud	Cloud Computing library for erlang (Amazon EC2, S3, SQS, SimpleDB, Mechanical Turk, ELB)
 erlcron	git	https://github.com/erlware/erlcron	master	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	git	https://github.com/erldb/erldb	master	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
@@ -97,6 +99,7 @@ push_service	git	https://github.com/hairyhum/push_service	master	https://github.
 qdate	git	https://github.com/choptastic/qdate	0.4.0	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
 rack	git	https://github.com/erlyvideo/rack	master	https://github.com/erlyvideo/rack	Rack handler for erlang
 ranch	git	https://github.com/ninenines/ranch	1.1.0	http://ninenines.eu	Socket acceptor pool for TCP protocols.
+rec2json	git	https://github.com/lordnull/rec2json	master	https://github.com/lordnull/rec2json	Compile erlang record definitions into modules to convert them to/from json easily.
 recon	git	https://github.com/ferd/recon	2.2.1	https://github.com/ferd/recon	Collection of functions and scripts to debug Erlang in production.
 record_info	git	https://github.com/bipthelin/erlang-record_info	master	https://github.com/bipthelin/erlang-record_info	Convert between record and proplist
 relx	git	https://github.com/erlware/relx	master	https://github.com/erlware/relx	Sane, simple release creation for Erlang
