@@ -32,6 +32,7 @@ erlasticsearch	git	https://github.com/dieswaytoofast/erlasticsearch	master	https
 erlcloud	git	https://github.com/gleber/erlcloud	master	https://github.com/gleber/erlcloud	Cloud Computing library for erlang (Amazon EC2, S3, SQS, SimpleDB, Mechanical Turk, ELB)
 erlcron	git	https://github.com/erlware/erlcron	master	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	git	https://github.com/erldb/erldb	master	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
+erldns	git	https://github.com/aetrion/erl-dns	master	https://github.com/aetrion/erl-dns	DNS server, in erlang.
 erlog	git	https://github.com/rvirding/erlog	master	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlport	git	https://github.com/hdima/erlport	master	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
 erlsom	git	https://github.com/willemdj/erlsom	master	https://github.com/willemdj/erlsom	XML parser for Erlang

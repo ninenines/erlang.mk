@@ -32,6 +32,7 @@ erlasticsearch	https://github.com/dieswaytoofast/erlasticsearch	https://github.c
 erlcloud	https://github.com/gleber/erlcloud	https://github.com/gleber/erlcloud	Cloud Computing library for erlang (Amazon EC2, S3, SQS, SimpleDB, Mechanical Turk, ELB)
 erlcron	https://github.com/erlware/erlcron	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	https://github.com/erldb/erldb	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
+erldns	https://github.com/aetrion/erl-dns	https://github.com/aetrion/erl-dns	DNS server, in erlang.
 erlog	https://github.com/rvirding/erlog	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlport	https://github.com/hdima/erlport	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
 erlsom	https://github.com/willemdj/erlsom	https://github.com/willemdj/erlsom	XML parser for Erlang
