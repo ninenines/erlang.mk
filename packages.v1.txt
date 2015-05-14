@@ -55,6 +55,7 @@ gun	https://github.com/ninenines/gun	http//ninenines.eu	Asynchronous SPDY, HTTP 
 hackney	https://github.com/benoitc/hackney	https://github.com/benoitc/hackney	simple HTTP client in Erlang
 hanoidb	https://github.com/krestenkrab/hanoidb	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
+ierlang	https://github.com/robbielynch/ierlang	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 itweet	https://github.com/inaka/itweet	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
 jesse	https://github.com/klarna/jesse	https://github.com/klarna/jesse	jesse (JSon Schema Erlang) is an implementation of a json schema validator for Erlang.
 jiffy	https://github.com/davisp/jiffy	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
