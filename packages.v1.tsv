@@ -35,6 +35,7 @@ erldb	https://github.com/erldb/erldb	http://erldb.org	ORM (Object-relational map
 erlog	https://github.com/rvirding/erlog	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlport	https://github.com/hdima/erlport	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
 erlsom	https://github.com/willemdj/erlsom	https://github.com/willemdj/erlsom	XML parser for Erlang
+erlubi	https://github.com/krestenkrab/erlubi	https://github.com/krestenkrab/erlubi	Ubigraph Erlang Client (and Process Visualizer)
 erlware_commons	https://github.com/erlware/erlware_commons	https://github.com/erlware/erlware_commons	Erlware Commons is an Erlware project focused on all aspects of reusable Erlang components.
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
