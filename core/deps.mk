@@ -148,6 +148,14 @@ define dep_autopatch_rebar.erl
 			_ -> ok
 		end
 	end(),
+	fun() ->
+		case filelib:is_dir("$(DEPS_DIR)/$(1)/c_src") of
+			false -> ok;
+			true ->
+				Sources = [[" ./c_src/", S] || S <- filelib:wildcard("*.{c,C,cc,cpp}", "$(DEPS_DIR)/$(1)/c_src")],
+				Write(io_lib:format("SOURCES := ~s\n", [Sources]))
+		end
+	end(),
 	Write("\n\nrebar_dep: pre-deps deps pre-app app\n"),
 	Write("\npre-deps::\n"),
 	Write("\npre-app::\n"),

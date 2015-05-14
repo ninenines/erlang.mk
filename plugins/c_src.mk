@@ -59,7 +59,10 @@ clean::
 	$(MAKE) -C $(C_SRC_DIR) clean
 
 else
+
+ifeq ($(SOURCES),)
 SOURCES := $(shell find $(C_SRC_DIR) -type f \( -name "*.c" -o -name "*.C" -o -name "*.cc" -o -name "*.cpp" \))
+endif
 OBJECTS = $(addsuffix .o, $(basename $(SOURCES)))
 
 COMPILE_C = $(c_verbose) $(CC) $(CFLAGS) $(CPPFLAGS) -c

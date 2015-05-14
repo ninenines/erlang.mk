@@ -217,6 +217,7 @@ pkg-$(1)-clean:
 pkg-$(1)-app1:
 	$(call app1_setup)
 
+# Running 'make' twice to make sure it recompiles fine.
 pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 	$i
 	$i "  pkgs: Checking that '$(1)' builds correctly"
@@ -227,6 +228,7 @@ pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 		"include erlang.mk" \
 		> app1/Makefile
 	cp ../packages.v2.tsv app1/.erlang.mk.packages.v2
+	$t make -C app1
 	$t make -C app1
 endef
 
