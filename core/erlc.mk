@@ -28,6 +28,9 @@ erlc_verbose = $(erlc_verbose_$(V))
 xyrl_verbose_0 = @echo " XYRL  " $(filter %.xrl %.yrl,$(?F));
 xyrl_verbose = $(xyrl_verbose_$(V))
 
+asn1_verbose_0 = @echo " ASN1  " $(filter %.asn1,$(?F));
+asn1_verbose = $(asn1_verbose_$(V))
+
 mib_verbose_0 = @echo " MIB   " $(filter %.bin %.mib,$(?F));
 mib_verbose = $(mib_verbose_$(V))
 
@@ -69,6 +72,13 @@ define compile_xyrl
 	@rm ebin/*.erl
 endef
 
+define compile_asn1
+	$(asn1_verbose) erlc -v -I include/ -o ebin/ $(1)
+	@mv ebin/*.hrl include/
+	@mv ebin/*.asn1db include/
+	@rm ebin/*.erl
+endef
+
 define compile_mib
 	$(mib_verbose) erlc -v $(ERLC_MIB_OPTS) -o priv/mibs/ \
 		-I priv/mibs/ $(COMPILE_MIB_FIRST_PATHS) $(1)
@@ -78,6 +88,12 @@ endef
 ifneq ($(wildcard src/),)
 ebin/$(PROJECT).app::
 	@mkdir -p ebin/
+
+ifneq ($(wildcard asn1/),)
+ebin/$(PROJECT).app:: $(shell find asn1 -type f -name \*.asn1)
+	@mkdir -p include
+	$(if $(strip $?),$(call compile_asn1,$?))
+endif
 
 ifneq ($(wildcard mibs/),)
 ebin/$(PROJECT).app:: $(shell find mibs -type f -name \*.mib)
