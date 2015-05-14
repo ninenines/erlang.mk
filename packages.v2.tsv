@@ -18,6 +18,7 @@ eep	git	https://github.com/virtan/eep	master	https://github.com/virtan/eep	Erlan
 efene	git	https://github.com/efene/efene	master	https://github.com/efene/efene	Alternative syntax for the Erlang Programming Language focusing on simplicity, ease of use and programmer UX
 eganglia	git	https://github.com/inaka/eganglia	v0.9.1	https://github.com/inaka/eganglia	Erlang library to interact with Ganglia
 ehsa	hg	https://bitbucket.org/a12n/ehsa	2.0.4	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
+eleveldb	git	https://github.com/basho/eleveldb	master	https://github.com/basho/eleveldb	Erlang LevelDB API
 elli	git	https://github.com/knutin/elli	master	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
 elvis	git	https://github.com/inaka/elvis	0.2.4	https://github.com/inaka/elvis	Erlang Style Reviewer
 emysql	git	https://github.com/Eonblast/Emysql	master	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
