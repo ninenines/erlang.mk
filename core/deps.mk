@@ -66,7 +66,11 @@ define dep_autopatch
 			$(call dep_autopatch_erlang_mk,$(1)); \
 		fi \
 	else \
-		$(call dep_autopatch2,$(1)); \
+		if [ ! -d $(DEPS_DIR)/$(1)/src/ ]; then \
+			$(call dep_autopatch_noop,$(1)); \
+		else \
+			$(call dep_autopatch2,$(1)); \
+		fi \
 	fi
 endef
 
@@ -76,6 +80,10 @@ define dep_autopatch2
 	else \
 		$(call dep_autopatch_rebar,$(1)); \
 	fi
+endef
+
+define dep_autopatch_noop
+	printf "noop:\n" > $(DEPS_DIR)/$(1)/Makefile
 endef
 
 # Overwrite erlang.mk with the current file by default.
