@@ -237,6 +237,13 @@ define dep_autopatch_rebar.erl
 		end
 	end(),
 	Write("\ninclude ../../erlang.mk"),
+	fun() ->
+		case filelib:is_dir("$(DEPS_DIR)/$(1)/c_src") of
+			false -> ok;
+			true ->
+				Write("\n\nCFLAGS := $$$$\(filter-out -std=c99 -Wmissing-prototypes,$$$$\(CFLAGS\)\)\n")
+		end
+	end(),
 	halt()
 endef
 
