@@ -99,6 +99,7 @@ openpoker	https://github.com/hpyhacking/openpoker	https://github.com/hpyhacking/
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 pobox	https://github.com/ferd/pobox	https://github.com/ferd/pobox	External buffer processes to protect against mailbox overflow in Erlang
 poolboy	https://github.com/devinus/poolboy	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
+pooler	https://github.com/seth/pooler	https://github.com/seth/pooler	An OTP Process Pool Application
 procket	https://github.com/msantos/procket	http://blog.listincomprehension.com/search/label/procket	Erlang interface to low level socket operations
 proper	https://github.com/manopapad/proper	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
 protobuffs	https://github.com/basho/erlang_protobuffs	https://github.com/basho/erlang_protobuffs	An implementation of Google's Protocol Buffers for Erlang, based on ngerakines/erlang_protobuffs.
