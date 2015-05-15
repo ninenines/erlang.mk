@@ -41,6 +41,7 @@ erlubi	git	https://github.com/krestenkrab/erlubi	master	https://github.com/krest
 erlware_commons	git	https://github.com/erlware/erlware_commons	master	https://github.com/erlware/erlware_commons	Erlware Commons is an Erlware project focused on all aspects of reusable Erlang components.
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	git	https://github.com/bwegh/erwa	0.1.1	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
+exec	git	https://github.com/saleyn/erlexec	master	http://saleyn.github.com/erlexec	Execute and control OS processes from Erlang/OTP.
 exmpp	git	https://github.com/processone/exmpp	master	https://github.com/processone/exmpp	Erlang XMPP library
 exometer	git	https://github.com/Feuerlabs/exometer	1.2	https://github.com/Feuerlabs/exometer	Basic measurement objects and probe behavior
 exs1024	git	https://github.com/jj1bdx/exs1024	master	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
