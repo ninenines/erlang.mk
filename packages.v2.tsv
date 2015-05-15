@@ -105,6 +105,7 @@ pooler	git	https://github.com/seth/pooler	master	https://github.com/seth/pooler	
 procket	git	https://github.com/msantos/procket	master	http://blog.listincomprehension.com/search/label/procket	Erlang interface to low level socket operations
 proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
 protobuffs	git	https://github.com/basho/erlang_protobuffs	master	https://github.com/basho/erlang_protobuffs	An implementation of Google's Protocol Buffers for Erlang, based on ngerakines/erlang_protobuffs.
+psycho	git	https://github.com/gar1t/psycho	master	https://github.com/gar1t/psycho	HTTP server that provides a WSGI-like interface for applications and middleware.
 ptrackerl	git	https://github.com/inaka/ptrackerl	master	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
 push_service	git	https://github.com/hairyhum/push_service	master	https://github.com/hairyhum/push_service	Push service
 qdate	git	https://github.com/choptastic/qdate	0.4.0	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.

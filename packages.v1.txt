@@ -105,6 +105,7 @@ pooler	https://github.com/seth/pooler	https://github.com/seth/pooler	An OTP Proc
 procket	https://github.com/msantos/procket	http://blog.listincomprehension.com/search/label/procket	Erlang interface to low level socket operations
 proper	https://github.com/manopapad/proper	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
 protobuffs	https://github.com/basho/erlang_protobuffs	https://github.com/basho/erlang_protobuffs	An implementation of Google's Protocol Buffers for Erlang, based on ngerakines/erlang_protobuffs.
+psycho	https://github.com/gar1t/psycho	https://github.com/gar1t/psycho	HTTP server that provides a WSGI-like interface for applications and middleware.
 ptrackerl	https://github.com/inaka/ptrackerl	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
 push_service	https://github.com/hairyhum/push_service	https://github.com/hairyhum/push_service	Push service
 qdate	https://github.com/choptastic/qdate	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
