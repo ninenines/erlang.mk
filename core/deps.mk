@@ -62,6 +62,8 @@ define dep_autopatch
 	if [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
 		if [ 0 != `grep -ci rebar $(DEPS_DIR)/$(1)/Makefile` ]; then \
 			$(call dep_autopatch2,$(1)); \
+		elif [ 0 != `cd $(DEPS_DIR)/$(1)/ && make -n | grep -ci rebar` ]; then \
+			$(call dep_autopatch2,$(1)); \
 		else \
 			$(call dep_autopatch_erlang_mk,$(1)); \
 		fi \
