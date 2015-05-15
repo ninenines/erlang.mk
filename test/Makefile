@@ -14,12 +14,12 @@ V ?= 0
 ifeq ($V,0)
 	# Show info messages only
 	t = @
-	v = V=0 &>/dev/null
+	v = V=0 >/dev/null 2>&1
 	i = @echo
 else ifeq ($V,1)
 	# Show test commands
 	t =
-	v = V=0 &>/dev/null
+	v = V=0 >/dev/null 2>&1
 	i = @echo ==
 else ifeq ($V,2)
 	# Show briefly what erlang.mk is doing
