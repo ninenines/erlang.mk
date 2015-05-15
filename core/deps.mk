@@ -301,7 +301,7 @@ pkg-search: $(PKG_FILE2)
 		"Description:\t" $$6 "\n" }'
 else
 pkg-search:
-	$(error Usage: make pkg-search q=STRING)
+	$(error Usage: $(MAKE) pkg-search q=STRING)
 endif
 
 ifeq ($(PKG_FILE2),$(CURDIR)/.erlang.mk.packages.v2)

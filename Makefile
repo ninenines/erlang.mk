@@ -27,4 +27,4 @@ pkg:
 	cp packages.v1.tsv packages.v1.txt
 
 check:
-	make -C test
+	$(MAKE) -C test

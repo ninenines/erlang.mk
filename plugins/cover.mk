@@ -46,7 +46,7 @@ endif
 ifdef COVER
 ifneq ($(COVER_REPORT_DIR),)
 tests::
-	@$(MAKE) make --no-print-directory cover-report
+	@$(MAKE) --no-print-directory cover-report
 endif
 endif
 

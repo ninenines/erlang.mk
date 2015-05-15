@@ -47,19 +47,19 @@ clean:
 
 app: app1
 	$i "app: Testing the 'app' target."
-	$t make -C app1 app $v
+	$t $(MAKE) -C app1 app $v
 	$i "Checking the modules line in the generated .app file."
 	$t [ `grep -E "{modules, *\['m'\]}" app1/ebin/app1.app | wc -l` == 1 ]
 	$t [ -e app1/ebin/m.beam ]
-	$i "Checking that 'make clean-app' deletes ebin."
-	$t make -C app1 clean-app $v
+	$i "Checking that '$(MAKE) clean-app' deletes ebin."
+	$t $(MAKE) -C app1 clean-app $v
 	$t [ ! -e app1/ebin ]
-	$i "Checking that 'make app' returns non-zero on compile errors."
+	$i "Checking that '$(MAKE) app' returns non-zero on compile errors."
 	$t printf "%s\n" \
 		"-module(syntax_error)." \
 		"foo lorem_ipsum dolor sit amet." \
 	 > app1/src/syntax_error.erl
-	$t if make -C app1 app $v ; then false ; fi
+	$t if $(MAKE) -C app1 app $v ; then false ; fi
 	$t rm app1/src/syntax_error.erl
 	$i "Test 'app' passed."
 
@@ -73,26 +73,26 @@ ct: app1
 		"all() -> [testcase1]." \
 		"testcase1(_) -> 2 = m:succ(1)." \
 	 > app1/test/m_SUITE.erl
-	$t make -C app1 ct $v
-	$i "Checking files created by 'make ct'."
+	$t $(MAKE) -C app1 ct $v
+	$i "Checking files created by '$(MAKE) ct'."
 	$t [ -e app1/test/m_SUITE.beam ]
 	$t [ -e app1/ebin/m.beam ]
 	$t [ -e app1/logs ]
-	$i "Checking that 'make clean' does not delete logs."
-	$t make -C app1 clean $v
+	$i "Checking that '$(MAKE) clean' does not delete logs."
+	$t $(MAKE) -C app1 clean $v
 	$t [ -e app1/logs ]
 	$i "Testing target 'ct-mysuite' where mysuite_SUITE is a test suite."
-	$t make -C app1 ct-m $v
-	$i "Checking that 'make ct' returns non-zero for a failing suite."
+	$t $(MAKE) -C app1 ct-m $v
+	$i "Checking that '$(MAKE) ct' returns non-zero for a failing suite."
 	$t printf "%s\n" \
 		"-module(failing_SUITE)." \
 		"-export([all/0, testcase1/1])." \
 		"all() -> [testcase1]." \
 		"testcase1(_) -> 42 = m:succ(1)." \
 	 > app1/test/failing_SUITE.erl
-	$t if make -C app1 ct-failing $v ; then false ; fi
-	$i "Checking that 'make distclean-ct' deletes logs."
-	$t make -C app1 distclean-ct $v
+	$t if $(MAKE) -C app1 ct-failing $v ; then false ; fi
+	$i "Checking that '$(MAKE) distclean-ct' deletes logs."
+	$t $(MAKE) -C app1 distclean-ct $v
 	$t [ ! -e app1/logs ]
 	$t [ -e app1/ebin/m.beam ]
 	$i "Cleaning up test data."
@@ -103,7 +103,7 @@ eunit: app1
 	$i "eunit: Testing the 'eunit' target."
 	$i "Running eunit test case inside module src/t.erl"
 	$t $(call create-module-t)
-	$t make -C app1 eunit $v
+	$t $(MAKE) -C app1 eunit $v
 	$i "Checking that the eunit test in module t."
 	$t echo t | cmp app1/test-eunit.log -
 	$t rm app1/test-eunit.log
@@ -123,11 +123,11 @@ eunit: app1
 		'	?assertEqual(2, t:succ(1)),' \
 		'	os:cmd("echo x_tests >> test-eunit.log").' \
 		> app1/eunit/x_tests.erl
-	$t make -C app1 eunit TEST_DIR=eunit $v
-	$i "Checking that 'make eunit' didn't run the tests in t_tests twice, etc."
+	$t $(MAKE) -C app1 eunit TEST_DIR=eunit $v
+	$i "Checking that '$(MAKE) eunit' didn't run the tests in t_tests twice, etc."
 	$t printf "%s\n" t t_tests x_tests | cmp app1/test-eunit.log -
 	$t rm app1/test-eunit.log
-	$i "Checking that 'make eunit' returns non-zero for a failing test."
+	$i "Checking that '$(MAKE) eunit' returns non-zero for a failing test."
 	$t rm -f app1/eunit/*
 	$t printf "%s\n" \
 		"-module(t_tests)." \
@@ -135,7 +135,7 @@ eunit: app1
 		"succ_test() ->" \
 		"	?assertEqual(42, t:succ(1))." \
 		> app1/eunit/t_tests.erl
-	$t if make -C app1 eunit TEST_DIR=eunit $v ; then false ; fi
+	$t if $(MAKE) -C app1 eunit TEST_DIR=eunit $v ; then false ; fi
 	$t rm -rf app1/eunit app1/src/t.erl app1/test-eunit.log
 	$i "Test 'eunit' passed."
 
@@ -152,26 +152,26 @@ tests-cover: app1
 		"testcase1(_) -> 2 = m:succ(1)." \
 	 > app1/test/m_SUITE.erl
 	$i "Running tests with coverage analysis."
-	$t make -C app1 eunit ct COVER=1 $v
+	$t $(MAKE) -C app1 eunit ct COVER=1 $v
 	$t [ -e app1/test-eunit.log ]
 	$t [ -e app1/eunit.coverdata ]
 	$t [ -e app1/ct.coverdata ]
 	$i "Generating coverage report."
-	$t make -C app1 cover-report COVER=1 $v
+	$t $(MAKE) -C app1 cover-report COVER=1 $v
 	$t [ -e app1/cover/m.COVER.html ]
 	$t [ -e app1/cover/t.COVER.html ]
 	$t [ -e app1/cover/index.html ]
 	$i "Checking combined coverage from eunit and ct."
 	$t [ `grep 'Total: 100%' app1/cover/index.html | wc -l` -eq 1 ]
 	$i "Checking that cover-report-clean removes cover report."
-	$t make -C app1 cover-report-clean $v
+	$t $(MAKE) -C app1 cover-report-clean $v
 	$t [ ! -e app1/cover ]
 	$i "Checking that coverdata-clean removes cover data."
-	$t make -C app1 coverdata-clean $v
+	$t $(MAKE) -C app1 coverdata-clean $v
 	$t [ ! -e app1/eunit.coverdata ]
 	@# clean up
 	$t rm -rf app1/src/t.erl app1/test app1/test-eunit.log
-	$t make -C app1 clean $v
+	$t $(MAKE) -C app1 clean $v
 	$i "Test 'tests-cover' passed."
 
 docs: app1
@@ -187,11 +187,11 @@ docs: app1
 		"	rm -rf doc/*.md" \
 		> app1/Makefile-doc
 	$i "Downloading doc deps (edown) and building docs."
-	$t make -C app1 -f Makefile-doc docs $v
-	$i "Checking that 'make docs' using edown generated a markdown file."
+	$t $(MAKE) -C app1 -f Makefile-doc docs $v
+	$i "Checking that '$(MAKE) docs' using edown generated a markdown file."
 	$t [ -e app1/doc/m.md ]
-	$i "Checking that 'make distclean' deletes all generated doc files."
-	$t make -C app1 -f Makefile-doc distclean $v
+	$i "Checking that '$(MAKE) distclean' deletes all generated doc files."
+	$t $(MAKE) -C app1 -f Makefile-doc distclean $v
 	$t [ "`ls app1/doc/`" == "" ]
 	$i "Cleaning up test data."
 	$t rm app1/Makefile-doc
@@ -200,9 +200,9 @@ docs: app1
 define app1_setup
 	$i "Setting up app."
 	$t mkdir -p app1
-	$t cd .. && make
+	$t cd .. && $(MAKE)
 	$t cp ../erlang.mk app1/
-	$t make -C app1 -f erlang.mk bootstrap-lib
+	$t $(MAKE) -C app1 -f erlang.mk bootstrap-lib
 	$t printf "%s\n" \
 		"-module(m)." \
 		"-export([succ/1])." \
@@ -228,8 +228,8 @@ pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 		"include erlang.mk" \
 		> app1/Makefile
 	cp ../packages.v2.tsv app1/.erlang.mk.packages.v2
-	$t make -C app1
-	$t make -C app1
+	$t $(MAKE) -C app1
+	$t $(MAKE) -C app1
 endef
 
 $(foreach pkg,$(shell awk '{print $$1}' ../packages.v2.tsv),$(eval $(call pkg_test_target,$(pkg))))

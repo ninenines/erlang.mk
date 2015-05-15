@@ -365,13 +365,13 @@ ifeq ($(wildcard src/),)
 	$(error Error: src/ directory does not exist)
 endif
 ifndef t
-	$(error Usage: make new t=TEMPLATE n=NAME)
+	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME)
 endif
 ifndef tpl_$(t)
 	$(error Unknown template)
 endif
 ifndef n
-	$(error Usage: make new t=TEMPLATE n=NAME)
+	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME)
 endif
 	$(call render_template,tpl_$(t),src/$(n).erl)
 

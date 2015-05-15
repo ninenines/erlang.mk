@@ -53,7 +53,7 @@ $(KERL):
 help::
 	@printf "%s\n" "" \
 		"Continuous Integration targets:" \
-		"  ci          Run 'make tests' on all configured Erlang versions." \
+		"  ci          Run '$(MAKE) tests' on all configured Erlang versions." \
 		"" \
 		"The CI_OTP variable must be defined with the Erlang versions" \
 		"that must be tested. For example: CI_OTP = OTP-17.3.4 OTP-17.5.3"

@@ -89,7 +89,7 @@ help::
 		"erlang.mk (version $(ERLANG_MK_VERSION)) is distributed under the terms of the ISC License." \
 		"Copyright (c) 2013-2014 Loïc Hoguin <essen@ninenines.eu>" \
 		"" \
-		"Usage: [V=1] make [-jNUM] [target]" \
+		"Usage: [V=1] $(MAKE) [-jNUM] [target]" \
 		"" \
 		"Core targets:" \
 		"  all           Run deps, app and rel targets in that order" \
@@ -107,8 +107,8 @@ help::
 		"The target clean only removes files that are commonly removed." \
 		"Dependencies and releases are left untouched." \
 		"" \
-		"Setting V=1 when calling make enables verbose mode." \
-		"Parallel execution is supported through the -j Make flag."
+		"Setting V=1 when calling $(MAKE) enables verbose mode." \
+		"Parallel execution is supported through the -j $(MAKE) flag."
 
 # Core functions.
 
@@ -154,6 +154,6 @@ ERLANG_MK_BUILD_DIR ?= .erlang.mk.build
 erlang-mk:
 	git clone https://github.com/ninenines/erlang.mk $(ERLANG_MK_BUILD_DIR)
 	if [ -f $(ERLANG_MK_BUILD_CONFIG) ]; then cp $(ERLANG_MK_BUILD_CONFIG) $(ERLANG_MK_BUILD_DIR); fi
-	cd $(ERLANG_MK_BUILD_DIR) && make
+	cd $(ERLANG_MK_BUILD_DIR) && $(MAKE)
 	cp $(ERLANG_MK_BUILD_DIR)/erlang.mk ./erlang.mk
 	rm -rf $(ERLANG_MK_BUILD_DIR)
