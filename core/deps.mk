@@ -145,7 +145,21 @@ define dep_autopatch_rebar.erl
 	Escape = fun (Text) ->
 		re:replace(Text, "\\\\$$$$", "\$$$$$$$$", [global, {return, list}])
 	end,
-	Write("ERLC_OPTS = +debug_info\n\n"),
+	fun() ->
+		Write("ERLC_OPTS = +debug_info\n"),
+		case lists:keyfind(erl_opts, 1, Conf) of
+			false -> ok;
+			{_, ErlOpts} ->
+				lists:foreach(fun
+					({d, D}) ->
+						Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n");
+					({parse_transform, PT}) ->
+						Write("ERLC_OPTS += +'{parse_transform, " ++ atom_to_list(PT) ++ "}'\n");
+					(_) -> ok
+				end, ErlOpts)
+		end,
+		Write("\n")
+	end(),
 	fun() ->
 		File = case lists:keyfind(deps, 1, Conf) of
 			false -> [];
