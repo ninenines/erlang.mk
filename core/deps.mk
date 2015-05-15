@@ -77,10 +77,13 @@ define dep_autopatch
 endef
 
 define dep_autopatch2
-	if [ ! -f $(DEPS_DIR)/$(1)/rebar.config ]; then \
-		$(call dep_autopatch_gen,$(1)); \
-	else \
+	if [ -f $(DEPS_DIR)/$(1)/rebar.config.script ]; then \
+		$(call dep_autopatch_rebar_script,$(1)); \
 		$(call dep_autopatch_rebar,$(1)); \
+	elif [ -f $(DEPS_DIR)/$(1)/rebar.config ]; then \
+		$(call dep_autopatch_rebar,$(1)); \
+	else \
+		$(call dep_autopatch_gen,$(1)); \
 	fi
 endef
 
@@ -108,6 +111,12 @@ define dep_autopatch_gen
 	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
 endef
 
+define dep_autopatch_rebar_script
+	mv $(DEPS_DIR)/$(1)/rebar.config.script $(DEPS_DIR)/$(1)/rebar.config.script.orig; \
+	sed -r 's/rebar_utils:is_arch\((.*)\)/\1 =:= "$(PLATFORM)"/g' $(DEPS_DIR)/$(1)/rebar.config.script.orig \
+		> $(DEPS_DIR)/$(1)/rebar.config.script
+endef
+
 define dep_autopatch_rebar
 	if [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
 		mv $(DEPS_DIR)/$(1)/Makefile $(DEPS_DIR)/$(1)/Makefile.orig.mk; \
@@ -117,7 +126,19 @@ define dep_autopatch_rebar
 endef
 
 define dep_autopatch_rebar.erl
-	{ok, Conf} = file:consult("$(DEPS_DIR)/$(1)/rebar.config"),
+	Conf1 = case file:consult("$(DEPS_DIR)/$(1)/rebar.config") of
+		{ok, Conf0} -> Conf0;
+		_ -> []
+	end,
+	Conf = case filelib:is_file("$(DEPS_DIR)/$(1)/rebar.config.script") of
+		false -> Conf1;
+		true ->
+			Bindings0 = erl_eval:new_bindings(),
+			Bindings1 = erl_eval:add_binding('CONFIG', Conf1, Bindings0),
+			Bindings = erl_eval:add_binding('SCRIPT', "$(DEPS_DIR)/$(1)/rebar.config.script", Bindings1),
+			{ok, Conf2} = file:script("$(DEPS_DIR)/$(1)/rebar.config.script", Bindings),
+			Conf2
+	end,
 	Write = fun (Text) ->
 		file:write_file("$(DEPS_DIR)/$(1)/Makefile", Text, [append])
 	end,
@@ -151,7 +172,26 @@ define dep_autopatch_rebar.erl
 	fun() ->
 		case lists:keyfind(port_env, 1, Conf) of
 			{_, Vars} ->
-				[Write(K ++ " = $$$$\(shell echo " ++ Escape(V) ++ "\)\n") || {K, V} <- Vars],
+				lists:foldl(fun
+					({K, V}, Acc) ->
+						case lists:member(K, Acc) of
+							true -> Acc;
+							false ->
+								Write(K ++ " = $$$$\(shell echo " ++ Escape(V) ++ "\)\n"),
+								[K|Acc]
+						end;
+					({Regex, K, V}, Acc) ->
+						case lists:member(K, Acc) of
+							true -> Acc;
+							false ->
+								case re:run("$(PLATFORM)", Regex, [{capture, none}]) of
+									nomatch -> Acc;
+									match ->
+										Write(K ++ " = $$$$\(shell echo " ++ Escape(V) ++ "\)\n"),
+										[K|Acc]
+								end
+						end
+				end, [], Vars),
 				Write("CFLAGS += $$$$\(DRV_CFLAGS\)\n"),
 				Write("CXXFLAGS += $$$$\(DRV_CFLAGS\)\n"),
 				Write("LDFLAGS += $$$$\(DRV_LDFLAGS\)\n");
