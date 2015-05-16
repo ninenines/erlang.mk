@@ -2,6 +2,7 @@ apns	git	https://github.com/inaka/apns4erl	1.0.4	http://inaka.github.com/apns4er
 azdht	git	https://github.com/arcusfelis/azdht	master	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
 binpp	git	https://github.com/jtendo/binpp	master	https://github.com/jtendo/binpp	Erlang Binary Pretty Printer
 bitcask	git	https://github.com/basho/bitcask	master	https://github.com/basho/bitcask	because you need another a key/value storage engine
+boss	git	https://github.com/ChicagoBoss/ChicagoBoss	master	https://github.com/ChicagoBoss/ChicagoBoss	Erlang web MVC, now featuring Comet
 bullet	git	https://github.com/extend/bullet	master	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cake	git	https://github.com/darach/cake-erl	v0.1.2	https://github.com/darach/cake-erl	Really simple terminal colorization
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
