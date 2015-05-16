@@ -5,8 +5,7 @@
 
 # Configuration.
 
-AUTOPATCH ?= edown gen_leader gproc
-export AUTOPATCH
+IGNORE_DEPS ?=
 
 DEPS_DIR ?= $(CURDIR)/deps
 export DEPS_DIR
@@ -14,7 +13,7 @@ export DEPS_DIR
 REBAR_DEPS_DIR = $(DEPS_DIR)
 export REBAR_DEPS_DIR
 
-ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(DEPS))
+ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(filter-out $(IGNORE_DEPS),$(DEPS)))
 
 ifeq ($(filter $(DEPS_DIR),$(subst :, ,$(ERL_LIBS))),)
 ifeq ($(ERL_LIBS),)
@@ -45,7 +44,7 @@ deps:: $(ALL_DEPS_DIRS)
 		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
 			$(MAKE) -C $$dep IS_DEP=1 || exit $$? ; \
 		else \
-			echo "ERROR: No makefile to build dependency $$dep. Consider adding it to AUTOPATCH." ; \
+			echo "ERROR: No Makefile to build dependency $$dep." ; \
 			exit 1 ; \
 		fi ; \
 	done
