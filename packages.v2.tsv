@@ -94,7 +94,7 @@ n2o	git	https://github.com/5HT/n2o	master	https://github.com/5HT/n2o	WebSocket A
 nat_upnp	git	https://github.com/benoitc/nat_upnp	master	https://github.com/benoitc/nat_upnp	Erlang library to map your internal port to an external using UNP IGD
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 neotoma	git	https://github.com/seancribbs/neotoma	master	https://github.com/seancribbs/neotoma	Erlang library and packrat parser-generator for parsing expression grammars.
-nodefinder	git	https://github.com/erlanger/nodefinder	0.2.3	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
+nodefinder	git	https://github.com/ingwinlu/nodefinder	master	https://github.com/ingwinlu/nodefinder	automatic node discovery via UDP multicast
 oauth2	git	https://github.com/kivra/oauth2	master	https://github.com/kivra/oauth2	Erlang Oauth2 implementation
 oauth	git	https://github.com/tim/erlang-oauth	master	https://github.com/tim/erlang-oauth	An Erlang OAuth 1.0 implementation
 openpoker	git	https://github.com/hpyhacking/openpoker	master	https://github.com/hpyhacking/openpoker	Genesis Texas hold'em Game Server
