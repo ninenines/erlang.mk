@@ -185,6 +185,14 @@ define dep_autopatch_rebar.erl
 		end
 	end(),
 	fun() ->
+		case lists:keyfind(port_specs, 1, Conf) of
+			{_, [{Output, _}]} ->
+				filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
+				Write("C_SRC_OUTPUT = " ++ Output ++ "\n");
+			_ -> ok
+		end
+	end(),
+	fun() ->
 		case lists:keyfind(port_env, 1, Conf) of
 			{_, Vars} ->
 				lists:foldl(fun
