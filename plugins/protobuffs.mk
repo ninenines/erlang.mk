@@ -11,7 +11,7 @@ proto_verbose = $(proto_verbose_$(V))
 define compile_proto
 	@mkdir -p ebin/ include/
 	$(proto_verbose) $(call erlang,$(call compile_proto.erl,$(1)))
-	$(proto_verbose) erlc $(ERLC_OPTS) -o ebin/ ebin/*.erl
+	$(proto_verbose) erlc +debug_info -o ebin/ ebin/*.erl
 	@rm ebin/*.erl
 endef
 
