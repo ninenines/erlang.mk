@@ -2,6 +2,7 @@ apns	https://github.com/inaka/apns4erl	http://inaka.github.com/apns4erl	Apple Pu
 azdht	https://github.com/arcusfelis/azdht	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
 binpp	https://github.com/jtendo/binpp	https://github.com/jtendo/binpp	Erlang Binary Pretty Printer
 bitcask	https://github.com/basho/bitcask	https://github.com/basho/bitcask	because you need another a key/value storage engine
+boss_db	https://github.com/ErlyORM/boss_db	https://github.com/ErlyORM/boss_db	BossDB: a sharded, caching, pooling, evented ORM for Erlang
 boss	https://github.com/ChicagoBoss/ChicagoBoss	https://github.com/ChicagoBoss/ChicagoBoss	Erlang web MVC, now featuring Comet
 bullet	https://github.com/extend/bullet	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Really simple terminal colorization
