@@ -260,6 +260,26 @@ define dep_autopatch_rebar.erl
 				Write("\n\nCFLAGS := $$$$\(filter-out -std=c99 -Wmissing-prototypes,$$$$\(CFLAGS\)\)\n")
 		end
 	end(),
+	fun() ->
+		case lists:keyfind(plugins, 1, Conf) of
+			{_, [Plugin]} when is_atom(Plugin) ->
+				ErlFile = "$(DEPS_DIR)/$(1)/plugins/" ++ atom_to_list(Plugin) ++ ".erl",
+				try
+					{ok, PF} = file:read_file(ErlFile),
+					PF2 = re:replace(PF, "rebar_utils:find_files", "find_files", [global, {return, list}]),
+					PF3 = PF2 ++ "find_files(Dir, Regex) ->
+						filelib:fold_files(Dir, Regex, true, fun(F, Acc) -> [F|Acc] end, []).",
+					ok = file:write_file(ErlFile, PF3),
+					{ok, Mod, Bin} = compile:file(ErlFile, [binary]),
+					{module, Mod} = code:load_binary(Mod, ErlFile, Bin),
+					c:cd("$(DEPS_DIR)/$(1)/"),
+					ok = Mod:pre_compile(Conf, undefined)
+				catch _:_ ->
+					ok
+				end;
+			_ -> ok
+		end
+	end(),
 	halt()
 endef
 
