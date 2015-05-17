@@ -63,6 +63,7 @@ gproc	git	https://github.com/uwiger/gproc	master	https://github.com/uwiger/gproc
 gun	git	https://github.com/ninenines/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 hackney	git	https://github.com/benoitc/hackney	master	https://github.com/benoitc/hackney	simple HTTP client in Erlang
 hanoidb	git	https://github.com/krestenkrab/hanoidb	master	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
+i18n	git	https://github.com/erlang-unicode/i18n	master	https://github.com/erlang-unicode/i18n	icu nif: international components for unicode from Erlang (unicode, date, string, number, format, locale, localization, transliteration, icu4e)
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	git	https://github.com/robbielynch/ierlang	master	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 itweet	git	https://github.com/inaka/itweet	v2.0	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse

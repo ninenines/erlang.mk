@@ -63,6 +63,7 @@ gproc	https://github.com/uwiger/gproc	https://github.com/uwiger/gproc	Extended p
 gun	https://github.com/ninenines/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 hackney	https://github.com/benoitc/hackney	https://github.com/benoitc/hackney	simple HTTP client in Erlang
 hanoidb	https://github.com/krestenkrab/hanoidb	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
+i18n	https://github.com/erlang-unicode/i18n	https://github.com/erlang-unicode/i18n	icu nif: international components for unicode from Erlang (unicode, date, string, number, format, locale, localization, transliteration, icu4e)
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	https://github.com/robbielynch/ierlang	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 itweet	https://github.com/inaka/itweet	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
