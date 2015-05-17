@@ -125,6 +125,7 @@ resource_discovery	https://github.com/erlware/resource_discovery	http://erlware.
 riakc	https://github.com/basho/riak-erlang-client	https://github.com/basho/riak-erlang-client	Erlang clients for Riak.
 riak_core	https://github.com/basho/riak_core	https://github.com/basho/riak_core	Distributed systems infrastructure used by Riak.
 riak_dt	https://github.com/basho/riak_dt	https://github.com/basho/riak_dt	Convergent replicated datatypes in Erlang
+riak_kv	https://github.com/basho/riak_kv	https://github.com/basho/riak_kv	Riak Key/Value Store
 riak_pipe	https://github.com/basho/riak_pipe	https://github.com/basho/riak_pipe	Riak Pipelines
 rlimit	https://github.com/jlouis/rlimit	https://github.com/jlouis/rlimit	Magnus Klaar's rate limiter code from etorrent
 safetyvalve	https://github.com/jlouis/safetyvalve	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node
