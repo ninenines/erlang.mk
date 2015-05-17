@@ -90,6 +90,7 @@ mekao	git	https://github.com/ddosia/mekao	master	https://github.com/ddosia/mekao
 mochiweb	git	https://github.com/mochi/mochiweb	master	https://github.com/mochi/mochiweb	MochiWeb is an Erlang library for building lightweight HTTP servers.
 modlib	git	https://github.com/gar1t/modlib	master	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 mongodb	git	https://github.com/comtihon/mongodb-erlang	master	https://github.com/comtihon/mongodb-erlang	MongoDB driver for Erlang
+mongooseim	git	https://github.com/esl/MongooseIM	master	https://www.erlang-solutions.com/products/mongooseim-massively-scalable-ejabberd-platform	Jabber / XMPP server with focus on performance and scalability, by Erlang Solutions
 msgpack	git	https://github.com/msgpack/msgpack-erlang	master	https://github.com/msgpack/msgpack-erlang	MessagePack (de)serializer implementation for Erlang
 mustache	git	https://github.com/mojombo/mustache.erl	master	https://github.com/mojombo/mustache.erl	Mustache template engine for Erlang.
 mysql	git	https://github.com/dizzyd/erlang-mysql-driver	master	https://github.com/dizzyd/erlang-mysql-driver	Erlang MySQL Driver (from code.google.com)

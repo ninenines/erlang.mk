@@ -90,6 +90,7 @@ mekao	https://github.com/ddosia/mekao	https://github.com/ddosia/mekao	SQL constr
 mochiweb	https://github.com/mochi/mochiweb	https://github.com/mochi/mochiweb	MochiWeb is an Erlang library for building lightweight HTTP servers.
 modlib	https://github.com/gar1t/modlib	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 mongodb	https://github.com/comtihon/mongodb-erlang	https://github.com/comtihon/mongodb-erlang	MongoDB driver for Erlang
+mongooseim	https://github.com/esl/MongooseIM	https://www.erlang-solutions.com/products/mongooseim-massively-scalable-ejabberd-platform	Jabber / XMPP server with focus on performance and scalability, by Erlang Solutions
 msgpack	https://github.com/msgpack/msgpack-erlang	https://github.com/msgpack/msgpack-erlang	MessagePack (de)serializer implementation for Erlang
 mustache	https://github.com/mojombo/mustache.erl	https://github.com/mojombo/mustache.erl	Mustache template engine for Erlang.
 mysql	https://github.com/dizzyd/erlang-mysql-driver	https://github.com/dizzyd/erlang-mysql-driver	Erlang MySQL Driver (from code.google.com)
