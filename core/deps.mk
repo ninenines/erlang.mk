@@ -184,6 +184,38 @@ define dep_autopatch_rebar.erl
 			Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
 		end
 	end(),
+	FindFirst = fun(F, Fd) ->
+		case io:parse_erl_form(Fd, undefined) of
+			{ok, {attribute, _,compile, {parse_transform, PT}}, _} ->
+				[PT, F(F, Fd)];
+			{ok, {attribute, _, include, Hrl}, _} ->
+				case file:open("$(DEPS_DIR)/$(1)/include/" ++ Hrl, [read]) of
+					{ok, HrlFd} -> [F(F, HrlFd), F(F, Fd)];
+					_ ->
+						case file:open("$(DEPS_DIR)/$(1)/src/" ++ Hrl, [read]) of
+							{ok, HrlFd} -> [F(F, HrlFd), F(F, Fd)];
+							_ -> [F(F, Fd)]
+						end
+				end;
+			{ok, {attribute, _, include_lib, "$(1)/include/" ++ Hrl}, _} ->
+				{ok, HrlFd} = file:open("$(DEPS_DIR)/$(1)/include/" ++ Hrl, [read]),
+				[F(F, HrlFd), F(F, Fd)];
+			{eof, _} ->
+				file:close(Fd),
+				[];
+			_ ->
+				F(F, Fd)
+		end
+	end,
+	fun() ->
+		ErlFiles = filelib:wildcard("$(DEPS_DIR)/$(1)/src/*.erl"),
+		First = lists:usort(lists:flatten([begin
+			{ok, Fd} = file:open(F, [read]),
+			FindFirst(FindFirst, Fd)
+		end || F <- ErlFiles])),
+		Write(["COMPILE_FIRST +=", [[" ", atom_to_list(M)] || M <- First,
+			lists:member("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", ErlFiles)], "\n"])
+	end(),
 	PortSpec = fun(Name, {_, Output, Input, [{env, Env}]}) ->
 		filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
 		file:write_file("$(DEPS_DIR)/$(1)/c_src/Makefile." ++ Name, [
