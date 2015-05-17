@@ -202,6 +202,11 @@ define dep_autopatch_rebar.erl
 			{ok, {attribute, _, include_lib, "$(1)/include/" ++ Hrl}, _} ->
 				{ok, HrlFd} = file:open("$(DEPS_DIR)/$(1)/include/" ++ Hrl, [read]),
 				[F(F, HrlFd), F(F, Fd)];
+			{ok, {attribute, _, import, {Imp, _}}, _} ->
+				case file:open("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(Imp) ++ ".erl", [read]) of
+					{ok, ImpFd} -> [Imp, F(F, ImpFd), F(F, Fd)];
+					_ -> [F(F, Fd)]
+				end;
 			{eof, _} ->
 				file:close(Fd),
 				[];
@@ -211,10 +216,14 @@ define dep_autopatch_rebar.erl
 	end,
 	fun() ->
 		ErlFiles = filelib:wildcard("$(DEPS_DIR)/$(1)/src/*.erl"),
-		First = lists:usort(lists:flatten([begin
+		First0 = lists:usort(lists:flatten([begin
 			{ok, Fd} = file:open(F, [read]),
 			FindFirst(FindFirst, Fd)
 		end || F <- ErlFiles])),
+		First = lists:flatten([begin
+			{ok, Fd} = file:open("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(F) ++ ".erl", [read]),
+			FindFirst(FindFirst, Fd)
+		end || F <- First0]) ++ First0,
 		Write(["COMPILE_FIRST +=", [[" ", atom_to_list(M)] || M <- First,
 			lists:member("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", ErlFiles)], "\n"])
 	end(),
