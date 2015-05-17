@@ -184,11 +184,26 @@ define dep_autopatch_rebar.erl
 			Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
 		end
 	end(),
+	PortSpec = fun(Name, {_, Output, Input, [{env, Env}]}) ->
+		filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
+		file:write_file("$(DEPS_DIR)/$(1)/c_src/Makefile." ++ Name, [
+			[["override ", K, " = $$$$\(shell echo ", Escape(V), "\)\n"]
+				|| {_, K, V} <- Env],
+			"\nall:\n\t$$$$\(CC\) $$$$\(CFLAGS\) $$$$\(LDLIBS\) $$$$\(LDFLAGS\) ",
+			"-o $(DEPS_DIR)/$(1)/", Output, " ",
+			[["../", F] || F <- Input]
+		])
+	end,
 	fun() ->
 		case lists:keyfind(port_specs, 1, Conf) of
 			{_, [{Output, _}]} ->
 				filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
-				Write("C_SRC_OUTPUT = " ++ Output ++ "\n");
+				Write("C_SRC_OUTPUT = " ++ Escape(Output) ++ "\n");
+			{_, [First, Second]} ->
+				PortSpec("1", First),
+				PortSpec("2", Second),
+				file:write_file("$(DEPS_DIR)/$(1)/c_src/Makefile",
+					"all:\n\t$$$$\(MAKE\) -f Makefile.1\n\t$$$$\(MAKE\) -f Makefile.2\n");
 			_ -> ok
 		end
 	end(),
