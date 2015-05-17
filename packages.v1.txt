@@ -44,6 +44,7 @@ erlware_commons	https://github.com/erlware/erlware_commons	https://github.com/er
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 exec	https://github.com/saleyn/erlexec	http://saleyn.github.com/erlexec	Execute and control OS processes from Erlang/OTP.
+exml	https://github.com/paulgray/exml	https://github.com/paulgray/exml	XML parsing library in Erlang
 exmpp	https://github.com/processone/exmpp	https://github.com/processone/exmpp	Erlang XMPP library
 exometer	https://github.com/Feuerlabs/exometer	https://github.com/Feuerlabs/exometer	Basic measurement objects and probe behavior
 exs1024	https://github.com/jj1bdx/exs1024	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
