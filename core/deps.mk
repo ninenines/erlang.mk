@@ -222,8 +222,8 @@ define dep_autopatch_rebar.erl
 			[["override ", K, " = $$$$\(shell echo ", Escape(V), "\)\n"]
 				|| {_, K, V} <- Env],
 			"\nall:\n\t$$$$\(CC\) $$$$\(CFLAGS\) $$$$\(LDLIBS\) $$$$\(LDFLAGS\) ",
-			"-o $(DEPS_DIR)/$(1)/", Output, " ",
-			[["../", F] || F <- Input]
+			"-o $(DEPS_DIR)/$(1)/", Output,
+			[[" ../", F] || F <- Input]
 		])
 	end,
 	fun() ->
