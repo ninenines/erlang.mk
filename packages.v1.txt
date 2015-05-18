@@ -205,6 +205,7 @@ gcprof	https://github.com/knutin/gcprof	a	b
 gcprof	https://github.com/knutin/gcprof	https://github.com/knutin/gcprof	Garbage Collection profiler for Erlang
 geas	https://github.com/crownedgrouse/geas	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
 gen_icmp	https://github.com/msantos/gen_icmp	a	b
+gen_icmp	https://github.com/msantos/gen_icmp	https://github.com/msantos/gen_icmp	Erlang interface to ICMP sockets
 gen_nb_server	https://github.com/kevsmith/gen_nb_server	https://github.com/kevsmith/gen_nb_server	OTP behavior for writing non-blocking servers
 gen_paxos	https://github.com/gburd/gen_paxos	a	b
 gen_paxos	https://github.com/gburd/gen_paxos	https://github.com/gburd/gen_paxos	An Erlang/OTP-style implementation of the PAXOS distributed consensus protocol
