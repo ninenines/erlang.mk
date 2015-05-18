@@ -57,6 +57,7 @@ cuttlefish	https://github.com/basho/cuttlefish	a	b
 damocles	https://github.com/lostcolony/damocles	https://github.com/lostcolony/damocles	Erlang library for generating adversarial network conditions for QAing distributed applications/systems on a single Linux box.
 debbie	https://github.com/crownedgrouse/debbie	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
 decimal	https://github.com/tim/erlang-decimal	a	b
+decimal	https://github.com/tim/erlang-decimal	https://github.com/tim/erlang-decimal	An Erlang decimal arithmetic library
 detergent	https://github.com/devinus/detergent	a	b
 detergent	https://github.com/devinus/detergent	https://github.com/devinus/detergent	An emulsifying Erlang SOAP library
 dh_date	https://github.com/daleharvey/dh_date	a	b
