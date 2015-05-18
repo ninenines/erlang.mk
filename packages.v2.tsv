@@ -88,6 +88,7 @@ egeoip	git	https://github.com/mochi/egeoip	master	a	b
 ehsa	hg	https://bitbucket.org/a12n/ehsa	2.0.4	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
 ej	git	https://github.com/seth/ej	master	https://github.com/seth/ej	Helper module for working with Erlang terms representing JSON
 ekaf	git	https://github.com/helpshift/ekaf	master	a	b
+ekaf	git	https://github.com/helpshift/ekaf	master	https://github.com/helpshift/ekaf	A minimal, high-performance Kafka client in Erlang.
 elarm	git	https://github.com/esl/elarm	master	a	b
 eleveldb	git	https://github.com/basho/eleveldb	master	https://github.com/basho/eleveldb	Erlang LevelDB API
 elli	git	https://github.com/knutin/elli	master	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
