@@ -335,6 +335,7 @@ neotoma	https://github.com/seancribbs/neotoma	https://github.com/seancribbs/neot
 newrelic	https://github.com/wooga/newrelic-erlang	a	b
 newrelic	https://github.com/wooga/newrelic-erlang	https://github.com/wooga/newrelic-erlang	Erlang library for sending metrics to New Relic
 nkdocker	https://github.com/Nekso/nkdocker	a	b
+nkdocker	https://github.com/Nekso/nkdocker	https://github.com/Nekso/nkdocker	Erlang Docker client
 nkpacket	https://github.com/Nekso/nkpacket	a	b
 nkpacket	https://github.com/Nekso/nkpacket	https://github.com/Nekso/nkpacket	Generic Erlang transport layer
 nodefinder	https://github.com/erlanger/nodefinder	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
