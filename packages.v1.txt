@@ -134,6 +134,7 @@ erl_streams	https://github.com/epappas/erl_streams	a	b
 erl_streams	https://github.com/epappas/erl_streams	https://github.com/epappas/erl_streams	Streams in Erlang
 erlubi	https://github.com/krestenkrab/erlubi	https://github.com/krestenkrab/erlubi	Ubigraph Erlang Client (and Process Visualizer)
 erlvolt	https://github.com/VoltDB/voltdb-client-erlang	a	b
+erlvolt	https://github.com/VoltDB/voltdb-client-erlang	https://github.com/VoltDB/voltdb-client-erlang	VoltDB Erlang Client Driver
 erlware_commons	https://github.com/erlware/erlware_commons	https://github.com/erlware/erlware_commons	Erlware Commons is an Erlware project focused on all aspects of reusable Erlang components.
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 errd	https://github.com/archaelus/errd	a	b

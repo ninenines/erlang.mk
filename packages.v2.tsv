@@ -134,6 +134,7 @@ erl_streams	git	https://github.com/epappas/erl_streams	master	a	b
 erl_streams	git	https://github.com/epappas/erl_streams	master	https://github.com/epappas/erl_streams	Streams in Erlang
 erlubi	git	https://github.com/krestenkrab/erlubi	master	https://github.com/krestenkrab/erlubi	Ubigraph Erlang Client (and Process Visualizer)
 erlvolt	git	https://github.com/VoltDB/voltdb-client-erlang	master	a	b
+erlvolt	git	https://github.com/VoltDB/voltdb-client-erlang	master	https://github.com/VoltDB/voltdb-client-erlang	VoltDB Erlang Client Driver
 erlware_commons	git	https://github.com/erlware/erlware_commons	master	https://github.com/erlware/erlware_commons	Erlware Commons is an Erlware project focused on all aspects of reusable Erlang components.
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
 errd	git	https://github.com/archaelus/errd	master	a	b
