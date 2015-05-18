@@ -5,6 +5,7 @@ annotations	git	https://github.com/hyperthunk/annotations	master	a	b
 apns	git	https://github.com/inaka/apns4erl	1.0.4	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 azdht	git	https://github.com/arcusfelis/azdht	master	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
 backoff	git	https://github.com/ferd/backoff	master	a	b
+backoff	git	https://github.com/ferd/backoff	master	https://github.com/ferd/backoff	Simple exponential backoffs in Erlang
 barrel	git	https://github.com/benoitc/barrel	master	a	b
 beanstalk	git	https://github.com/tim/erlang-beanstalk	master	a	b
 bear	git	https://github.com/boundary/bear	master	a	b
