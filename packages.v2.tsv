@@ -250,6 +250,7 @@ kdht	git	https://github.com/kevinlynx/kdht	master	https://github.com/kevinlynx/k
 kjell	git	https://github.com/karlll/kjell	master	https://github.com/karlll/kjell	Erlang Shell
 kraken	git	https://github.com/Asana/kraken	master	https://github.com/Asana/kraken	Distributed Pubsub Server for Realtime Apps
 kucumberl	git	https://github.com/openshine/kucumberl	master	a	b
+kucumberl	git	https://github.com/openshine/kucumberl	master	https://github.com/openshine/kucumberl	A pure-erlang, open-source, implementation of Cucumber
 kvc	git	https://github.com/etrepum/kvc	master	a	b
 kvlists	git	https://github.com/jcomellas/kvlists	master	a	b
 kvlists	git	https://github.com/jcomellas/kvlists	master	https://github.com/jcomellas/kvlists	Lists of key-value pairs (decoded JSON) in Erlang

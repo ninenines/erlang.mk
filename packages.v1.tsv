@@ -250,6 +250,7 @@ kdht	https://github.com/kevinlynx/kdht	https://github.com/kevinlynx/kdht	kdht is
 kjell	https://github.com/karlll/kjell	https://github.com/karlll/kjell	Erlang Shell
 kraken	https://github.com/Asana/kraken	https://github.com/Asana/kraken	Distributed Pubsub Server for Realtime Apps
 kucumberl	https://github.com/openshine/kucumberl	a	b
+kucumberl	https://github.com/openshine/kucumberl	https://github.com/openshine/kucumberl	A pure-erlang, open-source, implementation of Cucumber
 kvc	https://github.com/etrepum/kvc	a	b
 kvlists	https://github.com/jcomellas/kvlists	a	b
 kvlists	https://github.com/jcomellas/kvlists	https://github.com/jcomellas/kvlists	Lists of key-value pairs (decoded JSON) in Erlang
