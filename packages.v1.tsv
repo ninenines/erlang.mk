@@ -72,6 +72,7 @@ eleveldb	https://github.com/basho/eleveldb	https://github.com/basho/eleveldb	Erl
 elli	https://github.com/knutin/elli	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
 elvis	https://github.com/inaka/elvis	https://github.com/inaka/elvis	Erlang Style Reviewer
 emagick	https://github.com/kivra/emagick	a	b
+emagick	https://github.com/kivra/emagick	https://github.com/kivra/emagick	Wrapper for Graphics/ImageMagick command line tool.
 emysql	https://github.com/Eonblast/Emysql	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
 enet	https://github.com/archaelus/enet	a	b
 enm	https://github.com/basho/enm	a	b

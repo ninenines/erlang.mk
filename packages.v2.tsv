@@ -72,6 +72,7 @@ eleveldb	git	https://github.com/basho/eleveldb	master	https://github.com/basho/e
 elli	git	https://github.com/knutin/elli	master	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
 elvis	git	https://github.com/inaka/elvis	0.2.4	https://github.com/inaka/elvis	Erlang Style Reviewer
 emagick	git	https://github.com/kivra/emagick	master	a	b
+emagick	git	https://github.com/kivra/emagick	master	https://github.com/kivra/emagick	Wrapper for Graphics/ImageMagick command line tool.
 emysql	git	https://github.com/Eonblast/Emysql	master	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
 enet	git	https://github.com/archaelus/enet	master	a	b
 enm	git	https://github.com/basho/enm	master	a	b
