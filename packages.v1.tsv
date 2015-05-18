@@ -231,6 +231,7 @@ kraken	https://github.com/Asana/kraken	https://github.com/Asana/kraken	Distribut
 kucumberl	https://github.com/openshine/kucumberl	a	b
 kvc	https://github.com/etrepum/kvc	a	b
 kvlists	https://github.com/jcomellas/kvlists	a	b
+kvlists	https://github.com/jcomellas/kvlists	https://github.com/jcomellas/kvlists	Lists of key-value pairs (decoded JSON) in Erlang
 kvs	https://github.com/synrc/kvs	a	b
 lager_amqp_backend	https://github.com/jbrisbin/lager_amqp_backend	a	b
 lager	https://github.com/basho/lager	https://github.com/basho/lager	A logging framework for Erlang/OTP.

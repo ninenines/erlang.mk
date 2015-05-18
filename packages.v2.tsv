@@ -231,6 +231,7 @@ kraken	git	https://github.com/Asana/kraken	master	https://github.com/Asana/krake
 kucumberl	git	https://github.com/openshine/kucumberl	master	a	b
 kvc	git	https://github.com/etrepum/kvc	master	a	b
 kvlists	git	https://github.com/jcomellas/kvlists	master	a	b
+kvlists	git	https://github.com/jcomellas/kvlists	master	https://github.com/jcomellas/kvlists	Lists of key-value pairs (decoded JSON) in Erlang
 kvs	git	https://github.com/synrc/kvs	master	a	b
 lager_amqp_backend	git	https://github.com/jbrisbin/lager_amqp_backend	master	a	b
 lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A logging framework for Erlang/OTP.
