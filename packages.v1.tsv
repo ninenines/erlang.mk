@@ -487,6 +487,7 @@ statman	https://github.com/knutin/statman	a	b
 statsderl	https://github.com/lpgauth/statsderl	a	b
 statsderl	https://github.com/lpgauth/statsderl	https://github.com/lpgauth/statsderl	StatsD client (erlang)
 stockdb	https://github.com/maxlapshin/stockdb	a	b
+stockdb	https://github.com/maxlapshin/stockdb	https://github.com/maxlapshin/stockdb	Database for storing Stock Exchange quotes in erlang
 stripe	https://github.com/mattsta/stripe-erlang	a	b
 stripe	https://github.com/mattsta/stripe-erlang	https://github.com/mattsta/stripe-erlang	Erlang interface to the stripe.com API
 swab	https://github.com/crownedgrouse/swab	https://github.com/crownedgrouse/swab	General purpose buffer handling module
