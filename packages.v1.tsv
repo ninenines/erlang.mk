@@ -105,6 +105,7 @@ eredis_pool	https://github.com/hiroeorz/eredis_pool	a	b
 eredis_pool	https://github.com/hiroeorz/eredis_pool	https://github.com/hiroeorz/eredis_pool	eredis_pool is Pool of Redis clients, using eredis and poolboy.
 erlang_js	https://github.com/basho/erlang_js	https://github.com/basho/erlang_js	A linked-in driver for Erlang to Mozilla's Spidermonkey Javascript runtime.
 erlang_localtime	https://github.com/dmitryme/erlang_localtime	a	b
+erlang_localtime	https://github.com/dmitryme/erlang_localtime	https://github.com/dmitryme/erlang_localtime	Erlang library for conversion from one local time to another
 erlang_smtp	https://github.com/tonyg/erlang-smtp	a	b
 erlang_smtp	https://github.com/tonyg/erlang-smtp	https://github.com/tonyg/erlang-smtp	Erlang SMTP and POP3 server code.
 erlasticsearch	https://github.com/dieswaytoofast/erlasticsearch	https://github.com/dieswaytoofast/erlasticsearch	Erlang thrift interface to elastic_search
