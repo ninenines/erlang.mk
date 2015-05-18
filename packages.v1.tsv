@@ -118,6 +118,7 @@ erldis	https://github.com/cstar/erldis	a	b
 erldns	https://github.com/aetrion/erl-dns	https://github.com/aetrion/erl-dns	DNS server, in erlang.
 erldocker	https://github.com/proger/erldocker	a	b
 erlfsmon	https://github.com/proger/erlfsmon	a	b
+erlfsmon	https://github.com/proger/erlfsmon	https://github.com/proger/erlfsmon	Erlang filesystem event watcher for Linux and OSX
 erlgit	https://github.com/gleber/erlgit	a	b
 erlgit	https://github.com/gleber/erlgit	https://github.com/gleber/erlgit	Erlang convenience wrapper around git executable
 erlguten	https://github.com/richcarl/erlguten	a	b
