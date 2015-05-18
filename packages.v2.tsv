@@ -109,6 +109,7 @@ ej	git	https://github.com/seth/ej	master	https://github.com/seth/ej	Helper modul
 ekaf	git	https://github.com/helpshift/ekaf	master	a	b
 ekaf	git	https://github.com/helpshift/ekaf	master	https://github.com/helpshift/ekaf	A minimal, high-performance Kafka client in Erlang.
 elarm	git	https://github.com/esl/elarm	master	a	b
+elarm	git	https://github.com/esl/elarm	master	https://github.com/esl/elarm	Alarm Manager for Erlang.
 eleveldb	git	https://github.com/basho/eleveldb	master	https://github.com/basho/eleveldb	Erlang LevelDB API
 elli	git	https://github.com/knutin/elli	master	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
 elvis	git	https://github.com/inaka/elvis	0.2.4	https://github.com/inaka/elvis	Erlang Style Reviewer
