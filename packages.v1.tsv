@@ -167,6 +167,7 @@ gen_paxos	https://github.com/gburd/gen_paxos	a	b
 gen_smtp	https://github.com/Vagabond/gen_smtp	https://github.com/Vagabond/gen_smtp	A generic Erlang SMTP server and client that can be extended via callback modules
 gen_tracker	https://github.com/erlyvideo/gen_tracker	a	b
 gen_unix	https://github.com/msantos/gen_unix	a	b
+gen_unix	https://github.com/msantos/gen_unix	https://github.com/msantos/gen_unix	Erlang Unix socket interface
 getopt	https://github.com/jcomellas/getopt	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gettext	https://github.com/etnt/gettext	a	b
 gin	https://github.com/mad-cocktail/gin	a	b
