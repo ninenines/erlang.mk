@@ -56,6 +56,7 @@ e2	git	https://github.com/gar1t/e2	master	http://e2project.org	Library to simply
 eamf	git	https://github.com/mrinalwadhwa/eamf	master	a	b
 eamf	git	https://github.com/mrinalwadhwa/eamf	master	https://github.com/mrinalwadhwa/eamf	eAMF provides Action Message Format (AMF) support for Erlang
 eavro	git	https://github.com/SIfoxDevTeam/eavro	master	a	b
+eavro	git	https://github.com/SIfoxDevTeam/eavro	master	https://github.com/SIfoxDevTeam/eavro	Apache Avro encoder/decoder
 ecapnp	git	https://github.com/kaos/ecapnp	master	a	b
 econfig	git	https://github.com/benoitc/econfig	master	a	b
 edate	git	https://github.com/dweldon/edate	master	a	b

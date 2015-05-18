@@ -56,6 +56,7 @@ e2	https://github.com/gar1t/e2	http://e2project.org	Library to simply writing co
 eamf	https://github.com/mrinalwadhwa/eamf	a	b
 eamf	https://github.com/mrinalwadhwa/eamf	https://github.com/mrinalwadhwa/eamf	eAMF provides Action Message Format (AMF) support for Erlang
 eavro	https://github.com/SIfoxDevTeam/eavro	a	b
+eavro	https://github.com/SIfoxDevTeam/eavro	https://github.com/SIfoxDevTeam/eavro	Apache Avro encoder/decoder
 ecapnp	https://github.com/kaos/ecapnp	a	b
 econfig	https://github.com/benoitc/econfig	a	b
 edate	https://github.com/dweldon/edate	a	b
