@@ -256,6 +256,7 @@ i18n	https://github.com/erlang-unicode/i18n	https://github.com/erlang-unicode/i1
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	https://github.com/robbielynch/ierlang	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 ircbot	https://github.com/gdamjan/erlang-irc-bot	a	b
+ircbot	https://github.com/gdamjan/erlang-irc-bot	https://github.com/gdamjan/erlang-irc-bot	A simple extendable irc bot in Erlang
 ircd	https://github.com/tonyg/erlang-ircd	a	b
 ircd	https://github.com/tonyg/erlang-ircd	https://github.com/tonyg/erlang-ircd	A pluggable IRC daemon application/library for Erlang.
 irc_lib	https://github.com/OtpChatBot/irc_lib	a	b
