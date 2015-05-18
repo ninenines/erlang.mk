@@ -324,6 +324,7 @@ protobuffs	git	https://github.com/basho/erlang_protobuffs	master	https://github.
 psycho	git	https://github.com/gar1t/psycho	master	https://github.com/gar1t/psycho	HTTP server that provides a WSGI-like interface for applications and middleware.
 ptrackerl	git	https://github.com/inaka/ptrackerl	master	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
 purity	git	https://github.com/mpitid/purity	master	a	b
+purity	git	https://github.com/mpitid/purity	master	https://github.com/mpitid/purity	A side-effect analyzer for Erlang
 push_service	git	https://github.com/hairyhum/push_service	master	https://github.com/hairyhum/push_service	Push service
 qdate	git	https://github.com/choptastic/qdate	0.4.0	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
 qrcode	git	https://github.com/komone/qrcode	master	a	b
