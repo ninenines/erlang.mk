@@ -386,4 +386,5 @@ zeta	https://github.com/s1n4/zeta	https://github.com/s1n4/zeta	HTTP access log p
 zippers	https://github.com/ferd/zippers	a	b
 zippers	https://github.com/ferd/zippers	https://github.com/ferd/zippers	A library for functional zipper data structures in Erlang. Read more on zippers
 zlists	https://github.com/vjache/erlang-zlists	a	b
+zlists	https://github.com/vjache/erlang-zlists	https://github.com/vjache/erlang-zlists	Erlang lazy lists library.
 zucchini	https://github.com/devinus/zucchini	a	b
