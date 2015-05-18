@@ -106,6 +106,7 @@ eep	git	https://github.com/virtan/eep	master	https://github.com/virtan/eep	Erlan
 efene	git	https://github.com/efene/efene	master	https://github.com/efene/efene	Alternative syntax for the Erlang Programming Language focusing on simplicity, ease of use and programmer UX
 eganglia	git	https://github.com/inaka/eganglia	v0.9.1	https://github.com/inaka/eganglia	Erlang library to interact with Ganglia
 egeoip	git	https://github.com/mochi/egeoip	master	a	b
+egeoip	git	https://github.com/mochi/egeoip	master	https://github.com/mochi/egeoip	Erlang IP Geolocation module, currently supporting the MaxMind GeoLite City Database.
 ehsa	hg	https://bitbucket.org/a12n/ehsa	2.0.4	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
 ej	git	https://github.com/seth/ej	master	https://github.com/seth/ej	Helper module for working with Erlang terms representing JSON
 ekaf	git	https://github.com/helpshift/ekaf	master	a	b
