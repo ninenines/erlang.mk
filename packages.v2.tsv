@@ -226,6 +226,7 @@ iris	git	https://github.com/project-iris/iris-erl	master	https://github.com/proj
 iso8601	git	https://github.com/seansawyer/erlang_iso8601	master	a	b
 itweet	git	https://github.com/inaka/itweet	v2.0	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
 jerg	git	https://github.com/ddossot/jerg	master	a	b
+jerg	git	https://github.com/ddossot/jerg	master	https://github.com/ddossot/jerg	JSON Schema to Erlang Records Generator
 jesse	git	https://github.com/klarna/jesse	master	https://github.com/klarna/jesse	jesse (JSon Schema Erlang) is an implementation of a json schema validator for Erlang.
 jiffy	git	https://github.com/davisp/jiffy	master	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
 jiffy_v	git	https://github.com/shizzard/jiffy-v	0.3.3	https://github.com/shizzard/jiffy-v	JSON validation utility
