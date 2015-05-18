@@ -404,6 +404,7 @@ tinymt	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1
 trane	git	https://github.com/massemanet/trane	master	a	b
 trane	git	https://github.com/massemanet/trane	master	https://github.com/massemanet/trane	SAX style broken HTML parser in Erlang
 transit	git	https://github.com/isaiah/transit-erlang	master	a	b
+transit	git	https://github.com/isaiah/transit-erlang	master	https://github.com/isaiah/transit-erlang	transit format for erlang
 trie	git	https://github.com/okeuday/trie	master	a	b
 triq	git	https://github.com/krestenkrab/triq	master	https://github.com/krestenkrab/triq	Trifork QuickCheck
 tsung	git	https://github.com/processone/tsung	master	https://github.com/processone/tsung	Tsung is a high-performance benchmark framework for various protocols including HTTP, XMPP, LDAP, etc.
