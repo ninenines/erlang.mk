@@ -8,6 +8,7 @@ backoff	https://github.com/ferd/backoff	a	b
 backoff	https://github.com/ferd/backoff	https://github.com/ferd/backoff	Simple exponential backoffs in Erlang
 barrel	https://github.com/benoitc/barrel	a	b
 beanstalk	https://github.com/tim/erlang-beanstalk	a	b
+beanstalk	https://github.com/tim/erlang-beanstalk	https://github.com/tim/erlang-beanstalk	An Erlang client for beanstalkd
 bear	https://github.com/boundary/bear	a	b
 bertconf	https://github.com/ferd/bertconf	a	b
 bifrost	https://github.com/thorstadt/bifrost	a	b
