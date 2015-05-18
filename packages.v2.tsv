@@ -192,6 +192,7 @@ exs64	git	https://github.com/jj1bdx/exs64	master	https://github.com/jj1bdx/exs64
 exsplus116	git	https://github.com/jj1bdx/exsplus116	master	https://github.com/jj1bdx/exsplus116	Xorshift116plus for Erlang
 exsplus128	git	https://github.com/jj1bdx/exsplus128	master	https://github.com/jj1bdx/exsplus128	Xorshift128plus pseudo random number generator for Erlang.
 ezmq	git	https://github.com/RoadRunnr/ezmq	master	a	b
+ezmq	git	https://github.com/RoadRunnr/ezmq	master	https://github.com/RoadRunnr/ezmq	zMQ implemented in Erlang
 ezmtp	git	https://github.com/a13x/ezmtp	master	a	b
 ezmtp	git	https://github.com/a13x/ezmtp	master	https://github.com/a13x/ezmtp	ZMTP protocol in pure Erlang.
 fast_disk_log	git	https://github.com/lpgauth/fast_disk_log	master	https://github.com/lpgauth/fast_disk_log	Pool-based asynchronous Erlang disk logger

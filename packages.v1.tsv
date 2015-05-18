@@ -192,6 +192,7 @@ exs64	https://github.com/jj1bdx/exs64	https://github.com/jj1bdx/exs64	Xorshift64
 exsplus116	https://github.com/jj1bdx/exsplus116	https://github.com/jj1bdx/exsplus116	Xorshift116plus for Erlang
 exsplus128	https://github.com/jj1bdx/exsplus128	https://github.com/jj1bdx/exsplus128	Xorshift128plus pseudo random number generator for Erlang.
 ezmq	https://github.com/RoadRunnr/ezmq	a	b
+ezmq	https://github.com/RoadRunnr/ezmq	https://github.com/RoadRunnr/ezmq	zMQ implemented in Erlang
 ezmtp	https://github.com/a13x/ezmtp	a	b
 ezmtp	https://github.com/a13x/ezmtp	https://github.com/a13x/ezmtp	ZMTP protocol in pure Erlang.
 fast_disk_log	https://github.com/lpgauth/fast_disk_log	https://github.com/lpgauth/fast_disk_log	Pool-based asynchronous Erlang disk logger
