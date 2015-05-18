@@ -45,6 +45,7 @@ couch	https://github.com/benoitc/opencouch	https://github.com/benoitc/opencouch	
 covertool	https://github.com/idubrov/covertool	a	b
 cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
 cowdb	https://github.com/refuge/cowdb	a	b
+cowdb	https://github.com/refuge/cowdb	https://github.com/refuge/cowdb	Pure Key/Value database library for Erlang Applications
 cowlib	https://github.com/ninenines/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
 cpg	https://github.com/okeuday/cpg	a	b
 cpg	https://github.com/okeuday/cpg	https://github.com/okeuday/cpg	CloudI Process Groups

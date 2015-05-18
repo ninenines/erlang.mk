@@ -45,6 +45,7 @@ couch	git	https://github.com/benoitc/opencouch	master	https://github.com/benoitc
 covertool	git	https://github.com/idubrov/covertool	master	a	b
 cowboy	git	https://github.com/ninenines/cowboy	1.0.1	http://ninenines.eu	Small, fast and modular HTTP server.
 cowdb	git	https://github.com/refuge/cowdb	master	a	b
+cowdb	git	https://github.com/refuge/cowdb	master	https://github.com/refuge/cowdb	Pure Key/Value database library for Erlang Applications
 cowlib	git	https://github.com/ninenines/cowlib	1.0.1	http://ninenines.eu	Support library for manipulating Web protocols.
 cpg	git	https://github.com/okeuday/cpg	master	a	b
 cpg	git	https://github.com/okeuday/cpg	master	https://github.com/okeuday/cpg	CloudI Process Groups
