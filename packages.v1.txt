@@ -343,6 +343,7 @@ pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An imp
 percept2	https://github.com/huiqing/percept2	a	b
 pgsql	https://github.com/semiocast/pgsql	a	b
 pkgx	https://github.com/arjan/pkgx	a	b
+pkgx	https://github.com/arjan/pkgx	https://github.com/arjan/pkgx	Build .deb packages from Erlang releases
 pkt	https://github.com/msantos/pkt	a	b
 plain_fsm	https://github.com/uwiger/plain_fsm	a	b
 pmod_transform	https://github.com/erlang/pmod_transform	a	b
