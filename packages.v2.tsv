@@ -95,6 +95,7 @@ emagick	git	https://github.com/kivra/emagick	master	https://github.com/kivra/ema
 emysql	git	https://github.com/Eonblast/Emysql	master	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
 enet	git	https://github.com/archaelus/enet	master	a	b
 enm	git	https://github.com/basho/enm	master	a	b
+enm	git	https://github.com/basho/enm	master	https://github.com/basho/enm	Erlang driver for nanomsg
 entop	git	https://github.com/mazenharake/entop	master	https://github.com/mazenharake/entop	A top-like tool for monitoring an Erlang node
 epcap	git	https://github.com/msantos/epcap	master	a	b
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
