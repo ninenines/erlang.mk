@@ -446,6 +446,7 @@ statebox	https://github.com/mochi/statebox	https://github.com/mochi/statebox	Erl
 statebox_riak	https://github.com/mochi/statebox_riak	a	b
 statman	https://github.com/knutin/statman	a	b
 statsderl	https://github.com/lpgauth/statsderl	a	b
+statsderl	https://github.com/lpgauth/statsderl	https://github.com/lpgauth/statsderl	StatsD client (erlang)
 stockdb	https://github.com/maxlapshin/stockdb	a	b
 stripe	https://github.com/mattsta/stripe-erlang	a	b
 stripe	https://github.com/mattsta/stripe-erlang	https://github.com/mattsta/stripe-erlang	Erlang interface to the stripe.com API
