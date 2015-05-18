@@ -241,6 +241,7 @@ kvlists	git	https://github.com/jcomellas/kvlists	master	a	b
 kvlists	git	https://github.com/jcomellas/kvlists	master	https://github.com/jcomellas/kvlists	Lists of key-value pairs (decoded JSON) in Erlang
 kvs	git	https://github.com/synrc/kvs	master	a	b
 lager_amqp_backend	git	https://github.com/jbrisbin/lager_amqp_backend	master	a	b
+lager_amqp_backend	git	https://github.com/jbrisbin/lager_amqp_backend	master	https://github.com/jbrisbin/lager_amqp_backend	AMQP RabbitMQ Lager backend
 lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A logging framework for Erlang/OTP.
 lager_syslog	git	https://github.com/basho/lager_syslog	master	a	b
 lambdapad	git	https://github.com/gar1t/lambdapad	master	a	b
