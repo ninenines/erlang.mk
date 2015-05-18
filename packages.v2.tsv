@@ -186,6 +186,7 @@ erwa	git	https://github.com/bwegh/erwa	0.1.1	https://github.com/bwegh/erwa	A WAM
 espec	git	https://github.com/lucaspiller/espec	master	a	b
 espec	git	https://github.com/lucaspiller/espec	master	https://github.com/lucaspiller/espec	ESpec: Behaviour driven development framework for Erlang
 estatsd	git	https://github.com/RJ/estatsd	master	a	b
+estatsd	git	https://github.com/RJ/estatsd	master	https://github.com/RJ/estatsd	Erlang stats aggregation app that periodically flushes data to graphite
 etap	git	https://github.com/ngerakines/etap	master	a	b
 etap	git	https://github.com/ngerakines/etap	master	https://github.com/ngerakines/etap	etap is a simple erlang testing library that provides TAP compliant output.
 etest	git	https://github.com/wooga/etest	master	a	b
