@@ -368,6 +368,7 @@ pgsql	git	https://github.com/semiocast/pgsql	master	a	b
 pkgx	git	https://github.com/arjan/pkgx	master	a	b
 pkgx	git	https://github.com/arjan/pkgx	master	https://github.com/arjan/pkgx	Build .deb packages from Erlang releases
 pkt	git	https://github.com/msantos/pkt	master	a	b
+pkt	git	https://github.com/msantos/pkt	master	https://github.com/msantos/pkt	Erlang network protocol library
 plain_fsm	git	https://github.com/uwiger/plain_fsm	master	a	b
 pmod_transform	git	https://github.com/erlang/pmod_transform	master	a	b
 pmod_transform	git	https://github.com/erlang/pmod_transform	master	https://github.com/erlang/pmod_transform	Parse transform for parameterized modules
