@@ -311,6 +311,7 @@ nat_upnp	https://github.com/benoitc/nat_upnp	https://github.com/benoitc/nat_upnp
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 neotoma	https://github.com/seancribbs/neotoma	https://github.com/seancribbs/neotoma	Erlang library and packrat parser-generator for parsing expression grammars.
 newrelic	https://github.com/wooga/newrelic-erlang	a	b
+newrelic	https://github.com/wooga/newrelic-erlang	https://github.com/wooga/newrelic-erlang	Erlang library for sending metrics to New Relic
 nkdocker	https://github.com/Nekso/nkdocker	a	b
 nkpacket	https://github.com/Nekso/nkpacket	a	b
 nkpacket	https://github.com/Nekso/nkpacket	https://github.com/Nekso/nkpacket	Generic Erlang transport layer

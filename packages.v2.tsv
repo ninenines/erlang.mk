@@ -311,6 +311,7 @@ nat_upnp	git	https://github.com/benoitc/nat_upnp	master	https://github.com/benoi
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 neotoma	git	https://github.com/seancribbs/neotoma	master	https://github.com/seancribbs/neotoma	Erlang library and packrat parser-generator for parsing expression grammars.
 newrelic	git	https://github.com/wooga/newrelic-erlang	master	a	b
+newrelic	git	https://github.com/wooga/newrelic-erlang	master	https://github.com/wooga/newrelic-erlang	Erlang library for sending metrics to New Relic
 nkdocker	git	https://github.com/Nekso/nkdocker	master	a	b
 nkpacket	git	https://github.com/Nekso/nkpacket	master	a	b
 nkpacket	git	https://github.com/Nekso/nkpacket	master	https://github.com/Nekso/nkpacket	Generic Erlang transport layer
