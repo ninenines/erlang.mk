@@ -23,6 +23,7 @@ bisect	git	https://github.com/knutin/bisect	master	https://github.com/knutin/bis
 bitcask	git	https://github.com/basho/bitcask	master	https://github.com/basho/bitcask	because you need another a key/value storage engine
 bitstore	git	https://github.com/bdionne/bitstore	master	a	b
 bootstrap	git	https://github.com/schlagert/bootstrap	master	a	b
+bootstrap	git	https://github.com/schlagert/bootstrap	master	https://github.com/schlagert/bootstrap	A simple, yet powerful Erlang cluster bootstrapping application.
 boss_db	git	https://github.com/ErlyORM/boss_db	master	https://github.com/ErlyORM/boss_db	BossDB: a sharded, caching, pooling, evented ORM for Erlang
 boss	git	https://github.com/ChicagoBoss/ChicagoBoss	master	https://github.com/ChicagoBoss/ChicagoBoss	Erlang web MVC, now featuring Comet
 bson	git	https://github.com/comtihon/bson-erlang	master	a	b
