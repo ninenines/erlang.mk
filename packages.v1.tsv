@@ -14,6 +14,7 @@ barrel	https://github.com/benoitc/barrel	a	b
 beanstalk	https://github.com/tim/erlang-beanstalk	a	b
 beanstalk	https://github.com/tim/erlang-beanstalk	https://github.com/tim/erlang-beanstalk	An Erlang client for beanstalkd
 bear	https://github.com/boundary/bear	a	b
+bear	https://github.com/boundary/bear	https://github.com/boundary/bear	a set of statistics functions for erlang
 bertconf	https://github.com/ferd/bertconf	a	b
 bertconf	https://github.com/ferd/bertconf	https://github.com/ferd/bertconf	Make ETS tables out of statc BERT files that are auto-reloaded
 bifrost	https://github.com/thorstadt/bifrost	a	b
