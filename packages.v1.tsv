@@ -41,6 +41,7 @@ cecho	https://github.com/mazenharake/cecho	a	b
 cferl	https://github.com/ddossot/cferl	a	b
 cferl	https://github.com/ddossot/cferl	https://github.com/ddossot/cferl	Rackspace / Open Stack Cloud Files Erlang Client
 chaos_monkey	https://github.com/dLuna/chaos_monkey	a	b
+chaos_monkey	https://github.com/dLuna/chaos_monkey	https://github.com/dLuna/chaos_monkey	This is The CHAOS MONKEY.  It will kill your processes.
 chronos	https://github.com/lehoff/chronos	a	b
 chronos	https://github.com/lehoff/chronos	https://github.com/lehoff/chronos	Timer module for Erlang that makes it easy to abstact time out of the tests.
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
