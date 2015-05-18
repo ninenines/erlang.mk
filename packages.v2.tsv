@@ -193,6 +193,7 @@ kafka	git	https://github.com/wooga/kafka-erlang	master	a	b
 kai	git	https://github.com/synrc/kai	master	a	b
 katja	git	https://github.com/nifoc/katja	master	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 kdht	git	https://github.com/kevinlynx/kdht	master	a	b
+kdht	git	https://github.com/kevinlynx/kdht	master	https://github.com/kevinlynx/kdht	kdht is an erlang DHT implementation
 kjell	git	https://github.com/karlll/kjell	master	https://github.com/karlll/kjell	Erlang Shell
 kraken	git	https://github.com/Asana/kraken	master	https://github.com/Asana/kraken	Distributed Pubsub Server for Realtime Apps
 kucumberl	git	https://github.com/openshine/kucumberl	master	a	b
