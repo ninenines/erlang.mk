@@ -387,6 +387,7 @@ parsexml	https://github.com/maxlapshin/parsexml	https://github.com/maxlapshin/pa
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 percept2	https://github.com/huiqing/percept2	a	b
 pgsql	https://github.com/semiocast/pgsql	a	b
+pgsql	https://github.com/semiocast/pgsql	https://github.com/semiocast/pgsql	Erlang PostgreSQL driver
 pkgx	https://github.com/arjan/pkgx	a	b
 pkgx	https://github.com/arjan/pkgx	https://github.com/arjan/pkgx	Build .deb packages from Erlang releases
 pkt	https://github.com/msantos/pkt	a	b

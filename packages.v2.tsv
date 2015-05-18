@@ -387,6 +387,7 @@ parsexml	git	https://github.com/maxlapshin/parsexml	master	https://github.com/ma
 pegjs	git	https://github.com/dmitriid/pegjs	0.3	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 percept2	git	https://github.com/huiqing/percept2	master	a	b
 pgsql	git	https://github.com/semiocast/pgsql	master	a	b
+pgsql	git	https://github.com/semiocast/pgsql	master	https://github.com/semiocast/pgsql	Erlang PostgreSQL driver
 pkgx	git	https://github.com/arjan/pkgx	master	a	b
 pkgx	git	https://github.com/arjan/pkgx	master	https://github.com/arjan/pkgx	Build .deb packages from Erlang releases
 pkt	git	https://github.com/msantos/pkt	master	a	b
