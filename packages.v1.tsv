@@ -262,6 +262,7 @@ mochiweb	https://github.com/mochi/mochiweb	https://github.com/mochi/mochiweb	Moc
 mochiweb_xpath	https://github.com/retnuh/mochiweb_xpath	a	b
 mochiweb_xpath	https://github.com/retnuh/mochiweb_xpath	https://github.com/retnuh/mochiweb_xpath	XPath support for mochiweb's html parser
 mockgyver	https://github.com/klajo/mockgyver	a	b
+mockgyver	https://github.com/klajo/mockgyver	https://github.com/klajo/mockgyver	A mocking library for Erlang
 modlib	https://github.com/gar1t/modlib	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 mongodb	https://github.com/comtihon/mongodb-erlang	https://github.com/comtihon/mongodb-erlang	MongoDB driver for Erlang
 mongooseim	https://github.com/esl/MongooseIM	https://www.erlang-solutions.com/products/mongooseim-massively-scalable-ejabberd-platform	Jabber / XMPP server with focus on performance and scalability, by Erlang Solutions
