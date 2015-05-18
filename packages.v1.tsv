@@ -140,6 +140,7 @@ erldb	https://github.com/erldb/erldb	http://erldb.org	ORM (Object-relational map
 erldis	https://github.com/cstar/erldis	a	b
 erldns	https://github.com/aetrion/erl-dns	https://github.com/aetrion/erl-dns	DNS server, in erlang.
 erldocker	https://github.com/proger/erldocker	a	b
+erldocker	https://github.com/proger/erldocker	https://github.com/proger/erldocker	Docker Remote API client for Erlang
 erlfsmon	https://github.com/proger/erlfsmon	a	b
 erlfsmon	https://github.com/proger/erlfsmon	https://github.com/proger/erlfsmon	Erlang filesystem event watcher for Linux and OSX
 erlgit	https://github.com/gleber/erlgit	a	b

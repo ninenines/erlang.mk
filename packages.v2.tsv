@@ -140,6 +140,7 @@ erldb	git	https://github.com/erldb/erldb	master	http://erldb.org	ORM (Object-rel
 erldis	git	https://github.com/cstar/erldis	master	a	b
 erldns	git	https://github.com/aetrion/erl-dns	master	https://github.com/aetrion/erl-dns	DNS server, in erlang.
 erldocker	git	https://github.com/proger/erldocker	master	a	b
+erldocker	git	https://github.com/proger/erldocker	master	https://github.com/proger/erldocker	Docker Remote API client for Erlang
 erlfsmon	git	https://github.com/proger/erlfsmon	master	a	b
 erlfsmon	git	https://github.com/proger/erlfsmon	master	https://github.com/proger/erlfsmon	Erlang filesystem event watcher for Linux and OSX
 erlgit	git	https://github.com/gleber/erlgit	master	a	b
