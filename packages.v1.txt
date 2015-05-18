@@ -147,6 +147,7 @@ erlgit	https://github.com/gleber/erlgit	https://github.com/gleber/erlgit	Erlang 
 erlguten	https://github.com/richcarl/erlguten	a	b
 erlguten	https://github.com/richcarl/erlguten	https://github.com/richcarl/erlguten	ErlGuten is a system for high-quality typesetting, written purely in Erlang.
 erlmc	https://github.com/jkvor/erlmc	a	b
+erlmc	https://github.com/jkvor/erlmc	https://github.com/jkvor/erlmc	Erlang memcached binary protocol client
 erlog	https://github.com/rvirding/erlog	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlport	https://github.com/hdima/erlport	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
 erlsh	https://github.com/proger/erlsh	a	b
