@@ -236,6 +236,7 @@ modlib	https://github.com/gar1t/modlib	https://github.com/gar1t/modlib	Web frame
 mongodb	https://github.com/comtihon/mongodb-erlang	https://github.com/comtihon/mongodb-erlang	MongoDB driver for Erlang
 mongooseim	https://github.com/esl/MongooseIM	https://www.erlang-solutions.com/products/mongooseim-massively-scalable-ejabberd-platform	Jabber / XMPP server with focus on performance and scalability, by Erlang Solutions
 moyo	https://github.com/dwango/moyo	a	b
+moyo	https://github.com/dwango/moyo	https://github.com/dwango/moyo	Erlang utility functions library
 msgpack	https://github.com/msgpack/msgpack-erlang	https://github.com/msgpack/msgpack-erlang	MessagePack (de)serializer implementation for Erlang
 mustache	https://github.com/mojombo/mustache.erl	https://github.com/mojombo/mustache.erl	Mustache template engine for Erlang.
 myproto	https://github.com/altenwald/myproto	a	b
