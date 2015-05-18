@@ -24,6 +24,7 @@ bootstrap	git	https://github.com/schlagert/bootstrap	master	a	b
 boss_db	git	https://github.com/ErlyORM/boss_db	master	https://github.com/ErlyORM/boss_db	BossDB: a sharded, caching, pooling, evented ORM for Erlang
 boss	git	https://github.com/ChicagoBoss/ChicagoBoss	master	https://github.com/ChicagoBoss/ChicagoBoss	Erlang web MVC, now featuring Comet
 bson	git	https://github.com/comtihon/bson-erlang	master	a	b
+bson	git	https://github.com/comtihon/bson-erlang	master	https://github.com/comtihon/bson-erlang	BSON documents in Erlang, see bsonspec.org
 bullet	git	https://github.com/extend/bullet	master	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cache	git	https://github.com/fogfish/cache	master	a	b
 cache	git	https://github.com/fogfish/cache	master	https://github.com/fogfish/cache	Erlang in-memory cache
