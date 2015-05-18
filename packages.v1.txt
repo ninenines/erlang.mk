@@ -397,6 +397,7 @@ stripe	https://github.com/mattsta/stripe-erlang	a	b
 stripe	https://github.com/mattsta/stripe-erlang	https://github.com/mattsta/stripe-erlang	Erlang interface to the stripe.com API
 swab	https://github.com/crownedgrouse/swab	https://github.com/crownedgrouse/swab	General purpose buffer handling module
 swarm	https://github.com/jeremey/swarm	a	b
+swarm	https://github.com/jeremey/swarm	https://github.com/jeremey/swarm	Fast and simple acceptor pool for Erlang
 switchboard	https://github.com/thusfresh/switchboard	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
 sync	https://github.com/rustyio/sync	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 syntaxerl	https://github.com/ten0s/syntaxerl	a	b
