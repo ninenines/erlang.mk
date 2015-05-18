@@ -28,6 +28,7 @@ carotene	https://github.com/carotene/carotene	a	b
 carotene	https://github.com/carotene/carotene	https://github.com/carotene/carotene	Real-time server
 cecho	https://github.com/mazenharake/cecho	a	b
 cferl	https://github.com/ddossot/cferl	a	b
+cferl	https://github.com/ddossot/cferl	https://github.com/ddossot/cferl	Rackspace / Open Stack Cloud Files Erlang Client
 chaos_monkey	https://github.com/dLuna/chaos_monkey	a	b
 chronos	https://github.com/lehoff/chronos	a	b
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
