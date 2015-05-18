@@ -325,6 +325,7 @@ radierl	git	https://github.com/vances/radierl	master	https://github.com/vances/r
 rafter	git	https://github.com/andrewjstone/rafter	master	https://github.com/andrewjstone/rafter	An Erlang library application which implements the Raft consensus protocol
 ranch	git	https://github.com/ninenines/ranch	1.1.0	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 rbeacon	git	https://github.com/refuge/rbeacon	master	a	b
+rbeacon	git	https://github.com/refuge/rbeacon	master	https://github.com/refuge/rbeacon	LAN discovery and presence in Erlang.
 rebar	git	https://github.com/rebar/rebar3	master	http://www.rebar3.org	Erlang build tool that makes it easy to compile and test Erlang applications, port drivers and releases.
 rec2json	git	https://github.com/lordnull/rec2json	master	https://github.com/lordnull/rec2json	Compile erlang record definitions into modules to convert them to/from json easily.
 recon	git	https://github.com/ferd/recon	2.2.1	https://github.com/ferd/recon	Collection of functions and scripts to debug Erlang in production.

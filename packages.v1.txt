@@ -325,6 +325,7 @@ radierl	https://github.com/vances/radierl	https://github.com/vances/radierl	RADI
 rafter	https://github.com/andrewjstone/rafter	https://github.com/andrewjstone/rafter	An Erlang library application which implements the Raft consensus protocol
 ranch	https://github.com/ninenines/ranch	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 rbeacon	https://github.com/refuge/rbeacon	a	b
+rbeacon	https://github.com/refuge/rbeacon	https://github.com/refuge/rbeacon	LAN discovery and presence in Erlang.
 rebar	https://github.com/rebar/rebar3	http://www.rebar3.org	Erlang build tool that makes it easy to compile and test Erlang applications, port drivers and releases.
 rec2json	https://github.com/lordnull/rec2json	https://github.com/lordnull/rec2json	Compile erlang record definitions into modules to convert them to/from json easily.
 recon	https://github.com/ferd/recon	https://github.com/ferd/recon	Collection of functions and scripts to debug Erlang in production.
