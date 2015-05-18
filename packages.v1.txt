@@ -491,6 +491,7 @@ statebox	https://github.com/mochi/statebox	https://github.com/mochi/statebox	Erl
 statebox_riak	https://github.com/mochi/statebox_riak	a	b
 statebox_riak	https://github.com/mochi/statebox_riak	https://github.com/mochi/statebox_riak	Convenience library that makes it easier to use statebox with riak, extracted from best practices in our production code at Mochi Media.
 statman	https://github.com/knutin/statman	a	b
+statman	https://github.com/knutin/statman	https://github.com/knutin/statman	Efficiently collect massive volumes of metrics inside the Erlang VM
 statsderl	https://github.com/lpgauth/statsderl	a	b
 statsderl	https://github.com/lpgauth/statsderl	https://github.com/lpgauth/statsderl	StatsD client (erlang)
 stockdb	https://github.com/maxlapshin/stockdb	a	b
