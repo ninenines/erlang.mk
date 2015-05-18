@@ -501,6 +501,7 @@ taskforce	https://github.com/g-andrade/taskforce	a	b
 taskforce	https://github.com/g-andrade/taskforce	https://github.com/g-andrade/taskforce	Erlang worker pools for controlled parallelisation of arbitrary tasks.
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tempo	https://github.com/selectel/tempo	a	b
+tempo	https://github.com/selectel/tempo	https://github.com/selectel/tempo	NIF-based date and time parsing and formatting for Erlang.
 ticktick	https://github.com/ericliang/ticktick	a	b
 tinymq	https://github.com/ChicagoBoss/tinymq	a	b
 tinymt	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
