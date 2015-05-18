@@ -5,6 +5,7 @@ active	https://github.com/proger/active	https://github.com/proger/active	Active 
 aleppo	https://github.com/ErlyORM/aleppo	a	b
 aleppo	https://github.com/ErlyORM/aleppo	https://github.com/ErlyORM/aleppo	Alternative Erlang Pre-Processor
 annotations	https://github.com/hyperthunk/annotations	a	b
+annotations	https://github.com/hyperthunk/annotations	https://github.com/hyperthunk/annotations	Simple code instrumentation utilities
 apns	https://github.com/inaka/apns4erl	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 azdht	https://github.com/arcusfelis/azdht	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
 backoff	https://github.com/ferd/backoff	a	b

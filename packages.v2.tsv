@@ -5,6 +5,7 @@ active	git	https://github.com/proger/active	master	https://github.com/proger/act
 aleppo	git	https://github.com/ErlyORM/aleppo	master	a	b
 aleppo	git	https://github.com/ErlyORM/aleppo	master	https://github.com/ErlyORM/aleppo	Alternative Erlang Pre-Processor
 annotations	git	https://github.com/hyperthunk/annotations	master	a	b
+annotations	git	https://github.com/hyperthunk/annotations	master	https://github.com/hyperthunk/annotations	Simple code instrumentation utilities
 apns	git	https://github.com/inaka/apns4erl	1.0.4	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 azdht	git	https://github.com/arcusfelis/azdht	master	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
 backoff	git	https://github.com/ferd/backoff	master	a	b
