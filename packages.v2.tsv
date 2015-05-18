@@ -23,6 +23,7 @@ bisect	git	https://github.com/knutin/bisect	master	a	b
 bisect	git	https://github.com/knutin/bisect	master	https://github.com/knutin/bisect	Ordered fixed-size binary dictionary in Erlang
 bitcask	git	https://github.com/basho/bitcask	master	https://github.com/basho/bitcask	because you need another a key/value storage engine
 bitstore	git	https://github.com/bdionne/bitstore	master	a	b
+bitstore	git	https://github.com/bdionne/bitstore	master	https://github.com/bdionne/bitstore	A document based ontology development environment
 bootstrap	git	https://github.com/schlagert/bootstrap	master	a	b
 bootstrap	git	https://github.com/schlagert/bootstrap	master	https://github.com/schlagert/bootstrap	A simple, yet powerful Erlang cluster bootstrapping application.
 boss_db	git	https://github.com/ErlyORM/boss_db	master	https://github.com/ErlyORM/boss_db	BossDB: a sharded, caching, pooling, evented ORM for Erlang
