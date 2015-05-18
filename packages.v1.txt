@@ -292,6 +292,7 @@ log4erl	https://github.com/ahmednawras/log4erl	https://github.com/ahmednawras/lo
 lol	https://github.com/b0oh/lol	a	b
 lol	https://github.com/b0oh/lol	https://github.com/b0oh/lol	Lisp on erLang, and programming is fun again
 lucid	https://github.com/tatsuhiro-t/lucid	a	b
+lucid	https://github.com/tatsuhiro-t/lucid	https://github.com/tatsuhiro-t/lucid	HTTP/2 server written in Erlang
 luerl	https://github.com/rvirding/luerl	https://github.com/rvirding/luerl	Lua in Erlang
 luwak	https://github.com/basho/luwak	a	b
 mad	https://github.com/synrc/mad	https://github.com/synrc/mad	Small and Fast Rebar Replacement
