@@ -491,6 +491,7 @@ sync	git	https://github.com/rustyio/sync	master	https://github.com/rustyio/sync	
 syntaxerl	git	https://github.com/ten0s/syntaxerl	master	a	b
 syntaxerl	git	https://github.com/ten0s/syntaxerl	master	https://github.com/ten0s/syntaxerl	Syntax checker for Erlang
 syslog	git	https://github.com/Vagabond/erlang-syslog	master	a	b
+syslog	git	https://github.com/Vagabond/erlang-syslog	master	https://github.com/Vagabond/erlang-syslog	Erlang port driver for interacting with syslog via syslog(3)
 taskforce	git	https://github.com/g-andrade/taskforce	master	a	b
 taskforce	git	https://github.com/g-andrade/taskforce	master	https://github.com/g-andrade/taskforce	Erlang worker pools for controlled parallelisation of arbitrary tasks.
 tddreloader	git	https://github.com/version2beta/tddreloader	master	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes

@@ -491,6 +491,7 @@ sync	https://github.com/rustyio/sync	https://github.com/rustyio/sync	On-the-fly 
 syntaxerl	https://github.com/ten0s/syntaxerl	a	b
 syntaxerl	https://github.com/ten0s/syntaxerl	https://github.com/ten0s/syntaxerl	Syntax checker for Erlang
 syslog	https://github.com/Vagabond/erlang-syslog	a	b
+syslog	https://github.com/Vagabond/erlang-syslog	https://github.com/Vagabond/erlang-syslog	Erlang port driver for interacting with syslog via syslog(3)
 taskforce	https://github.com/g-andrade/taskforce	a	b
 taskforce	https://github.com/g-andrade/taskforce	https://github.com/g-andrade/taskforce	Erlang worker pools for controlled parallelisation of arbitrary tasks.
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
