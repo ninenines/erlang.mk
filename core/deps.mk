@@ -221,9 +221,9 @@ define dep_autopatch_rebar.erl
 			FindFirst(FindFirst, Fd)
 		end || F <- ErlFiles])),
 		First = lists:flatten([begin
-			{ok, Fd} = file:open("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(F) ++ ".erl", [read]),
+			{ok, Fd} = file:open("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", [read]),
 			FindFirst(FindFirst, Fd)
-		end || F <- First0]) ++ First0,
+		end || M <- First0, lists:member("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", ErlFiles)]) ++ First0,
 		Write(["COMPILE_FIRST +=", [[" ", atom_to_list(M)] || M <- First,
 			lists:member("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", ErlFiles)], "\n"])
 	end(),
