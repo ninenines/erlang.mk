@@ -320,6 +320,7 @@ oauth2c	git	https://github.com/kivra/oauth2_client	master	https://github.com/kiv
 oauth2	git	https://github.com/kivra/oauth2	master	https://github.com/kivra/oauth2	Erlang Oauth2 implementation
 oauth	git	https://github.com/tim/erlang-oauth	master	https://github.com/tim/erlang-oauth	An Erlang OAuth 1.0 implementation
 of_protocol	git	https://github.com/FlowForwarding/of_protocol	master	a	b
+of_protocol	git	https://github.com/FlowForwarding/of_protocol	master	https://github.com/FlowForwarding/of_protocol	OpenFlow Protocol Library for Erlang
 openflow	git	https://github.com/renatoaguiar/erlang-openflow	master	a	b
 openflow	git	https://github.com/renatoaguiar/erlang-openflow	master	https://github.com/renatoaguiar/erlang-openflow	An OpenFlow controller written in pure erlang
 openid	git	https://github.com/brendonh/erl_openid	master	a	b
