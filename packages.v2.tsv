@@ -244,6 +244,7 @@ mimetypes	git	https://github.com/spawngrid/mimetypes	master	a	b
 mixer	git	https://github.com/chef/mixer	master	a	b
 mochiweb	git	https://github.com/mochi/mochiweb	master	https://github.com/mochi/mochiweb	MochiWeb is an Erlang library for building lightweight HTTP servers.
 mochiweb_xpath	git	https://github.com/retnuh/mochiweb_xpath	master	a	b
+mochiweb_xpath	git	https://github.com/retnuh/mochiweb_xpath	master	https://github.com/retnuh/mochiweb_xpath	XPath support for mochiweb's html parser
 mockgyver	git	https://github.com/klajo/mockgyver	master	a	b
 modlib	git	https://github.com/gar1t/modlib	master	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 mongodb	git	https://github.com/comtihon/mongodb-erlang	master	https://github.com/comtihon/mongodb-erlang	MongoDB driver for Erlang
