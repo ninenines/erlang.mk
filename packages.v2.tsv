@@ -380,6 +380,7 @@ ponos	git	https://github.com/klarna/ponos	master	a	b
 poolboy	git	https://github.com/devinus/poolboy	master	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 pooler	git	https://github.com/seth/pooler	master	https://github.com/seth/pooler	An OTP Process Pool Application
 pqueue	git	https://github.com/okeuday/pqueue	master	a	b
+pqueue	git	https://github.com/okeuday/pqueue	master	https://github.com/okeuday/pqueue	Erlang Priority Queues
 procket	git	https://github.com/msantos/procket	master	http://blog.listincomprehension.com/search/label/procket	Erlang interface to low level socket operations
 proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
 props	git	https://github.com/greyarea/props	master	a	b

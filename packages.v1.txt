@@ -380,6 +380,7 @@ ponos	https://github.com/klarna/ponos	a	b
 poolboy	https://github.com/devinus/poolboy	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 pooler	https://github.com/seth/pooler	https://github.com/seth/pooler	An OTP Process Pool Application
 pqueue	https://github.com/okeuday/pqueue	a	b
+pqueue	https://github.com/okeuday/pqueue	https://github.com/okeuday/pqueue	Erlang Priority Queues
 procket	https://github.com/msantos/procket	http://blog.listincomprehension.com/search/label/procket	Erlang interface to low level socket operations
 proper	https://github.com/manopapad/proper	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
 props	https://github.com/greyarea/props	a	b
