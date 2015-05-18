@@ -225,6 +225,7 @@ irc_lib	https://github.com/OtpChatBot/irc_lib	https://github.com/OtpChatBot/irc_
 iris	https://github.com/project-iris/iris-erl	a	b
 iris	https://github.com/project-iris/iris-erl	https://github.com/project-iris/iris-erl	Iris Erlang binding
 iso8601	https://github.com/seansawyer/erlang_iso8601	a	b
+iso8601	https://github.com/seansawyer/erlang_iso8601	https://github.com/seansawyer/erlang_iso8601	Erlang ISO 8601 date formatter/parser
 itweet	https://github.com/inaka/itweet	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
 jerg	https://github.com/ddossot/jerg	a	b
 jerg	https://github.com/ddossot/jerg	https://github.com/ddossot/jerg	JSON Schema to Erlang Records Generator

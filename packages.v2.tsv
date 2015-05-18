@@ -225,6 +225,7 @@ irc_lib	git	https://github.com/OtpChatBot/irc_lib	master	https://github.com/OtpC
 iris	git	https://github.com/project-iris/iris-erl	master	a	b
 iris	git	https://github.com/project-iris/iris-erl	master	https://github.com/project-iris/iris-erl	Iris Erlang binding
 iso8601	git	https://github.com/seansawyer/erlang_iso8601	master	a	b
+iso8601	git	https://github.com/seansawyer/erlang_iso8601	master	https://github.com/seansawyer/erlang_iso8601	Erlang ISO 8601 date formatter/parser
 itweet	git	https://github.com/inaka/itweet	v2.0	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
 jerg	git	https://github.com/ddossot/jerg	master	a	b
 jerg	git	https://github.com/ddossot/jerg	master	https://github.com/ddossot/jerg	JSON Schema to Erlang Records Generator
