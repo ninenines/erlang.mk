@@ -161,6 +161,7 @@ erserve	https://github.com/del/erserve	a	b
 erserve	https://github.com/del/erserve	https://github.com/del/erserve	Erlang/Rserve communication interface
 erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 espec	https://github.com/lucaspiller/espec	a	b
+espec	https://github.com/lucaspiller/espec	https://github.com/lucaspiller/espec	ESpec: Behaviour driven development framework for Erlang
 estatsd	https://github.com/RJ/estatsd	a	b
 etap	https://github.com/ngerakines/etap	a	b
 etest	https://github.com/wooga/etest	a	b

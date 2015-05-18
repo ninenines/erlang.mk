@@ -161,6 +161,7 @@ erserve	git	https://github.com/del/erserve	master	a	b
 erserve	git	https://github.com/del/erserve	master	https://github.com/del/erserve	Erlang/Rserve communication interface
 erwa	git	https://github.com/bwegh/erwa	0.1.1	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 espec	git	https://github.com/lucaspiller/espec	master	a	b
+espec	git	https://github.com/lucaspiller/espec	master	https://github.com/lucaspiller/espec	ESpec: Behaviour driven development framework for Erlang
 estatsd	git	https://github.com/RJ/estatsd	master	a	b
 etap	git	https://github.com/ngerakines/etap	master	a	b
 etest	git	https://github.com/wooga/etest	master	a	b
