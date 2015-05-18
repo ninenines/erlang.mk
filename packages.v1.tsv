@@ -50,6 +50,7 @@ detergent	https://github.com/devinus/detergent	a	b
 dh_date	https://github.com/daleharvey/dh_date	a	b
 dhtcrawler	https://github.com/kevinlynx/dhtcrawler	a	b
 dirbusterl	https://github.com/silentsignal/DirBustErl	a	b
+dirbusterl	https://github.com/silentsignal/DirBustErl	https://github.com/silentsignal/DirBustErl	DirBuster successor in Erlang
 dispcount	https://github.com/ferd/dispcount	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
 dns	https://github.com/aetrion/dns_erlang	a	b
 dtl	https://github.com/oinksoft/dtl	a	b

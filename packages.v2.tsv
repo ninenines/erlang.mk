@@ -50,6 +50,7 @@ detergent	git	https://github.com/devinus/detergent	master	a	b
 dh_date	git	https://github.com/daleharvey/dh_date	master	a	b
 dhtcrawler	git	https://github.com/kevinlynx/dhtcrawler	master	a	b
 dirbusterl	git	https://github.com/silentsignal/DirBustErl	master	a	b
+dirbusterl	git	https://github.com/silentsignal/DirBustErl	master	https://github.com/silentsignal/DirBustErl	DirBuster successor in Erlang
 dispcount	git	https://github.com/ferd/dispcount	master	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
 dns	git	https://github.com/aetrion/dns_erlang	master	a	b
 dtl	git	https://github.com/oinksoft/dtl	master	a	b
