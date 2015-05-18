@@ -324,6 +324,7 @@ lucid	git	https://github.com/tatsuhiro-t/lucid	master	a	b
 lucid	git	https://github.com/tatsuhiro-t/lucid	master	https://github.com/tatsuhiro-t/lucid	HTTP/2 server written in Erlang
 luerl	git	https://github.com/rvirding/luerl	master	https://github.com/rvirding/luerl	Lua in Erlang
 luwak	git	https://github.com/basho/luwak	master	a	b
+luwak	git	https://github.com/basho/luwak	master	https://github.com/basho/luwak	Large-object storage interface for Riak
 mad	git	https://github.com/synrc/mad	master	https://github.com/synrc/mad	Small and Fast Rebar Replacement
 mavg	git	https://github.com/EchoTeam/mavg	master	a	b
 mavg	git	https://github.com/EchoTeam/mavg	master	https://github.com/EchoTeam/mavg	Erlang :: Exponential moving average library
