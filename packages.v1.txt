@@ -364,6 +364,7 @@ riakhttpc	https://github.com/basho/riak-erlang-http-client	a	b
 riak_kv	https://github.com/basho/riak_kv	https://github.com/basho/riak_kv	Riak Key/Value Store
 riaknostic	https://github.com/basho/riaknostic	a	b
 riak_pg	https://github.com/cmeiklejohn/riak_pg	a	b
+riak_pg	https://github.com/cmeiklejohn/riak_pg	https://github.com/cmeiklejohn/riak_pg	Distributed process groups with riak_core.
 riak_pipe	https://github.com/basho/riak_pipe	https://github.com/basho/riak_pipe	Riak Pipelines
 riakpool	https://github.com/dweldon/riakpool	a	b
 riak_sysmon	https://github.com/basho/riak_sysmon	a	b
