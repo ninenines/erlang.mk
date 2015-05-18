@@ -47,6 +47,7 @@ cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and m
 cowdb	https://github.com/refuge/cowdb	a	b
 cowlib	https://github.com/ninenines/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
 cpg	https://github.com/okeuday/cpg	a	b
+cpg	https://github.com/okeuday/cpg	https://github.com/okeuday/cpg	CloudI Process Groups
 cuttlefish	https://github.com/basho/cuttlefish	a	b
 damocles	https://github.com/lostcolony/damocles	https://github.com/lostcolony/damocles	Erlang library for generating adversarial network conditions for QAing distributed applications/systems on a single Linux box.
 debbie	https://github.com/crownedgrouse/debbie	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
