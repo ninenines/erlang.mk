@@ -514,6 +514,7 @@ tddreloader	https://github.com/version2beta/tddreloader	https://github.com/versi
 tempo	https://github.com/selectel/tempo	a	b
 tempo	https://github.com/selectel/tempo	https://github.com/selectel/tempo	NIF-based date and time parsing and formatting for Erlang.
 ticktick	https://github.com/ericliang/ticktick	a	b
+ticktick	https://github.com/ericliang/ticktick	https://github.com/ericliang/ticktick	Ticktick is an id generator for message service.
 tinymq	https://github.com/ChicagoBoss/tinymq	a	b
 tinymt	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
 trane	https://github.com/massemanet/trane	a	b
