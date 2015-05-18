@@ -120,6 +120,7 @@ emagick	https://github.com/kivra/emagick	a	b
 emagick	https://github.com/kivra/emagick	https://github.com/kivra/emagick	Wrapper for Graphics/ImageMagick command line tool.
 emysql	https://github.com/Eonblast/Emysql	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
 enet	https://github.com/archaelus/enet	a	b
+enet	https://github.com/archaelus/enet	https://github.com/archaelus/enet	Pure Erlang network stack
 enm	https://github.com/basho/enm	a	b
 enm	https://github.com/basho/enm	https://github.com/basho/enm	Erlang driver for nanomsg
 entop	https://github.com/mazenharake/entop	https://github.com/mazenharake/entop	A top-like tool for monitoring an Erlang node
