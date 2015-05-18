@@ -111,6 +111,7 @@ erlang_smtp	https://github.com/tonyg/erlang-smtp	https://github.com/tonyg/erlang
 erlasticsearch	https://github.com/dieswaytoofast/erlasticsearch	https://github.com/dieswaytoofast/erlasticsearch	Erlang thrift interface to elastic_search
 erlastic_search	https://github.com/tsloughter/erlastic_search	a	b
 erlbrake	https://github.com/kenpratt/erlbrake	a	b
+erlbrake	https://github.com/kenpratt/erlbrake	https://github.com/kenpratt/erlbrake	Erlang Airbrake notification client
 erlcloud	https://github.com/gleber/erlcloud	https://github.com/gleber/erlcloud	Cloud Computing library for erlang (Amazon EC2, S3, SQS, SimpleDB, Mechanical Turk, ELB)
 erlcron	https://github.com/erlware/erlcron	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	https://github.com/erldb/erldb	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang

@@ -111,6 +111,7 @@ erlang_smtp	git	https://github.com/tonyg/erlang-smtp	master	https://github.com/t
 erlasticsearch	git	https://github.com/dieswaytoofast/erlasticsearch	master	https://github.com/dieswaytoofast/erlasticsearch	Erlang thrift interface to elastic_search
 erlastic_search	git	https://github.com/tsloughter/erlastic_search	master	a	b
 erlbrake	git	https://github.com/kenpratt/erlbrake	master	a	b
+erlbrake	git	https://github.com/kenpratt/erlbrake	master	https://github.com/kenpratt/erlbrake	Erlang Airbrake notification client
 erlcloud	git	https://github.com/gleber/erlcloud	master	https://github.com/gleber/erlcloud	Cloud Computing library for erlang (Amazon EC2, S3, SQS, SimpleDB, Mechanical Turk, ELB)
 erlcron	git	https://github.com/erlware/erlcron	master	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	git	https://github.com/erldb/erldb	master	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
