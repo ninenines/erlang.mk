@@ -184,6 +184,7 @@ espec	https://github.com/lucaspiller/espec	a	b
 espec	https://github.com/lucaspiller/espec	https://github.com/lucaspiller/espec	ESpec: Behaviour driven development framework for Erlang
 estatsd	https://github.com/RJ/estatsd	a	b
 etap	https://github.com/ngerakines/etap	a	b
+etap	https://github.com/ngerakines/etap	https://github.com/ngerakines/etap	etap is a simple erlang testing library that provides TAP compliant output.
 etest	https://github.com/wooga/etest	a	b
 etest	https://github.com/wooga/etest	https://github.com/wooga/etest	A lightweight, convention over configuration test framework for Erlang
 etest_http	https://github.com/wooga/etest_http	a	b
