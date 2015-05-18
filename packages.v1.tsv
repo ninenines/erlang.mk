@@ -268,6 +268,7 @@ openpoker	https://github.com/hpyhacking/openpoker	https://github.com/hpyhacking/
 pal	https://github.com/manifest/pal	a	b
 parse_trans	https://github.com/uwiger/parse_trans	a	b
 parsexml	https://github.com/maxlapshin/parsexml	a	b
+parsexml	https://github.com/maxlapshin/parsexml	https://github.com/maxlapshin/parsexml	Simple DOM XML parser with convenient and very simple API
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
 percept2	https://github.com/huiqing/percept2	a	b
 pgsql	https://github.com/semiocast/pgsql	a	b
