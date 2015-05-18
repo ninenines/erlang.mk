@@ -291,6 +291,7 @@ nkpacket	git	https://github.com/Nekso/nkpacket	master	a	b
 nkpacket	git	https://github.com/Nekso/nkpacket	master	https://github.com/Nekso/nkpacket	Generic Erlang transport layer
 nodefinder	git	https://github.com/erlanger/nodefinder	0.2.3	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
 oauth2c	git	https://github.com/kivra/oauth2_client	master	a	b
+oauth2c	git	https://github.com/kivra/oauth2_client	master	https://github.com/kivra/oauth2_client	Erlang OAuth2 Client
 oauth2	git	https://github.com/kivra/oauth2	master	https://github.com/kivra/oauth2	Erlang Oauth2 implementation
 oauth	git	https://github.com/tim/erlang-oauth	master	https://github.com/tim/erlang-oauth	An Erlang OAuth 1.0 implementation
 of_protocol	git	https://github.com/FlowForwarding/of_protocol	master	a	b
