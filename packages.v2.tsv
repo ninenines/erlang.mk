@@ -209,6 +209,7 @@ json	git	https://github.com/talentdeficit/json	master	https://github.com/talentd
 jsonpath	git	https://github.com/GeneStevens/jsonpath	master	a	b
 jsonpath	git	https://github.com/GeneStevens/jsonpath	master	https://github.com/GeneStevens/jsonpath	Fast Erlang JSON data retrieval and updates via javascript-like notation
 json_rec	git	https://github.com/justinkirby/json_rec	master	a	b
+json_rec	git	https://github.com/justinkirby/json_rec	master	https://github.com/justinkirby/json_rec	JSON to erlang record
 jsx	git	https://github.com/talentdeficit/jsx	master	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 kafka	git	https://github.com/wooga/kafka-erlang	master	a	b
 kafka	git	https://github.com/wooga/kafka-erlang	master	https://github.com/wooga/kafka-erlang	Kafka consumer and producer in Erlang
