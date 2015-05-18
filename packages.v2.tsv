@@ -10,6 +10,7 @@ beanstalk	git	https://github.com/tim/erlang-beanstalk	master	a	b
 bear	git	https://github.com/boundary/bear	master	a	b
 bertconf	git	https://github.com/ferd/bertconf	master	a	b
 bifrost	git	https://github.com/thorstadt/bifrost	master	a	b
+bifrost	git	https://github.com/thorstadt/bifrost	master	https://github.com/thorstadt/bifrost	Erlang FTP Server Framework
 binpp	git	https://github.com/jtendo/binpp	master	https://github.com/jtendo/binpp	Erlang Binary Pretty Printer
 bisect	git	https://github.com/knutin/bisect	master	a	b
 bitcask	git	https://github.com/basho/bitcask	master	https://github.com/basho/bitcask	because you need another a key/value storage engine
