@@ -416,6 +416,7 @@ swarm	git	https://github.com/jeremey/swarm	master	https://github.com/jeremey/swa
 switchboard	git	https://github.com/thusfresh/switchboard	master	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
 sync	git	https://github.com/rustyio/sync	master	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 syntaxerl	git	https://github.com/ten0s/syntaxerl	master	a	b
+syntaxerl	git	https://github.com/ten0s/syntaxerl	master	https://github.com/ten0s/syntaxerl	Syntax checker for Erlang
 syslog	git	https://github.com/Vagabond/erlang-syslog	master	a	b
 taskforce	git	https://github.com/g-andrade/taskforce	master	a	b
 taskforce	git	https://github.com/g-andrade/taskforce	master	https://github.com/g-andrade/taskforce	Erlang worker pools for controlled parallelisation of arbitrary tasks.

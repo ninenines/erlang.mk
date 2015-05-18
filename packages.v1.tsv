@@ -416,6 +416,7 @@ swarm	https://github.com/jeremey/swarm	https://github.com/jeremey/swarm	Fast and
 switchboard	https://github.com/thusfresh/switchboard	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
 sync	https://github.com/rustyio/sync	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
 syntaxerl	https://github.com/ten0s/syntaxerl	a	b
+syntaxerl	https://github.com/ten0s/syntaxerl	https://github.com/ten0s/syntaxerl	Syntax checker for Erlang
 syslog	https://github.com/Vagabond/erlang-syslog	a	b
 taskforce	https://github.com/g-andrade/taskforce	a	b
 taskforce	https://github.com/g-andrade/taskforce	https://github.com/g-andrade/taskforce	Erlang worker pools for controlled parallelisation of arbitrary tasks.
