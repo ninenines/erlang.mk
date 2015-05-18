@@ -192,6 +192,7 @@ folsom_cowboy	https://github.com/boundary/folsom_cowboy	a	b
 folsom_cowboy	https://github.com/boundary/folsom_cowboy	https://github.com/boundary/folsom_cowboy	A Cowboy based Folsom HTTP Wrapper.
 folsom	https://github.com/boundary/folsom	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
 folsomite	https://github.com/campanja/folsomite	a	b
+folsomite	https://github.com/campanja/folsomite	https://github.com/campanja/folsomite	blow up your graphite / riemann server with folsom metrics
 fuse	https://github.com/jlouis/fuse	https://github.com/jlouis/fuse	A Circuit Breaker for Erlang
 gcm	https://github.com/pdincau/gcm-erlang	a	b
 gcprof	https://github.com/knutin/gcprof	a	b
