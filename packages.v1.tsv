@@ -115,7 +115,6 @@ ptrackerl	https://github.com/inaka/ptrackerl	https://github.com/inaka/ptrackerl	
 push_service	https://github.com/hairyhum/push_service	https://github.com/hairyhum/push_service	Push service
 qdate	https://github.com/choptastic/qdate	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
 rack	https://github.com/erlyvideo/rack	https://github.com/erlyvideo/rack	Rack handler for erlang
-rafter	https://github.com/andrewjstone/rafter	https://github.com/andrewjstone/rafter	An Erlang library application which implements the Raft consensus protocol
 ranch	https://github.com/ninenines/ranch	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 rebar	https://github.com/rebar/rebar3	http://www.rebar3.org	Erlang build tool that makes it easy to compile and test Erlang applications, port drivers and releases.
 rec2json	https://github.com/lordnull/rec2json	https://github.com/lordnull/rec2json	Compile erlang record definitions into modules to convert them to/from json easily.

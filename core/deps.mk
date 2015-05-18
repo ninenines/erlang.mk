@@ -289,8 +289,8 @@ define dep_autopatch_rebar.erl
 		case filelib:is_dir("$(DEPS_DIR)/$(1)/c_src") of
 			false -> ok;
 			true ->
-				Sources = [[" ./c_src/", S] || S <- filelib:wildcard("*.{c,C,cc,cpp}", "$(DEPS_DIR)/$(1)/c_src")],
-				Write(io_lib:format("SOURCES := ~s\n", [Sources]))
+				Sources = filelib:fold_files("$(DEPS_DIR)/$(1)/c_src", ".*\\\\.(c|C|cc|cpp)$$$$", true, fun(F, Acc) -> [F|Acc] end, []),
+				Write(io_lib:format("SOURCES :=~s\n", [[[" ", S] || S <- Sources]]))
 		end
 	end(),
 	Write("\n\nrebar_dep: pre-deps deps pre-app app\n"),
