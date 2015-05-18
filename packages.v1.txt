@@ -265,6 +265,7 @@ mavg	https://github.com/EchoTeam/mavg	a	b
 mavg	https://github.com/EchoTeam/mavg	https://github.com/EchoTeam/mavg	Erlang :: Exponential moving average library
 mcd	https://github.com/EchoTeam/mcd	a	b
 mcerlang	https://github.com/fredlund/McErlang	a	b
+mcerlang	https://github.com/fredlund/McErlang	https://github.com/fredlund/McErlang	The McErlang model checker for Erlang
 mc_erl	https://github.com/clonejo/mc-erl	a	b
 mc_erl	https://github.com/clonejo/mc-erl	https://github.com/clonejo/mc-erl	mc-erl is a server for Minecraft 1.4.7 written in Erlang.
 meck	https://github.com/eproxus/meck	https://github.com/eproxus/meck	A mocking library for Erlang
