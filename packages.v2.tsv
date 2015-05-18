@@ -433,6 +433,7 @@ yamerl	git	https://github.com/yakaz/yamerl	master	a	b
 yamler	git	https://github.com/goertzenator/yamler	master	https://github.com/goertzenator/yamler	libyaml-based yaml loader for Erlang
 yaws	git	https://github.com/klacke/yaws	master	http://yaws.hyber.org	Yaws webserver
 zab_engine	git	https://github.com/xinmingyao/zab_engine	master	a	b
+zab_engine	git	https://github.com/xinmingyao/zab_engine	master	https://github.com/xinmingyao/zab_engine	zab propotocol implement by erlang
 zeta	git	https://github.com/s1n4/zeta	 	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
 zippers	git	https://github.com/ferd/zippers	master	a	b
 zippers	git	https://github.com/ferd/zippers	master	https://github.com/ferd/zippers	A library for functional zipper data structures in Erlang. Read more on zippers
