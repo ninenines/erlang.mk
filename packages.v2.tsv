@@ -439,6 +439,7 @@ riakc	git	https://github.com/basho/riak-erlang-client	master	https://github.com/
 riak_core	git	https://github.com/basho/riak_core	master	https://github.com/basho/riak_core	Distributed systems infrastructure used by Riak.
 riak_dt	git	https://github.com/basho/riak_dt	master	https://github.com/basho/riak_dt	Convergent replicated datatypes in Erlang
 riak_ensemble	git	https://github.com/basho/riak_ensemble	master	a	b
+riak_ensemble	git	https://github.com/basho/riak_ensemble	master	https://github.com/basho/riak_ensemble	Multi-Paxos framework in Erlang
 riakhttpc	git	https://github.com/basho/riak-erlang-http-client	master	a	b
 riakhttpc	git	https://github.com/basho/riak-erlang-http-client	master	https://github.com/basho/riak-erlang-http-client	Riak Erlang client using the HTTP interface
 riak_kv	git	https://github.com/basho/riak_kv	master	https://github.com/basho/riak_kv	Riak Key/Value Store
