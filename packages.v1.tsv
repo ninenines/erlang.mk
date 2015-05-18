@@ -242,6 +242,7 @@ neotoma	https://github.com/seancribbs/neotoma	https://github.com/seancribbs/neot
 newrelic	https://github.com/wooga/newrelic-erlang	a	b
 nkdocker	https://github.com/Nekso/nkdocker	a	b
 nkpacket	https://github.com/Nekso/nkpacket	a	b
+nkpacket	https://github.com/Nekso/nkpacket	https://github.com/Nekso/nkpacket	Generic Erlang transport layer
 nodefinder	https://github.com/erlanger/nodefinder	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
 oauth2c	https://github.com/kivra/oauth2_client	a	b
 oauth2	https://github.com/kivra/oauth2	https://github.com/kivra/oauth2	Erlang Oauth2 implementation
