@@ -11,6 +11,7 @@ beanstalk	https://github.com/tim/erlang-beanstalk	a	b
 beanstalk	https://github.com/tim/erlang-beanstalk	https://github.com/tim/erlang-beanstalk	An Erlang client for beanstalkd
 bear	https://github.com/boundary/bear	a	b
 bertconf	https://github.com/ferd/bertconf	a	b
+bertconf	https://github.com/ferd/bertconf	https://github.com/ferd/bertconf	Make ETS tables out of statc BERT files that are auto-reloaded
 bifrost	https://github.com/thorstadt/bifrost	a	b
 bifrost	https://github.com/thorstadt/bifrost	https://github.com/thorstadt/bifrost	Erlang FTP Server Framework
 binpp	https://github.com/jtendo/binpp	https://github.com/jtendo/binpp	Erlang Binary Pretty Printer
