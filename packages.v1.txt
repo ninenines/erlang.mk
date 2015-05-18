@@ -25,6 +25,7 @@ cache	https://github.com/fogfish/cache	a	b
 cache	https://github.com/fogfish/cache	https://github.com/fogfish/cache	Erlang in-memory cache
 cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Really simple terminal colorization
 carotene	https://github.com/carotene/carotene	a	b
+carotene	https://github.com/carotene/carotene	https://github.com/carotene/carotene	Real-time server
 cecho	https://github.com/mazenharake/cecho	a	b
 cferl	https://github.com/ddossot/cferl	a	b
 chaos_monkey	https://github.com/dLuna/chaos_monkey	a	b

@@ -25,6 +25,7 @@ cache	git	https://github.com/fogfish/cache	master	a	b
 cache	git	https://github.com/fogfish/cache	master	https://github.com/fogfish/cache	Erlang in-memory cache
 cake	git	https://github.com/darach/cake-erl	v0.1.2	https://github.com/darach/cake-erl	Really simple terminal colorization
 carotene	git	https://github.com/carotene/carotene	master	a	b
+carotene	git	https://github.com/carotene/carotene	master	https://github.com/carotene/carotene	Real-time server
 cecho	git	https://github.com/mazenharake/cecho	master	a	b
 cferl	git	https://github.com/ddossot/cferl	master	a	b
 chaos_monkey	git	https://github.com/dLuna/chaos_monkey	master	a	b
