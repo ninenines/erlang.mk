@@ -1,6 +1,7 @@
 aberth	git	https://github.com/a13x/aberth	master	a	b
 aberth	git	https://github.com/a13x/aberth	master	https://github.com/a13x/aberth	Generic BERT-RPC server in Erlang
 active	git	https://github.com/proger/active	master	a	b
+active	git	https://github.com/proger/active	master	https://github.com/proger/active	Active development for Erlang: rebuild and reload source/binary files while the VM is running
 aleppo	git	https://github.com/ErlyORM/aleppo	master	a	b
 aleppo	git	https://github.com/ErlyORM/aleppo	master	https://github.com/ErlyORM/aleppo	Alternative Erlang Pre-Processor
 annotations	git	https://github.com/hyperthunk/annotations	master	a	b
