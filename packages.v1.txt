@@ -64,6 +64,7 @@ detergent	https://github.com/devinus/detergent	https://github.com/devinus/deterg
 dh_date	https://github.com/daleharvey/dh_date	a	b
 dh_date	https://github.com/daleharvey/dh_date	https://github.com/daleharvey/dh_date	Date formatting / parsing library for erlang
 dhtcrawler	https://github.com/kevinlynx/dhtcrawler	a	b
+dhtcrawler	https://github.com/kevinlynx/dhtcrawler	https://github.com/kevinlynx/dhtcrawler	dhtcrawler is a DHT crawler written in erlang. It can join a DHT network and crawl many P2P torrents.
 dirbusterl	https://github.com/silentsignal/DirBustErl	a	b
 dirbusterl	https://github.com/silentsignal/DirBustErl	https://github.com/silentsignal/DirBustErl	DirBuster successor in Erlang
 dispcount	https://github.com/ferd/dispcount	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
