@@ -404,6 +404,7 @@ sext	https://github.com/uwiger/sext	a	b
 sext	https://github.com/uwiger/sext	https://github.com/uwiger/sext	Sortable Erlang Term Serialization
 sfmt	https://github.com/jj1bdx/sfmt-erlang	https://github.com/jj1bdx/sfmt-erlang	SFMT pseudo random number generator for Erlang.
 sgte	https://github.com/filippo/sgte	a	b
+sgte	https://github.com/filippo/sgte	https://github.com/filippo/sgte	A simple Erlang Template Engine
 sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform for type based validation.
 shotgun	https://github.com/inaka/shotgun	https://github.com/inaka/shotgun	better than just a gun
 sidejob	https://github.com/basho/sidejob	a	b
