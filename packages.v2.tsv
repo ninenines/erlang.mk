@@ -66,6 +66,7 @@ cowlib	git	https://github.com/ninenines/cowlib	1.0.1	http://ninenines.eu	Support
 cpg	git	https://github.com/okeuday/cpg	master	a	b
 cpg	git	https://github.com/okeuday/cpg	master	https://github.com/okeuday/cpg	CloudI Process Groups
 cuttlefish	git	https://github.com/basho/cuttlefish	master	a	b
+cuttlefish	git	https://github.com/basho/cuttlefish	master	https://github.com/basho/cuttlefish	never lose your childlike sense of wonder baby cuttlefish, promise me?
 damocles	git	https://github.com/lostcolony/damocles	master	https://github.com/lostcolony/damocles	Erlang library for generating adversarial network conditions for QAing distributed applications/systems on a single Linux box.
 debbie	git	https://github.com/crownedgrouse/debbie	master	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
 decimal	git	https://github.com/tim/erlang-decimal	master	a	b

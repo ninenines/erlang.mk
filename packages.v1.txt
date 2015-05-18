@@ -66,6 +66,7 @@ cowlib	https://github.com/ninenines/cowlib	http://ninenines.eu	Support library f
 cpg	https://github.com/okeuday/cpg	a	b
 cpg	https://github.com/okeuday/cpg	https://github.com/okeuday/cpg	CloudI Process Groups
 cuttlefish	https://github.com/basho/cuttlefish	a	b
+cuttlefish	https://github.com/basho/cuttlefish	https://github.com/basho/cuttlefish	never lose your childlike sense of wonder baby cuttlefish, promise me?
 damocles	https://github.com/lostcolony/damocles	https://github.com/lostcolony/damocles	Erlang library for generating adversarial network conditions for QAing distributed applications/systems on a single Linux box.
 debbie	https://github.com/crownedgrouse/debbie	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
 decimal	https://github.com/tim/erlang-decimal	a	b
