@@ -103,6 +103,7 @@ erldns	https://github.com/aetrion/erl-dns	https://github.com/aetrion/erl-dns	DNS
 erldocker	https://github.com/proger/erldocker	a	b
 erlfsmon	https://github.com/proger/erlfsmon	a	b
 erlgit	https://github.com/gleber/erlgit	a	b
+erlgit	https://github.com/gleber/erlgit	https://github.com/gleber/erlgit	Erlang convenience wrapper around git executable
 erlguten	https://github.com/richcarl/erlguten	a	b
 erlmc	https://github.com/jkvor/erlmc	a	b
 erlog	https://github.com/rvirding/erlog	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang

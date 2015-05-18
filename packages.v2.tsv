@@ -103,6 +103,7 @@ erldns	git	https://github.com/aetrion/erl-dns	master	https://github.com/aetrion/
 erldocker	git	https://github.com/proger/erldocker	master	a	b
 erlfsmon	git	https://github.com/proger/erlfsmon	master	a	b
 erlgit	git	https://github.com/gleber/erlgit	master	a	b
+erlgit	git	https://github.com/gleber/erlgit	master	https://github.com/gleber/erlgit	Erlang convenience wrapper around git executable
 erlguten	git	https://github.com/richcarl/erlguten	master	a	b
 erlmc	git	https://github.com/jkvor/erlmc	master	a	b
 erlog	git	https://github.com/rvirding/erlog	master	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
