@@ -240,6 +240,7 @@ gin	git	https://github.com/mad-cocktail/gin	master	https://github.com/mad-cockta
 gitty	git	https://github.com/maxlapshin/gitty	master	a	b
 gitty	git	https://github.com/maxlapshin/gitty	master	https://github.com/maxlapshin/gitty	Git access in erlang
 gpb	git	https://github.com/tomas-abrahamsson/gpb	master	a	b
+gpb	git	https://github.com/tomas-abrahamsson/gpb	master	https://github.com/tomas-abrahamsson/gpb	A Google Protobuf implementation for Erlang
 gproc	git	https://github.com/uwiger/gproc	master	https://github.com/uwiger/gproc	Extended process registry for Erlang
 grapherl	git	https://github.com/eproxus/grapherl	master	a	b
 grapherl	git	https://github.com/eproxus/grapherl	master	https://github.com/eproxus/grapherl	Create graphs of Erlang systems and programs
