@@ -78,6 +78,7 @@ edis	https://github.com/inaka/edis	http://inaka.github.com/edis/	An Erlang imple
 edns	https://github.com/hcvst/erlang-dns	a	b
 edns	https://github.com/hcvst/erlang-dns	https://github.com/hcvst/erlang-dns	Erlang/OTP DNS server
 eep_app	https://github.com/darach/eep-erl	a	b
+eep_app	https://github.com/darach/eep-erl	https://github.com/darach/eep-erl	Embedded Event Processing
 eep	https://github.com/virtan/eep	https://github.com/virtan/eep	Erlang Easy Profiling (eep) application provides a way to analyze application performance and call hierarchy
 efene	https://github.com/efene/efene	https://github.com/efene/efene	Alternative syntax for the Erlang Programming Language focusing on simplicity, ease of use and programmer UX
 eganglia	https://github.com/inaka/eganglia	https://github.com/inaka/eganglia	Erlang library to interact with Ganglia
