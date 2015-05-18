@@ -534,6 +534,7 @@ ux	https://github.com/erlang-unicode/ux	https://github.com/erlang-unicode/ux	Uni
 vert	https://github.com/msantos/erlang-libvirt	a	b
 vert	https://github.com/msantos/erlang-libvirt	https://github.com/msantos/erlang-libvirt	Erlang binding to libvirt virtualization API
 vmstats	https://github.com/ferd/vmstats	a	b
+vmstats	https://github.com/ferd/vmstats	https://github.com/ferd/vmstats	tiny Erlang app that works in conjunction with statsderl in order to generate information on the Erlang VM for graphite logs.
 walrus	https://github.com/devinus/walrus	a	b
 walrus	https://github.com/devinus/walrus	https://github.com/devinus/walrus	Walrus - Mustache-like Templating
 webmachine	https://github.com/basho/webmachine	https://github.com/basho/webmachine	A REST-based system for building web applications.

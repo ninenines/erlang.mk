@@ -534,6 +534,7 @@ ux	git	https://github.com/erlang-unicode/ux	master	https://github.com/erlang-uni
 vert	git	https://github.com/msantos/erlang-libvirt	master	a	b
 vert	git	https://github.com/msantos/erlang-libvirt	master	https://github.com/msantos/erlang-libvirt	Erlang binding to libvirt virtualization API
 vmstats	git	https://github.com/ferd/vmstats	master	a	b
+vmstats	git	https://github.com/ferd/vmstats	master	https://github.com/ferd/vmstats	tiny Erlang app that works in conjunction with statsderl in order to generate information on the Erlang VM for graphite logs.
 walrus	git	https://github.com/devinus/walrus	master	a	b
 walrus	git	https://github.com/devinus/walrus	master	https://github.com/devinus/walrus	Walrus - Mustache-like Templating
 webmachine	git	https://github.com/basho/webmachine	master	https://github.com/basho/webmachine	A REST-based system for building web applications.
