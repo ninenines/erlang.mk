@@ -267,6 +267,7 @@ lager_amqp_backend	https://github.com/jbrisbin/lager_amqp_backend	a	b
 lager_amqp_backend	https://github.com/jbrisbin/lager_amqp_backend	https://github.com/jbrisbin/lager_amqp_backend	AMQP RabbitMQ Lager backend
 lager	https://github.com/basho/lager	https://github.com/basho/lager	A logging framework for Erlang/OTP.
 lager_syslog	https://github.com/basho/lager_syslog	a	b
+lager_syslog	https://github.com/basho/lager_syslog	https://github.com/basho/lager_syslog	Syslog backend for lager
 lambdapad	https://github.com/gar1t/lambdapad	a	b
 lasse	https://github.com/inaka/lasse	https://github.com/inaka/lasse	SSE handler for Cowboy
 ldap	https://github.com/spawnproc/ldap	a	b
