@@ -18,6 +18,7 @@ bifrost	https://github.com/thorstadt/bifrost	a	b
 bifrost	https://github.com/thorstadt/bifrost	https://github.com/thorstadt/bifrost	Erlang FTP Server Framework
 binpp	https://github.com/jtendo/binpp	https://github.com/jtendo/binpp	Erlang Binary Pretty Printer
 bisect	https://github.com/knutin/bisect	a	b
+bisect	https://github.com/knutin/bisect	https://github.com/knutin/bisect	Ordered fixed-size binary dictionary in Erlang
 bitcask	https://github.com/basho/bitcask	https://github.com/basho/bitcask	because you need another a key/value storage engine
 bitstore	https://github.com/bdionne/bitstore	a	b
 bootstrap	https://github.com/schlagert/bootstrap	a	b
