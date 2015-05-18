@@ -400,6 +400,7 @@ trie	https://github.com/okeuday/trie	a	b
 triq	https://github.com/krestenkrab/triq	https://github.com/krestenkrab/triq	Trifork QuickCheck
 tsung	https://github.com/processone/tsung	https://github.com/processone/tsung	Tsung is a high-performance benchmark framework for various protocols including HTTP, XMPP, LDAP, etc.
 tunctl	https://github.com/msantos/tunctl	a	b
+tunctl	https://github.com/msantos/tunctl	https://github.com/msantos/tunctl	Erlang TUN/TAP interface
 twerl	https://github.com/lucaspiller/twerl	a	b
 twerl	https://github.com/lucaspiller/twerl	https://github.com/lucaspiller/twerl	Erlang client for the Twitter Streaming API
 twitter_erlang	https://github.com/ngerakines/erlang_twitter	https://github.com/ngerakines/erlang_twitter	An Erlang twitter client
