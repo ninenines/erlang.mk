@@ -33,6 +33,7 @@ color	https://github.com/julianduque/erlang-color	a	b
 confetti	https://github.com/jtendo/confetti	a	b
 couchbeam	https://github.com/benoitc/couchbeam	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 couch	https://github.com/benoitc/opencouch	a	b
+couch	https://github.com/benoitc/opencouch	https://github.com/benoitc/opencouch	A embeddable document oriented database compatible with Apache CouchDB
 covertool	https://github.com/idubrov/covertool	a	b
 cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
 cowdb	https://github.com/refuge/cowdb	a	b
