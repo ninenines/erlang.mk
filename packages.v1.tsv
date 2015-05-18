@@ -370,6 +370,7 @@ rivus_cep	https://github.com/vascokk/rivus_cep	a	b
 rlimit	https://github.com/jlouis/rlimit	https://github.com/jlouis/rlimit	Magnus Klaar's rate limiter code from etorrent
 safetyvalve	https://github.com/jlouis/safetyvalve	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node
 seestar	https://github.com/iamaleksey/seestar	a	b
+seestar	https://github.com/iamaleksey/seestar	https://github.com/iamaleksey/seestar	The Erlang client for Cassandra 1.2+ binary protocol
 setup	https://github.com/uwiger/setup	a	b
 setup	https://github.com/uwiger/setup	https://github.com/uwiger/setup	Generic setup utility for Erlang-based systems
 sext	https://github.com/uwiger/sext	a	b
