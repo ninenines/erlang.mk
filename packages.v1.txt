@@ -544,6 +544,7 @@ walrus	https://github.com/devinus/walrus	a	b
 walrus	https://github.com/devinus/walrus	https://github.com/devinus/walrus	Walrus - Mustache-like Templating
 webmachine	https://github.com/basho/webmachine	https://github.com/basho/webmachine	A REST-based system for building web applications.
 websocket_client	https://github.com/jeremyong/websocket_client	a	b
+websocket_client	https://github.com/jeremyong/websocket_client	https://github.com/jeremyong/websocket_client	Erlang websocket client (ws and wss supported)
 worker_pool	https://github.com/inaka/worker_pool	https://github.com/inaka/worker_pool	a simple erlang worker pool
 wsock	https://github.com/madtrick/wsock	a	b
 wsock	https://github.com/madtrick/wsock	https://github.com/madtrick/wsock	Erlang library to build WebSocket clients and servers
