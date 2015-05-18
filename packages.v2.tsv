@@ -197,6 +197,7 @@ hackney	git	https://github.com/benoitc/hackney	master	https://github.com/benoitc
 hamcrest	git	https://github.com/hyperthunk/hamcrest-erlang	master	a	b
 hanoidb	git	https://github.com/krestenkrab/hanoidb	master	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 hottub	git	https://github.com/bfrog/hottub	master	a	b
+hottub	git	https://github.com/bfrog/hottub	master	https://github.com/bfrog/hottub	Permanent Erlang Worker Pool
 i18n	git	https://github.com/erlang-unicode/i18n	master	https://github.com/erlang-unicode/i18n	icu nif: international components for unicode from Erlang (unicode, date, string, number, format, locale, localization, transliteration, icu4e)
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	git	https://github.com/robbielynch/ierlang	master	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
