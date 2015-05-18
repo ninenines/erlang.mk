@@ -117,6 +117,7 @@ erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Dj
 errd	https://github.com/archaelus/errd	a	b
 errd	https://github.com/archaelus/errd	https://github.com/archaelus/errd	Erlang RRDTool library
 erserve	https://github.com/del/erserve	a	b
+erserve	https://github.com/del/erserve	https://github.com/del/erserve	Erlang/Rserve communication interface
 erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 espec	https://github.com/lucaspiller/espec	a	b
 estatsd	https://github.com/RJ/estatsd	a	b

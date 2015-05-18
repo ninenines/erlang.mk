@@ -117,6 +117,7 @@ erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl
 errd	git	https://github.com/archaelus/errd	master	a	b
 errd	git	https://github.com/archaelus/errd	master	https://github.com/archaelus/errd	Erlang RRDTool library
 erserve	git	https://github.com/del/erserve	master	a	b
+erserve	git	https://github.com/del/erserve	master	https://github.com/del/erserve	Erlang/Rserve communication interface
 erwa	git	https://github.com/bwegh/erwa	0.1.1	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
 espec	git	https://github.com/lucaspiller/espec	master	a	b
 estatsd	git	https://github.com/RJ/estatsd	master	a	b
