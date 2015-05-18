@@ -400,6 +400,7 @@ riak_pg	git	https://github.com/cmeiklejohn/riak_pg	master	a	b
 riak_pg	git	https://github.com/cmeiklejohn/riak_pg	master	https://github.com/cmeiklejohn/riak_pg	Distributed process groups with riak_core.
 riak_pipe	git	https://github.com/basho/riak_pipe	master	https://github.com/basho/riak_pipe	Riak Pipelines
 riakpool	git	https://github.com/dweldon/riakpool	master	a	b
+riakpool	git	https://github.com/dweldon/riakpool	master	https://github.com/dweldon/riakpool	erlang riak client pool
 riak_sysmon	git	https://github.com/basho/riak_sysmon	master	a	b
 riak_sysmon	git	https://github.com/basho/riak_sysmon	master	https://github.com/basho/riak_sysmon	Simple OTP app for managing Erlang VM system_monitor event messages
 riak_test	git	https://github.com/basho/riak_test	master	a	b
