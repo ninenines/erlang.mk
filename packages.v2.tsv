@@ -335,6 +335,7 @@ moyo	git	https://github.com/dwango/moyo	master	https://github.com/dwango/moyo	Er
 msgpack	git	https://github.com/msgpack/msgpack-erlang	master	https://github.com/msgpack/msgpack-erlang	MessagePack (de)serializer implementation for Erlang
 mustache	git	https://github.com/mojombo/mustache.erl	master	https://github.com/mojombo/mustache.erl	Mustache template engine for Erlang.
 myproto	git	https://github.com/altenwald/myproto	master	a	b
+myproto	git	https://github.com/altenwald/myproto	master	https://github.com/altenwald/myproto	MySQL Server Protocol in Erlang
 mysql	git	https://github.com/dizzyd/erlang-mysql-driver	master	https://github.com/dizzyd/erlang-mysql-driver	Erlang MySQL Driver (from code.google.com)
 n2o	git	https://github.com/5HT/n2o	master	https://github.com/5HT/n2o	WebSocket Application Server
 nat_upnp	git	https://github.com/benoitc/nat_upnp	master	https://github.com/benoitc/nat_upnp	Erlang library to map your internal port to an external using UNP IGD
