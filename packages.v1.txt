@@ -200,6 +200,7 @@ jsonpath	https://github.com/GeneStevens/jsonpath	a	b
 json_rec	https://github.com/justinkirby/json_rec	a	b
 jsx	https://github.com/talentdeficit/jsx	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 kafka	https://github.com/wooga/kafka-erlang	a	b
+kafka	https://github.com/wooga/kafka-erlang	https://github.com/wooga/kafka-erlang	Kafka consumer and producer in Erlang
 kai	https://github.com/synrc/kai	a	b
 katja	https://github.com/nifoc/katja	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 kdht	https://github.com/kevinlynx/kdht	a	b
