@@ -365,6 +365,7 @@ social	https://github.com/dvv/social	a	b
 spapi_router	https://github.com/spilgames/spapi-router	a	b
 sqerl	https://github.com/hairyhum/sqerl	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
 srly	https://github.com/msantos/srly	a	b
+srly	https://github.com/msantos/srly	https://github.com/msantos/srly	Native Erlang Unix serial interface
 sshrpc	https://github.com/jj1bdx/sshrpc	a	b
 stable	https://github.com/dvv/stable	a	b
 statebox	https://github.com/mochi/statebox	https://github.com/mochi/statebox	Erlang state monad with merge/conflict-resolution capabilities. Useful for Riak.

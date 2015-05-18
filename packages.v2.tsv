@@ -365,6 +365,7 @@ social	git	https://github.com/dvv/social	master	a	b
 spapi_router	git	https://github.com/spilgames/spapi-router	master	a	b
 sqerl	git	https://github.com/hairyhum/sqerl	master	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
 srly	git	https://github.com/msantos/srly	master	a	b
+srly	git	https://github.com/msantos/srly	master	https://github.com/msantos/srly	Native Erlang Unix serial interface
 sshrpc	git	https://github.com/jj1bdx/sshrpc	master	a	b
 stable	git	https://github.com/dvv/stable	master	a	b
 statebox	git	https://github.com/mochi/statebox	master	https://github.com/mochi/statebox	Erlang state monad with merge/conflict-resolution capabilities. Useful for Riak.
