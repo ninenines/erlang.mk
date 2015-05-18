@@ -147,6 +147,7 @@ erlcloud	git	https://github.com/gleber/erlcloud	master	https://github.com/gleber
 erlcron	git	https://github.com/erlware/erlcron	master	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	git	https://github.com/erldb/erldb	master	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
 erldis	git	https://github.com/cstar/erldis	master	a	b
+erldis	git	https://github.com/cstar/erldis	master	https://github.com/cstar/erldis	redis erlang client library
 erldns	git	https://github.com/aetrion/erl-dns	master	https://github.com/aetrion/erl-dns	DNS server, in erlang.
 erldocker	git	https://github.com/proger/erldocker	master	a	b
 erldocker	git	https://github.com/proger/erldocker	master	https://github.com/proger/erldocker	Docker Remote API client for Erlang

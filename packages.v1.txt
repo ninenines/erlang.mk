@@ -147,6 +147,7 @@ erlcloud	https://github.com/gleber/erlcloud	https://github.com/gleber/erlcloud	C
 erlcron	https://github.com/erlware/erlcron	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	https://github.com/erldb/erldb	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
 erldis	https://github.com/cstar/erldis	a	b
+erldis	https://github.com/cstar/erldis	https://github.com/cstar/erldis	redis erlang client library
 erldns	https://github.com/aetrion/erl-dns	https://github.com/aetrion/erl-dns	DNS server, in erlang.
 erldocker	https://github.com/proger/erldocker	a	b
 erldocker	https://github.com/proger/erldocker	https://github.com/proger/erldocker	Docker Remote API client for Erlang
