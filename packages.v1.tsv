@@ -388,6 +388,7 @@ triq	https://github.com/krestenkrab/triq	https://github.com/krestenkrab/triq	Tri
 tsung	https://github.com/processone/tsung	https://github.com/processone/tsung	Tsung is a high-performance benchmark framework for various protocols including HTTP, XMPP, LDAP, etc.
 tunctl	https://github.com/msantos/tunctl	a	b
 twerl	https://github.com/lucaspiller/twerl	a	b
+twerl	https://github.com/lucaspiller/twerl	https://github.com/lucaspiller/twerl	Erlang client for the Twitter Streaming API
 twitter_erlang	https://github.com/ngerakines/erlang_twitter	https://github.com/ngerakines/erlang_twitter	An Erlang twitter client
 unicorn	https://github.com/shizzard/unicorn	https://github.com/shizzard/unicorn	Generic configuration server
 unsplit	https://github.com/uwiger/unsplit	a	b

@@ -388,6 +388,7 @@ triq	git	https://github.com/krestenkrab/triq	master	https://github.com/krestenkr
 tsung	git	https://github.com/processone/tsung	master	https://github.com/processone/tsung	Tsung is a high-performance benchmark framework for various protocols including HTTP, XMPP, LDAP, etc.
 tunctl	git	https://github.com/msantos/tunctl	master	a	b
 twerl	git	https://github.com/lucaspiller/twerl	oauth	a	b
+twerl	git	https://github.com/lucaspiller/twerl	oauth	https://github.com/lucaspiller/twerl	Erlang client for the Twitter Streaming API
 twitter_erlang	git	https://github.com/ngerakines/erlang_twitter	master	https://github.com/ngerakines/erlang_twitter	An Erlang twitter client
 unicorn	git	https://github.com/shizzard/unicorn	0.3.0	https://github.com/shizzard/unicorn	Generic configuration server
 unsplit	git	https://github.com/uwiger/unsplit	master	a	b
