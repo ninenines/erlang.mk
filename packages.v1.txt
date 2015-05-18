@@ -469,6 +469,7 @@ riak_sysmon	https://github.com/basho/riak_sysmon	https://github.com/basho/riak_s
 riak_test	https://github.com/basho/riak_test	a	b
 riak_test	https://github.com/basho/riak_test	https://github.com/basho/riak_test	I'm in your cluster, testing your riaks
 rivus_cep	https://github.com/vascokk/rivus_cep	a	b
+rivus_cep	https://github.com/vascokk/rivus_cep	https://github.com/vascokk/rivus_cep	Complex event processing in Erlang
 rlimit	https://github.com/jlouis/rlimit	https://github.com/jlouis/rlimit	Magnus Klaar's rate limiter code from etorrent
 safetyvalve	https://github.com/jlouis/safetyvalve	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node
 seestar	https://github.com/iamaleksey/seestar	a	b

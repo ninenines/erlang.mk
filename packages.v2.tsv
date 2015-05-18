@@ -469,6 +469,7 @@ riak_sysmon	git	https://github.com/basho/riak_sysmon	master	https://github.com/b
 riak_test	git	https://github.com/basho/riak_test	master	a	b
 riak_test	git	https://github.com/basho/riak_test	master	https://github.com/basho/riak_test	I'm in your cluster, testing your riaks
 rivus_cep	git	https://github.com/vascokk/rivus_cep	master	a	b
+rivus_cep	git	https://github.com/vascokk/rivus_cep	master	https://github.com/vascokk/rivus_cep	Complex event processing in Erlang
 rlimit	git	https://github.com/jlouis/rlimit	master	https://github.com/jlouis/rlimit	Magnus Klaar's rate limiter code from etorrent
 safetyvalve	git	https://github.com/jlouis/safetyvalve	master	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node
 seestar	git	https://github.com/iamaleksey/seestar	master	a	b
