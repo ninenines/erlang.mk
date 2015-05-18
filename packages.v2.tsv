@@ -379,5 +379,6 @@ yaws	git	https://github.com/klacke/yaws	master	http://yaws.hyber.org	Yaws webser
 zab_engine	git	https://github.com/xinmingyao/zab_engine	master	a	b
 zeta	git	https://github.com/s1n4/zeta	 	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
 zippers	git	https://github.com/ferd/zippers	master	a	b
+zippers	git	https://github.com/ferd/zippers	master	https://github.com/ferd/zippers	A library for functional zipper data structures in Erlang. Read more on zippers
 zlists	git	https://github.com/vjache/erlang-zlists	master	a	b
 zucchini	git	https://github.com/devinus/zucchini	master	a	b
