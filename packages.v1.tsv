@@ -289,6 +289,7 @@ meck	https://github.com/eproxus/meck	https://github.com/eproxus/meck	A mocking l
 mekao	https://github.com/ddosia/mekao	https://github.com/ddosia/mekao	SQL constructor
 merge_index	https://github.com/basho/merge_index	a	b
 merl	https://github.com/richcarl/merl	a	b
+merl	https://github.com/richcarl/merl	https://github.com/richcarl/merl	Metaprogramming in Erlang
 mimetypes	https://github.com/spawngrid/mimetypes	a	b
 mixer	https://github.com/chef/mixer	a	b
 mixer	https://github.com/chef/mixer	https://github.com/chef/mixer	Mix in functions from other modules

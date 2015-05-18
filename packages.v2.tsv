@@ -289,6 +289,7 @@ meck	git	https://github.com/eproxus/meck	master	https://github.com/eproxus/meck	
 mekao	git	https://github.com/ddosia/mekao	master	https://github.com/ddosia/mekao	SQL constructor
 merge_index	git	https://github.com/basho/merge_index	master	a	b
 merl	git	https://github.com/richcarl/merl	master	a	b
+merl	git	https://github.com/richcarl/merl	master	https://github.com/richcarl/merl	Metaprogramming in Erlang
 mimetypes	git	https://github.com/spawngrid/mimetypes	master	a	b
 mixer	git	https://github.com/chef/mixer	master	a	b
 mixer	git	https://github.com/chef/mixer	master	https://github.com/chef/mixer	Mix in functions from other modules
