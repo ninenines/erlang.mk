@@ -52,6 +52,7 @@ damocles	git	https://github.com/lostcolony/damocles	master	https://github.com/lo
 debbie	git	https://github.com/crownedgrouse/debbie	master	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
 decimal	git	https://github.com/tim/erlang-decimal	master	a	b
 detergent	git	https://github.com/devinus/detergent	master	a	b
+detergent	git	https://github.com/devinus/detergent	master	https://github.com/devinus/detergent	An emulsifying Erlang SOAP library
 dh_date	git	https://github.com/daleharvey/dh_date	master	a	b
 dhtcrawler	git	https://github.com/kevinlynx/dhtcrawler	master	a	b
 dirbusterl	git	https://github.com/silentsignal/DirBustErl	master	a	b

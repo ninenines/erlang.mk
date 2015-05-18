@@ -52,6 +52,7 @@ damocles	https://github.com/lostcolony/damocles	https://github.com/lostcolony/da
 debbie	https://github.com/crownedgrouse/debbie	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
 decimal	https://github.com/tim/erlang-decimal	a	b
 detergent	https://github.com/devinus/detergent	a	b
+detergent	https://github.com/devinus/detergent	https://github.com/devinus/detergent	An emulsifying Erlang SOAP library
 dh_date	https://github.com/daleharvey/dh_date	a	b
 dhtcrawler	https://github.com/kevinlynx/dhtcrawler	a	b
 dirbusterl	https://github.com/silentsignal/DirBustErl	a	b
