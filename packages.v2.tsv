@@ -174,6 +174,7 @@ ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cm
 ierlang	git	https://github.com/robbielynch/ierlang	master	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 ircbot	git	https://github.com/gdamjan/erlang-irc-bot	master	a	b
 ircd	git	https://github.com/tonyg/erlang-ircd	master	a	b
+ircd	git	https://github.com/tonyg/erlang-ircd	master	https://github.com/tonyg/erlang-ircd	A pluggable IRC daemon application/library for Erlang.
 irc_lib	git	https://github.com/OtpChatBot/irc_lib	master	a	b
 iris	git	https://github.com/project-iris/iris-erl	master	a	b
 iso8601	git	https://github.com/seansawyer/erlang_iso8601	master	a	b
