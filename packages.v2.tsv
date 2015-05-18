@@ -148,6 +148,7 @@ exsplus116	git	https://github.com/jj1bdx/exsplus116	master	https://github.com/jj
 exsplus128	git	https://github.com/jj1bdx/exsplus128	master	https://github.com/jj1bdx/exsplus128	Xorshift128plus pseudo random number generator for Erlang.
 ezmq	git	https://github.com/RoadRunnr/ezmq	master	a	b
 ezmtp	git	https://github.com/a13x/ezmtp	master	a	b
+ezmtp	git	https://github.com/a13x/ezmtp	master	https://github.com/a13x/ezmtp	ZMTP protocol in pure Erlang.
 fast_disk_log	git	https://github.com/lpgauth/fast_disk_log	master	https://github.com/lpgauth/fast_disk_log	Pool-based asynchronous Erlang disk logger
 feeder	git	https://github.com/michaelnisi/feeder	v1.4.6	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
 fix	git	https://github.com/maxlapshin/fix	master	a	b
