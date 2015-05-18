@@ -398,6 +398,7 @@ seestar	git	https://github.com/iamaleksey/seestar	master	https://github.com/iama
 setup	git	https://github.com/uwiger/setup	master	a	b
 setup	git	https://github.com/uwiger/setup	master	https://github.com/uwiger/setup	Generic setup utility for Erlang-based systems
 sext	git	https://github.com/uwiger/sext	master	a	b
+sext	git	https://github.com/uwiger/sext	master	https://github.com/uwiger/sext	Sortable Erlang Term Serialization
 sfmt	git	https://github.com/jj1bdx/sfmt-erlang	master	https://github.com/jj1bdx/sfmt-erlang	SFMT pseudo random number generator for Erlang.
 sgte	git	https://github.com/filippo/sgte	master	a	b
 sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse transform for type based validation.

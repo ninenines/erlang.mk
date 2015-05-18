@@ -398,6 +398,7 @@ seestar	https://github.com/iamaleksey/seestar	https://github.com/iamaleksey/sees
 setup	https://github.com/uwiger/setup	a	b
 setup	https://github.com/uwiger/setup	https://github.com/uwiger/setup	Generic setup utility for Erlang-based systems
 sext	https://github.com/uwiger/sext	a	b
+sext	https://github.com/uwiger/sext	https://github.com/uwiger/sext	Sortable Erlang Term Serialization
 sfmt	https://github.com/jj1bdx/sfmt-erlang	https://github.com/jj1bdx/sfmt-erlang	SFMT pseudo random number generator for Erlang.
 sgte	https://github.com/filippo/sgte	a	b
 sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform for type based validation.
