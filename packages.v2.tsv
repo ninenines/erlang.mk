@@ -76,6 +76,7 @@ eamf	git	https://github.com/mrinalwadhwa/eamf	master	https://github.com/mrinalwa
 eavro	git	https://github.com/SIfoxDevTeam/eavro	master	a	b
 eavro	git	https://github.com/SIfoxDevTeam/eavro	master	https://github.com/SIfoxDevTeam/eavro	Apache Avro encoder/decoder
 ecapnp	git	https://github.com/kaos/ecapnp	master	a	b
+ecapnp	git	https://github.com/kaos/ecapnp	master	https://github.com/kaos/ecapnp	Cap'n Proto library for Erlang
 econfig	git	https://github.com/benoitc/econfig	master	a	b
 edate	git	https://github.com/dweldon/edate	master	a	b
 edgar	git	https://github.com/crownedgrouse/edgar	master	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR

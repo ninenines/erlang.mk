@@ -76,6 +76,7 @@ eamf	https://github.com/mrinalwadhwa/eamf	https://github.com/mrinalwadhwa/eamf	e
 eavro	https://github.com/SIfoxDevTeam/eavro	a	b
 eavro	https://github.com/SIfoxDevTeam/eavro	https://github.com/SIfoxDevTeam/eavro	Apache Avro encoder/decoder
 ecapnp	https://github.com/kaos/ecapnp	a	b
+ecapnp	https://github.com/kaos/ecapnp	https://github.com/kaos/ecapnp	Cap'n Proto library for Erlang
 econfig	https://github.com/benoitc/econfig	a	b
 edate	https://github.com/dweldon/edate	a	b
 edgar	https://github.com/crownedgrouse/edgar	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
