@@ -85,6 +85,7 @@ episcina	https://github.com/erlware/episcina	a	b
 eplot	https://github.com/psyeugenic/eplot	a	b
 epocxy	https://github.com/duomark/epocxy	https://github.com/duomark/epocxy	Erlang Patterns of Concurrency
 epubnub	https://github.com/tsloughter/epubnub	a	b
+epubnub	https://github.com/tsloughter/epubnub	https://github.com/tsloughter/epubnub	Erlang PubNub API
 eredis	https://github.com/wooga/eredis	https://github.com/wooga/eredis	Erlang Redis client
 eredis_pool	https://github.com/hiroeorz/eredis_pool	a	b
 erlang_js	https://github.com/basho/erlang_js	https://github.com/basho/erlang_js	A linked-in driver for Erlang to Mozilla's Spidermonkey Javascript runtime.

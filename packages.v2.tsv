@@ -85,6 +85,7 @@ episcina	git	https://github.com/erlware/episcina	master	a	b
 eplot	git	https://github.com/psyeugenic/eplot	master	a	b
 epocxy	git	https://github.com/duomark/epocxy	master	https://github.com/duomark/epocxy	Erlang Patterns of Concurrency
 epubnub	git	https://github.com/tsloughter/epubnub	master	a	b
+epubnub	git	https://github.com/tsloughter/epubnub	master	https://github.com/tsloughter/epubnub	Erlang PubNub API
 eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredis	Erlang Redis client
 eredis_pool	git	https://github.com/hiroeorz/eredis_pool	master	a	b
 erlang_js	git	https://github.com/basho/erlang_js	master	https://github.com/basho/erlang_js	A linked-in driver for Erlang to Mozilla's Spidermonkey Javascript runtime.
