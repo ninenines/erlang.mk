@@ -401,6 +401,7 @@ pmod_transform	https://github.com/erlang/pmod_transform	a	b
 pmod_transform	https://github.com/erlang/pmod_transform	https://github.com/erlang/pmod_transform	Parse transform for parameterized modules
 pobox	https://github.com/ferd/pobox	https://github.com/ferd/pobox	External buffer processes to protect against mailbox overflow in Erlang
 ponos	https://github.com/klarna/ponos	a	b
+ponos	https://github.com/klarna/ponos	https://github.com/klarna/ponos	ponos is a simple yet powerful load generator written in erlang
 poolboy	https://github.com/devinus/poolboy	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 pooler	https://github.com/seth/pooler	https://github.com/seth/pooler	An OTP Process Pool Application
 pqueue	https://github.com/okeuday/pqueue	a	b
