@@ -485,6 +485,7 @@ vert	https://github.com/msantos/erlang-libvirt	a	b
 vert	https://github.com/msantos/erlang-libvirt	https://github.com/msantos/erlang-libvirt	Erlang binding to libvirt virtualization API
 vmstats	https://github.com/ferd/vmstats	a	b
 walrus	https://github.com/devinus/walrus	a	b
+walrus	https://github.com/devinus/walrus	https://github.com/devinus/walrus	Walrus - Mustache-like Templating
 webmachine	https://github.com/basho/webmachine	https://github.com/basho/webmachine	A REST-based system for building web applications.
 websocket_client	https://github.com/jeremyong/websocket_client	a	b
 worker_pool	https://github.com/inaka/worker_pool	https://github.com/inaka/worker_pool	a simple erlang worker pool

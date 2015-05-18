@@ -485,6 +485,7 @@ vert	git	https://github.com/msantos/erlang-libvirt	master	a	b
 vert	git	https://github.com/msantos/erlang-libvirt	master	https://github.com/msantos/erlang-libvirt	Erlang binding to libvirt virtualization API
 vmstats	git	https://github.com/ferd/vmstats	master	a	b
 walrus	git	https://github.com/devinus/walrus	master	a	b
+walrus	git	https://github.com/devinus/walrus	master	https://github.com/devinus/walrus	Walrus - Mustache-like Templating
 webmachine	git	https://github.com/basho/webmachine	master	https://github.com/basho/webmachine	A REST-based system for building web applications.
 websocket_client	git	https://github.com/jeremyong/websocket_client	master	a	b
 worker_pool	git	https://github.com/inaka/worker_pool	1.0.2	https://github.com/inaka/worker_pool	a simple erlang worker pool
