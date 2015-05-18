@@ -340,6 +340,7 @@ rlimit	https://github.com/jlouis/rlimit	https://github.com/jlouis/rlimit	Magnus 
 safetyvalve	https://github.com/jlouis/safetyvalve	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node
 seestar	https://github.com/iamaleksey/seestar	a	b
 setup	https://github.com/uwiger/setup	a	b
+setup	https://github.com/uwiger/setup	https://github.com/uwiger/setup	Generic setup utility for Erlang-based systems
 sext	https://github.com/uwiger/sext	a	b
 sfmt	https://github.com/jj1bdx/sfmt-erlang	https://github.com/jj1bdx/sfmt-erlang	SFMT pseudo random number generator for Erlang.
 sgte	https://github.com/filippo/sgte	a	b

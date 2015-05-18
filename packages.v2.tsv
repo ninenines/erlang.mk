@@ -340,6 +340,7 @@ rlimit	git	https://github.com/jlouis/rlimit	master	https://github.com/jlouis/rli
 safetyvalve	git	https://github.com/jlouis/safetyvalve	master	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node
 seestar	git	https://github.com/iamaleksey/seestar	master	a	b
 setup	git	https://github.com/uwiger/setup	master	a	b
+setup	git	https://github.com/uwiger/setup	master	https://github.com/uwiger/setup	Generic setup utility for Erlang-based systems
 sext	git	https://github.com/uwiger/sext	master	a	b
 sfmt	git	https://github.com/jj1bdx/sfmt-erlang	master	https://github.com/jj1bdx/sfmt-erlang	SFMT pseudo random number generator for Erlang.
 sgte	git	https://github.com/filippo/sgte	master	a	b
