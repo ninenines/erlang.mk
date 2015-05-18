@@ -95,6 +95,7 @@ epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epg
 episcina	git	https://github.com/erlware/episcina	master	a	b
 episcina	git	https://github.com/erlware/episcina	master	https://github.com/erlware/episcina	A simple non intrusive resource pool for connections
 eplot	git	https://github.com/psyeugenic/eplot	master	a	b
+eplot	git	https://github.com/psyeugenic/eplot	master	https://github.com/psyeugenic/eplot	A plot engine written in erlang.
 epocxy	git	https://github.com/duomark/epocxy	master	https://github.com/duomark/epocxy	Erlang Patterns of Concurrency
 epubnub	git	https://github.com/tsloughter/epubnub	master	a	b
 epubnub	git	https://github.com/tsloughter/epubnub	master	https://github.com/tsloughter/epubnub	Erlang PubNub API

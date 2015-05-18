@@ -95,6 +95,7 @@ epgsql	https://github.com/epgsql/epgsql	https://github.com/epgsql/epgsql	Erlang 
 episcina	https://github.com/erlware/episcina	a	b
 episcina	https://github.com/erlware/episcina	https://github.com/erlware/episcina	A simple non intrusive resource pool for connections
 eplot	https://github.com/psyeugenic/eplot	a	b
+eplot	https://github.com/psyeugenic/eplot	https://github.com/psyeugenic/eplot	A plot engine written in erlang.
 epocxy	https://github.com/duomark/epocxy	https://github.com/duomark/epocxy	Erlang Patterns of Concurrency
 epubnub	https://github.com/tsloughter/epubnub	a	b
 epubnub	https://github.com/tsloughter/epubnub	https://github.com/tsloughter/epubnub	Erlang PubNub API
