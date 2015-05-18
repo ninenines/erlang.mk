@@ -291,6 +291,7 @@ lager	https://github.com/basho/lager	https://github.com/basho/lager	A logging fr
 lager_syslog	https://github.com/basho/lager_syslog	a	b
 lager_syslog	https://github.com/basho/lager_syslog	https://github.com/basho/lager_syslog	Syslog backend for lager
 lambdapad	https://github.com/gar1t/lambdapad	a	b
+lambdapad	https://github.com/gar1t/lambdapad	https://github.com/gar1t/lambdapad	Static site generator using Erlang. Yes, Erlang.
 lasse	https://github.com/inaka/lasse	https://github.com/inaka/lasse	SSE handler for Cowboy
 ldap	https://github.com/spawnproc/ldap	a	b
 ldap	https://github.com/spawnproc/ldap	https://github.com/spawnproc/ldap	LDAP server written in Erlang
