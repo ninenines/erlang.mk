@@ -200,6 +200,7 @@ folsomite	git	https://github.com/campanja/folsomite	master	a	b
 folsomite	git	https://github.com/campanja/folsomite	master	https://github.com/campanja/folsomite	blow up your graphite / riemann server with folsom metrics
 fuse	git	https://github.com/jlouis/fuse	master	https://github.com/jlouis/fuse	A Circuit Breaker for Erlang
 gcm	git	https://github.com/pdincau/gcm-erlang	master	a	b
+gcm	git	https://github.com/pdincau/gcm-erlang	master	https://github.com/pdincau/gcm-erlang	An Erlang application for Google Cloud Messaging
 gcprof	git	https://github.com/knutin/gcprof	master	a	b
 gcprof	git	https://github.com/knutin/gcprof	master	https://github.com/knutin/gcprof	Garbage Collection profiler for Erlang
 geas	git	https://github.com/crownedgrouse/geas	master	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
