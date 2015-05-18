@@ -35,6 +35,7 @@ cferl	git	https://github.com/ddossot/cferl	master	a	b
 cferl	git	https://github.com/ddossot/cferl	master	https://github.com/ddossot/cferl	Rackspace / Open Stack Cloud Files Erlang Client
 chaos_monkey	git	https://github.com/dLuna/chaos_monkey	master	a	b
 chronos	git	https://github.com/lehoff/chronos	master	a	b
+chronos	git	https://github.com/lehoff/chronos	master	https://github.com/lehoff/chronos	Timer module for Erlang that makes it easy to abstact time out of the tests.
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	git	https://github.com/basho/clique	develop	a	b
 cluster_info	git	https://github.com/basho/cluster_info	master	a	b
