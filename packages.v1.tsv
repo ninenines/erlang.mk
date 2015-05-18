@@ -202,6 +202,7 @@ lambdapad	https://github.com/gar1t/lambdapad	a	b
 lasse	https://github.com/inaka/lasse	https://github.com/inaka/lasse	SSE handler for Cowboy
 ldap	https://github.com/spawnproc/ldap	a	b
 lethink	https://github.com/taybin/lethink	a	b
+lethink	https://github.com/taybin/lethink	https://github.com/taybin/lethink	erlang driver for rethinkdb
 lfe	https://github.com/rvirding/lfe	https://github.com/rvirding/lfe	Lisp Flavoured Erlang (LFE)
 ling	https://github.com/cloudozer/ling	https://github.com/cloudozer/ling	Erlang on Xen
 live	https://github.com/ninenines/live	http://ninenines.eu	Automated module and configuration reloader.

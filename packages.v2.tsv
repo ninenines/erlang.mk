@@ -202,6 +202,7 @@ lambdapad	git	https://github.com/gar1t/lambdapad	master	a	b
 lasse	git	https://github.com/inaka/lasse	0.1.0	https://github.com/inaka/lasse	SSE handler for Cowboy
 ldap	git	https://github.com/spawnproc/ldap	master	a	b
 lethink	git	https://github.com/taybin/lethink	master	a	b
+lethink	git	https://github.com/taybin/lethink	master	https://github.com/taybin/lethink	erlang driver for rethinkdb
 lfe	git	https://github.com/rvirding/lfe	master	https://github.com/rvirding/lfe	Lisp Flavoured Erlang (LFE)
 ling	git	https://github.com/cloudozer/ling	master	https://github.com/cloudozer/ling	Erlang on Xen
 live	git	https://github.com/ninenines/live	master	http://ninenines.eu	Automated module and configuration reloader.
