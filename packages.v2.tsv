@@ -348,6 +348,7 @@ pkgx	git	https://github.com/arjan/pkgx	master	https://github.com/arjan/pkgx	Buil
 pkt	git	https://github.com/msantos/pkt	master	a	b
 plain_fsm	git	https://github.com/uwiger/plain_fsm	master	a	b
 pmod_transform	git	https://github.com/erlang/pmod_transform	master	a	b
+pmod_transform	git	https://github.com/erlang/pmod_transform	master	https://github.com/erlang/pmod_transform	Parse transform for parameterized modules
 pobox	git	https://github.com/ferd/pobox	master	https://github.com/ferd/pobox	External buffer processes to protect against mailbox overflow in Erlang
 ponos	git	https://github.com/klarna/ponos	master	a	b
 poolboy	git	https://github.com/devinus/poolboy	master	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
