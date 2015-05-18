@@ -156,6 +156,12 @@ define dep_autopatch_rebar.erl
 				lists:foreach(fun
 					({d, D}) ->
 						Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n");
+					({platform_define, Regex, D}) ->
+						case re:run("$(PLATFORM)", Regex, [{capture, none}]) of
+							nomatch -> ok;
+							match ->
+								Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n")
+						end;
 					({parse_transform, PT}) ->
 						Write("ERLC_OPTS += +'{parse_transform, " ++ atom_to_list(PT) ++ "}'\n");
 					(_) -> ok
