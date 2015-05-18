@@ -178,6 +178,7 @@ espec	git	https://github.com/lucaspiller/espec	master	https://github.com/lucaspi
 estatsd	git	https://github.com/RJ/estatsd	master	a	b
 etap	git	https://github.com/ngerakines/etap	master	a	b
 etest	git	https://github.com/wooga/etest	master	a	b
+etest	git	https://github.com/wooga/etest	master	https://github.com/wooga/etest	A lightweight, convention over configuration test framework for Erlang
 etest_http	git	https://github.com/wooga/etest_http	master	a	b
 etest_http	git	https://github.com/wooga/etest_http	master	https://github.com/wooga/etest_http	etest Assertions around HTTP (client-side)
 etoml	git	https://github.com/kalta/etoml	master	a	b

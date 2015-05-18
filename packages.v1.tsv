@@ -178,6 +178,7 @@ espec	https://github.com/lucaspiller/espec	https://github.com/lucaspiller/espec	
 estatsd	https://github.com/RJ/estatsd	a	b
 etap	https://github.com/ngerakines/etap	a	b
 etest	https://github.com/wooga/etest	a	b
+etest	https://github.com/wooga/etest	https://github.com/wooga/etest	A lightweight, convention over configuration test framework for Erlang
 etest_http	https://github.com/wooga/etest_http	a	b
 etest_http	https://github.com/wooga/etest_http	https://github.com/wooga/etest_http	etest Assertions around HTTP (client-side)
 etoml	https://github.com/kalta/etoml	a	b
