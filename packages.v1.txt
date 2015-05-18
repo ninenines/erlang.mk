@@ -148,6 +148,7 @@ feeder	https://github.com/michaelnisi/feeder	https://github.com/michaelnisi/feed
 fix	https://github.com/maxlapshin/fix	a	b
 flower	https://github.com/travelping/flower	a	b
 fn	https://github.com/reiddraper/fn	a	b
+fn	https://github.com/reiddraper/fn	https://github.com/reiddraper/fn	Function utilities for Erlang
 folsom_cowboy	https://github.com/boundary/folsom_cowboy	a	b
 folsom	https://github.com/boundary/folsom	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
 folsomite	https://github.com/campanja/folsomite	a	b

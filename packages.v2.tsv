@@ -148,6 +148,7 @@ feeder	git	https://github.com/michaelnisi/feeder	v1.4.6	https://github.com/micha
 fix	git	https://github.com/maxlapshin/fix	master	a	b
 flower	git	https://github.com/travelping/flower	master	a	b
 fn	git	https://github.com/reiddraper/fn	master	a	b
+fn	git	https://github.com/reiddraper/fn	master	https://github.com/reiddraper/fn	Function utilities for Erlang
 folsom_cowboy	git	https://github.com/boundary/folsom_cowboy	master	a	b
 folsom	git	https://github.com/boundary/folsom	master	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
 folsomite	git	https://github.com/campanja/folsomite	master	a	b
