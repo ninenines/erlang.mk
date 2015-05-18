@@ -382,6 +382,7 @@ simple_bridge	https://github.com/nitrogen/simple_bridge	a	b
 simple_oauth2	https://github.com/virtan/simple_oauth2	a	b
 skel	https://github.com/ParaPhrase/skel	a	b
 social	https://github.com/dvv/social	a	b
+social	https://github.com/dvv/social	https://github.com/dvv/social	Cowboy handler for social login via OAuth2 providers
 spapi_router	https://github.com/spilgames/spapi-router	a	b
 spapi_router	https://github.com/spilgames/spapi-router	https://github.com/spilgames/spapi-router	Partially-connected Erlang clustering
 sqerl	https://github.com/hairyhum/sqerl	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
