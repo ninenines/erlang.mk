@@ -262,6 +262,7 @@ locker	git	https://github.com/wooga/locker	master	a	b
 locks	git	https://github.com/uwiger/locks	master	https://github.com/uwiger/locks	A scalable, deadlock-resolving resource locker
 log4erl	git	https://github.com/ahmednawras/log4erl	master	https://github.com/ahmednawras/log4erl	A logger for erlang in the spirit of Log4J.
 lol	git	https://github.com/b0oh/lol	master	a	b
+lol	git	https://github.com/b0oh/lol	master	https://github.com/b0oh/lol	Lisp on erLang, and programming is fun again
 lucid	git	https://github.com/tatsuhiro-t/lucid	master	a	b
 luerl	git	https://github.com/rvirding/luerl	master	https://github.com/rvirding/luerl	Lua in Erlang
 luwak	git	https://github.com/basho/luwak	master	a	b
