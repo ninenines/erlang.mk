@@ -319,6 +319,7 @@ sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse t
 shotgun	git	https://github.com/inaka/shotgun	0.1.0	https://github.com/inaka/shotgun	better than just a gun
 sidejob	git	https://github.com/basho/sidejob	master	a	b
 sieve	git	https://github.com/benoitc/sieve	master	a	b
+sieve	git	https://github.com/benoitc/sieve	master	https://github.com/benoitc/sieve	sieve is a simple TCP routing proxy (layer 7) in erlang
 simhash	git	https://github.com/ferd/simhash	master	a	b
 simple_bridge	git	https://github.com/nitrogen/simple_bridge	master	a	b
 simple_oauth2	git	https://github.com/virtan/simple_oauth2	master	a	b

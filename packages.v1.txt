@@ -319,6 +319,7 @@ sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform fo
 shotgun	https://github.com/inaka/shotgun	https://github.com/inaka/shotgun	better than just a gun
 sidejob	https://github.com/basho/sidejob	a	b
 sieve	https://github.com/benoitc/sieve	a	b
+sieve	https://github.com/benoitc/sieve	https://github.com/benoitc/sieve	sieve is a simple TCP routing proxy (layer 7) in erlang
 simhash	https://github.com/ferd/simhash	a	b
 simple_bridge	https://github.com/nitrogen/simple_bridge	a	b
 simple_oauth2	https://github.com/virtan/simple_oauth2	a	b
