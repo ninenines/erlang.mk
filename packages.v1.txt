@@ -374,6 +374,7 @@ riak_core	https://github.com/basho/riak_core	https://github.com/basho/riak_core	
 riak_dt	https://github.com/basho/riak_dt	https://github.com/basho/riak_dt	Convergent replicated datatypes in Erlang
 riak_ensemble	https://github.com/basho/riak_ensemble	a	b
 riakhttpc	https://github.com/basho/riak-erlang-http-client	a	b
+riakhttpc	https://github.com/basho/riak-erlang-http-client	https://github.com/basho/riak-erlang-http-client	Riak Erlang client using the HTTP interface
 riak_kv	https://github.com/basho/riak_kv	https://github.com/basho/riak_kv	Riak Key/Value Store
 riaknostic	https://github.com/basho/riaknostic	a	b
 riak_pg	https://github.com/cmeiklejohn/riak_pg	a	b
