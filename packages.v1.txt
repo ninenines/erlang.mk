@@ -538,6 +538,7 @@ twerl	https://github.com/lucaspiller/twerl	https://github.com/lucaspiller/twerl	
 twitter_erlang	https://github.com/ngerakines/erlang_twitter	https://github.com/ngerakines/erlang_twitter	An Erlang twitter client
 unicorn	https://github.com/shizzard/unicorn	https://github.com/shizzard/unicorn	Generic configuration server
 unsplit	https://github.com/uwiger/unsplit	a	b
+unsplit	https://github.com/uwiger/unsplit	https://github.com/uwiger/unsplit	Resolves conflicts in Mnesia after network splits
 uuid	https://github.com/okeuday/uuid	https://github.com/okeuday/uuid	Erlang UUID Implementation
 ux	https://github.com/erlang-unicode/ux	https://github.com/erlang-unicode/ux	Unicode eXtention for Erlang (Strings, Collation)
 vert	https://github.com/msantos/erlang-libvirt	a	b
