@@ -278,6 +278,7 @@ jiffy_v	git	https://github.com/shizzard/jiffy-v	0.3.3	https://github.com/shizzar
 jobs	git	https://github.com/esl/jobs	0.3	https://github.com/esl/jobs	a Job scheduler for load regulation
 joxa	git	https://github.com/joxa/joxa	master	https://github.com/joxa/joxa	A Modern Lisp for the Erlang VM
 jsonerl	git	https://github.com/lambder/jsonerl	master	a	b
+jsonerl	git	https://github.com/lambder/jsonerl	master	https://github.com/lambder/jsonerl	yet another but slightly different erlang <-> json encoder/decoder
 json	git	https://github.com/talentdeficit/json	master	https://github.com/talentdeficit/json	a high level json library for erlang (17.0+)
 jsonpath	git	https://github.com/GeneStevens/jsonpath	master	a	b
 jsonpath	git	https://github.com/GeneStevens/jsonpath	master	https://github.com/GeneStevens/jsonpath	Fast Erlang JSON data retrieval and updates via javascript-like notation
