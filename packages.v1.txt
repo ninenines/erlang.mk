@@ -213,6 +213,7 @@ gitty	https://github.com/maxlapshin/gitty	https://github.com/maxlapshin/gitty	Gi
 gpb	https://github.com/tomas-abrahamsson/gpb	a	b
 gproc	https://github.com/uwiger/gproc	https://github.com/uwiger/gproc	Extended process registry for Erlang
 grapherl	https://github.com/eproxus/grapherl	a	b
+grapherl	https://github.com/eproxus/grapherl	https://github.com/eproxus/grapherl	Create graphs of Erlang systems and programs
 gun	https://github.com/ninenines/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 hackney	https://github.com/benoitc/hackney	https://github.com/benoitc/hackney	simple HTTP client in Erlang
 hamcrest	https://github.com/hyperthunk/hamcrest-erlang	a	b
