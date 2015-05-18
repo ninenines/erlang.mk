@@ -39,6 +39,7 @@ cake	git	https://github.com/darach/cake-erl	v0.1.2	https://github.com/darach/cak
 carotene	git	https://github.com/carotene/carotene	master	a	b
 carotene	git	https://github.com/carotene/carotene	master	https://github.com/carotene/carotene	Real-time server
 cecho	git	https://github.com/mazenharake/cecho	master	a	b
+cecho	git	https://github.com/mazenharake/cecho	master	https://github.com/mazenharake/cecho	An ncurses library for Erlang
 cferl	git	https://github.com/ddossot/cferl	master	a	b
 cferl	git	https://github.com/ddossot/cferl	master	https://github.com/ddossot/cferl	Rackspace / Open Stack Cloud Files Erlang Client
 chaos_monkey	git	https://github.com/dLuna/chaos_monkey	master	a	b

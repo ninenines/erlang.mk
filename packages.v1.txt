@@ -39,6 +39,7 @@ cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Reall
 carotene	https://github.com/carotene/carotene	a	b
 carotene	https://github.com/carotene/carotene	https://github.com/carotene/carotene	Real-time server
 cecho	https://github.com/mazenharake/cecho	a	b
+cecho	https://github.com/mazenharake/cecho	https://github.com/mazenharake/cecho	An ncurses library for Erlang
 cferl	https://github.com/ddossot/cferl	a	b
 cferl	https://github.com/ddossot/cferl	https://github.com/ddossot/cferl	Rackspace / Open Stack Cloud Files Erlang Client
 chaos_monkey	https://github.com/dLuna/chaos_monkey	a	b
