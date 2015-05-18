@@ -324,6 +324,7 @@ mad	git	https://github.com/synrc/mad	master	https://github.com/synrc/mad	Small a
 mavg	git	https://github.com/EchoTeam/mavg	master	a	b
 mavg	git	https://github.com/EchoTeam/mavg	master	https://github.com/EchoTeam/mavg	Erlang :: Exponential moving average library
 mcd	git	https://github.com/EchoTeam/mcd	master	a	b
+mcd	git	https://github.com/EchoTeam/mcd	master	https://github.com/EchoTeam/mcd	Fast memcached protocol client in pure Erlang
 mcerlang	git	https://github.com/fredlund/McErlang	master	a	b
 mcerlang	git	https://github.com/fredlund/McErlang	master	https://github.com/fredlund/McErlang	The McErlang model checker for Erlang
 mc_erl	git	https://github.com/clonejo/mc-erl	master	a	b
