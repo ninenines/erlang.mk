@@ -140,6 +140,7 @@ erlang_smtp	git	https://github.com/tonyg/erlang-smtp	master	a	b
 erlang_smtp	git	https://github.com/tonyg/erlang-smtp	master	https://github.com/tonyg/erlang-smtp	Erlang SMTP and POP3 server code.
 erlasticsearch	git	https://github.com/dieswaytoofast/erlasticsearch	master	https://github.com/dieswaytoofast/erlasticsearch	Erlang thrift interface to elastic_search
 erlastic_search	git	https://github.com/tsloughter/erlastic_search	master	a	b
+erlastic_search	git	https://github.com/tsloughter/erlastic_search	master	https://github.com/tsloughter/erlastic_search	An Erlang app for communicating with Elastic Search's rest interface.
 erlbrake	git	https://github.com/kenpratt/erlbrake	master	a	b
 erlbrake	git	https://github.com/kenpratt/erlbrake	master	https://github.com/kenpratt/erlbrake	Erlang Airbrake notification client
 erlcloud	git	https://github.com/gleber/erlcloud	master	https://github.com/gleber/erlcloud	Cloud Computing library for erlang (Amazon EC2, S3, SQS, SimpleDB, Mechanical Turk, ELB)
