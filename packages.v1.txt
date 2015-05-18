@@ -458,6 +458,7 @@ stable	https://github.com/dvv/stable	a	b
 stable	https://github.com/dvv/stable	https://github.com/dvv/stable	Library of assorted helpers for Cowboy web server.
 statebox	https://github.com/mochi/statebox	https://github.com/mochi/statebox	Erlang state monad with merge/conflict-resolution capabilities. Useful for Riak.
 statebox_riak	https://github.com/mochi/statebox_riak	a	b
+statebox_riak	https://github.com/mochi/statebox_riak	https://github.com/mochi/statebox_riak	Convenience library that makes it easier to use statebox with riak, extracted from best practices in our production code at Mochi Media.
 statman	https://github.com/knutin/statman	a	b
 statsderl	https://github.com/lpgauth/statsderl	a	b
 statsderl	https://github.com/lpgauth/statsderl	https://github.com/lpgauth/statsderl	StatsD client (erlang)
