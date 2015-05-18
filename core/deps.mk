@@ -244,10 +244,20 @@ define dep_autopatch_rebar.erl
 		])
 	end,
 	fun() ->
+		case filelib:is_dir("$(DEPS_DIR)/$(1)/c_src") of
+			false -> ok;
+			true ->
+				Sources = filelib:fold_files("$(DEPS_DIR)/$(1)/c_src", ".*\\\\.(c|C|cc|cpp)$$$$", true, fun(F, Acc) -> [F|Acc] end, []),
+				Write(io_lib:format("SOURCES :=~s\n", [[[" ", S] || S <- Sources]]))
+		end
+	end(),
+	fun() ->
 		case lists:keyfind(port_specs, 1, Conf) of
-			{_, [{Output, _}]} ->
+			{_, [{Output, Wildcards}]} ->
 				filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
-				Write("C_SRC_OUTPUT = " ++ Escape(Output) ++ "\n");
+				Write("C_SRC_OUTPUT = " ++ Escape(Output) ++ "\n"),
+				Sources = [[[" ", S] || S <- filelib:wildcard("$(DEPS_DIR)/$(1)/" ++ W)] || W <- Wildcards],
+				Write(io_lib:format("SOURCES :=~s\n", [Sources]));
 			{_, [First, Second]} ->
 				PortSpec("1", First),
 				PortSpec("2", Second),
@@ -283,14 +293,6 @@ define dep_autopatch_rebar.erl
 				Write("CXXFLAGS += $$$$\(DRV_CFLAGS\)\n"),
 				Write("LDFLAGS += $$$$\(DRV_LDFLAGS\)\n");
 			_ -> ok
-		end
-	end(),
-	fun() ->
-		case filelib:is_dir("$(DEPS_DIR)/$(1)/c_src") of
-			false -> ok;
-			true ->
-				Sources = filelib:fold_files("$(DEPS_DIR)/$(1)/c_src", ".*\\\\.(c|C|cc|cpp)$$$$", true, fun(F, Acc) -> [F|Acc] end, []),
-				Write(io_lib:format("SOURCES :=~s\n", [[[" ", S] || S <- Sources]]))
 		end
 	end(),
 	Write("\n\nrebar_dep: pre-deps deps pre-app app\n"),
