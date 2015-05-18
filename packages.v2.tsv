@@ -11,6 +11,7 @@ azdht	git	https://github.com/arcusfelis/azdht	master	https://github.com/arcusfel
 backoff	git	https://github.com/ferd/backoff	master	a	b
 backoff	git	https://github.com/ferd/backoff	master	https://github.com/ferd/backoff	Simple exponential backoffs in Erlang
 barrel	git	https://github.com/benoitc/barrel	master	a	b
+barrel	git	https://github.com/benoitc/barrel	master	https://github.com/benoitc/barrel	barrel is a generic TCP acceptor pool with low latency in Erlang.
 beanstalk	git	https://github.com/tim/erlang-beanstalk	master	a	b
 beanstalk	git	https://github.com/tim/erlang-beanstalk	master	https://github.com/tim/erlang-beanstalk	An Erlang client for beanstalkd
 bear	git	https://github.com/boundary/bear	master	a	b
