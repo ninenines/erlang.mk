@@ -291,6 +291,7 @@ merge_index	git	https://github.com/basho/merge_index	master	a	b
 merl	git	https://github.com/richcarl/merl	master	a	b
 mimetypes	git	https://github.com/spawngrid/mimetypes	master	a	b
 mixer	git	https://github.com/chef/mixer	master	a	b
+mixer	git	https://github.com/chef/mixer	master	https://github.com/chef/mixer	Mix in functions from other modules
 mochiweb	git	https://github.com/mochi/mochiweb	master	https://github.com/mochi/mochiweb	MochiWeb is an Erlang library for building lightweight HTTP servers.
 mochiweb_xpath	git	https://github.com/retnuh/mochiweb_xpath	master	a	b
 mochiweb_xpath	git	https://github.com/retnuh/mochiweb_xpath	master	https://github.com/retnuh/mochiweb_xpath	XPath support for mochiweb's html parser
