@@ -444,6 +444,7 @@ resource_discovery	https://github.com/erlware/resource_discovery	http://erlware.
 restc	https://github.com/kivra/restclient	a	b
 restc	https://github.com/kivra/restclient	https://github.com/kivra/restclient	Erlang Rest Client
 rfc4627_jsonrpc	https://github.com/tonyg/erlang-rfc4627	a	b
+rfc4627_jsonrpc	https://github.com/tonyg/erlang-rfc4627	https://github.com/tonyg/erlang-rfc4627	Erlang RFC4627 (JSON) codec and JSON-RPC server implementation.
 riakc	https://github.com/basho/riak-erlang-client	https://github.com/basho/riak-erlang-client	Erlang clients for Riak.
 riak_core	https://github.com/basho/riak_core	https://github.com/basho/riak_core	Distributed systems infrastructure used by Riak.
 riak_dt	https://github.com/basho/riak_dt	https://github.com/basho/riak_dt	Convergent replicated datatypes in Erlang
