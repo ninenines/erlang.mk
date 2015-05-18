@@ -341,6 +341,7 @@ statman	git	https://github.com/knutin/statman	master	a	b
 statsderl	git	https://github.com/lpgauth/statsderl	master	a	b
 stockdb	git	https://github.com/maxlapshin/stockdb	master	a	b
 stripe	git	https://github.com/mattsta/stripe-erlang	v1	a	b
+stripe	git	https://github.com/mattsta/stripe-erlang	v1	https://github.com/mattsta/stripe-erlang	Erlang interface to the stripe.com API
 swab	git	https://github.com/crownedgrouse/swab	master	https://github.com/crownedgrouse/swab	General purpose buffer handling module
 swarm	git	https://github.com/jeremey/swarm	master	a	b
 switchboard	git	https://github.com/thusfresh/switchboard	master	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
