@@ -209,6 +209,7 @@ gettext	https://github.com/etnt/gettext	a	b
 gin	https://github.com/mad-cocktail/gin	a	b
 gin	https://github.com/mad-cocktail/gin	https://github.com/mad-cocktail/gin	The guards  and  for Erlang parse_transform
 gitty	https://github.com/maxlapshin/gitty	a	b
+gitty	https://github.com/maxlapshin/gitty	https://github.com/maxlapshin/gitty	Git access in erlang
 gpb	https://github.com/tomas-abrahamsson/gpb	a	b
 gproc	https://github.com/uwiger/gproc	https://github.com/uwiger/gproc	Extended process registry for Erlang
 grapherl	https://github.com/eproxus/grapherl	a	b

@@ -209,6 +209,7 @@ gettext	git	https://github.com/etnt/gettext	master	a	b
 gin	git	https://github.com/mad-cocktail/gin	master	a	b
 gin	git	https://github.com/mad-cocktail/gin	master	https://github.com/mad-cocktail/gin	The guards  and  for Erlang parse_transform
 gitty	git	https://github.com/maxlapshin/gitty	master	a	b
+gitty	git	https://github.com/maxlapshin/gitty	master	https://github.com/maxlapshin/gitty	Git access in erlang
 gpb	git	https://github.com/tomas-abrahamsson/gpb	master	a	b
 gproc	git	https://github.com/uwiger/gproc	master	https://github.com/uwiger/gproc	Extended process registry for Erlang
 grapherl	git	https://github.com/eproxus/grapherl	master	a	b
