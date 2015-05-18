@@ -241,6 +241,7 @@ grapherl	https://github.com/eproxus/grapherl	https://github.com/eproxus/grapherl
 gun	https://github.com/ninenines/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 hackney	https://github.com/benoitc/hackney	https://github.com/benoitc/hackney	simple HTTP client in Erlang
 hamcrest	https://github.com/hyperthunk/hamcrest-erlang	a	b
+hamcrest	https://github.com/hyperthunk/hamcrest-erlang	https://github.com/hyperthunk/hamcrest-erlang	Erlang port of Hamcrest
 hanoidb	https://github.com/krestenkrab/hanoidb	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 hottub	https://github.com/bfrog/hottub	a	b
 hottub	https://github.com/bfrog/hottub	https://github.com/bfrog/hottub	Permanent Erlang Worker Pool
