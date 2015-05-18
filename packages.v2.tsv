@@ -135,6 +135,7 @@ etoml	git	https://github.com/kalta/etoml	master	https://github.com/kalta/etoml	T
 eunit_formatters	git	https://github.com/seancribbs/eunit_formatters	master	a	b
 eunit	git	https://github.com/richcarl/eunit	master	a	b
 euthanasia	git	https://github.com/doubleyou/euthanasia	master	a	b
+euthanasia	git	https://github.com/doubleyou/euthanasia	master	https://github.com/doubleyou/euthanasia	Merciful killer for your Erlang processes
 exec	git	https://github.com/saleyn/erlexec	master	http://saleyn.github.com/erlexec	Execute and control OS processes from Erlang/OTP.
 exml	git	https://github.com/paulgray/exml	master	https://github.com/paulgray/exml	XML parsing library in Erlang
 exmpp	git	https://github.com/processone/exmpp	master	https://github.com/processone/exmpp	Erlang XMPP library

@@ -135,6 +135,7 @@ etoml	https://github.com/kalta/etoml	https://github.com/kalta/etoml	TOML languag
 eunit_formatters	https://github.com/seancribbs/eunit_formatters	a	b
 eunit	https://github.com/richcarl/eunit	a	b
 euthanasia	https://github.com/doubleyou/euthanasia	a	b
+euthanasia	https://github.com/doubleyou/euthanasia	https://github.com/doubleyou/euthanasia	Merciful killer for your Erlang processes
 exec	https://github.com/saleyn/erlexec	http://saleyn.github.com/erlexec	Execute and control OS processes from Erlang/OTP.
 exml	https://github.com/paulgray/exml	https://github.com/paulgray/exml	XML parsing library in Erlang
 exmpp	https://github.com/processone/exmpp	https://github.com/processone/exmpp	Erlang XMPP library
