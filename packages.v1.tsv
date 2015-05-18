@@ -22,6 +22,7 @@ boss	https://github.com/ChicagoBoss/ChicagoBoss	https://github.com/ChicagoBoss/C
 bson	https://github.com/comtihon/bson-erlang	a	b
 bullet	https://github.com/extend/bullet	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cache	https://github.com/fogfish/cache	a	b
+cache	https://github.com/fogfish/cache	https://github.com/fogfish/cache	Erlang in-memory cache
 cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Really simple terminal colorization
 carotene	https://github.com/carotene/carotene	a	b
 cecho	https://github.com/mazenharake/cecho	a	b

@@ -22,6 +22,7 @@ boss	git	https://github.com/ChicagoBoss/ChicagoBoss	master	https://github.com/Ch
 bson	git	https://github.com/comtihon/bson-erlang	master	a	b
 bullet	git	https://github.com/extend/bullet	master	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
 cache	git	https://github.com/fogfish/cache	master	a	b
+cache	git	https://github.com/fogfish/cache	master	https://github.com/fogfish/cache	Erlang in-memory cache
 cake	git	https://github.com/darach/cake-erl	v0.1.2	https://github.com/darach/cake-erl	Really simple terminal colorization
 carotene	git	https://github.com/carotene/carotene	master	a	b
 cecho	git	https://github.com/mazenharake/cecho	master	a	b
