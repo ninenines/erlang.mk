@@ -203,6 +203,7 @@ joxa	git	https://github.com/joxa/joxa	master	https://github.com/joxa/joxa	A Mode
 jsonerl	git	https://github.com/lambder/jsonerl	master	a	b
 json	git	https://github.com/talentdeficit/json	master	https://github.com/talentdeficit/json	a high level json library for erlang (17.0+)
 jsonpath	git	https://github.com/GeneStevens/jsonpath	master	a	b
+jsonpath	git	https://github.com/GeneStevens/jsonpath	master	https://github.com/GeneStevens/jsonpath	Fast Erlang JSON data retrieval and updates via javascript-like notation
 json_rec	git	https://github.com/justinkirby/json_rec	master	a	b
 jsx	git	https://github.com/talentdeficit/jsx	master	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 kafka	git	https://github.com/wooga/kafka-erlang	master	a	b

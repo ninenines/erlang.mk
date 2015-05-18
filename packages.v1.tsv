@@ -203,6 +203,7 @@ joxa	https://github.com/joxa/joxa	https://github.com/joxa/joxa	A Modern Lisp for
 jsonerl	https://github.com/lambder/jsonerl	a	b
 json	https://github.com/talentdeficit/json	https://github.com/talentdeficit/json	a high level json library for erlang (17.0+)
 jsonpath	https://github.com/GeneStevens/jsonpath	a	b
+jsonpath	https://github.com/GeneStevens/jsonpath	https://github.com/GeneStevens/jsonpath	Fast Erlang JSON data retrieval and updates via javascript-like notation
 json_rec	https://github.com/justinkirby/json_rec	a	b
 jsx	https://github.com/talentdeficit/jsx	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 kafka	https://github.com/wooga/kafka-erlang	a	b
