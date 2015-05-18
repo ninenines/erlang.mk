@@ -396,6 +396,7 @@ simhash	https://github.com/ferd/simhash	a	b
 simhash	https://github.com/ferd/simhash	https://github.com/ferd/simhash	Simhashing for Erlang -- hashing algorithm to find near-duplicates in binary data.
 simple_bridge	https://github.com/nitrogen/simple_bridge	a	b
 simple_oauth2	https://github.com/virtan/simple_oauth2	a	b
+simple_oauth2	https://github.com/virtan/simple_oauth2	https://github.com/virtan/simple_oauth2	Simple erlang OAuth2 client module for any http server framework (Google, Facebook, Yandex, Vkontakte are preconfigured)
 skel	https://github.com/ParaPhrase/skel	a	b
 social	https://github.com/dvv/social	a	b
 social	https://github.com/dvv/social	https://github.com/dvv/social	Cowboy handler for social login via OAuth2 providers
