@@ -164,6 +164,7 @@ estatsd	https://github.com/RJ/estatsd	a	b
 etap	https://github.com/ngerakines/etap	a	b
 etest	https://github.com/wooga/etest	a	b
 etest_http	https://github.com/wooga/etest_http	a	b
+etest_http	https://github.com/wooga/etest_http	https://github.com/wooga/etest_http	etest Assertions around HTTP (client-side)
 etoml	https://github.com/kalta/etoml	a	b
 etoml	https://github.com/kalta/etoml	https://github.com/kalta/etoml	TOML language erlang parser
 eunit_formatters	https://github.com/seancribbs/eunit_formatters	a	b
