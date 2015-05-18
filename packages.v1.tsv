@@ -373,6 +373,7 @@ sqerl	https://github.com/hairyhum/sqerl	https://github.com/hairyhum/sqerl	An Erl
 srly	https://github.com/msantos/srly	a	b
 srly	https://github.com/msantos/srly	https://github.com/msantos/srly	Native Erlang Unix serial interface
 sshrpc	https://github.com/jj1bdx/sshrpc	a	b
+sshrpc	https://github.com/jj1bdx/sshrpc	https://github.com/jj1bdx/sshrpc	Erlang SSH RPC module (experimental)
 stable	https://github.com/dvv/stable	a	b
 statebox	https://github.com/mochi/statebox	https://github.com/mochi/statebox	Erlang state monad with merge/conflict-resolution capabilities. Useful for Riak.
 statebox_riak	https://github.com/mochi/statebox_riak	a	b

@@ -373,6 +373,7 @@ sqerl	git	https://github.com/hairyhum/sqerl	master	https://github.com/hairyhum/s
 srly	git	https://github.com/msantos/srly	master	a	b
 srly	git	https://github.com/msantos/srly	master	https://github.com/msantos/srly	Native Erlang Unix serial interface
 sshrpc	git	https://github.com/jj1bdx/sshrpc	master	a	b
+sshrpc	git	https://github.com/jj1bdx/sshrpc	master	https://github.com/jj1bdx/sshrpc	Erlang SSH RPC module (experimental)
 stable	git	https://github.com/dvv/stable	master	a	b
 statebox	git	https://github.com/mochi/statebox	master	https://github.com/mochi/statebox	Erlang state monad with merge/conflict-resolution capabilities. Useful for Riak.
 statebox_riak	git	https://github.com/mochi/statebox_riak	master	a	b
