@@ -172,6 +172,7 @@ gen_unix	git	https://github.com/msantos/gen_unix	master	https://github.com/msant
 getopt	git	https://github.com/jcomellas/getopt	master	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gettext	git	https://github.com/etnt/gettext	master	a	b
 gin	git	https://github.com/mad-cocktail/gin	master	a	b
+gin	git	https://github.com/mad-cocktail/gin	master	https://github.com/mad-cocktail/gin	The guards  and  for Erlang parse_transform
 gitty	git	https://github.com/maxlapshin/gitty	master	a	b
 gpb	git	https://github.com/tomas-abrahamsson/gpb	master	a	b
 gproc	git	https://github.com/uwiger/gproc	master	https://github.com/uwiger/gproc	Extended process registry for Erlang

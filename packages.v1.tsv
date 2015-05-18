@@ -172,6 +172,7 @@ gen_unix	https://github.com/msantos/gen_unix	https://github.com/msantos/gen_unix
 getopt	https://github.com/jcomellas/getopt	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gettext	https://github.com/etnt/gettext	a	b
 gin	https://github.com/mad-cocktail/gin	a	b
+gin	https://github.com/mad-cocktail/gin	https://github.com/mad-cocktail/gin	The guards  and  for Erlang parse_transform
 gitty	https://github.com/maxlapshin/gitty	a	b
 gpb	https://github.com/tomas-abrahamsson/gpb	a	b
 gproc	https://github.com/uwiger/gproc	https://github.com/uwiger/gproc	Extended process registry for Erlang
