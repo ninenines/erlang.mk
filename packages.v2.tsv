@@ -418,6 +418,7 @@ qrcode	git	https://github.com/komone/qrcode	master	https://github.com/komone/qrc
 quest	git	https://github.com/eriksoe/ErlangQuest	master	a	b
 quest	git	https://github.com/eriksoe/ErlangQuest	master	https://github.com/eriksoe/ErlangQuest	Learn Erlang through this set of challenges. An interactive system for getting to know Erlang.
 rabbit_exchange_type_riak	git	https://github.com/jbrisbin/riak-exchange	master	a	b
+rabbit_exchange_type_riak	git	https://github.com/jbrisbin/riak-exchange	master	https://github.com/jbrisbin/riak-exchange	Custom RabbitMQ exchange type for sticking messages in Riak
 rack	git	https://github.com/erlyvideo/rack	master	https://github.com/erlyvideo/rack	Rack handler for erlang
 radierl	git	https://github.com/vances/radierl	master	a	b
 radierl	git	https://github.com/vances/radierl	master	https://github.com/vances/radierl	RADIUS protocol stack implemented in Erlang.
