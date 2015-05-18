@@ -130,6 +130,7 @@ etap	https://github.com/ngerakines/etap	a	b
 etest	https://github.com/wooga/etest	a	b
 etest_http	https://github.com/wooga/etest_http	a	b
 etoml	https://github.com/kalta/etoml	a	b
+etoml	https://github.com/kalta/etoml	https://github.com/kalta/etoml	TOML language erlang parser
 eunit_formatters	https://github.com/seancribbs/eunit_formatters	a	b
 eunit	https://github.com/richcarl/eunit	a	b
 euthanasia	https://github.com/doubleyou/euthanasia	a	b

@@ -130,6 +130,7 @@ etap	git	https://github.com/ngerakines/etap	master	a	b
 etest	git	https://github.com/wooga/etest	master	a	b
 etest_http	git	https://github.com/wooga/etest_http	master	a	b
 etoml	git	https://github.com/kalta/etoml	master	a	b
+etoml	git	https://github.com/kalta/etoml	master	https://github.com/kalta/etoml	TOML language erlang parser
 eunit_formatters	git	https://github.com/seancribbs/eunit_formatters	master	a	b
 eunit	git	https://github.com/richcarl/eunit	master	a	b
 euthanasia	git	https://github.com/doubleyou/euthanasia	master	a	b
