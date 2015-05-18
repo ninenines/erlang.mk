@@ -137,6 +137,7 @@ erlmc	https://github.com/jkvor/erlmc	a	b
 erlog	https://github.com/rvirding/erlog	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlport	https://github.com/hdima/erlport	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
 erlsh	https://github.com/proger/erlsh	a	b
+erlsh	https://github.com/proger/erlsh	https://github.com/proger/erlsh	Erlang shell tools
 erlsom	https://github.com/willemdj/erlsom	https://github.com/willemdj/erlsom	XML parser for Erlang
 erl_streams	https://github.com/epappas/erl_streams	a	b
 erl_streams	https://github.com/epappas/erl_streams	https://github.com/epappas/erl_streams	Streams in Erlang
