@@ -203,6 +203,7 @@ geas	https://github.com/crownedgrouse/geas	https://github.com/crownedgrouse/geas
 gen_icmp	https://github.com/msantos/gen_icmp	a	b
 gen_nb_server	https://github.com/kevsmith/gen_nb_server	https://github.com/kevsmith/gen_nb_server	OTP behavior for writing non-blocking servers
 gen_paxos	https://github.com/gburd/gen_paxos	a	b
+gen_paxos	https://github.com/gburd/gen_paxos	https://github.com/gburd/gen_paxos	An Erlang/OTP-style implementation of the PAXOS distributed consensus protocol
 gen_smtp	https://github.com/Vagabond/gen_smtp	https://github.com/Vagabond/gen_smtp	A generic Erlang SMTP server and client that can be extended via callback modules
 gen_tracker	https://github.com/erlyvideo/gen_tracker	a	b
 gen_tracker	https://github.com/erlyvideo/gen_tracker	https://github.com/erlyvideo/gen_tracker	supervisor with ets handling of children and their metadata
