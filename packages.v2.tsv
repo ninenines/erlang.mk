@@ -45,6 +45,7 @@ chronos	git	https://github.com/lehoff/chronos	master	a	b
 chronos	git	https://github.com/lehoff/chronos	master	https://github.com/lehoff/chronos	Timer module for Erlang that makes it easy to abstact time out of the tests.
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	git	https://github.com/basho/clique	develop	a	b
+clique	git	https://github.com/basho/clique	develop	https://github.com/basho/clique	CLI Framework for Erlang
 cluster_info	git	https://github.com/basho/cluster_info	master	a	b
 cluster_info	git	https://github.com/basho/cluster_info	master	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
 color	git	https://github.com/julianduque/erlang-color	master	a	b
