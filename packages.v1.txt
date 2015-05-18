@@ -213,6 +213,7 @@ lager_syslog	https://github.com/basho/lager_syslog	a	b
 lambdapad	https://github.com/gar1t/lambdapad	a	b
 lasse	https://github.com/inaka/lasse	https://github.com/inaka/lasse	SSE handler for Cowboy
 ldap	https://github.com/spawnproc/ldap	a	b
+ldap	https://github.com/spawnproc/ldap	https://github.com/spawnproc/ldap	LDAP server written in Erlang
 lethink	https://github.com/taybin/lethink	a	b
 lethink	https://github.com/taybin/lethink	https://github.com/taybin/lethink	erlang driver for rethinkdb
 lfe	https://github.com/rvirding/lfe	https://github.com/rvirding/lfe	Lisp Flavoured Erlang (LFE)
