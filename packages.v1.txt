@@ -219,6 +219,7 @@ jsx	https://github.com/talentdeficit/jsx	https://github.com/talentdeficit/jsx	An
 kafka	https://github.com/wooga/kafka-erlang	a	b
 kafka	https://github.com/wooga/kafka-erlang	https://github.com/wooga/kafka-erlang	Kafka consumer and producer in Erlang
 kai	https://github.com/synrc/kai	a	b
+kai	https://github.com/synrc/kai	https://github.com/synrc/kai	DHT storage by Takeshi Inoue
 katja	https://github.com/nifoc/katja	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 kdht	https://github.com/kevinlynx/kdht	a	b
 kdht	https://github.com/kevinlynx/kdht	https://github.com/kevinlynx/kdht	kdht is an erlang DHT implementation
