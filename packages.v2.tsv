@@ -343,6 +343,7 @@ merge_index	git	https://github.com/basho/merge_index	master	https://github.com/b
 merl	git	https://github.com/richcarl/merl	master	a	b
 merl	git	https://github.com/richcarl/merl	master	https://github.com/richcarl/merl	Metaprogramming in Erlang
 mimetypes	git	https://github.com/spawngrid/mimetypes	master	a	b
+mimetypes	git	https://github.com/spawngrid/mimetypes	master	https://github.com/spawngrid/mimetypes	Erlang MIME types library
 mixer	git	https://github.com/chef/mixer	master	a	b
 mixer	git	https://github.com/chef/mixer	master	https://github.com/chef/mixer	Mix in functions from other modules
 mochiweb	git	https://github.com/mochi/mochiweb	master	https://github.com/mochi/mochiweb	MochiWeb is an Erlang library for building lightweight HTTP servers.
