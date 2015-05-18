@@ -43,6 +43,7 @@ classifier	git	https://github.com/inaka/classifier	master	https://github.com/ina
 clique	git	https://github.com/basho/clique	develop	a	b
 cluster_info	git	https://github.com/basho/cluster_info	master	a	b
 color	git	https://github.com/julianduque/erlang-color	master	a	b
+color	git	https://github.com/julianduque/erlang-color	master	https://github.com/julianduque/erlang-color	ANSI colors for your Erlang
 confetti	git	https://github.com/jtendo/confetti	master	a	b
 couchbeam	git	https://github.com/benoitc/couchbeam	master	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 couch	git	https://github.com/benoitc/opencouch	master	a	b
