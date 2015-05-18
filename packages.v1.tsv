@@ -422,6 +422,7 @@ riakhttpc	https://github.com/basho/riak-erlang-http-client	a	b
 riakhttpc	https://github.com/basho/riak-erlang-http-client	https://github.com/basho/riak-erlang-http-client	Riak Erlang client using the HTTP interface
 riak_kv	https://github.com/basho/riak_kv	https://github.com/basho/riak_kv	Riak Key/Value Store
 riaknostic	https://github.com/basho/riaknostic	a	b
+riaknostic	https://github.com/basho/riaknostic	https://github.com/basho/riaknostic	A diagnostic tool for Riak installations, to find common errors asap
 riak_pg	https://github.com/cmeiklejohn/riak_pg	a	b
 riak_pg	https://github.com/cmeiklejohn/riak_pg	https://github.com/cmeiklejohn/riak_pg	Distributed process groups with riak_core.
 riak_pipe	https://github.com/basho/riak_pipe	https://github.com/basho/riak_pipe	Riak Pipelines
