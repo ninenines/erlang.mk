@@ -517,6 +517,7 @@ trane	https://github.com/massemanet/trane	https://github.com/massemanet/trane	SA
 transit	https://github.com/isaiah/transit-erlang	a	b
 transit	https://github.com/isaiah/transit-erlang	https://github.com/isaiah/transit-erlang	transit format for erlang
 trie	https://github.com/okeuday/trie	a	b
+trie	https://github.com/okeuday/trie	https://github.com/okeuday/trie	Erlang Trie Implementation
 triq	https://github.com/krestenkrab/triq	https://github.com/krestenkrab/triq	Trifork QuickCheck
 tsung	https://github.com/processone/tsung	https://github.com/processone/tsung	Tsung is a high-performance benchmark framework for various protocols including HTTP, XMPP, LDAP, etc.
 tunctl	https://github.com/msantos/tunctl	a	b
