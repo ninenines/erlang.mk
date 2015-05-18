@@ -478,6 +478,7 @@ sieve	git	https://github.com/benoitc/sieve	master	https://github.com/benoitc/sie
 simhash	git	https://github.com/ferd/simhash	master	a	b
 simhash	git	https://github.com/ferd/simhash	master	https://github.com/ferd/simhash	Simhashing for Erlang -- hashing algorithm to find near-duplicates in binary data.
 simple_bridge	git	https://github.com/nitrogen/simple_bridge	master	a	b
+simple_bridge	git	https://github.com/nitrogen/simple_bridge	master	https://github.com/nitrogen/simple_bridge	A simple, standardized interface library to Erlang HTTP Servers.
 simple_oauth2	git	https://github.com/virtan/simple_oauth2	master	a	b
 simple_oauth2	git	https://github.com/virtan/simple_oauth2	master	https://github.com/virtan/simple_oauth2	Simple erlang OAuth2 client module for any http server framework (Google, Facebook, Yandex, Vkontakte are preconfigured)
 skel	git	https://github.com/ParaPhrase/skel	master	a	b
