@@ -87,6 +87,7 @@ ecapnp	git	https://github.com/kaos/ecapnp	master	https://github.com/kaos/ecapnp	
 econfig	git	https://github.com/benoitc/econfig	master	a	b
 econfig	git	https://github.com/benoitc/econfig	master	https://github.com/benoitc/econfig	simple Erlang config handler using INI files
 edate	git	https://github.com/dweldon/edate	master	a	b
+edate	git	https://github.com/dweldon/edate	master	https://github.com/dweldon/edate	date manipulation library for erlang
 edgar	git	https://github.com/crownedgrouse/edgar	master	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 edis	git	https://github.com/inaka/edis	master	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
 edns	git	https://github.com/hcvst/erlang-dns	master	a	b

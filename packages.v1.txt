@@ -87,6 +87,7 @@ ecapnp	https://github.com/kaos/ecapnp	https://github.com/kaos/ecapnp	Cap'n Proto
 econfig	https://github.com/benoitc/econfig	a	b
 econfig	https://github.com/benoitc/econfig	https://github.com/benoitc/econfig	simple Erlang config handler using INI files
 edate	https://github.com/dweldon/edate	a	b
+edate	https://github.com/dweldon/edate	https://github.com/dweldon/edate	date manipulation library for erlang
 edgar	https://github.com/crownedgrouse/edgar	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 edis	https://github.com/inaka/edis	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
 edns	https://github.com/hcvst/erlang-dns	a	b
