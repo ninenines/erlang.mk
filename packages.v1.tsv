@@ -59,6 +59,7 @@ decimal	https://github.com/tim/erlang-decimal	a	b
 detergent	https://github.com/devinus/detergent	a	b
 detergent	https://github.com/devinus/detergent	https://github.com/devinus/detergent	An emulsifying Erlang SOAP library
 dh_date	https://github.com/daleharvey/dh_date	a	b
+dh_date	https://github.com/daleharvey/dh_date	https://github.com/daleharvey/dh_date	Date formatting / parsing library for erlang
 dhtcrawler	https://github.com/kevinlynx/dhtcrawler	a	b
 dirbusterl	https://github.com/silentsignal/DirBustErl	a	b
 dirbusterl	https://github.com/silentsignal/DirBustErl	https://github.com/silentsignal/DirBustErl	DirBuster successor in Erlang
