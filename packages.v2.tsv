@@ -339,6 +339,7 @@ purity	git	https://github.com/mpitid/purity	master	https://github.com/mpitid/pur
 push_service	git	https://github.com/hairyhum/push_service	master	https://github.com/hairyhum/push_service	Push service
 qdate	git	https://github.com/choptastic/qdate	0.4.0	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
 qrcode	git	https://github.com/komone/qrcode	master	a	b
+qrcode	git	https://github.com/komone/qrcode	master	https://github.com/komone/qrcode	QR Code encoder in Erlang
 quest	git	https://github.com/eriksoe/ErlangQuest	master	a	b
 quest	git	https://github.com/eriksoe/ErlangQuest	master	https://github.com/eriksoe/ErlangQuest	Learn Erlang through this set of challenges. An interactive system for getting to know Erlang.
 rabbit_exchange_type_riak	git	https://github.com/jbrisbin/riak-exchange	master	a	b
