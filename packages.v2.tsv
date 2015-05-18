@@ -383,6 +383,7 @@ openpoker	git	https://github.com/hpyhacking/openpoker	master	https://github.com/
 pal	git	https://github.com/manifest/pal	master	a	b
 pal	git	https://github.com/manifest/pal	master	https://github.com/manifest/pal	Pragmatic Authentication Library
 parse_trans	git	https://github.com/uwiger/parse_trans	master	a	b
+parse_trans	git	https://github.com/uwiger/parse_trans	master	https://github.com/uwiger/parse_trans	Parse transform utilities for Erlang
 parsexml	git	https://github.com/maxlapshin/parsexml	master	a	b
 parsexml	git	https://github.com/maxlapshin/parsexml	master	https://github.com/maxlapshin/parsexml	Simple DOM XML parser with convenient and very simple API
 pegjs	git	https://github.com/dmitriid/pegjs	0.3	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
