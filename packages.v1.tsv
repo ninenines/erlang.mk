@@ -367,6 +367,7 @@ sync	https://github.com/rustyio/sync	https://github.com/rustyio/sync	On-the-fly 
 syntaxerl	https://github.com/ten0s/syntaxerl	a	b
 syslog	https://github.com/Vagabond/erlang-syslog	a	b
 taskforce	https://github.com/g-andrade/taskforce	a	b
+taskforce	https://github.com/g-andrade/taskforce	https://github.com/g-andrade/taskforce	Erlang worker pools for controlled parallelisation of arbitrary tasks.
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tempo	https://github.com/selectel/tempo	a	b
 ticktick	https://github.com/ericliang/ticktick	a	b

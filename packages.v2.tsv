@@ -367,6 +367,7 @@ sync	git	https://github.com/rustyio/sync	master	https://github.com/rustyio/sync	
 syntaxerl	git	https://github.com/ten0s/syntaxerl	master	a	b
 syslog	git	https://github.com/Vagabond/erlang-syslog	master	a	b
 taskforce	git	https://github.com/g-andrade/taskforce	master	a	b
+taskforce	git	https://github.com/g-andrade/taskforce	master	https://github.com/g-andrade/taskforce	Erlang worker pools for controlled parallelisation of arbitrary tasks.
 tddreloader	git	https://github.com/version2beta/tddreloader	master	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
 tempo	git	https://github.com/selectel/tempo	master	a	b
 ticktick	git	https://github.com/ericliang/ticktick	master	a	b
