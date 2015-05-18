@@ -1,4 +1,5 @@
 aberth	https://github.com/a13x/aberth	a	b
+aberth	https://github.com/a13x/aberth	https://github.com/a13x/aberth	Generic BERT-RPC server in Erlang
 active	https://github.com/proger/active	a	b
 aleppo	https://github.com/ErlyORM/aleppo	a	b
 annotations	https://github.com/hyperthunk/annotations	a	b
