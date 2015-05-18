@@ -545,6 +545,7 @@ wsock	https://github.com/madtrick/wsock	a	b
 wsock	https://github.com/madtrick/wsock	https://github.com/madtrick/wsock	Erlang library to build WebSocket clients and servers
 xref_runner	https://github.com/inaka/xref_runner	https://github.com/inaka/xref_runner	Erlang Xref Runner (inspired in rebar xref)
 yamerl	https://github.com/yakaz/yamerl	a	b
+yamerl	https://github.com/yakaz/yamerl	https://github.com/yakaz/yamerl	YAML 1.2 parser in pure Erlang
 yamler	https://github.com/goertzenator/yamler	https://github.com/goertzenator/yamler	libyaml-based yaml loader for Erlang
 yaws	https://github.com/klacke/yaws	http://yaws.hyber.org	Yaws webserver
 zab_engine	https://github.com/xinmingyao/zab_engine	a	b

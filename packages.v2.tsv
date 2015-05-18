@@ -545,6 +545,7 @@ wsock	git	https://github.com/madtrick/wsock	master	a	b
 wsock	git	https://github.com/madtrick/wsock	master	https://github.com/madtrick/wsock	Erlang library to build WebSocket clients and servers
 xref_runner	git	https://github.com/inaka/xref_runner	0.2.0	https://github.com/inaka/xref_runner	Erlang Xref Runner (inspired in rebar xref)
 yamerl	git	https://github.com/yakaz/yamerl	master	a	b
+yamerl	git	https://github.com/yakaz/yamerl	master	https://github.com/yakaz/yamerl	YAML 1.2 parser in pure Erlang
 yamler	git	https://github.com/goertzenator/yamler	master	https://github.com/goertzenator/yamler	libyaml-based yaml loader for Erlang
 yaws	git	https://github.com/klacke/yaws	master	http://yaws.hyber.org	Yaws webserver
 zab_engine	git	https://github.com/xinmingyao/zab_engine	master	a	b
