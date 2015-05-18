@@ -47,6 +47,7 @@ couchbeam	https://github.com/benoitc/couchbeam	https://github.com/benoitc/couchb
 couch	https://github.com/benoitc/opencouch	a	b
 couch	https://github.com/benoitc/opencouch	https://github.com/benoitc/opencouch	A embeddable document oriented database compatible with Apache CouchDB
 covertool	https://github.com/idubrov/covertool	a	b
+covertool	https://github.com/idubrov/covertool	https://github.com/idubrov/covertool	Tool to convert Erlang cover data files into Cobertura XML reports
 cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
 cowdb	https://github.com/refuge/cowdb	a	b
 cowdb	https://github.com/refuge/cowdb	https://github.com/refuge/cowdb	Pure Key/Value database library for Erlang Applications
