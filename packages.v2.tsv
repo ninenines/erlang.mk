@@ -295,6 +295,7 @@ kraken	git	https://github.com/Asana/kraken	master	https://github.com/Asana/krake
 kucumberl	git	https://github.com/openshine/kucumberl	master	a	b
 kucumberl	git	https://github.com/openshine/kucumberl	master	https://github.com/openshine/kucumberl	A pure-erlang, open-source, implementation of Cucumber
 kvc	git	https://github.com/etrepum/kvc	master	a	b
+kvc	git	https://github.com/etrepum/kvc	master	https://github.com/etrepum/kvc	KVC - Key Value Coding for Erlang data structures
 kvlists	git	https://github.com/jcomellas/kvlists	master	a	b
 kvlists	git	https://github.com/jcomellas/kvlists	master	https://github.com/jcomellas/kvlists	Lists of key-value pairs (decoded JSON) in Erlang
 kvs	git	https://github.com/synrc/kvs	master	a	b
