@@ -195,6 +195,7 @@ ezmtp	https://github.com/a13x/ezmtp	https://github.com/a13x/ezmtp	ZMTP protocol 
 fast_disk_log	https://github.com/lpgauth/fast_disk_log	https://github.com/lpgauth/fast_disk_log	Pool-based asynchronous Erlang disk logger
 feeder	https://github.com/michaelnisi/feeder	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
 fix	https://github.com/maxlapshin/fix	a	b
+fix	https://github.com/maxlapshin/fix	https://github.com/maxlapshin/fix	http://fixprotocol.org/ implementation.
 flower	https://github.com/travelping/flower	a	b
 flower	https://github.com/travelping/flower	https://github.com/travelping/flower	FlowER - a Erlang OpenFlow development platform
 fn	https://github.com/reiddraper/fn	a	b
