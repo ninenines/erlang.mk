@@ -305,6 +305,7 @@ oauth2	https://github.com/kivra/oauth2	https://github.com/kivra/oauth2	Erlang Oa
 oauth	https://github.com/tim/erlang-oauth	https://github.com/tim/erlang-oauth	An Erlang OAuth 1.0 implementation
 of_protocol	https://github.com/FlowForwarding/of_protocol	a	b
 openflow	https://github.com/renatoaguiar/erlang-openflow	a	b
+openflow	https://github.com/renatoaguiar/erlang-openflow	https://github.com/renatoaguiar/erlang-openflow	An OpenFlow controller written in pure erlang
 openid	https://github.com/brendonh/erl_openid	a	b
 openid	https://github.com/brendonh/erl_openid	https://github.com/brendonh/erl_openid	Erlang OpenID
 openpoker	https://github.com/hpyhacking/openpoker	https://github.com/hpyhacking/openpoker	Genesis Texas hold'em Game Server
