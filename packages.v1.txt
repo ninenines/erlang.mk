@@ -386,6 +386,7 @@ srly	https://github.com/msantos/srly	https://github.com/msantos/srly	Native Erla
 sshrpc	https://github.com/jj1bdx/sshrpc	a	b
 sshrpc	https://github.com/jj1bdx/sshrpc	https://github.com/jj1bdx/sshrpc	Erlang SSH RPC module (experimental)
 stable	https://github.com/dvv/stable	a	b
+stable	https://github.com/dvv/stable	https://github.com/dvv/stable	Library of assorted helpers for Cowboy web server.
 statebox	https://github.com/mochi/statebox	https://github.com/mochi/statebox	Erlang state monad with merge/conflict-resolution capabilities. Useful for Riak.
 statebox_riak	https://github.com/mochi/statebox_riak	a	b
 statman	https://github.com/knutin/statman	a	b
