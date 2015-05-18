@@ -184,6 +184,7 @@ ircbot	https://github.com/gdamjan/erlang-irc-bot	a	b
 ircd	https://github.com/tonyg/erlang-ircd	a	b
 ircd	https://github.com/tonyg/erlang-ircd	https://github.com/tonyg/erlang-ircd	A pluggable IRC daemon application/library for Erlang.
 irc_lib	https://github.com/OtpChatBot/irc_lib	a	b
+irc_lib	https://github.com/OtpChatBot/irc_lib	https://github.com/OtpChatBot/irc_lib	Erlang irc client library
 iris	https://github.com/project-iris/iris-erl	a	b
 iris	https://github.com/project-iris/iris-erl	https://github.com/project-iris/iris-erl	Iris Erlang binding
 iso8601	https://github.com/seansawyer/erlang_iso8601	a	b
