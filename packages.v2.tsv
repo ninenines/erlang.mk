@@ -368,6 +368,7 @@ simple_oauth2	git	https://github.com/virtan/simple_oauth2	master	a	b
 skel	git	https://github.com/ParaPhrase/skel	master	a	b
 social	git	https://github.com/dvv/social	master	a	b
 spapi_router	git	https://github.com/spilgames/spapi-router	master	a	b
+spapi_router	git	https://github.com/spilgames/spapi-router	master	https://github.com/spilgames/spapi-router	Partially-connected Erlang clustering
 sqerl	git	https://github.com/hairyhum/sqerl	master	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
 srly	git	https://github.com/msantos/srly	master	a	b
 srly	git	https://github.com/msantos/srly	master	https://github.com/msantos/srly	Native Erlang Unix serial interface

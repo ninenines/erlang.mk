@@ -368,6 +368,7 @@ simple_oauth2	https://github.com/virtan/simple_oauth2	a	b
 skel	https://github.com/ParaPhrase/skel	a	b
 social	https://github.com/dvv/social	a	b
 spapi_router	https://github.com/spilgames/spapi-router	a	b
+spapi_router	https://github.com/spilgames/spapi-router	https://github.com/spilgames/spapi-router	Partially-connected Erlang clustering
 sqerl	https://github.com/hairyhum/sqerl	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
 srly	https://github.com/msantos/srly	a	b
 srly	https://github.com/msantos/srly	https://github.com/msantos/srly	Native Erlang Unix serial interface
