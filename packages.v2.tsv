@@ -126,6 +126,7 @@ erlfsmon	git	https://github.com/proger/erlfsmon	master	https://github.com/proger
 erlgit	git	https://github.com/gleber/erlgit	master	a	b
 erlgit	git	https://github.com/gleber/erlgit	master	https://github.com/gleber/erlgit	Erlang convenience wrapper around git executable
 erlguten	git	https://github.com/richcarl/erlguten	master	a	b
+erlguten	git	https://github.com/richcarl/erlguten	master	https://github.com/richcarl/erlguten	ErlGuten is a system for high-quality typesetting, written purely in Erlang.
 erlmc	git	https://github.com/jkvor/erlmc	master	a	b
 erlog	git	https://github.com/rvirding/erlog	master	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlport	git	https://github.com/hdima/erlport	master	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
