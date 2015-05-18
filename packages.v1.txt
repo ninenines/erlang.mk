@@ -395,3 +395,4 @@ zippers	https://github.com/ferd/zippers	https://github.com/ferd/zippers	A librar
 zlists	https://github.com/vjache/erlang-zlists	a	b
 zlists	https://github.com/vjache/erlang-zlists	https://github.com/vjache/erlang-zlists	Erlang lazy lists library.
 zucchini	https://github.com/devinus/zucchini	a	b
+zucchini	https://github.com/devinus/zucchini	https://github.com/devinus/zucchini	An Erlang INI parser

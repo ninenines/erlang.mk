@@ -395,3 +395,4 @@ zippers	git	https://github.com/ferd/zippers	master	https://github.com/ferd/zippe
 zlists	git	https://github.com/vjache/erlang-zlists	master	a	b
 zlists	git	https://github.com/vjache/erlang-zlists	master	https://github.com/vjache/erlang-zlists	Erlang lazy lists library.
 zucchini	git	https://github.com/devinus/zucchini	master	a	b
+zucchini	git	https://github.com/devinus/zucchini	master	https://github.com/devinus/zucchini	An Erlang INI parser
