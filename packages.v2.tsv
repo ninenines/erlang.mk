@@ -84,6 +84,7 @@ eavro	git	https://github.com/SIfoxDevTeam/eavro	master	https://github.com/SIfoxD
 ecapnp	git	https://github.com/kaos/ecapnp	master	a	b
 ecapnp	git	https://github.com/kaos/ecapnp	master	https://github.com/kaos/ecapnp	Cap'n Proto library for Erlang
 econfig	git	https://github.com/benoitc/econfig	master	a	b
+econfig	git	https://github.com/benoitc/econfig	master	https://github.com/benoitc/econfig	simple Erlang config handler using INI files
 edate	git	https://github.com/dweldon/edate	master	a	b
 edgar	git	https://github.com/crownedgrouse/edgar	master	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 edis	git	https://github.com/inaka/edis	master	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
