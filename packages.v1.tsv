@@ -1,48 +1,128 @@
+aberth	https://github.com/a13x/aberth	a	b
+active	https://github.com/proger/active	a	b
+aleppo	https://github.com/ErlyORM/aleppo	a	b
+annotations	https://github.com/hyperthunk/annotations	a	b
 apns	https://github.com/inaka/apns4erl	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 azdht	https://github.com/arcusfelis/azdht	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
+backoff	https://github.com/ferd/backoff	a	b
+barrel	https://github.com/benoitc/barrel	a	b
+beanstalk	https://github.com/tim/erlang-beanstalk	a	b
+bear	https://github.com/boundary/bear	a	b
+bertconf	https://github.com/ferd/bertconf	a	b
+bifrost	https://github.com/thorstadt/bifrost	a	b
 binpp	https://github.com/jtendo/binpp	https://github.com/jtendo/binpp	Erlang Binary Pretty Printer
+bisect	https://github.com/knutin/bisect	a	b
 bitcask	https://github.com/basho/bitcask	https://github.com/basho/bitcask	because you need another a key/value storage engine
+bitstore	https://github.com/bdionne/bitstore	a	b
+bootstrap	https://github.com/schlagert/bootstrap	a	b
 boss_db	https://github.com/ErlyORM/boss_db	https://github.com/ErlyORM/boss_db	BossDB: a sharded, caching, pooling, evented ORM for Erlang
 boss	https://github.com/ChicagoBoss/ChicagoBoss	https://github.com/ChicagoBoss/ChicagoBoss	Erlang web MVC, now featuring Comet
+bson	https://github.com/comtihon/bson-erlang	a	b
 bullet	https://github.com/extend/bullet	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
+cache	https://github.com/fogfish/cache	a	b
 cake	https://github.com/darach/cake-erl	https://github.com/darach/cake-erl	Really simple terminal colorization
+carotene	https://github.com/carotene/carotene	a	b
+cecho	https://github.com/mazenharake/cecho	a	b
+cferl	https://github.com/ddossot/cferl	a	b
+chaos_monkey	https://github.com/dLuna/chaos_monkey	a	b
+chronos	https://github.com/lehoff/chronos	a	b
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
+clique	https://github.com/basho/clique	a	b
+cluster_info	https://github.com/basho/cluster_info	a	b
+color	https://github.com/julianduque/erlang-color	a	b
+confetti	https://github.com/jtendo/confetti	a	b
 couchbeam	https://github.com/benoitc/couchbeam	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
+couch	https://github.com/benoitc/opencouch	a	b
+covertool	https://github.com/idubrov/covertool	a	b
 cowboy	https://github.com/ninenines/cowboy	http://ninenines.eu	Small, fast and modular HTTP server.
+cowdb	https://github.com/refuge/cowdb	a	b
 cowlib	https://github.com/ninenines/cowlib	http://ninenines.eu	Support library for manipulating Web protocols.
+cpg	https://github.com/okeuday/cpg	a	b
+cuttlefish	https://github.com/basho/cuttlefish	a	b
 damocles	https://github.com/lostcolony/damocles	https://github.com/lostcolony/damocles	Erlang library for generating adversarial network conditions for QAing distributed applications/systems on a single Linux box.
 debbie	https://github.com/crownedgrouse/debbie	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
+decimal	https://github.com/tim/erlang-decimal	a	b
+detergent	https://github.com/devinus/detergent	a	b
+dh_date	https://github.com/daleharvey/dh_date	a	b
+dhtcrawler	https://github.com/kevinlynx/dhtcrawler	a	b
+dirbusterl	https://github.com/silentsignal/DirBustErl	a	b
 dispcount	https://github.com/ferd/dispcount	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
+dns	https://github.com/aetrion/dns_erlang	a	b
+dtl	https://github.com/oinksoft/dtl	a	b
+dynamic_compile	https://github.com/jkvor/dynamic_compile	a	b
 e2	https://github.com/gar1t/e2	http://e2project.org	Library to simply writing correct OTP applications.
+eamf	https://github.com/mrinalwadhwa/eamf	a	b
+eavro	https://github.com/SIfoxDevTeam/eavro	a	b
+ecapnp	https://github.com/kaos/ecapnp	a	b
+econfig	https://github.com/benoitc/econfig	a	b
+edate	https://github.com/dweldon/edate	a	b
 edgar	https://github.com/crownedgrouse/edgar	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 edis	https://github.com/inaka/edis	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
+edns	https://github.com/hcvst/erlang-dns	a	b
+eep_app	https://github.com/darach/eep-erl	a	b
 eep	https://github.com/virtan/eep	https://github.com/virtan/eep	Erlang Easy Profiling (eep) application provides a way to analyze application performance and call hierarchy
 efene	https://github.com/efene/efene	https://github.com/efene/efene	Alternative syntax for the Erlang Programming Language focusing on simplicity, ease of use and programmer UX
 eganglia	https://github.com/inaka/eganglia	https://github.com/inaka/eganglia	Erlang library to interact with Ganglia
+egeoip	https://github.com/mochi/egeoip	a	b
 ehsa	https://bitbucket.org/a12n/ehsa	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
 ej	https://github.com/seth/ej	https://github.com/seth/ej	Helper module for working with Erlang terms representing JSON
+ekaf	https://github.com/helpshift/ekaf	a	b
+elarm	https://github.com/esl/elarm	a	b
 eleveldb	https://github.com/basho/eleveldb	https://github.com/basho/eleveldb	Erlang LevelDB API
 elli	https://github.com/knutin/elli	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
 elvis	https://github.com/inaka/elvis	https://github.com/inaka/elvis	Erlang Style Reviewer
+emagick	https://github.com/kivra/emagick	a	b
 emysql	https://github.com/Eonblast/Emysql	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
+enet	https://github.com/archaelus/enet	a	b
+enm	https://github.com/basho/enm	a	b
 entop	https://github.com/mazenharake/entop	https://github.com/mazenharake/entop	A top-like tool for monitoring an Erlang node
+epcap	https://github.com/msantos/epcap	a	b
 eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	https://github.com/epgsql/epgsql	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
+episcina	https://github.com/erlware/episcina	a	b
+eplot	https://github.com/psyeugenic/eplot	a	b
 epocxy	https://github.com/duomark/epocxy	https://github.com/duomark/epocxy	Erlang Patterns of Concurrency
+epubnub	https://github.com/tsloughter/epubnub	a	b
 eredis	https://github.com/wooga/eredis	https://github.com/wooga/eredis	Erlang Redis client
+eredis_pool	https://github.com/hiroeorz/eredis_pool	a	b
 erlang_js	https://github.com/basho/erlang_js	https://github.com/basho/erlang_js	A linked-in driver for Erlang to Mozilla's Spidermonkey Javascript runtime.
+erlang_localtime	https://github.com/dmitryme/erlang_localtime	a	b
+erlang_smtp	https://github.com/tonyg/erlang-smtp	a	b
 erlasticsearch	https://github.com/dieswaytoofast/erlasticsearch	https://github.com/dieswaytoofast/erlasticsearch	Erlang thrift interface to elastic_search
+erlastic_search	https://github.com/tsloughter/erlastic_search	a	b
+erlbrake	https://github.com/kenpratt/erlbrake	a	b
 erlcloud	https://github.com/gleber/erlcloud	https://github.com/gleber/erlcloud	Cloud Computing library for erlang (Amazon EC2, S3, SQS, SimpleDB, Mechanical Turk, ELB)
 erlcron	https://github.com/erlware/erlcron	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	https://github.com/erldb/erldb	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
+erldis	https://github.com/cstar/erldis	a	b
 erldns	https://github.com/aetrion/erl-dns	https://github.com/aetrion/erl-dns	DNS server, in erlang.
+erldocker	https://github.com/proger/erldocker	a	b
+erlfsmon	https://github.com/proger/erlfsmon	a	b
+erlgit	https://github.com/gleber/erlgit	a	b
+erlguten	https://github.com/richcarl/erlguten	a	b
+erlmc	https://github.com/jkvor/erlmc	a	b
 erlog	https://github.com/rvirding/erlog	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlport	https://github.com/hdima/erlport	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
+erlsh	https://github.com/proger/erlsh	a	b
 erlsom	https://github.com/willemdj/erlsom	https://github.com/willemdj/erlsom	XML parser for Erlang
+erl_streams	https://github.com/epappas/erl_streams	a	b
 erlubi	https://github.com/krestenkrab/erlubi	https://github.com/krestenkrab/erlubi	Ubigraph Erlang Client (and Process Visualizer)
+erlvolt	https://github.com/VoltDB/voltdb-client-erlang	a	b
 erlware_commons	https://github.com/erlware/erlware_commons	https://github.com/erlware/erlware_commons	Erlware Commons is an Erlware project focused on all aspects of reusable Erlang components.
 erlydtl	https://github.com/erlydtl/erlydtl	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
+errd	https://github.com/archaelus/errd	a	b
+errd	https://github.com/archaelus/errd	https://github.com/archaelus/errd	Erlang RRDTool library
+erserve	https://github.com/del/erserve	a	b
 erwa	https://github.com/bwegh/erwa	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
+espec	https://github.com/lucaspiller/espec	a	b
+estatsd	https://github.com/RJ/estatsd	a	b
+etap	https://github.com/ngerakines/etap	a	b
+etest	https://github.com/wooga/etest	a	b
+etest_http	https://github.com/wooga/etest_http	a	b
+etoml	https://github.com/kalta/etoml	a	b
+eunit_formatters	https://github.com/seancribbs/eunit_formatters	a	b
+eunit	https://github.com/richcarl/eunit	a	b
+euthanasia	https://github.com/doubleyou/euthanasia	a	b
 exec	https://github.com/saleyn/erlexec	http://saleyn.github.com/erlexec	Execute and control OS processes from Erlang/OTP.
 exml	https://github.com/paulgray/exml	https://github.com/paulgray/exml	XML parsing library in Erlang
 exmpp	https://github.com/processone/exmpp	https://github.com/processone/exmpp	Erlang XMPP library
@@ -51,104 +131,241 @@ exs1024	https://github.com/jj1bdx/exs1024	https://github.com/jj1bdx/exs1024	Xors
 exs64	https://github.com/jj1bdx/exs64	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
 exsplus116	https://github.com/jj1bdx/exsplus116	https://github.com/jj1bdx/exsplus116	Xorshift116plus for Erlang
 exsplus128	https://github.com/jj1bdx/exsplus128	https://github.com/jj1bdx/exsplus128	Xorshift128plus pseudo random number generator for Erlang.
+ezmq	https://github.com/RoadRunnr/ezmq	a	b
+ezmtp	https://github.com/a13x/ezmtp	a	b
 fast_disk_log	https://github.com/lpgauth/fast_disk_log	https://github.com/lpgauth/fast_disk_log	Pool-based asynchronous Erlang disk logger
 feeder	https://github.com/michaelnisi/feeder	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
+fix	https://github.com/maxlapshin/fix	a	b
+flower	https://github.com/travelping/flower	a	b
+fn	https://github.com/reiddraper/fn	a	b
+folsom_cowboy	https://github.com/boundary/folsom_cowboy	a	b
 folsom	https://github.com/boundary/folsom	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
+folsomite	https://github.com/campanja/folsomite	a	b
 fuse	https://github.com/jlouis/fuse	https://github.com/jlouis/fuse	A Circuit Breaker for Erlang
+gcm	https://github.com/pdincau/gcm-erlang	a	b
+gcprof	https://github.com/knutin/gcprof	a	b
 geas	https://github.com/crownedgrouse/geas	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
+gen_icmp	https://github.com/msantos/gen_icmp	a	b
 gen_nb_server	https://github.com/kevsmith/gen_nb_server	https://github.com/kevsmith/gen_nb_server	OTP behavior for writing non-blocking servers
+gen_paxos	https://github.com/gburd/gen_paxos	a	b
 gen_smtp	https://github.com/Vagabond/gen_smtp	https://github.com/Vagabond/gen_smtp	A generic Erlang SMTP server and client that can be extended via callback modules
+gen_tracker	https://github.com/erlyvideo/gen_tracker	a	b
+gen_unix	https://github.com/msantos/gen_unix	a	b
 getopt	https://github.com/jcomellas/getopt	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
+gettext	https://github.com/etnt/gettext	a	b
+gin	https://github.com/mad-cocktail/gin	a	b
+gitty	https://github.com/maxlapshin/gitty	a	b
+gpb	https://github.com/tomas-abrahamsson/gpb	a	b
 gproc	https://github.com/uwiger/gproc	https://github.com/uwiger/gproc	Extended process registry for Erlang
+grapherl	https://github.com/eproxus/grapherl	a	b
 gun	https://github.com/ninenines/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 hackney	https://github.com/benoitc/hackney	https://github.com/benoitc/hackney	simple HTTP client in Erlang
+hamcrest	https://github.com/hyperthunk/hamcrest-erlang	a	b
 hanoidb	https://github.com/krestenkrab/hanoidb	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
+hottub	https://github.com/bfrog/hottub	a	b
 i18n	https://github.com/erlang-unicode/i18n	https://github.com/erlang-unicode/i18n	icu nif: international components for unicode from Erlang (unicode, date, string, number, format, locale, localization, transliteration, icu4e)
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	https://github.com/robbielynch/ierlang	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
+ircbot	https://github.com/gdamjan/erlang-irc-bot	a	b
+ircd	https://github.com/tonyg/erlang-ircd	a	b
+irc_lib	https://github.com/OtpChatBot/irc_lib	a	b
+iris	https://github.com/project-iris/iris-erl	a	b
+iso8601	https://github.com/seansawyer/erlang_iso8601	a	b
 itweet	https://github.com/inaka/itweet	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
+jerg	https://github.com/ddossot/jerg	a	b
 jesse	https://github.com/klarna/jesse	https://github.com/klarna/jesse	jesse (JSon Schema Erlang) is an implementation of a json schema validator for Erlang.
 jiffy	https://github.com/davisp/jiffy	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
 jiffy_v	https://github.com/shizzard/jiffy-v	https://github.com/shizzard/jiffy-v	JSON validation utility
 jobs	https://github.com/esl/jobs	https://github.com/esl/jobs	a Job scheduler for load regulation
 joxa	https://github.com/joxa/joxa	https://github.com/joxa/joxa	A Modern Lisp for the Erlang VM
+jsonerl	https://github.com/lambder/jsonerl	a	b
 json	https://github.com/talentdeficit/json	https://github.com/talentdeficit/json	a high level json library for erlang (17.0+)
+jsonpath	https://github.com/GeneStevens/jsonpath	a	b
+json_rec	https://github.com/justinkirby/json_rec	a	b
 jsx	https://github.com/talentdeficit/jsx	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
+kafka	https://github.com/wooga/kafka-erlang	a	b
+kai	https://github.com/synrc/kai	a	b
 katja	https://github.com/nifoc/katja	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
+kdht	https://github.com/kevinlynx/kdht	a	b
 kjell	https://github.com/karlll/kjell	https://github.com/karlll/kjell	Erlang Shell
 kraken	https://github.com/Asana/kraken	https://github.com/Asana/kraken	Distributed Pubsub Server for Realtime Apps
+kucumberl	https://github.com/openshine/kucumberl	a	b
+kvc	https://github.com/etrepum/kvc	a	b
+kvlists	https://github.com/jcomellas/kvlists	a	b
+kvs	https://github.com/synrc/kvs	a	b
+lager_amqp_backend	https://github.com/jbrisbin/lager_amqp_backend	a	b
 lager	https://github.com/basho/lager	https://github.com/basho/lager	A logging framework for Erlang/OTP.
+lager_syslog	https://github.com/basho/lager_syslog	a	b
+lambdapad	https://github.com/gar1t/lambdapad	a	b
 lasse	https://github.com/inaka/lasse	https://github.com/inaka/lasse	SSE handler for Cowboy
+ldap	https://github.com/spawnproc/ldap	a	b
+lethink	https://github.com/taybin/lethink	a	b
 lfe	https://github.com/rvirding/lfe	https://github.com/rvirding/lfe	Lisp Flavoured Erlang (LFE)
 ling	https://github.com/cloudozer/ling	https://github.com/cloudozer/ling	Erlang on Xen
 live	https://github.com/ninenines/live	http://ninenines.eu	Automated module and configuration reloader.
+locker	https://github.com/wooga/locker	a	b
 locks	https://github.com/uwiger/locks	https://github.com/uwiger/locks	A scalable, deadlock-resolving resource locker
 log4erl	https://github.com/ahmednawras/log4erl	https://github.com/ahmednawras/log4erl	A logger for erlang in the spirit of Log4J.
+lol	https://github.com/b0oh/lol	a	b
+lucid	https://github.com/tatsuhiro-t/lucid	a	b
 luerl	https://github.com/rvirding/luerl	https://github.com/rvirding/luerl	Lua in Erlang
+luwak	https://github.com/basho/luwak	a	b
 mad	https://github.com/synrc/mad	https://github.com/synrc/mad	Small and Fast Rebar Replacement
+mavg	https://github.com/EchoTeam/mavg	a	b
+mcd	https://github.com/EchoTeam/mcd	a	b
+mcerlang	https://github.com/fredlund/McErlang	a	b
+mc_erl	https://github.com/clonejo/mc-erl	a	b
 meck	https://github.com/eproxus/meck	https://github.com/eproxus/meck	A mocking library for Erlang
 mekao	https://github.com/ddosia/mekao	https://github.com/ddosia/mekao	SQL constructor
+merge_index	https://github.com/basho/merge_index	a	b
+merl	https://github.com/richcarl/merl	a	b
+mimetypes	https://github.com/spawngrid/mimetypes	a	b
+mixer	https://github.com/chef/mixer	a	b
 mochiweb	https://github.com/mochi/mochiweb	https://github.com/mochi/mochiweb	MochiWeb is an Erlang library for building lightweight HTTP servers.
+mochiweb_xpath	https://github.com/retnuh/mochiweb_xpath	a	b
+mockgyver	https://github.com/klajo/mockgyver	a	b
 modlib	https://github.com/gar1t/modlib	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 mongodb	https://github.com/comtihon/mongodb-erlang	https://github.com/comtihon/mongodb-erlang	MongoDB driver for Erlang
 mongooseim	https://github.com/esl/MongooseIM	https://www.erlang-solutions.com/products/mongooseim-massively-scalable-ejabberd-platform	Jabber / XMPP server with focus on performance and scalability, by Erlang Solutions
+moyo	https://github.com/dwango/moyo	a	b
 msgpack	https://github.com/msgpack/msgpack-erlang	https://github.com/msgpack/msgpack-erlang	MessagePack (de)serializer implementation for Erlang
 mustache	https://github.com/mojombo/mustache.erl	https://github.com/mojombo/mustache.erl	Mustache template engine for Erlang.
+myproto	https://github.com/altenwald/myproto	a	b
 mysql	https://github.com/dizzyd/erlang-mysql-driver	https://github.com/dizzyd/erlang-mysql-driver	Erlang MySQL Driver (from code.google.com)
 n2o	https://github.com/5HT/n2o	https://github.com/5HT/n2o	WebSocket Application Server
 nat_upnp	https://github.com/benoitc/nat_upnp	https://github.com/benoitc/nat_upnp	Erlang library to map your internal port to an external using UNP IGD
 neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 neotoma	https://github.com/seancribbs/neotoma	https://github.com/seancribbs/neotoma	Erlang library and packrat parser-generator for parsing expression grammars.
+newrelic	https://github.com/wooga/newrelic-erlang	a	b
+nkdocker	https://github.com/Nekso/nkdocker	a	b
+nkpacket	https://github.com/Nekso/nkpacket	a	b
 nodefinder	https://github.com/erlanger/nodefinder	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
+oauth2c	https://github.com/kivra/oauth2_client	a	b
 oauth2	https://github.com/kivra/oauth2	https://github.com/kivra/oauth2	Erlang Oauth2 implementation
 oauth	https://github.com/tim/erlang-oauth	https://github.com/tim/erlang-oauth	An Erlang OAuth 1.0 implementation
+of_protocol	https://github.com/FlowForwarding/of_protocol	a	b
+openflow	https://github.com/renatoaguiar/erlang-openflow	a	b
+openid	https://github.com/brendonh/erl_openid	a	b
 openpoker	https://github.com/hpyhacking/openpoker	https://github.com/hpyhacking/openpoker	Genesis Texas hold'em Game Server
+pal	https://github.com/manifest/pal	a	b
+parse_trans	https://github.com/uwiger/parse_trans	a	b
+parsexml	https://github.com/maxlapshin/parsexml	a	b
 pegjs	https://github.com/dmitriid/pegjs	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
+percept2	https://github.com/huiqing/percept2	a	b
+pgsql	https://github.com/semiocast/pgsql	a	b
+pkgx	https://github.com/arjan/pkgx	a	b
+pkt	https://github.com/msantos/pkt	a	b
+plain_fsm	https://github.com/uwiger/plain_fsm	a	b
+pmod_transform	https://github.com/erlang/pmod_transform	a	b
 pobox	https://github.com/ferd/pobox	https://github.com/ferd/pobox	External buffer processes to protect against mailbox overflow in Erlang
+ponos	https://github.com/klarna/ponos	a	b
 poolboy	https://github.com/devinus/poolboy	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 pooler	https://github.com/seth/pooler	https://github.com/seth/pooler	An OTP Process Pool Application
+pqueue	https://github.com/okeuday/pqueue	a	b
 procket	https://github.com/msantos/procket	http://blog.listincomprehension.com/search/label/procket	Erlang interface to low level socket operations
 proper	https://github.com/manopapad/proper	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
+props	https://github.com/greyarea/props	a	b
 protobuffs	https://github.com/basho/erlang_protobuffs	https://github.com/basho/erlang_protobuffs	An implementation of Google's Protocol Buffers for Erlang, based on ngerakines/erlang_protobuffs.
 psycho	https://github.com/gar1t/psycho	https://github.com/gar1t/psycho	HTTP server that provides a WSGI-like interface for applications and middleware.
 ptrackerl	https://github.com/inaka/ptrackerl	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
+purity	https://github.com/mpitid/purity	a	b
 push_service	https://github.com/hairyhum/push_service	https://github.com/hairyhum/push_service	Push service
 qdate	https://github.com/choptastic/qdate	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
+qrcode	https://github.com/komone/qrcode	a	b
+quest	https://github.com/eriksoe/ErlangQuest	a	b
+rabbit_exchange_type_riak	https://github.com/jbrisbin/riak-exchange	a	b
 rack	https://github.com/erlyvideo/rack	https://github.com/erlyvideo/rack	Rack handler for erlang
+radierl	https://github.com/vances/radierl	a	b
 rafter	https://github.com/andrewjstone/rafter	https://github.com/andrewjstone/rafter	An Erlang library application which implements the Raft consensus protocol
 ranch	https://github.com/ninenines/ranch	http://ninenines.eu	Socket acceptor pool for TCP protocols.
+rbeacon	https://github.com/refuge/rbeacon	a	b
 rebar	https://github.com/rebar/rebar3	http://www.rebar3.org	Erlang build tool that makes it easy to compile and test Erlang applications, port drivers and releases.
 rec2json	https://github.com/lordnull/rec2json	https://github.com/lordnull/rec2json	Compile erlang record definitions into modules to convert them to/from json easily.
 recon	https://github.com/ferd/recon	https://github.com/ferd/recon	Collection of functions and scripts to debug Erlang in production.
 record_info	https://github.com/bipthelin/erlang-record_info	https://github.com/bipthelin/erlang-record_info	Convert between record and proplist
+redgrid	https://github.com/jkvor/redgrid	a	b
+redo	https://github.com/jkvor/redo	a	b
 relx	https://github.com/erlware/relx	https://github.com/erlware/relx	Sane, simple release creation for Erlang
 resource_discovery	https://github.com/erlware/resource_discovery	http://erlware.org/	An application used to dynamically discover resources present in an Erlang node cluster.
+restc	https://github.com/kivra/restclient	a	b
+rfc4627_jsonrpc	https://github.com/tonyg/erlang-rfc4627	a	b
 riakc	https://github.com/basho/riak-erlang-client	https://github.com/basho/riak-erlang-client	Erlang clients for Riak.
 riak_core	https://github.com/basho/riak_core	https://github.com/basho/riak_core	Distributed systems infrastructure used by Riak.
 riak_dt	https://github.com/basho/riak_dt	https://github.com/basho/riak_dt	Convergent replicated datatypes in Erlang
+riak_ensemble	https://github.com/basho/riak_ensemble	a	b
+riakhttpc	https://github.com/basho/riak-erlang-http-client	a	b
 riak_kv	https://github.com/basho/riak_kv	https://github.com/basho/riak_kv	Riak Key/Value Store
+riaknostic	https://github.com/basho/riaknostic	a	b
+riak_pg	https://github.com/cmeiklejohn/riak_pg	a	b
 riak_pipe	https://github.com/basho/riak_pipe	https://github.com/basho/riak_pipe	Riak Pipelines
+riakpool	https://github.com/dweldon/riakpool	a	b
+riak_sysmon	https://github.com/basho/riak_sysmon	a	b
+riak_test	https://github.com/basho/riak_test	a	b
+rivus_cep	https://github.com/vascokk/rivus_cep	a	b
 rlimit	https://github.com/jlouis/rlimit	https://github.com/jlouis/rlimit	Magnus Klaar's rate limiter code from etorrent
 safetyvalve	https://github.com/jlouis/safetyvalve	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node
+seestar	https://github.com/iamaleksey/seestar	a	b
+setup	https://github.com/uwiger/setup	a	b
+sext	https://github.com/uwiger/sext	a	b
 sfmt	https://github.com/jj1bdx/sfmt-erlang	https://github.com/jj1bdx/sfmt-erlang	SFMT pseudo random number generator for Erlang.
+sgte	https://github.com/filippo/sgte	a	b
 sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform for type based validation.
 shotgun	https://github.com/inaka/shotgun	https://github.com/inaka/shotgun	better than just a gun
+sidejob	https://github.com/basho/sidejob	a	b
+sieve	https://github.com/benoitc/sieve	a	b
+simhash	https://github.com/ferd/simhash	a	b
+simple_bridge	https://github.com/nitrogen/simple_bridge	a	b
+simple_oauth2	https://github.com/virtan/simple_oauth2	a	b
+skel	https://github.com/ParaPhrase/skel	a	b
+social	https://github.com/dvv/social	a	b
+spapi_router	https://github.com/spilgames/spapi-router	a	b
 sqerl	https://github.com/hairyhum/sqerl	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
+srly	https://github.com/msantos/srly	a	b
+sshrpc	https://github.com/jj1bdx/sshrpc	a	b
+stable	https://github.com/dvv/stable	a	b
 statebox	https://github.com/mochi/statebox	https://github.com/mochi/statebox	Erlang state monad with merge/conflict-resolution capabilities. Useful for Riak.
+statebox_riak	https://github.com/mochi/statebox_riak	a	b
+statman	https://github.com/knutin/statman	a	b
+statsderl	https://github.com/lpgauth/statsderl	a	b
+stockdb	https://github.com/maxlapshin/stockdb	a	b
+stripe	https://github.com/mattsta/stripe-erlang	a	b
 swab	https://github.com/crownedgrouse/swab	https://github.com/crownedgrouse/swab	General purpose buffer handling module
+swarm	https://github.com/jeremey/swarm	a	b
 switchboard	https://github.com/thusfresh/switchboard	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
 sync	https://github.com/rustyio/sync	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
+syntaxerl	https://github.com/ten0s/syntaxerl	a	b
+syslog	https://github.com/Vagabond/erlang-syslog	a	b
+taskforce	https://github.com/g-andrade/taskforce	a	b
 tddreloader	https://github.com/version2beta/tddreloader	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
+tempo	https://github.com/selectel/tempo	a	b
+ticktick	https://github.com/ericliang/ticktick	a	b
+tinymq	https://github.com/ChicagoBoss/tinymq	a	b
 tinymt	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+trane	https://github.com/massemanet/trane	a	b
+transit	https://github.com/isaiah/transit-erlang	a	b
+trie	https://github.com/okeuday/trie	a	b
 triq	https://github.com/krestenkrab/triq	https://github.com/krestenkrab/triq	Trifork QuickCheck
 tsung	https://github.com/processone/tsung	https://github.com/processone/tsung	Tsung is a high-performance benchmark framework for various protocols including HTTP, XMPP, LDAP, etc.
+tunctl	https://github.com/msantos/tunctl	a	b
+twerl	https://github.com/lucaspiller/twerl	a	b
 twitter_erlang	https://github.com/ngerakines/erlang_twitter	https://github.com/ngerakines/erlang_twitter	An Erlang twitter client
 unicorn	https://github.com/shizzard/unicorn	https://github.com/shizzard/unicorn	Generic configuration server
+unsplit	https://github.com/uwiger/unsplit	a	b
 uuid	https://github.com/okeuday/uuid	https://github.com/okeuday/uuid	Erlang UUID Implementation
 ux	https://github.com/erlang-unicode/ux	https://github.com/erlang-unicode/ux	Unicode eXtention for Erlang (Strings, Collation)
+vert	https://github.com/msantos/erlang-libvirt	a	b
+vmstats	https://github.com/ferd/vmstats	a	b
+walrus	https://github.com/devinus/walrus	a	b
 webmachine	https://github.com/basho/webmachine	https://github.com/basho/webmachine	A REST-based system for building web applications.
+websocket_client	https://github.com/jeremyong/websocket_client	a	b
 worker_pool	https://github.com/inaka/worker_pool	https://github.com/inaka/worker_pool	a simple erlang worker pool
+wsock	https://github.com/madtrick/wsock	a	b
 xref_runner	https://github.com/inaka/xref_runner	https://github.com/inaka/xref_runner	Erlang Xref Runner (inspired in rebar xref)
+yamerl	https://github.com/yakaz/yamerl	a	b
 yamler	https://github.com/goertzenator/yamler	https://github.com/goertzenator/yamler	libyaml-based yaml loader for Erlang
 yaws	https://github.com/klacke/yaws	http://yaws.hyber.org	Yaws webserver
+zab_engine	https://github.com/xinmingyao/zab_engine	a	b
 zeta	https://github.com/s1n4/zeta	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
+zippers	https://github.com/ferd/zippers	a	b
+zlists	https://github.com/vjache/erlang-zlists	a	b
+zucchini	https://github.com/devinus/zucchini	a	b

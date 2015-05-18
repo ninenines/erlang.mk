@@ -1,48 +1,128 @@
+aberth	git	https://github.com/a13x/aberth	master	a	b
+active	git	https://github.com/proger/active	master	a	b
+aleppo	git	https://github.com/ErlyORM/aleppo	master	a	b
+annotations	git	https://github.com/hyperthunk/annotations	master	a	b
 apns	git	https://github.com/inaka/apns4erl	1.0.4	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 azdht	git	https://github.com/arcusfelis/azdht	master	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
+backoff	git	https://github.com/ferd/backoff	master	a	b
+barrel	git	https://github.com/benoitc/barrel	master	a	b
+beanstalk	git	https://github.com/tim/erlang-beanstalk	master	a	b
+bear	git	https://github.com/boundary/bear	master	a	b
+bertconf	git	https://github.com/ferd/bertconf	master	a	b
+bifrost	git	https://github.com/thorstadt/bifrost	master	a	b
 binpp	git	https://github.com/jtendo/binpp	master	https://github.com/jtendo/binpp	Erlang Binary Pretty Printer
+bisect	git	https://github.com/knutin/bisect	master	a	b
 bitcask	git	https://github.com/basho/bitcask	master	https://github.com/basho/bitcask	because you need another a key/value storage engine
+bitstore	git	https://github.com/bdionne/bitstore	master	a	b
+bootstrap	git	https://github.com/schlagert/bootstrap	master	a	b
 boss_db	git	https://github.com/ErlyORM/boss_db	master	https://github.com/ErlyORM/boss_db	BossDB: a sharded, caching, pooling, evented ORM for Erlang
 boss	git	https://github.com/ChicagoBoss/ChicagoBoss	master	https://github.com/ChicagoBoss/ChicagoBoss	Erlang web MVC, now featuring Comet
+bson	git	https://github.com/comtihon/bson-erlang	master	a	b
 bullet	git	https://github.com/extend/bullet	master	http://ninenines.eu	Simple, reliable, efficient streaming for Cowboy.
+cache	git	https://github.com/fogfish/cache	master	a	b
 cake	git	https://github.com/darach/cake-erl	v0.1.2	https://github.com/darach/cake-erl	Really simple terminal colorization
+carotene	git	https://github.com/carotene/carotene	master	a	b
+cecho	git	https://github.com/mazenharake/cecho	master	a	b
+cferl	git	https://github.com/ddossot/cferl	master	a	b
+chaos_monkey	git	https://github.com/dLuna/chaos_monkey	master	a	b
+chronos	git	https://github.com/lehoff/chronos	master	a	b
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
+clique	git	https://github.com/basho/clique	develop	a	b
+cluster_info	git	https://github.com/basho/cluster_info	master	a	b
+color	git	https://github.com/julianduque/erlang-color	master	a	b
+confetti	git	https://github.com/jtendo/confetti	master	a	b
 couchbeam	git	https://github.com/benoitc/couchbeam	master	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
+couch	git	https://github.com/benoitc/opencouch	master	a	b
+covertool	git	https://github.com/idubrov/covertool	master	a	b
 cowboy	git	https://github.com/ninenines/cowboy	1.0.1	http://ninenines.eu	Small, fast and modular HTTP server.
+cowdb	git	https://github.com/refuge/cowdb	master	a	b
 cowlib	git	https://github.com/ninenines/cowlib	1.0.1	http://ninenines.eu	Support library for manipulating Web protocols.
+cpg	git	https://github.com/okeuday/cpg	master	a	b
+cuttlefish	git	https://github.com/basho/cuttlefish	master	a	b
 damocles	git	https://github.com/lostcolony/damocles	master	https://github.com/lostcolony/damocles	Erlang library for generating adversarial network conditions for QAing distributed applications/systems on a single Linux box.
 debbie	git	https://github.com/crownedgrouse/debbie	master	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
+decimal	git	https://github.com/tim/erlang-decimal	master	a	b
+detergent	git	https://github.com/devinus/detergent	master	a	b
+dh_date	git	https://github.com/daleharvey/dh_date	master	a	b
+dhtcrawler	git	https://github.com/kevinlynx/dhtcrawler	master	a	b
+dirbusterl	git	https://github.com/silentsignal/DirBustErl	master	a	b
 dispcount	git	https://github.com/ferd/dispcount	master	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
+dns	git	https://github.com/aetrion/dns_erlang	master	a	b
+dtl	git	https://github.com/oinksoft/dtl	master	a	b
+dynamic_compile	git	https://github.com/jkvor/dynamic_compile	master	a	b
 e2	git	https://github.com/gar1t/e2	master	http://e2project.org	Library to simply writing correct OTP applications.
+eamf	git	https://github.com/mrinalwadhwa/eamf	master	a	b
+eavro	git	https://github.com/SIfoxDevTeam/eavro	master	a	b
+ecapnp	git	https://github.com/kaos/ecapnp	master	a	b
+econfig	git	https://github.com/benoitc/econfig	master	a	b
+edate	git	https://github.com/dweldon/edate	master	a	b
 edgar	git	https://github.com/crownedgrouse/edgar	master	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 edis	git	https://github.com/inaka/edis	master	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
+edns	git	https://github.com/hcvst/erlang-dns	master	a	b
+eep_app	git	https://github.com/darach/eep-erl	master	a	b
 eep	git	https://github.com/virtan/eep	master	https://github.com/virtan/eep	Erlang Easy Profiling (eep) application provides a way to analyze application performance and call hierarchy
 efene	git	https://github.com/efene/efene	master	https://github.com/efene/efene	Alternative syntax for the Erlang Programming Language focusing on simplicity, ease of use and programmer UX
 eganglia	git	https://github.com/inaka/eganglia	v0.9.1	https://github.com/inaka/eganglia	Erlang library to interact with Ganglia
+egeoip	git	https://github.com/mochi/egeoip	master	a	b
 ehsa	hg	https://bitbucket.org/a12n/ehsa	2.0.4	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
 ej	git	https://github.com/seth/ej	master	https://github.com/seth/ej	Helper module for working with Erlang terms representing JSON
+ekaf	git	https://github.com/helpshift/ekaf	master	a	b
+elarm	git	https://github.com/esl/elarm	master	a	b
 eleveldb	git	https://github.com/basho/eleveldb	master	https://github.com/basho/eleveldb	Erlang LevelDB API
 elli	git	https://github.com/knutin/elli	master	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
 elvis	git	https://github.com/inaka/elvis	0.2.4	https://github.com/inaka/elvis	Erlang Style Reviewer
+emagick	git	https://github.com/kivra/emagick	master	a	b
 emysql	git	https://github.com/Eonblast/Emysql	master	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
+enet	git	https://github.com/archaelus/enet	master	a	b
+enm	git	https://github.com/basho/enm	master	a	b
 entop	git	https://github.com/mazenharake/entop	master	https://github.com/mazenharake/entop	A top-like tool for monitoring an Erlang node
+epcap	git	https://github.com/msantos/epcap	master	a	b
 eper	git	https://github.com/massemanet/eper	master	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	git	https://github.com/epgsql/epgsql	master	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
+episcina	git	https://github.com/erlware/episcina	master	a	b
+eplot	git	https://github.com/psyeugenic/eplot	master	a	b
 epocxy	git	https://github.com/duomark/epocxy	master	https://github.com/duomark/epocxy	Erlang Patterns of Concurrency
+epubnub	git	https://github.com/tsloughter/epubnub	master	a	b
 eredis	git	https://github.com/wooga/eredis	master	https://github.com/wooga/eredis	Erlang Redis client
+eredis_pool	git	https://github.com/hiroeorz/eredis_pool	master	a	b
 erlang_js	git	https://github.com/basho/erlang_js	master	https://github.com/basho/erlang_js	A linked-in driver for Erlang to Mozilla's Spidermonkey Javascript runtime.
+erlang_localtime	git	https://github.com/dmitryme/erlang_localtime	master	a	b
+erlang_smtp	git	https://github.com/tonyg/erlang-smtp	master	a	b
 erlasticsearch	git	https://github.com/dieswaytoofast/erlasticsearch	master	https://github.com/dieswaytoofast/erlasticsearch	Erlang thrift interface to elastic_search
+erlastic_search	git	https://github.com/tsloughter/erlastic_search	master	a	b
+erlbrake	git	https://github.com/kenpratt/erlbrake	master	a	b
 erlcloud	git	https://github.com/gleber/erlcloud	master	https://github.com/gleber/erlcloud	Cloud Computing library for erlang (Amazon EC2, S3, SQS, SimpleDB, Mechanical Turk, ELB)
 erlcron	git	https://github.com/erlware/erlcron	master	https://github.com/erlware/erlcron	Erlang cronish system
 erldb	git	https://github.com/erldb/erldb	master	http://erldb.org	ORM (Object-relational mapping) application implemented in Erlang
+erldis	git	https://github.com/cstar/erldis	master	a	b
 erldns	git	https://github.com/aetrion/erl-dns	master	https://github.com/aetrion/erl-dns	DNS server, in erlang.
+erldocker	git	https://github.com/proger/erldocker	master	a	b
+erlfsmon	git	https://github.com/proger/erlfsmon	master	a	b
+erlgit	git	https://github.com/gleber/erlgit	master	a	b
+erlguten	git	https://github.com/richcarl/erlguten	master	a	b
+erlmc	git	https://github.com/jkvor/erlmc	master	a	b
 erlog	git	https://github.com/rvirding/erlog	master	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlport	git	https://github.com/hdima/erlport	master	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
+erlsh	git	https://github.com/proger/erlsh	master	a	b
 erlsom	git	https://github.com/willemdj/erlsom	master	https://github.com/willemdj/erlsom	XML parser for Erlang
+erl_streams	git	https://github.com/epappas/erl_streams	master	a	b
 erlubi	git	https://github.com/krestenkrab/erlubi	master	https://github.com/krestenkrab/erlubi	Ubigraph Erlang Client (and Process Visualizer)
+erlvolt	git	https://github.com/VoltDB/voltdb-client-erlang	master	a	b
 erlware_commons	git	https://github.com/erlware/erlware_commons	master	https://github.com/erlware/erlware_commons	Erlware Commons is an Erlware project focused on all aspects of reusable Erlang components.
 erlydtl	git	https://github.com/erlydtl/erlydtl	master	https://github.com/erlydtl/erlydtl	Django Template Language for Erlang.
+errd	git	https://github.com/archaelus/errd	master	a	b
+errd	git	https://github.com/archaelus/errd	master	https://github.com/archaelus/errd	Erlang RRDTool library
+erserve	git	https://github.com/del/erserve	master	a	b
 erwa	git	https://github.com/bwegh/erwa	0.1.1	https://github.com/bwegh/erwa	A WAMP router and client written in Erlang.
+espec	git	https://github.com/lucaspiller/espec	master	a	b
+estatsd	git	https://github.com/RJ/estatsd	master	a	b
+etap	git	https://github.com/ngerakines/etap	master	a	b
+etest	git	https://github.com/wooga/etest	master	a	b
+etest_http	git	https://github.com/wooga/etest_http	master	a	b
+etoml	git	https://github.com/kalta/etoml	master	a	b
+eunit_formatters	git	https://github.com/seancribbs/eunit_formatters	master	a	b
+eunit	git	https://github.com/richcarl/eunit	master	a	b
+euthanasia	git	https://github.com/doubleyou/euthanasia	master	a	b
 exec	git	https://github.com/saleyn/erlexec	master	http://saleyn.github.com/erlexec	Execute and control OS processes from Erlang/OTP.
 exml	git	https://github.com/paulgray/exml	master	https://github.com/paulgray/exml	XML parsing library in Erlang
 exmpp	git	https://github.com/processone/exmpp	master	https://github.com/processone/exmpp	Erlang XMPP library
@@ -51,104 +131,241 @@ exs1024	git	https://github.com/jj1bdx/exs1024	master	https://github.com/jj1bdx/e
 exs64	git	https://github.com/jj1bdx/exs64	master	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
 exsplus116	git	https://github.com/jj1bdx/exsplus116	master	https://github.com/jj1bdx/exsplus116	Xorshift116plus for Erlang
 exsplus128	git	https://github.com/jj1bdx/exsplus128	master	https://github.com/jj1bdx/exsplus128	Xorshift128plus pseudo random number generator for Erlang.
+ezmq	git	https://github.com/RoadRunnr/ezmq	master	a	b
+ezmtp	git	https://github.com/a13x/ezmtp	master	a	b
 fast_disk_log	git	https://github.com/lpgauth/fast_disk_log	master	https://github.com/lpgauth/fast_disk_log	Pool-based asynchronous Erlang disk logger
 feeder	git	https://github.com/michaelnisi/feeder	v1.4.6	https://github.com/michaelnisi/feeder	Stream parse RSS and Atom formatted XML feeds.
+fix	git	https://github.com/maxlapshin/fix	master	a	b
+flower	git	https://github.com/travelping/flower	master	a	b
+fn	git	https://github.com/reiddraper/fn	master	a	b
+folsom_cowboy	git	https://github.com/boundary/folsom_cowboy	master	a	b
 folsom	git	https://github.com/boundary/folsom	master	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
+folsomite	git	https://github.com/campanja/folsomite	master	a	b
 fuse	git	https://github.com/jlouis/fuse	master	https://github.com/jlouis/fuse	A Circuit Breaker for Erlang
+gcm	git	https://github.com/pdincau/gcm-erlang	master	a	b
+gcprof	git	https://github.com/knutin/gcprof	master	a	b
 geas	git	https://github.com/crownedgrouse/geas	master	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
+gen_icmp	git	https://github.com/msantos/gen_icmp	master	a	b
 gen_nb_server	git	https://github.com/kevsmith/gen_nb_server	master	https://github.com/kevsmith/gen_nb_server	OTP behavior for writing non-blocking servers
+gen_paxos	git	https://github.com/gburd/gen_paxos	master	a	b
 gen_smtp	git	https://github.com/Vagabond/gen_smtp	master	https://github.com/Vagabond/gen_smtp	A generic Erlang SMTP server and client that can be extended via callback modules
+gen_tracker	git	https://github.com/erlyvideo/gen_tracker	master	a	b
+gen_unix	git	https://github.com/msantos/gen_unix	master	a	b
 getopt	git	https://github.com/jcomellas/getopt	master	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
+gettext	git	https://github.com/etnt/gettext	master	a	b
+gin	git	https://github.com/mad-cocktail/gin	master	a	b
+gitty	git	https://github.com/maxlapshin/gitty	master	a	b
+gpb	git	https://github.com/tomas-abrahamsson/gpb	master	a	b
 gproc	git	https://github.com/uwiger/gproc	master	https://github.com/uwiger/gproc	Extended process registry for Erlang
+grapherl	git	https://github.com/eproxus/grapherl	master	a	b
 gun	git	https://github.com/ninenines/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 hackney	git	https://github.com/benoitc/hackney	master	https://github.com/benoitc/hackney	simple HTTP client in Erlang
+hamcrest	git	https://github.com/hyperthunk/hamcrest-erlang	master	a	b
 hanoidb	git	https://github.com/krestenkrab/hanoidb	master	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
+hottub	git	https://github.com/bfrog/hottub	master	a	b
 i18n	git	https://github.com/erlang-unicode/i18n	master	https://github.com/erlang-unicode/i18n	icu nif: international components for unicode from Erlang (unicode, date, string, number, format, locale, localization, transliteration, icu4e)
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	git	https://github.com/robbielynch/ierlang	master	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
+ircbot	git	https://github.com/gdamjan/erlang-irc-bot	master	a	b
+ircd	git	https://github.com/tonyg/erlang-ircd	master	a	b
+irc_lib	git	https://github.com/OtpChatBot/irc_lib	master	a	b
+iris	git	https://github.com/project-iris/iris-erl	master	a	b
+iso8601	git	https://github.com/seansawyer/erlang_iso8601	master	a	b
 itweet	git	https://github.com/inaka/itweet	v2.0	http://inaka.github.com/itweet/	Twitter Stream API on ibrowse
+jerg	git	https://github.com/ddossot/jerg	master	a	b
 jesse	git	https://github.com/klarna/jesse	master	https://github.com/klarna/jesse	jesse (JSon Schema Erlang) is an implementation of a json schema validator for Erlang.
 jiffy	git	https://github.com/davisp/jiffy	master	https://github.com/davisp/jiffy	JSON NIFs for Erlang.
 jiffy_v	git	https://github.com/shizzard/jiffy-v	0.3.3	https://github.com/shizzard/jiffy-v	JSON validation utility
 jobs	git	https://github.com/esl/jobs	0.3	https://github.com/esl/jobs	a Job scheduler for load regulation
 joxa	git	https://github.com/joxa/joxa	master	https://github.com/joxa/joxa	A Modern Lisp for the Erlang VM
+jsonerl	git	https://github.com/lambder/jsonerl	master	a	b
 json	git	https://github.com/talentdeficit/json	master	https://github.com/talentdeficit/json	a high level json library for erlang (17.0+)
+jsonpath	git	https://github.com/GeneStevens/jsonpath	master	a	b
+json_rec	git	https://github.com/justinkirby/json_rec	master	a	b
 jsx	git	https://github.com/talentdeficit/jsx	master	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
+kafka	git	https://github.com/wooga/kafka-erlang	master	a	b
+kai	git	https://github.com/synrc/kai	master	a	b
 katja	git	https://github.com/nifoc/katja	master	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
+kdht	git	https://github.com/kevinlynx/kdht	master	a	b
 kjell	git	https://github.com/karlll/kjell	master	https://github.com/karlll/kjell	Erlang Shell
 kraken	git	https://github.com/Asana/kraken	master	https://github.com/Asana/kraken	Distributed Pubsub Server for Realtime Apps
+kucumberl	git	https://github.com/openshine/kucumberl	master	a	b
+kvc	git	https://github.com/etrepum/kvc	master	a	b
+kvlists	git	https://github.com/jcomellas/kvlists	master	a	b
+kvs	git	https://github.com/synrc/kvs	master	a	b
+lager_amqp_backend	git	https://github.com/jbrisbin/lager_amqp_backend	master	a	b
 lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A logging framework for Erlang/OTP.
+lager_syslog	git	https://github.com/basho/lager_syslog	master	a	b
+lambdapad	git	https://github.com/gar1t/lambdapad	master	a	b
 lasse	git	https://github.com/inaka/lasse	0.1.0	https://github.com/inaka/lasse	SSE handler for Cowboy
+ldap	git	https://github.com/spawnproc/ldap	master	a	b
+lethink	git	https://github.com/taybin/lethink	master	a	b
 lfe	git	https://github.com/rvirding/lfe	master	https://github.com/rvirding/lfe	Lisp Flavoured Erlang (LFE)
 ling	git	https://github.com/cloudozer/ling	master	https://github.com/cloudozer/ling	Erlang on Xen
 live	git	https://github.com/ninenines/live	master	http://ninenines.eu	Automated module and configuration reloader.
+locker	git	https://github.com/wooga/locker	master	a	b
 locks	git	https://github.com/uwiger/locks	master	https://github.com/uwiger/locks	A scalable, deadlock-resolving resource locker
 log4erl	git	https://github.com/ahmednawras/log4erl	master	https://github.com/ahmednawras/log4erl	A logger for erlang in the spirit of Log4J.
+lol	git	https://github.com/b0oh/lol	master	a	b
+lucid	git	https://github.com/tatsuhiro-t/lucid	master	a	b
 luerl	git	https://github.com/rvirding/luerl	master	https://github.com/rvirding/luerl	Lua in Erlang
+luwak	git	https://github.com/basho/luwak	master	a	b
 mad	git	https://github.com/synrc/mad	master	https://github.com/synrc/mad	Small and Fast Rebar Replacement
+mavg	git	https://github.com/EchoTeam/mavg	master	a	b
+mcd	git	https://github.com/EchoTeam/mcd	master	a	b
+mcerlang	git	https://github.com/fredlund/McErlang	master	a	b
+mc_erl	git	https://github.com/clonejo/mc-erl	master	a	b
 meck	git	https://github.com/eproxus/meck	master	https://github.com/eproxus/meck	A mocking library for Erlang
 mekao	git	https://github.com/ddosia/mekao	master	https://github.com/ddosia/mekao	SQL constructor
+merge_index	git	https://github.com/basho/merge_index	master	a	b
+merl	git	https://github.com/richcarl/merl	master	a	b
+mimetypes	git	https://github.com/spawngrid/mimetypes	master	a	b
+mixer	git	https://github.com/chef/mixer	master	a	b
 mochiweb	git	https://github.com/mochi/mochiweb	master	https://github.com/mochi/mochiweb	MochiWeb is an Erlang library for building lightweight HTTP servers.
+mochiweb_xpath	git	https://github.com/retnuh/mochiweb_xpath	master	a	b
+mockgyver	git	https://github.com/klajo/mockgyver	master	a	b
 modlib	git	https://github.com/gar1t/modlib	master	https://github.com/gar1t/modlib	Web framework based on Erlang's inets httpd
 mongodb	git	https://github.com/comtihon/mongodb-erlang	master	https://github.com/comtihon/mongodb-erlang	MongoDB driver for Erlang
 mongooseim	git	https://github.com/esl/MongooseIM	master	https://www.erlang-solutions.com/products/mongooseim-massively-scalable-ejabberd-platform	Jabber / XMPP server with focus on performance and scalability, by Erlang Solutions
+moyo	git	https://github.com/dwango/moyo	master	a	b
 msgpack	git	https://github.com/msgpack/msgpack-erlang	master	https://github.com/msgpack/msgpack-erlang	MessagePack (de)serializer implementation for Erlang
 mustache	git	https://github.com/mojombo/mustache.erl	master	https://github.com/mojombo/mustache.erl	Mustache template engine for Erlang.
+myproto	git	https://github.com/altenwald/myproto	master	a	b
 mysql	git	https://github.com/dizzyd/erlang-mysql-driver	master	https://github.com/dizzyd/erlang-mysql-driver	Erlang MySQL Driver (from code.google.com)
 n2o	git	https://github.com/5HT/n2o	master	https://github.com/5HT/n2o	WebSocket Application Server
 nat_upnp	git	https://github.com/benoitc/nat_upnp	master	https://github.com/benoitc/nat_upnp	Erlang library to map your internal port to an external using UNP IGD
 neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmitriid/neo4j-erlang	Erlang client library for Neo4J.
 neotoma	git	https://github.com/seancribbs/neotoma	master	https://github.com/seancribbs/neotoma	Erlang library and packrat parser-generator for parsing expression grammars.
+newrelic	git	https://github.com/wooga/newrelic-erlang	master	a	b
+nkdocker	git	https://github.com/Nekso/nkdocker	master	a	b
+nkpacket	git	https://github.com/Nekso/nkpacket	master	a	b
 nodefinder	git	https://github.com/erlanger/nodefinder	0.2.3	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
+oauth2c	git	https://github.com/kivra/oauth2_client	master	a	b
 oauth2	git	https://github.com/kivra/oauth2	master	https://github.com/kivra/oauth2	Erlang Oauth2 implementation
 oauth	git	https://github.com/tim/erlang-oauth	master	https://github.com/tim/erlang-oauth	An Erlang OAuth 1.0 implementation
+of_protocol	git	https://github.com/FlowForwarding/of_protocol	master	a	b
+openflow	git	https://github.com/renatoaguiar/erlang-openflow	master	a	b
+openid	git	https://github.com/brendonh/erl_openid	master	a	b
 openpoker	git	https://github.com/hpyhacking/openpoker	master	https://github.com/hpyhacking/openpoker	Genesis Texas hold'em Game Server
+pal	git	https://github.com/manifest/pal	master	a	b
+parse_trans	git	https://github.com/uwiger/parse_trans	master	a	b
+parsexml	git	https://github.com/maxlapshin/parsexml	master	a	b
 pegjs	git	https://github.com/dmitriid/pegjs	0.3	https://github.com/dmitriid/pegjs	An implementation of PEG.js grammar for Erlang.
+percept2	git	https://github.com/huiqing/percept2	master	a	b
+pgsql	git	https://github.com/semiocast/pgsql	master	a	b
+pkgx	git	https://github.com/arjan/pkgx	master	a	b
+pkt	git	https://github.com/msantos/pkt	master	a	b
+plain_fsm	git	https://github.com/uwiger/plain_fsm	master	a	b
+pmod_transform	git	https://github.com/erlang/pmod_transform	master	a	b
 pobox	git	https://github.com/ferd/pobox	master	https://github.com/ferd/pobox	External buffer processes to protect against mailbox overflow in Erlang
+ponos	git	https://github.com/klarna/ponos	master	a	b
 poolboy	git	https://github.com/devinus/poolboy	master	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 pooler	git	https://github.com/seth/pooler	master	https://github.com/seth/pooler	An OTP Process Pool Application
+pqueue	git	https://github.com/okeuday/pqueue	master	a	b
 procket	git	https://github.com/msantos/procket	master	http://blog.listincomprehension.com/search/label/procket	Erlang interface to low level socket operations
 proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
+props	git	https://github.com/greyarea/props	master	a	b
 protobuffs	git	https://github.com/basho/erlang_protobuffs	master	https://github.com/basho/erlang_protobuffs	An implementation of Google's Protocol Buffers for Erlang, based on ngerakines/erlang_protobuffs.
 psycho	git	https://github.com/gar1t/psycho	master	https://github.com/gar1t/psycho	HTTP server that provides a WSGI-like interface for applications and middleware.
 ptrackerl	git	https://github.com/inaka/ptrackerl	master	https://github.com/inaka/ptrackerl	Pivotal Tracker API Client written in Erlang
+purity	git	https://github.com/mpitid/purity	master	a	b
 push_service	git	https://github.com/hairyhum/push_service	master	https://github.com/hairyhum/push_service	Push service
 qdate	git	https://github.com/choptastic/qdate	0.4.0	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
+qrcode	git	https://github.com/komone/qrcode	master	a	b
+quest	git	https://github.com/eriksoe/ErlangQuest	master	a	b
+rabbit_exchange_type_riak	git	https://github.com/jbrisbin/riak-exchange	master	a	b
 rack	git	https://github.com/erlyvideo/rack	master	https://github.com/erlyvideo/rack	Rack handler for erlang
+radierl	git	https://github.com/vances/radierl	master	a	b
 rafter	git	https://github.com/andrewjstone/rafter	master	https://github.com/andrewjstone/rafter	An Erlang library application which implements the Raft consensus protocol
 ranch	git	https://github.com/ninenines/ranch	1.1.0	http://ninenines.eu	Socket acceptor pool for TCP protocols.
+rbeacon	git	https://github.com/refuge/rbeacon	master	a	b
 rebar	git	https://github.com/rebar/rebar3	master	http://www.rebar3.org	Erlang build tool that makes it easy to compile and test Erlang applications, port drivers and releases.
 rec2json	git	https://github.com/lordnull/rec2json	master	https://github.com/lordnull/rec2json	Compile erlang record definitions into modules to convert them to/from json easily.
 recon	git	https://github.com/ferd/recon	2.2.1	https://github.com/ferd/recon	Collection of functions and scripts to debug Erlang in production.
 record_info	git	https://github.com/bipthelin/erlang-record_info	master	https://github.com/bipthelin/erlang-record_info	Convert between record and proplist
+redgrid	git	https://github.com/jkvor/redgrid	master	a	b
+redo	git	https://github.com/jkvor/redo	master	a	b
 relx	git	https://github.com/erlware/relx	master	https://github.com/erlware/relx	Sane, simple release creation for Erlang
 resource_discovery	git	https://github.com/erlware/resource_discovery	master	http://erlware.org/	An application used to dynamically discover resources present in an Erlang node cluster.
+restc	git	https://github.com/kivra/restclient	master	a	b
+rfc4627_jsonrpc	git	https://github.com/tonyg/erlang-rfc4627	master	a	b
 riakc	git	https://github.com/basho/riak-erlang-client	master	https://github.com/basho/riak-erlang-client	Erlang clients for Riak.
 riak_core	git	https://github.com/basho/riak_core	master	https://github.com/basho/riak_core	Distributed systems infrastructure used by Riak.
 riak_dt	git	https://github.com/basho/riak_dt	master	https://github.com/basho/riak_dt	Convergent replicated datatypes in Erlang
+riak_ensemble	git	https://github.com/basho/riak_ensemble	master	a	b
+riakhttpc	git	https://github.com/basho/riak-erlang-http-client	master	a	b
 riak_kv	git	https://github.com/basho/riak_kv	master	https://github.com/basho/riak_kv	Riak Key/Value Store
+riaknostic	git	https://github.com/basho/riaknostic	master	a	b
+riak_pg	git	https://github.com/cmeiklejohn/riak_pg	master	a	b
 riak_pipe	git	https://github.com/basho/riak_pipe	master	https://github.com/basho/riak_pipe	Riak Pipelines
+riakpool	git	https://github.com/dweldon/riakpool	master	a	b
+riak_sysmon	git	https://github.com/basho/riak_sysmon	master	a	b
+riak_test	git	https://github.com/basho/riak_test	master	a	b
+rivus_cep	git	https://github.com/vascokk/rivus_cep	master	a	b
 rlimit	git	https://github.com/jlouis/rlimit	master	https://github.com/jlouis/rlimit	Magnus Klaar's rate limiter code from etorrent
 safetyvalve	git	https://github.com/jlouis/safetyvalve	master	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node
+seestar	git	https://github.com/iamaleksey/seestar	master	a	b
+setup	git	https://github.com/uwiger/setup	master	a	b
+sext	git	https://github.com/uwiger/sext	master	a	b
 sfmt	git	https://github.com/jj1bdx/sfmt-erlang	master	https://github.com/jj1bdx/sfmt-erlang	SFMT pseudo random number generator for Erlang.
+sgte	git	https://github.com/filippo/sgte	master	a	b
 sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse transform for type based validation.
 shotgun	git	https://github.com/inaka/shotgun	0.1.0	https://github.com/inaka/shotgun	better than just a gun
+sidejob	git	https://github.com/basho/sidejob	master	a	b
+sieve	git	https://github.com/benoitc/sieve	master	a	b
+simhash	git	https://github.com/ferd/simhash	master	a	b
+simple_bridge	git	https://github.com/nitrogen/simple_bridge	master	a	b
+simple_oauth2	git	https://github.com/virtan/simple_oauth2	master	a	b
+skel	git	https://github.com/ParaPhrase/skel	master	a	b
+social	git	https://github.com/dvv/social	master	a	b
+spapi_router	git	https://github.com/spilgames/spapi-router	master	a	b
 sqerl	git	https://github.com/hairyhum/sqerl	master	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
+srly	git	https://github.com/msantos/srly	master	a	b
+sshrpc	git	https://github.com/jj1bdx/sshrpc	master	a	b
+stable	git	https://github.com/dvv/stable	master	a	b
 statebox	git	https://github.com/mochi/statebox	master	https://github.com/mochi/statebox	Erlang state monad with merge/conflict-resolution capabilities. Useful for Riak.
+statebox_riak	git	https://github.com/mochi/statebox_riak	master	a	b
+statman	git	https://github.com/knutin/statman	master	a	b
+statsderl	git	https://github.com/lpgauth/statsderl	master	a	b
+stockdb	git	https://github.com/maxlapshin/stockdb	master	a	b
+stripe	git	https://github.com/mattsta/stripe-erlang	v1	a	b
 swab	git	https://github.com/crownedgrouse/swab	master	https://github.com/crownedgrouse/swab	General purpose buffer handling module
+swarm	git	https://github.com/jeremey/swarm	master	a	b
 switchboard	git	https://github.com/thusfresh/switchboard	master	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
 sync	git	https://github.com/rustyio/sync	master	https://github.com/rustyio/sync	On-the-fly recompiling and reloading in Erlang.
+syntaxerl	git	https://github.com/ten0s/syntaxerl	master	a	b
+syslog	git	https://github.com/Vagabond/erlang-syslog	master	a	b
+taskforce	git	https://github.com/g-andrade/taskforce	master	a	b
 tddreloader	git	https://github.com/version2beta/tddreloader	master	https://github.com/version2beta/tddreloader	Shell utility for recompiling, reloading, and testing code as it changes
+tempo	git	https://github.com/selectel/tempo	master	a	b
+ticktick	git	https://github.com/ericliang/ticktick	master	a	b
+tinymq	git	https://github.com/ChicagoBoss/tinymq	master	a	b
 tinymt	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+trane	git	https://github.com/massemanet/trane	master	a	b
+transit	git	https://github.com/isaiah/transit-erlang	master	a	b
+trie	git	https://github.com/okeuday/trie	master	a	b
 triq	git	https://github.com/krestenkrab/triq	master	https://github.com/krestenkrab/triq	Trifork QuickCheck
 tsung	git	https://github.com/processone/tsung	master	https://github.com/processone/tsung	Tsung is a high-performance benchmark framework for various protocols including HTTP, XMPP, LDAP, etc.
+tunctl	git	https://github.com/msantos/tunctl	master	a	b
+twerl	git	https://github.com/lucaspiller/twerl	oauth	a	b
 twitter_erlang	git	https://github.com/ngerakines/erlang_twitter	master	https://github.com/ngerakines/erlang_twitter	An Erlang twitter client
 unicorn	git	https://github.com/shizzard/unicorn	0.3.0	https://github.com/shizzard/unicorn	Generic configuration server
+unsplit	git	https://github.com/uwiger/unsplit	master	a	b
 uuid	git	https://github.com/okeuday/uuid	v1.4.0	https://github.com/okeuday/uuid	Erlang UUID Implementation
 ux	git	https://github.com/erlang-unicode/ux	master	https://github.com/erlang-unicode/ux	Unicode eXtention for Erlang (Strings, Collation)
+vert	git	https://github.com/msantos/erlang-libvirt	master	a	b
+vmstats	git	https://github.com/ferd/vmstats	master	a	b
+walrus	git	https://github.com/devinus/walrus	master	a	b
 webmachine	git	https://github.com/basho/webmachine	master	https://github.com/basho/webmachine	A REST-based system for building web applications.
+websocket_client	git	https://github.com/jeremyong/websocket_client	master	a	b
 worker_pool	git	https://github.com/inaka/worker_pool	1.0.2	https://github.com/inaka/worker_pool	a simple erlang worker pool
+wsock	git	https://github.com/madtrick/wsock	master	a	b
 xref_runner	git	https://github.com/inaka/xref_runner	0.2.0	https://github.com/inaka/xref_runner	Erlang Xref Runner (inspired in rebar xref)
+yamerl	git	https://github.com/yakaz/yamerl	master	a	b
 yamler	git	https://github.com/goertzenator/yamler	master	https://github.com/goertzenator/yamler	libyaml-based yaml loader for Erlang
 yaws	git	https://github.com/klacke/yaws	master	http://yaws.hyber.org	Yaws webserver
+zab_engine	git	https://github.com/xinmingyao/zab_engine	master	a	b
 zeta	git	https://github.com/s1n4/zeta	 	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
+zippers	git	https://github.com/ferd/zippers	master	a	b
+zlists	git	https://github.com/vjache/erlang-zlists	master	a	b
+zucchini	git	https://github.com/devinus/zucchini	master	a	b
