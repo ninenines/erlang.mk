@@ -177,6 +177,7 @@ flower	git	https://github.com/travelping/flower	master	a	b
 fn	git	https://github.com/reiddraper/fn	master	a	b
 fn	git	https://github.com/reiddraper/fn	master	https://github.com/reiddraper/fn	Function utilities for Erlang
 folsom_cowboy	git	https://github.com/boundary/folsom_cowboy	master	a	b
+folsom_cowboy	git	https://github.com/boundary/folsom_cowboy	master	https://github.com/boundary/folsom_cowboy	A Cowboy based Folsom HTTP Wrapper.
 folsom	git	https://github.com/boundary/folsom	master	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
 folsomite	git	https://github.com/campanja/folsomite	master	a	b
 fuse	git	https://github.com/jlouis/fuse	master	https://github.com/jlouis/fuse	A Circuit Breaker for Erlang

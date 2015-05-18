@@ -177,6 +177,7 @@ flower	https://github.com/travelping/flower	a	b
 fn	https://github.com/reiddraper/fn	a	b
 fn	https://github.com/reiddraper/fn	https://github.com/reiddraper/fn	Function utilities for Erlang
 folsom_cowboy	https://github.com/boundary/folsom_cowboy	a	b
+folsom_cowboy	https://github.com/boundary/folsom_cowboy	https://github.com/boundary/folsom_cowboy	A Cowboy based Folsom HTTP Wrapper.
 folsom	https://github.com/boundary/folsom	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
 folsomite	https://github.com/campanja/folsomite	a	b
 fuse	https://github.com/jlouis/fuse	https://github.com/jlouis/fuse	A Circuit Breaker for Erlang
