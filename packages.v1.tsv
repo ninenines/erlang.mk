@@ -487,6 +487,7 @@ simple_bridge	https://github.com/nitrogen/simple_bridge	https://github.com/nitro
 simple_oauth2	https://github.com/virtan/simple_oauth2	a	b
 simple_oauth2	https://github.com/virtan/simple_oauth2	https://github.com/virtan/simple_oauth2	Simple erlang OAuth2 client module for any http server framework (Google, Facebook, Yandex, Vkontakte are preconfigured)
 skel	https://github.com/ParaPhrase/skel	a	b
+skel	https://github.com/ParaPhrase/skel	https://github.com/ParaPhrase/skel	A Streaming Process-based Skeleton Library for Erlang
 social	https://github.com/dvv/social	a	b
 social	https://github.com/dvv/social	https://github.com/dvv/social	Cowboy handler for social login via OAuth2 providers
 spapi_router	https://github.com/spilgames/spapi-router	a	b
