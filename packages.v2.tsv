@@ -308,6 +308,7 @@ quest	git	https://github.com/eriksoe/ErlangQuest	master	a	b
 rabbit_exchange_type_riak	git	https://github.com/jbrisbin/riak-exchange	master	a	b
 rack	git	https://github.com/erlyvideo/rack	master	https://github.com/erlyvideo/rack	Rack handler for erlang
 radierl	git	https://github.com/vances/radierl	master	a	b
+radierl	git	https://github.com/vances/radierl	master	https://github.com/vances/radierl	RADIUS protocol stack implemented in Erlang.
 rafter	git	https://github.com/andrewjstone/rafter	master	https://github.com/andrewjstone/rafter	An Erlang library application which implements the Raft consensus protocol
 ranch	git	https://github.com/ninenines/ranch	1.1.0	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 rbeacon	git	https://github.com/refuge/rbeacon	master	a	b
