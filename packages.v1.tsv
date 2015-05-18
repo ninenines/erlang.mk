@@ -329,6 +329,7 @@ openid	https://github.com/brendonh/erl_openid	a	b
 openid	https://github.com/brendonh/erl_openid	https://github.com/brendonh/erl_openid	Erlang OpenID
 openpoker	https://github.com/hpyhacking/openpoker	https://github.com/hpyhacking/openpoker	Genesis Texas hold'em Game Server
 pal	https://github.com/manifest/pal	a	b
+pal	https://github.com/manifest/pal	https://github.com/manifest/pal	Pragmatic Authentication Library
 parse_trans	https://github.com/uwiger/parse_trans	a	b
 parsexml	https://github.com/maxlapshin/parsexml	a	b
 parsexml	https://github.com/maxlapshin/parsexml	https://github.com/maxlapshin/parsexml	Simple DOM XML parser with convenient and very simple API
