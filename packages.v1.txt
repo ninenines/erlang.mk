@@ -172,6 +172,7 @@ etest_http	https://github.com/wooga/etest_http	https://github.com/wooga/etest_ht
 etoml	https://github.com/kalta/etoml	a	b
 etoml	https://github.com/kalta/etoml	https://github.com/kalta/etoml	TOML language erlang parser
 eunit_formatters	https://github.com/seancribbs/eunit_formatters	a	b
+eunit_formatters	https://github.com/seancribbs/eunit_formatters	https://github.com/seancribbs/eunit_formatters	Because eunit's output sucks. Let's make it better.
 eunit	https://github.com/richcarl/eunit	a	b
 eunit	https://github.com/richcarl/eunit	https://github.com/richcarl/eunit	The EUnit lightweight unit testing framework for Erlang - this is the canonical development repository.
 euthanasia	https://github.com/doubleyou/euthanasia	a	b
