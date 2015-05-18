@@ -385,6 +385,7 @@ sgte	https://github.com/filippo/sgte	a	b
 sheriff	https://github.com/extend/sheriff	http://ninenines.eu	Parse transform for type based validation.
 shotgun	https://github.com/inaka/shotgun	https://github.com/inaka/shotgun	better than just a gun
 sidejob	https://github.com/basho/sidejob	a	b
+sidejob	https://github.com/basho/sidejob	https://github.com/basho/sidejob	Parallel worker and capacity limiting library for Erlang
 sieve	https://github.com/benoitc/sieve	a	b
 sieve	https://github.com/benoitc/sieve	https://github.com/benoitc/sieve	sieve is a simple TCP routing proxy (layer 7) in erlang
 simhash	https://github.com/ferd/simhash	a	b

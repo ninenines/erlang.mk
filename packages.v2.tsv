@@ -385,6 +385,7 @@ sgte	git	https://github.com/filippo/sgte	master	a	b
 sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse transform for type based validation.
 shotgun	git	https://github.com/inaka/shotgun	0.1.0	https://github.com/inaka/shotgun	better than just a gun
 sidejob	git	https://github.com/basho/sidejob	master	a	b
+sidejob	git	https://github.com/basho/sidejob	master	https://github.com/basho/sidejob	Parallel worker and capacity limiting library for Erlang
 sieve	git	https://github.com/benoitc/sieve	master	a	b
 sieve	git	https://github.com/benoitc/sieve	master	https://github.com/benoitc/sieve	sieve is a simple TCP routing proxy (layer 7) in erlang
 simhash	git	https://github.com/ferd/simhash	master	a	b
