@@ -61,6 +61,7 @@ edate	git	https://github.com/dweldon/edate	master	a	b
 edgar	git	https://github.com/crownedgrouse/edgar	master	https://github.com/crownedgrouse/edgar	Erlang Does GNU AR
 edis	git	https://github.com/inaka/edis	master	http://inaka.github.com/edis/	An Erlang implementation of Redis KV Store
 edns	git	https://github.com/hcvst/erlang-dns	master	a	b
+edns	git	https://github.com/hcvst/erlang-dns	master	https://github.com/hcvst/erlang-dns	Erlang/OTP DNS server
 eep_app	git	https://github.com/darach/eep-erl	master	a	b
 eep	git	https://github.com/virtan/eep	master	https://github.com/virtan/eep	Erlang Easy Profiling (eep) application provides a way to analyze application performance and call hierarchy
 efene	git	https://github.com/efene/efene	master	https://github.com/efene/efene	Alternative syntax for the Erlang Programming Language focusing on simplicity, ease of use and programmer UX
