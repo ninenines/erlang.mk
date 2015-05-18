@@ -127,6 +127,7 @@ enm	https://github.com/basho/enm	a	b
 enm	https://github.com/basho/enm	https://github.com/basho/enm	Erlang driver for nanomsg
 entop	https://github.com/mazenharake/entop	https://github.com/mazenharake/entop	A top-like tool for monitoring an Erlang node
 epcap	https://github.com/msantos/epcap	a	b
+epcap	https://github.com/msantos/epcap	https://github.com/msantos/epcap	Erlang packet capture interface using pcap
 eper	https://github.com/massemanet/eper	https://github.com/massemanet/eper	Erlang performance and debugging tools.
 epgsql	https://github.com/epgsql/epgsql	https://github.com/epgsql/epgsql	Erlang PostgreSQL client library.
 episcina	https://github.com/erlware/episcina	a	b
