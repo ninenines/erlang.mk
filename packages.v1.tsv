@@ -49,6 +49,7 @@ cluster_info	https://github.com/basho/cluster_info	https://github.com/basho/clus
 color	https://github.com/julianduque/erlang-color	a	b
 color	https://github.com/julianduque/erlang-color	https://github.com/julianduque/erlang-color	ANSI colors for your Erlang
 confetti	https://github.com/jtendo/confetti	a	b
+confetti	https://github.com/jtendo/confetti	https://github.com/jtendo/confetti	Erlang configuration provider / application:get_env/2 on steroids
 couchbeam	https://github.com/benoitc/couchbeam	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 couch	https://github.com/benoitc/opencouch	a	b
 couch	https://github.com/benoitc/opencouch	https://github.com/benoitc/opencouch	A embeddable document oriented database compatible with Apache CouchDB
