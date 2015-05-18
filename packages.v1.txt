@@ -259,6 +259,7 @@ mavg	https://github.com/EchoTeam/mavg	https://github.com/EchoTeam/mavg	Erlang ::
 mcd	https://github.com/EchoTeam/mcd	a	b
 mcerlang	https://github.com/fredlund/McErlang	a	b
 mc_erl	https://github.com/clonejo/mc-erl	a	b
+mc_erl	https://github.com/clonejo/mc-erl	https://github.com/clonejo/mc-erl	mc-erl is a server for Minecraft 1.4.7 written in Erlang.
 meck	https://github.com/eproxus/meck	https://github.com/eproxus/meck	A mocking library for Erlang
 mekao	https://github.com/ddosia/mekao	https://github.com/ddosia/mekao	SQL constructor
 merge_index	https://github.com/basho/merge_index	a	b

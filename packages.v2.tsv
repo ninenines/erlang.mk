@@ -259,6 +259,7 @@ mavg	git	https://github.com/EchoTeam/mavg	master	https://github.com/EchoTeam/mav
 mcd	git	https://github.com/EchoTeam/mcd	master	a	b
 mcerlang	git	https://github.com/fredlund/McErlang	master	a	b
 mc_erl	git	https://github.com/clonejo/mc-erl	master	a	b
+mc_erl	git	https://github.com/clonejo/mc-erl	master	https://github.com/clonejo/mc-erl	mc-erl is a server for Minecraft 1.4.7 written in Erlang.
 meck	git	https://github.com/eproxus/meck	master	https://github.com/eproxus/meck	A mocking library for Erlang
 mekao	git	https://github.com/ddosia/mekao	master	https://github.com/ddosia/mekao	SQL constructor
 merge_index	git	https://github.com/basho/merge_index	master	a	b
