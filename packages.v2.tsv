@@ -98,6 +98,7 @@ eredis_pool	git	https://github.com/hiroeorz/eredis_pool	master	a	b
 erlang_js	git	https://github.com/basho/erlang_js	master	https://github.com/basho/erlang_js	A linked-in driver for Erlang to Mozilla's Spidermonkey Javascript runtime.
 erlang_localtime	git	https://github.com/dmitryme/erlang_localtime	master	a	b
 erlang_smtp	git	https://github.com/tonyg/erlang-smtp	master	a	b
+erlang_smtp	git	https://github.com/tonyg/erlang-smtp	master	https://github.com/tonyg/erlang-smtp	Erlang SMTP and POP3 server code.
 erlasticsearch	git	https://github.com/dieswaytoofast/erlasticsearch	master	https://github.com/dieswaytoofast/erlasticsearch	Erlang thrift interface to elastic_search
 erlastic_search	git	https://github.com/tsloughter/erlastic_search	master	a	b
 erlbrake	git	https://github.com/kenpratt/erlbrake	master	a	b
