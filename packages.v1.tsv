@@ -64,6 +64,7 @@ dns	https://github.com/aetrion/dns_erlang	a	b
 dtl	https://github.com/oinksoft/dtl	a	b
 dtl	https://github.com/oinksoft/dtl	https://github.com/oinksoft/dtl	Django Template Language: A full-featured port of the Django template engine to Erlang.
 dynamic_compile	https://github.com/jkvor/dynamic_compile	a	b
+dynamic_compile	https://github.com/jkvor/dynamic_compile	https://github.com/jkvor/dynamic_compile	compile and load erlang modules from string input
 e2	https://github.com/gar1t/e2	http://e2project.org	Library to simply writing correct OTP applications.
 eamf	https://github.com/mrinalwadhwa/eamf	a	b
 eamf	https://github.com/mrinalwadhwa/eamf	https://github.com/mrinalwadhwa/eamf	eAMF provides Action Message Format (AMF) support for Erlang

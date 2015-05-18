@@ -64,6 +64,7 @@ dns	git	https://github.com/aetrion/dns_erlang	master	a	b
 dtl	git	https://github.com/oinksoft/dtl	master	a	b
 dtl	git	https://github.com/oinksoft/dtl	master	https://github.com/oinksoft/dtl	Django Template Language: A full-featured port of the Django template engine to Erlang.
 dynamic_compile	git	https://github.com/jkvor/dynamic_compile	master	a	b
+dynamic_compile	git	https://github.com/jkvor/dynamic_compile	master	https://github.com/jkvor/dynamic_compile	compile and load erlang modules from string input
 e2	git	https://github.com/gar1t/e2	master	http://e2project.org	Library to simply writing correct OTP applications.
 eamf	git	https://github.com/mrinalwadhwa/eamf	master	a	b
 eamf	git	https://github.com/mrinalwadhwa/eamf	master	https://github.com/mrinalwadhwa/eamf	eAMF provides Action Message Format (AMF) support for Erlang
