@@ -56,6 +56,7 @@ dirbusterl	git	https://github.com/silentsignal/DirBustErl	master	https://github.
 dispcount	git	https://github.com/ferd/dispcount	master	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
 dns	git	https://github.com/aetrion/dns_erlang	master	a	b
 dtl	git	https://github.com/oinksoft/dtl	master	a	b
+dtl	git	https://github.com/oinksoft/dtl	master	https://github.com/oinksoft/dtl	Django Template Language: A full-featured port of the Django template engine to Erlang.
 dynamic_compile	git	https://github.com/jkvor/dynamic_compile	master	a	b
 e2	git	https://github.com/gar1t/e2	master	http://e2project.org	Library to simply writing correct OTP applications.
 eamf	git	https://github.com/mrinalwadhwa/eamf	master	a	b

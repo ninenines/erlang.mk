@@ -56,6 +56,7 @@ dirbusterl	https://github.com/silentsignal/DirBustErl	https://github.com/silents
 dispcount	https://github.com/ferd/dispcount	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
 dns	https://github.com/aetrion/dns_erlang	a	b
 dtl	https://github.com/oinksoft/dtl	a	b
+dtl	https://github.com/oinksoft/dtl	https://github.com/oinksoft/dtl	Django Template Language: A full-featured port of the Django template engine to Erlang.
 dynamic_compile	https://github.com/jkvor/dynamic_compile	a	b
 e2	https://github.com/gar1t/e2	http://e2project.org	Library to simply writing correct OTP applications.
 eamf	https://github.com/mrinalwadhwa/eamf	a	b
