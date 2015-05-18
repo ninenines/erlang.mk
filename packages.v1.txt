@@ -172,6 +172,7 @@ folsomite	https://github.com/campanja/folsomite	a	b
 fuse	https://github.com/jlouis/fuse	https://github.com/jlouis/fuse	A Circuit Breaker for Erlang
 gcm	https://github.com/pdincau/gcm-erlang	a	b
 gcprof	https://github.com/knutin/gcprof	a	b
+gcprof	https://github.com/knutin/gcprof	https://github.com/knutin/gcprof	Garbage Collection profiler for Erlang
 geas	https://github.com/crownedgrouse/geas	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
 gen_icmp	https://github.com/msantos/gen_icmp	a	b
 gen_nb_server	https://github.com/kevsmith/gen_nb_server	https://github.com/kevsmith/gen_nb_server	OTP behavior for writing non-blocking servers
