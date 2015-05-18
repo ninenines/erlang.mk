@@ -42,6 +42,7 @@ chronos	https://github.com/lehoff/chronos	https://github.com/lehoff/chronos	Time
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	https://github.com/basho/clique	a	b
 cluster_info	https://github.com/basho/cluster_info	a	b
+cluster_info	https://github.com/basho/cluster_info	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
 color	https://github.com/julianduque/erlang-color	a	b
 color	https://github.com/julianduque/erlang-color	https://github.com/julianduque/erlang-color	ANSI colors for your Erlang
 confetti	https://github.com/jtendo/confetti	a	b

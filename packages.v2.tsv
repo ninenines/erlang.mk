@@ -42,6 +42,7 @@ chronos	git	https://github.com/lehoff/chronos	master	https://github.com/lehoff/c
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	git	https://github.com/basho/clique	develop	a	b
 cluster_info	git	https://github.com/basho/cluster_info	master	a	b
+cluster_info	git	https://github.com/basho/cluster_info	master	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
 color	git	https://github.com/julianduque/erlang-color	master	a	b
 color	git	https://github.com/julianduque/erlang-color	master	https://github.com/julianduque/erlang-color	ANSI colors for your Erlang
 confetti	git	https://github.com/jtendo/confetti	master	a	b
