@@ -183,6 +183,7 @@ jsonerl	https://github.com/lambder/jsonerl	https://github.com/lambder/jsonerl	ye
 json	https://github.com/talentdeficit/json	https://github.com/talentdeficit/json	a high level json library for erlang (17.0+)
 jsonpath	https://github.com/GeneStevens/jsonpath	https://github.com/GeneStevens/jsonpath	Fast Erlang JSON data retrieval and updates via javascript-like notation
 json_rec	https://github.com/justinkirby/json_rec	https://github.com/justinkirby/json_rec	JSON to erlang record
+jsonx	https://github.com/iskra/jsonx	https://github.com/iskra/jsonx	JSONX is an Erlang library for efficient decode and encode JSON, written in C.
 jsx	https://github.com/talentdeficit/jsx	https://github.com/talentdeficit/jsx	An Erlang application for consuming, producing and manipulating JSON.
 kafka	https://github.com/wooga/kafka-erlang	https://github.com/wooga/kafka-erlang	Kafka consumer and producer in Erlang
 kai	https://github.com/synrc/kai	https://github.com/synrc/kai	DHT storage by Takeshi Inoue
