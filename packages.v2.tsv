@@ -314,6 +314,7 @@ sheriff	git	https://github.com/extend/sheriff	master	http://ninenines.eu	Parse t
 shotgun	git	https://github.com/inaka/shotgun	0.1.0	https://github.com/inaka/shotgun	better than just a gun
 sidejob	git	https://github.com/basho/sidejob	master	https://github.com/basho/sidejob	Parallel worker and capacity limiting library for Erlang
 sieve	git	https://github.com/benoitc/sieve	master	https://github.com/benoitc/sieve	sieve is a simple TCP routing proxy (layer 7) in erlang
+sighandler	git	https://github.com/jkingsbery/sighandler	master	https://github.com/jkingsbery/sighandler	Handle UNIX signals in Er    lang
 simhash	git	https://github.com/ferd/simhash	master	https://github.com/ferd/simhash	Simhashing for Erlang -- hashing algorithm to find near-duplicates in binary data.
 simple_bridge	git	https://github.com/nitrogen/simple_bridge	master	https://github.com/nitrogen/simple_bridge	A simple, standardized interface library to Erlang HTTP Servers.
 simple_oauth2	git	https://github.com/virtan/simple_oauth2	master	https://github.com/virtan/simple_oauth2	Simple erlang OAuth2 client module for any http server framework (Google, Facebook, Yandex, Vkontakte are preconfigured)
