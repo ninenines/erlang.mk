@@ -204,6 +204,7 @@ lethink	git	https://github.com/taybin/lethink	master	https://github.com/taybin/l
 lfe	git	https://github.com/rvirding/lfe	master	https://github.com/rvirding/lfe	Lisp Flavoured Erlang (LFE)
 ling	git	https://github.com/cloudozer/ling	master	https://github.com/cloudozer/ling	Erlang on Xen
 live	git	https://github.com/ninenines/live	master	http://ninenines.eu	Automated module and configuration reloader.
+lmq	git	https://github.com/iij/lmq	master	https://github.com/iij/lmq	Lightweight Message Queue
 locker	git	https://github.com/wooga/locker	master	https://github.com/wooga/locker	Atomic distributed 'check and set' for short-lived keys
 locks	git	https://github.com/uwiger/locks	master	https://github.com/uwiger/locks	A scalable, deadlock-resolving resource locker
 log4erl	git	https://github.com/ahmednawras/log4erl	master	https://github.com/ahmednawras/log4erl	A logger for erlang in the spirit of Log4J.

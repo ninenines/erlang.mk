@@ -204,6 +204,7 @@ lethink	https://github.com/taybin/lethink	https://github.com/taybin/lethink	erla
 lfe	https://github.com/rvirding/lfe	https://github.com/rvirding/lfe	Lisp Flavoured Erlang (LFE)
 ling	https://github.com/cloudozer/ling	https://github.com/cloudozer/ling	Erlang on Xen
 live	https://github.com/ninenines/live	http://ninenines.eu	Automated module and configuration reloader.
+lmq	https://github.com/iij/lmq	https://github.com/iij/lmq	Lightweight Message Queue
 locker	https://github.com/wooga/locker	https://github.com/wooga/locker	Atomic distributed 'check and set' for short-lived keys
 locks	https://github.com/uwiger/locks	https://github.com/uwiger/locks	A scalable, deadlock-resolving resource locker
 log4erl	https://github.com/ahmednawras/log4erl	https://github.com/ahmednawras/log4erl	A logger for erlang in the spirit of Log4J.
