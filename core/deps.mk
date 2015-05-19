@@ -78,10 +78,8 @@ define dep_autopatch
 endef
 
 define dep_autopatch2
-	if [ -f $(DEPS_DIR)/$(1)/rebar.config.script ]; then \
-		$(call dep_autopatch_rebar_script,$(1)); \
-		$(call dep_autopatch_rebar,$(1)); \
-	elif [ -f $(DEPS_DIR)/$(1)/rebar.config ]; then \
+	if [ -f $(DEPS_DIR)/$(1)/rebar.config -o -f $(DEPS_DIR)/$(1)/rebar.config.script ]; then \
+		$(call dep_autopatch_rebar_utils); \
 		$(call dep_autopatch_rebar,$(1)); \
 	else \
 		$(call dep_autopatch_gen,$(1)); \
@@ -112,10 +110,17 @@ define dep_autopatch_gen
 	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
 endef
 
-define dep_autopatch_rebar_script
-	mv $(DEPS_DIR)/$(1)/rebar.config.script $(DEPS_DIR)/$(1)/rebar.config.script.orig; \
-	sed -r 's/rebar_utils:is_arch\((.*)\)/\1 =:= "$(PLATFORM)"/g' $(DEPS_DIR)/$(1)/rebar.config.script.orig \
-		> $(DEPS_DIR)/$(1)/rebar.config.script
+define dep_autopatch_rebar_utils
+	mkdir -p $(ERLANG_MK_TMP)/ebin; \
+	if [ ! -f $(ERLANG_MK_TMP)/rebar.hrl ]; then \
+		$(call core_http_get,$(ERLANG_MK_TMP)/rebar.hrl,https://raw.githubusercontent.com/rebar/rebar/791db716b5a3a7671e0b351f95ddf24b848ee173/include/rebar.hrl); \
+	fi; \
+	if [ ! -f $(ERLANG_MK_TMP)/rebar_utils.erl ]; then \
+		$(call core_http_get,$(ERLANG_MK_TMP)/rebar_utils.erl,https://raw.githubusercontent.com/rebar/rebar/791db716b5a3a7671e0b351f95ddf24b848ee173/src/rebar_utils.erl); \
+	fi; \
+	if [ ! -f $(ERLANG_MK_TMP)/ebin/rebar_utils.beam ]; then \
+		erlc -o $(ERLANG_MK_TMP)/ebin $(ERLANG_MK_TMP)/rebar_utils.erl; \
+	fi
 endef
 
 define dep_autopatch_rebar
@@ -157,10 +162,9 @@ define dep_autopatch_rebar.erl
 					({d, D}) ->
 						Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n");
 					({platform_define, Regex, D}) ->
-						case re:run("$(PLATFORM)", Regex, [{capture, none}]) of
-							nomatch -> ok;
-							match ->
-								Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n")
+						case rebar_utils:is_arch(Regex) of
+							true -> Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n");
+							false -> ok
 						end;
 					({parse_transform, PT}) ->
 						Write("ERLC_OPTS += +'{parse_transform, " ++ atom_to_list(PT) ++ "}'\n");
@@ -233,7 +237,7 @@ define dep_autopatch_rebar.erl
 		Write(["COMPILE_FIRST +=", [[" ", atom_to_list(M)] || M <- First,
 			lists:member("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", ErlFiles)], "\n"])
 	end(),
-	PortSpec = fun(Name, {_, Output, Input, [{env, Env}]}) ->
+	PortSpecWrite = fun(Name, Output, Input, Env) ->
 		filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
 		file:write_file("$(DEPS_DIR)/$(1)/c_src/Makefile." ++ Name, [
 			[["override ", K, " = $$$$\(shell echo ", Escape(V), "\)\n"]
@@ -242,6 +246,21 @@ define dep_autopatch_rebar.erl
 			"-o $(DEPS_DIR)/$(1)/", Output,
 			[[" ../", F] || F <- Input]
 		])
+	end,
+	PortSpecNoop = fun(Name) -> file:write_file("$(DEPS_DIR)/$(1)/c_src/Makefile." ++ Name, "noop:\n") end,
+	PortSpec = fun
+		(Name, {Output, Input}) ->
+			PortSpecWrite(Name, Output, Input, []);
+		(Name, {Regex, Output, Input}) ->
+			case rebar_utils:is_arch(Regex) of
+				true -> PortSpecWrite(Name, Output, Input, []);
+				false -> PortSpecNoop(Name)
+			end;
+		(Name, {Regex, Output, Input, [{env, Env}]}) ->
+			case rebar_utils:is_arch(Regex) of
+				true -> PortSpecWrite(Name, Output, Input, Env);
+				false -> PortSpecNoop(Name)
+			end
 	end,
 	fun() ->
 		case filelib:is_dir("$(DEPS_DIR)/$(1)/c_src") of
@@ -266,6 +285,9 @@ define dep_autopatch_rebar.erl
 			_ -> ok
 		end
 	end(),
+	EnvValue = fun(V) ->
+		Escape(re:replace(V, "\\\\$$$$\ERLANG_ARCH", rebar_utils:wordsize(), [{return, list}]))
+	end,
 	fun() ->
 		case lists:keyfind(port_env, 1, Conf) of
 			{_, Vars} ->
@@ -274,18 +296,19 @@ define dep_autopatch_rebar.erl
 						case lists:member(K, Acc) of
 							true -> Acc;
 							false ->
-								Write(K ++ " = $$$$\(shell echo " ++ Escape(V) ++ "\)\n"),
+								Write(K ++ " = $$$$\(shell echo " ++ EnvValue(V) ++ "\)\n"),
 								[K|Acc]
 						end;
 					({Regex, K, V}, Acc) ->
 						case lists:member(K, Acc) of
 							true -> Acc;
 							false ->
-								case re:run("$(PLATFORM)", Regex, [{capture, none}]) of
-									nomatch -> Acc;
-									match ->
-										Write(K ++ " = $$$$\(shell echo " ++ Escape(V) ++ "\)\n"),
-										[K|Acc]
+								case rebar_utils:is_arch(Regex) of
+									true ->
+										Write(K ++ " = $$$$\(shell echo " ++ EnvValue(V) ++ "\)\n"),
+										[K|Acc];
+									false ->
+										Acc
 								end
 						end
 				end, [], Vars),
@@ -308,8 +331,8 @@ define dep_autopatch_rebar.erl
 					{compile, Command} ->
 						Write("\npre-app::\n\t" ++ Escape(Command) ++ "\n");
 					{Regex, compile, Command0} ->
-						case re:run("$(PLATFORM)", Regex, [{capture, none}]) of
-							match ->
+						case rebar_utils:is_arch(Regex) of
+							true ->
 								Command = case Command0 of
 									"make -C" ++ _ -> Escape(Command0);
 									"gmake -C" ++ _ -> Escape(Command0);
@@ -318,7 +341,7 @@ define dep_autopatch_rebar.erl
 									_ -> Command0
 								end,
 								Write("\npre-app::\n\t" ++ Command ++ "\n");
-							nomatch ->
+							false ->
 								ok
 						end;
 					_ -> ok
@@ -339,10 +362,7 @@ define dep_autopatch_rebar.erl
 				ErlFile = "$(DEPS_DIR)/$(1)/plugins/" ++ atom_to_list(Plugin) ++ ".erl",
 				try
 					{ok, PF} = file:read_file(ErlFile),
-					PF2 = re:replace(PF, "rebar_utils:find_files", "find_files", [global, {return, list}]),
-					PF3 = PF2 ++ "find_files(Dir, Regex) ->
-						filelib:fold_files(Dir, Regex, true, fun(F, Acc) -> [F|Acc] end, []).",
-					ok = file:write_file(ErlFile, PF3),
+					ok = file:write_file(ErlFile, PF),
 					{ok, Mod, Bin} = compile:file(ErlFile, [binary]),
 					{module, Mod} = code:load_binary(Mod, ErlFile, Bin),
 					c:cd("$(DEPS_DIR)/$(1)/"),

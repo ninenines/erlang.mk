@@ -28,6 +28,11 @@ V ?= 0
 gen_verbose_0 = @echo " GEN   " $@;
 gen_verbose = $(gen_verbose_$(V))
 
+# Temporary files directory.
+
+ERLANG_MK_TMP ?= $(CURDIR)/.erlang.mk
+export ERLANG_MK_TMP
+
 # "erl" command.
 
 ERL = erl +A0 -noinput -boot start_clean
@@ -119,7 +124,7 @@ endef
 
 # Adding erlang.mk to make Erlang scripts who call init:get_plain_arguments() happy.
 define erlang
-$(ERL) -eval "$(subst $(newline),,$(subst ",\",$(1)))" -- erlang.mk
+$(ERL) -pa $(ERLANG_MK_TMP)/ebin -eval "$(subst $(newline),,$(subst ",\",$(1)))" -- erlang.mk
 endef
 
 ifeq ($(shell which wget 2>/dev/null | wc -l), 1)

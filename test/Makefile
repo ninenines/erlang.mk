@@ -8,6 +8,11 @@
 
 V ?= 0
 
+# Temporary files directory.
+
+ERLANG_MK_TMP=$(CURDIR)/tmp
+export ERLANG_MK_TMP
+
 # t = Verbosity control for tests
 # v = Verbosity control for erlang.mk
 # i = Command to display (or suppress) info messages
@@ -43,7 +48,7 @@ all: clean app ct eunit tests-cover docs pkgs
 	$i '+---------------------+'
 
 clean:
-	$t rm -rf app1
+	$t rm -rf app1 $(ERLANG_MK_TMP)
 
 app: app1
 	$i "app: Testing the 'app' target."
