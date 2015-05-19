@@ -330,6 +330,7 @@ statebox	git	https://github.com/mochi/statebox	master	https://github.com/mochi/s
 statebox_riak	git	https://github.com/mochi/statebox_riak	master	https://github.com/mochi/statebox_riak	Convenience library that makes it easier to use statebox with riak, extracted from best practices in our production code at Mochi Media.
 statman	git	https://github.com/knutin/statman	master	https://github.com/knutin/statman	Efficiently collect massive volumes of metrics inside the Erlang VM
 statsderl	git	https://github.com/lpgauth/statsderl	master	https://github.com/lpgauth/statsderl	StatsD client (erlang)
+stdinout_pool	git	https://github.com/mattsta/erlang-stdinout-pool	master	https://github.com/mattsta/erlang-stdinout-pool	stdinout_pool    : stuff goes in, stuff goes out. there's never any miscommunication.
 stockdb	git	https://github.com/maxlapshin/stockdb	master	https://github.com/maxlapshin/stockdb	Database for storing Stock Exchange quotes in erlang
 stripe	git	https://github.com/mattsta/stripe-erlang	v1	https://github.com/mattsta/stripe-erlang	Erlang interface to the stripe.com API
 swab	git	https://github.com/crownedgrouse/swab	master	https://github.com/crownedgrouse/swab	General purpose buffer handling module
