@@ -146,7 +146,7 @@ define dep_autopatch_rebar.erl
 	Escape = fun (Text) ->
 		re:replace(Text, "\\\\$$$$", "\$$$$$$$$", [global, {return, list}])
 	end,
-	Write("IGNORE_DEPS = edown eper eunit_formatters meck "
+	Write("IGNORE_DEPS = edown eper eunit_formatters meck node_package "
 		"rebar_lock_deps_plugin rebar_vsn_plugin reltool_util\n\n"),
 	fun() ->
 		Write("ERLC_OPTS = +debug_info\n"),
