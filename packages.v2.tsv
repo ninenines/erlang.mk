@@ -354,6 +354,7 @@ tsung	git	https://github.com/processone/tsung	master	https://github.com/processo
 tunctl	git	https://github.com/msantos/tunctl	master	https://github.com/msantos/tunctl	Erlang TUN/TAP interface
 twerl	git	https://github.com/lucaspiller/twerl	oauth	https://github.com/lucaspiller/twerl	Erlang client for the Twitter Streaming API
 twitter_erlang	git	https://github.com/ngerakines/erlang_twitter	master	https://github.com/ngerakines/erlang_twitter	An Erlang twitter client
+ucol_nif	git	https://github.com/refuge/ucol_nif	master	https://github.com/refuge/ucol_nif	ICU based collation Erlang module
 unicorn	git	https://github.com/shizzard/unicorn	0.3.0	https://github.com/shizzard/unicorn	Generic configuration server
 unsplit	git	https://github.com/uwiger/unsplit	master	https://github.com/uwiger/unsplit	Resolves conflicts in Mnesia after network splits
 uuid	git	https://github.com/okeuday/uuid	v1.4.0	https://github.com/okeuday/uuid	Erlang UUID Implementation
