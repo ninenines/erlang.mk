@@ -136,14 +136,15 @@ define dep_autopatch_rebar.erl
 		{ok, Conf0} -> Conf0;
 		_ -> []
 	end,
-	Conf = case filelib:is_file("$(DEPS_DIR)/$(1)/rebar.config.script") of
-		false -> Conf1;
+	{Conf, OsEnv} = case filelib:is_file("$(DEPS_DIR)/$(1)/rebar.config.script") of
+		false -> {Conf1, []};
 		true ->
 			Bindings0 = erl_eval:new_bindings(),
 			Bindings1 = erl_eval:add_binding('CONFIG', Conf1, Bindings0),
 			Bindings = erl_eval:add_binding('SCRIPT', "$(DEPS_DIR)/$(1)/rebar.config.script", Bindings1),
+			Before = os:getenv(),
 			{ok, Conf2} = file:script("$(DEPS_DIR)/$(1)/rebar.config.script", Bindings),
-			Conf2
+			{Conf2, lists:foldl(fun(E, Acc) -> lists:delete(E, Acc) end, os:getenv(), Before)}
 	end,
 	Write = fun (Text) ->
 		file:write_file("$(DEPS_DIR)/$(1)/Makefile", Text, [append])
@@ -153,6 +154,8 @@ define dep_autopatch_rebar.erl
 	end,
 	Write("IGNORE_DEPS = edown eper eunit_formatters meck node_package "
 		"rebar_lock_deps_plugin rebar_vsn_plugin reltool_util\n\n"),
+	Write("C_SRC_DIR = /path/do/not/exist\n\n"),
+	Write("DRV_CFLAGS = -fPIC\nexport DRV_CFLAGS\n\n"),
 	fun() ->
 		Write("ERLC_OPTS = +debug_info\n"),
 		case lists:keyfind(erl_opts, 1, Conf) of
@@ -237,87 +240,6 @@ define dep_autopatch_rebar.erl
 		Write(["COMPILE_FIRST +=", [[" ", atom_to_list(M)] || M <- First,
 			lists:member("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", ErlFiles)], "\n"])
 	end(),
-	PortSpecWrite = fun(Name, Output, Input, Env) ->
-		filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
-		file:write_file("$(DEPS_DIR)/$(1)/c_src/Makefile." ++ Name, [
-			[["override ", K, " = $$$$\(shell echo ", Escape(V), "\)\n"]
-				|| {_, K, V} <- Env],
-			"\nall:\n\t$$$$\(CC\) $$$$\(CFLAGS\) $$$$\(LDLIBS\) $$$$\(LDFLAGS\) ",
-			"-o $(DEPS_DIR)/$(1)/", Output,
-			[[" ../", F] || F <- Input]
-		])
-	end,
-	PortSpecNoop = fun(Name) -> file:write_file("$(DEPS_DIR)/$(1)/c_src/Makefile." ++ Name, "noop:\n") end,
-	PortSpec = fun
-		(Name, {Output, Input}) ->
-			PortSpecWrite(Name, Output, Input, []);
-		(Name, {Regex, Output, Input}) ->
-			case rebar_utils:is_arch(Regex) of
-				true -> PortSpecWrite(Name, Output, Input, []);
-				false -> PortSpecNoop(Name)
-			end;
-		(Name, {Regex, Output, Input, [{env, Env}]}) ->
-			case rebar_utils:is_arch(Regex) of
-				true -> PortSpecWrite(Name, Output, Input, Env);
-				false -> PortSpecNoop(Name)
-			end
-	end,
-	fun() ->
-		case filelib:is_dir("$(DEPS_DIR)/$(1)/c_src") of
-			false -> ok;
-			true ->
-				Sources = filelib:fold_files("$(DEPS_DIR)/$(1)/c_src", ".*\\\\.(c|C|cc|cpp)$$$$", true, fun(F, Acc) -> [F|Acc] end, []),
-				Write(io_lib:format("SOURCES :=~s\n", [[[" ", S] || S <- Sources]]))
-		end
-	end(),
-	fun() ->
-		case lists:keyfind(port_specs, 1, Conf) of
-			{_, [{Output, Wildcards}]} ->
-				filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
-				Write("C_SRC_OUTPUT = " ++ Escape(Output) ++ "\n"),
-				Sources = [[[" ", S] || S <- filelib:wildcard("$(DEPS_DIR)/$(1)/" ++ W)] || W <- Wildcards],
-				Write(io_lib:format("SOURCES :=~s\n", [Sources]));
-			{_, [First, Second]} ->
-				PortSpec("1", First),
-				PortSpec("2", Second),
-				file:write_file("$(DEPS_DIR)/$(1)/c_src/Makefile",
-					"all:\n\t$$$$\(MAKE\) -f Makefile.1\n\t$$$$\(MAKE\) -f Makefile.2\n");
-			_ -> ok
-		end
-	end(),
-	EnvValue = fun(V) ->
-		Escape(re:replace(V, "\\\\$$$$\ERLANG_ARCH", rebar_utils:wordsize(), [{return, list}]))
-	end,
-	fun() ->
-		case lists:keyfind(port_env, 1, Conf) of
-			{_, Vars} ->
-				lists:foldl(fun
-					({K, V}, Acc) ->
-						case lists:member(K, Acc) of
-							true -> Acc;
-							false ->
-								Write(K ++ " = $$$$\(shell echo " ++ EnvValue(V) ++ "\)\n"),
-								[K|Acc]
-						end;
-					({Regex, K, V}, Acc) ->
-						case lists:member(K, Acc) of
-							true -> Acc;
-							false ->
-								case rebar_utils:is_arch(Regex) of
-									true ->
-										Write(K ++ " = $$$$\(shell echo " ++ EnvValue(V) ++ "\)\n"),
-										[K|Acc];
-									false ->
-										Acc
-								end
-						end
-				end, [], Vars),
-				Write("CFLAGS += $$$$\(DRV_CFLAGS\)\n"),
-				Write("CXXFLAGS += $$$$\(DRV_CFLAGS\)\n"),
-				Write("LDFLAGS += $$$$\(DRV_LDFLAGS\)\n");
-			_ -> ok
-		end
-	end(),
 	Write("\n\nrebar_dep: pre-deps deps pre-app app\n"),
 	Write("\npre-deps::\n"),
 	Write("\npre-app::\n"),
@@ -348,21 +270,93 @@ define dep_autopatch_rebar.erl
 				end || H <- Hooks]
 		end
 	end(),
-	Write("\ninclude ../../erlang.mk"),
-	fun() ->
-		case filelib:is_dir("$(DEPS_DIR)/$(1)/c_src") of
-			false -> ok;
-			true ->
-				Write("\n\nCFLAGS := $$$$\(filter-out -std=c99 -Wmissing-prototypes,$$$$\(CFLAGS\)\)\n")
+	ShellToMk = fun(V) ->
+		re:replace(V, "(\\\\$$$$)(\\\\w*)", "\\\\1(\\\\2)", [{return, list}, global])
+	end,
+	PortSpecs = fun() ->
+		case lists:keyfind(port_specs, 1, Conf) of
+			false ->
+				case filelib:wildcard("$(DEPS_DIR)/$(1)/c_src/*.c") of
+					[] -> [];
+					Src -> [{"priv/$(1)_drv.so", ["c_src/*.c"], []}]
+				end;
+			{_, Specs} ->
+				lists:flatten([case S of
+					{Output, Input} -> {ShellToMk(Output), Input, []};
+					{Regex, Output, Input} ->
+						case rebar_utils:is_arch(Regex) of
+							true -> {ShellToMk(Output), Input, []};
+							false -> []
+						end;
+					{Regex, Output, Input, [{env, Env}]} ->
+						case rebar_utils:is_arch(Regex) of
+							true -> {ShellToMk(Output), Input, Env};
+							false -> []
+						end
+				end || S <- Specs])
 		end
 	end(),
+	PortSpecWrite = fun (Text) ->
+		file:write_file("$(DEPS_DIR)/$(1)/c_src/Makefile.erlang.mk", Text, [append])
+	end,
+	case PortSpecs of
+		[] -> ok;
+		_ ->
+			Write("\npre-app::\n\t$$$$\(MAKE) -f c_src/Makefile.erlang.mk\n"),
+			PortSpecWrite(io_lib:format("ERL_CFLAGS = -finline-functions -Wall -fPIC -I ~s/erts-~s/include -I ~s\n",
+				[code:root_dir(), erlang:system_info(version), code:lib_dir(erl_interface, include)])),
+			PortSpecWrite(io_lib:format("ERL_LDFLAGS = -L ~s -lerl_interface -lei\n",
+				[code:lib_dir(erl_interface, lib)])),
+			PortSpecWrite(["\nERLANG_ARCH = ", rebar_utils:wordsize(), "\n"]),
+			[PortSpecWrite(["\n", E, "\n"]) || E <- OsEnv],
+			FilterEnv = fun(Env) ->
+				lists:flatten([case E of
+					{_, _} -> E;
+					{Regex, K, V} ->
+						case rebar_utils:is_arch(Regex) of
+							true -> {K, V};
+							false -> []
+						end
+				end || E <- Env])
+			end,
+			MergeEnv = fun(Env) ->
+				lists:foldl(fun ({K, V}, Acc) ->
+					case lists:keyfind(K, 1, Acc) of
+						false -> [{K, rebar_utils:expand_env_variable(V, K, "")}|Acc];
+						{_, V0} -> [{K, rebar_utils:expand_env_variable(V, K, V0)}|Acc]
+					end
+				end, [], Env)
+			end,
+			PortEnv = case lists:keyfind(port_env, 1, Conf) of
+				false -> [];
+				{_, PortEnv0} -> FilterEnv(PortEnv0)
+			end,
+			PortSpec = fun ({Output, Input0, Env}) ->
+				filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
+				Input = [[" ", I] || I <- Input0],
+				PortSpecWrite([
+					[["\n", K, " = ", ShellToMk(V)] || {K, V} <- lists:reverse(MergeEnv(PortEnv ++ FilterEnv(Env)))],
+					"\n\nall:: ", Output, "\n\n",
+					"%.o: %.c\n\t$$$$\(CC) -c -o $$$$\@ $$$$\< $$$$\(CFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
+					"%.o: %.C\n\t$$$$\(CXX) -c -o $$$$\@ $$$$\< $$$$\(CXXFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
+					"%.o: %.cc\n\t$$$$\(CXX) -c -o $$$$\@ $$$$\< $$$$\(CXXFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
+					"%.o: %.cpp\n\t$$$$\(CXX) -c -o $$$$\@ $$$$\< $$$$\(CXXFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
+					Output, ": $$$$\(foreach ext,.c .C .cc .cpp,",
+						"$$$$\(patsubst %$$$$\(ext),%.o,$$$$\(filter %$$$$\(ext),$$$$\(wildcard", Input, "))))\n",
+					"\t$$$$\(CC) -o $$$$\@ $$$$\? $$$$\(LDFLAGS) $$$$\(ERL_LDFLAGS) $$$$\(DRV_LDFLAGS) $$$$\(EXE_LDFLAGS)",
+					case filename:extension(Output) of
+						[] -> "\n";
+						_ -> " -shared\n"
+					end])
+			end,
+			[PortSpec(S) || S <- PortSpecs]
+	end,
+	Write("\ninclude ../../erlang.mk"),
 	fun() ->
 		case lists:keyfind(plugins, 1, Conf) of
 			{_, [Plugin]} when is_atom(Plugin) ->
 				ErlFile = "$(DEPS_DIR)/$(1)/plugins/" ++ atom_to_list(Plugin) ++ ".erl",
 				try
-					{ok, PF} = file:read_file(ErlFile),
-					ok = file:write_file(ErlFile, PF),
 					{ok, Mod, Bin} = compile:file(ErlFile, [binary]),
 					{module, Mod} = code:load_binary(Mod, ErlFile, Bin),
 					c:cd("$(DEPS_DIR)/$(1)/"),

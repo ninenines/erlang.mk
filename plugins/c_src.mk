@@ -5,9 +5,10 @@
 
 # Configuration.
 
-C_SRC_DIR = $(CURDIR)/c_src
+C_SRC_DIR ?= $(CURDIR)/c_src
 C_SRC_ENV ?= $(C_SRC_DIR)/env.mk
 C_SRC_OUTPUT ?= $(CURDIR)/priv/$(PROJECT).so
+C_SRC_TYPE ?= shared
 
 # System type and C compiler/flags.
 
@@ -30,7 +31,10 @@ CFLAGS += -fPIC -I $(ERTS_INCLUDE_DIR) -I $(ERL_INTERFACE_INCLUDE_DIR)
 CXXFLAGS += -fPIC -I $(ERTS_INCLUDE_DIR) -I $(ERL_INTERFACE_INCLUDE_DIR)
 
 LDLIBS += -L $(ERL_INTERFACE_LIB_DIR) -lerl_interface -lei
+
+ifeq ($(C_SRC_TYPE),shared)
 LDFLAGS += -shared
+endif
 
 # Verbosity.
 
@@ -52,11 +56,7 @@ app:: app-c_src
 test-build:: app-c_src
 
 app-c_src:
-	$(MAKE) -C $(C_SRC_DIR) \
-		CFLAGS="$(CFLAGS)" \
-		CXXFLAGS="$(CXXFLAGS)" \
-		LDLIBS="$(LDLIBS)" \
-		LDFLAGS="$(LDFLAGS)"
+	$(MAKE) -C $(C_SRC_DIR)
 
 clean::
 	$(MAKE) -C $(C_SRC_DIR) clean
