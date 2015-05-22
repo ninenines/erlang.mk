@@ -142,6 +142,7 @@ fn	https://github.com/reiddraper/fn	https://github.com/reiddraper/fn	Function ut
 folsom_cowboy	https://github.com/boundary/folsom_cowboy	https://github.com/boundary/folsom_cowboy	A Cowboy based Folsom HTTP Wrapper.
 folsom	https://github.com/boundary/folsom	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
 folsomite	https://github.com/campanja/folsomite	https://github.com/campanja/folsomite	blow up your graphite / riemann server with folsom metrics
+fs	https://github.com/synrc/fs	https://github.com/synrc/fs	Erlang FileSystem Listener
 fuse	https://github.com/jlouis/fuse	https://github.com/jlouis/fuse	A Circuit Breaker for Erlang
 gcm	https://github.com/pdincau/gcm-erlang	https://github.com/pdincau/gcm-erlang	An Erlang application for Google Cloud Messaging
 gcprof	https://github.com/knutin/gcprof	https://github.com/knutin/gcprof	Garbage Collection profiler for Erlang

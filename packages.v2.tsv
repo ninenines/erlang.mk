@@ -142,6 +142,7 @@ fn	git	https://github.com/reiddraper/fn	master	https://github.com/reiddraper/fn	
 folsom_cowboy	git	https://github.com/boundary/folsom_cowboy	master	https://github.com/boundary/folsom_cowboy	A Cowboy based Folsom HTTP Wrapper.
 folsom	git	https://github.com/boundary/folsom	master	https://github.com/boundary/folsom	Expose Erlang Events and Metrics
 folsomite	git	https://github.com/campanja/folsomite	master	https://github.com/campanja/folsomite	blow up your graphite / riemann server with folsom metrics
+fs	git	https://github.com/synrc/fs	master	https://github.com/synrc/fs	Erlang FileSystem Listener
 fuse	git	https://github.com/jlouis/fuse	master	https://github.com/jlouis/fuse	A Circuit Breaker for Erlang
 gcm	git	https://github.com/pdincau/gcm-erlang	master	https://github.com/pdincau/gcm-erlang	An Erlang application for Google Cloud Messaging
 gcprof	git	https://github.com/knutin/gcprof	master	https://github.com/knutin/gcprof	Garbage Collection profiler for Erlang
