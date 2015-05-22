@@ -147,6 +147,7 @@ fuse	git	https://github.com/jlouis/fuse	master	https://github.com/jlouis/fuse	A 
 gcm	git	https://github.com/pdincau/gcm-erlang	master	https://github.com/pdincau/gcm-erlang	An Erlang application for Google Cloud Messaging
 gcprof	git	https://github.com/knutin/gcprof	master	https://github.com/knutin/gcprof	Garbage Collection profiler for Erlang
 geas	git	https://github.com/crownedgrouse/geas	master	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
+gen_cycle	git	https://github.com/aerosol/gen_cycle	develop	https://github.com/aerosol/gen_cycle	Simple, generic OTP behaviour for recurring tasks
 gen_icmp	git	https://github.com/msantos/gen_icmp	master	https://github.com/msantos/gen_icmp	Erlang interface to ICMP sockets
 gen_nb_server	git	https://github.com/kevsmith/gen_nb_server	master	https://github.com/kevsmith/gen_nb_server	OTP behavior for writing non-blocking servers
 gen_paxos	git	https://github.com/gburd/gen_paxos	master	https://github.com/gburd/gen_paxos	An Erlang/OTP-style implementation of the PAXOS distributed consensus protocol
