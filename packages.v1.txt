@@ -169,6 +169,7 @@ hottub	https://github.com/bfrog/hottub	https://github.com/bfrog/hottub	Permanent
 hyper	https://github.com/GameAnalytics/hyper	https://github.com/GameAnalytics/hyper	Erlang implementation of HyperLogLog
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	https://github.com/robbielynch/ierlang	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
+iota	https://github.com/jpgneves/iota	https://github.com/jpgneves/iota	iota (Inter-dependency Objective Testing Apparatus) - a tool to enforce clean separation of responsibilities in Erlang code
 ircbot	https://github.com/gdamjan/erlang-irc-bot	https://github.com/gdamjan/erlang-irc-bot	A simple extendable irc bot in Erlang
 ircd	https://github.com/tonyg/erlang-ircd	https://github.com/tonyg/erlang-ircd	A pluggable IRC daemon application/library for Erlang.
 irc_lib	https://github.com/OtpChatBot/irc_lib	https://github.com/OtpChatBot/irc_lib	Erlang irc client library
