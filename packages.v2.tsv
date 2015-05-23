@@ -30,6 +30,7 @@ chronos	git	https://github.com/lehoff/chronos	master	https://github.com/lehoff/c
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	git	https://github.com/basho/clique	develop	https://github.com/basho/clique	CLI Framework for Erlang
 cluster_info	git	https://github.com/basho/cluster_info	master	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
+concuerror	git	https://github.com/parapluu/Concuerror	master	http://www.concuerror.com/	Concuerror is a systematic testing tool for concurrent Erlang programs
 confetti	git	https://github.com/jtendo/confetti	master	https://github.com/jtendo/confetti	Erlang configuration provider / application:get_env/2 on steroids
 couchbeam	git	https://github.com/benoitc/couchbeam	master	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 couch	git	https://github.com/benoitc/opencouch	master	https://github.com/benoitc/opencouch	A embeddable document oriented database compatible with Apache CouchDB

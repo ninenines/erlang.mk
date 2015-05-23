@@ -30,6 +30,7 @@ chronos	https://github.com/lehoff/chronos	https://github.com/lehoff/chronos	Time
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	https://github.com/basho/clique	https://github.com/basho/clique	CLI Framework for Erlang
 cluster_info	https://github.com/basho/cluster_info	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
+concuerror	https://github.com/parapluu/Concuerror	http://www.concuerror.com/	Concuerror is a systematic testing tool for concurrent Erlang programs
 confetti	https://github.com/jtendo/confetti	https://github.com/jtendo/confetti	Erlang configuration provider / application:get_env/2 on steroids
 couchbeam	https://github.com/benoitc/couchbeam	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 couch	https://github.com/benoitc/opencouch	https://github.com/benoitc/opencouch	A embeddable document oriented database compatible with Apache CouchDB
