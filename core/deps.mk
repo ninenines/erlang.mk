@@ -378,7 +378,7 @@ define dep_autopatch_appsrc.erl
 		true ->
 			fun() ->
 				{ok, [{application, $(1), L}]} = file:consult(AppSrcIn),
-				L2 = case lists:keyfind(modules, 1, L) of {_, _} -> L; false -> [{modules, []}|L] end,
+				L2 = lists:keystore(modules, 1, L, {modules, []}),
 				L3 = case lists:keyfind(vsn, 1, L2) of {vsn, git} -> lists:keyreplace(vsn, 1, L2, {vsn, "git"}); _ -> L2 end,
 				ok = file:write_file(AppSrcOut, io_lib:format("~p.~n", [{application, $(1), L3}]))
 			end(),
