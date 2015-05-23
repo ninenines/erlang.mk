@@ -48,6 +48,7 @@ dh_date	https://github.com/daleharvey/dh_date	https://github.com/daleharvey/dh_d
 dhtcrawler	https://github.com/kevinlynx/dhtcrawler	https://github.com/kevinlynx/dhtcrawler	dhtcrawler is a DHT crawler written in erlang. It can join a DHT network and crawl many P2P torrents.
 dirbusterl	https://github.com/silentsignal/DirBustErl	https://github.com/silentsignal/DirBustErl	DirBuster successor in Erlang
 dispcount	https://github.com/ferd/dispcount	https://github.com/ferd/dispcount	Erlang task dispatcher based on ETS counters.
+dlhttpc	https://github.com/ferd/dlhttpc	https://github.com/ferd/dlhttpc	dispcount-based lhttpc fork for massive amounts of requests to limited endpoints
 dns	https://github.com/aetrion/dns_erlang	https://github.com/aetrion/dns_erlang	Erlang DNS library
 dnssd	https://github.com/benoitc/dnssd_erlang	https://github.com/benoitc/dnssd_erlang	Erlang interface to Apple's Bonjour D    NS Service Discovery implementation
 dtl	https://github.com/oinksoft/dtl	https://github.com/oinksoft/dtl	Django Template Language: A full-featured port of the Django template engine to Erlang.
