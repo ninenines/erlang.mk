@@ -190,16 +190,22 @@ define dep_autopatch_rebar.erl
 		File = case lists:keyfind(deps, 1, Conf) of
 			false -> [];
 			{_, Deps} ->
-				[begin
-					Name = element(1, Dep),
-					{Method, Repo, Commit} = case element(3, Dep) of
-						{git, R} -> {git, R, master};
-						{M, R, {branch, C}} -> {M, R, C};
-						{M, R, {tag, C}} -> {M, R, C};
-						{M, R, C} -> {M, R, C}
-					end,
-					Write(io_lib:format("DEPS += ~s\ndep_~s = ~s ~s ~s~n", [Name, Name, Method, Repo, Commit]))
-				end || Dep <- Deps, tuple_size(Dep) > 2]
+				[begin case case Dep of
+							{N, S} when is_tuple(S) -> {N, S};
+							{N, _, S} -> {N, S};
+							{N, _, S, _} -> {N, S};
+							_ -> false
+						end of
+					false -> ok;
+					{Name, Source} ->
+						{Method, Repo, Commit} = case Source of
+							{git, R} -> {git, R, master};
+							{M, R, {branch, C}} -> {M, R, C};
+							{M, R, {tag, C}} -> {M, R, C};
+							{M, R, C} -> {M, R, C}
+						end,
+						Write(io_lib:format("DEPS += ~s\ndep_~s = ~s ~s ~s~n", [Name, Name, Method, Repo, Commit]))
+				end end || Dep <- Deps]
 		end
 	end(),
 	fun() ->
