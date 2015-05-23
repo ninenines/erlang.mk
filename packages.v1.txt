@@ -307,7 +307,6 @@ riak_pg	https://github.com/cmeiklejohn/riak_pg	https://github.com/cmeiklejohn/ri
 riak_pipe	https://github.com/basho/riak_pipe	https://github.com/basho/riak_pipe	Riak Pipelines
 riakpool	https://github.com/dweldon/riakpool	https://github.com/dweldon/riakpool	erlang riak client pool
 riak_sysmon	https://github.com/basho/riak_sysmon	https://github.com/basho/riak_sysmon	Simple OTP app for managing Erlang VM system_monitor event messages
-riak_test	https://github.com/basho/riak_test	https://github.com/basho/riak_test	I'm in your cluster, testing your riaks
 rivus_cep	https://github.com/vascokk/rivus_cep	https://github.com/vascokk/rivus_cep	Complex event processing in Erlang
 rlimit	https://github.com/jlouis/rlimit	https://github.com/jlouis/rlimit	Magnus Klaar's rate limiter code from etorrent
 safetyvalve	https://github.com/jlouis/safetyvalve	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node

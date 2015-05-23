@@ -367,10 +367,13 @@ define dep_autopatch_rebar.erl
 	Write("\ninclude ../../erlang.mk"),
 	PatchPlugin = fun(ErlFile) ->
 		{ok, F0} = file:read_file(ErlFile),
-		F = re:replace(F0, "rebar_config:", "rebar_config_", [global]),
-		ok = file:write_file(ErlFile, [F,
-			"\nrebar_config_get(_, current_command, _) -> compile.\n"
-		])
+		case re:replace(F0, "rebar_config:", "rebar_config_", [global]) of
+			F0 -> ok;
+			F ->
+				ok = file:write_file(ErlFile, [F,
+					"\nrebar_config_get(_, current_command, _) -> compile.\n"
+				])
+		end
 	end,
 	RunPlugin = fun(Plugin, Step) ->
 		case erlang:function_exported(Plugin, Step, 2) of
