@@ -103,6 +103,7 @@ erlgit	git	https://github.com/gleber/erlgit	master	https://github.com/gleber/erl
 erlguten	git	https://github.com/richcarl/erlguten	master	https://github.com/richcarl/erlguten	ErlGuten is a system for high-quality typesetting, written purely in Erlang.
 erlmc	git	https://github.com/jkvor/erlmc	master	https://github.com/jkvor/erlmc	Erlang memcached binary protocol client
 erlog	git	https://github.com/rvirding/erlog	master	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
+erlpass	git	https://github.com/ferd/erlpass	master	https://github.com/ferd/erlpass	A library to handle password hashing and changing in a safe manner, independent from any kind of storage whatsoever.
 erlport	git	https://github.com/hdima/erlport	master	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
 erlsh	git	https://github.com/proger/erlsh	master	https://github.com/proger/erlsh	Erlang shell tools
 erlsom	git	https://github.com/willemdj/erlsom	master	https://github.com/willemdj/erlsom	XML parser for Erlang
