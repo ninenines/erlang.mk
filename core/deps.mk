@@ -162,9 +162,10 @@ define dep_autopatch_rebar.erl
 		re:replace(Text, "\\\\$$$$", "\$$$$$$$$", [global, {return, list}])
 	end,
 	Write("IGNORE_DEPS = edown eper eunit_formatters meck node_package "
-		"rebar_lock_deps_plugin rebar_vsn_plugin reltool_util\n\n"),
-	Write("C_SRC_DIR = /path/do/not/exist\n\n"),
-	Write("DRV_CFLAGS = -fPIC\nexport DRV_CFLAGS\n\n"),
+		"rebar_lock_deps_plugin rebar_vsn_plugin reltool_util\n"),
+	Write("C_SRC_DIR = /path/do/not/exist\n"),
+	Write("DRV_CFLAGS = -fPIC\nexport DRV_CFLAGS\n"),
+	Write(["ERLANG_ARCH = ", rebar_utils:wordsize(), "\nexport ERLANG_ARCH\n"]),
 	fun() ->
 		Write("ERLC_OPTS = +debug_info\n"),
 		case lists:keyfind(erl_opts, 1, Conf) of
@@ -319,7 +320,6 @@ define dep_autopatch_rebar.erl
 				[code:root_dir(), erlang:system_info(version), code:lib_dir(erl_interface, include)])),
 			PortSpecWrite(io_lib:format("ERL_LDFLAGS = -L ~s -lerl_interface -lei\n",
 				[code:lib_dir(erl_interface, lib)])),
-			PortSpecWrite(["\nERLANG_ARCH = ", rebar_utils:wordsize(), "\n"]),
 			[PortSpecWrite(["\n", E, "\n"]) || E <- OsEnv],
 			FilterEnv = fun(Env) ->
 				lists:flatten([case E of
