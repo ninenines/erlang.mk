@@ -253,28 +253,28 @@ define dep_autopatch_rebar.erl
 	Write("\npreprocess::\n"),
 	Write("\npre-deps::\n"),
 	Write("\npre-app::\n"),
+	PatchHook = fun(Cmd) ->
+		case Cmd of
+			"make -C" ++ _ -> Escape(Cmd);
+			"gmake -C" ++ _ -> Escape(Cmd);
+			"make " ++ Cmd1 -> "make -f Makefile.orig.mk " ++ Escape(Cmd1);
+			"gmake " ++ Cmd1 -> "gmake -f Makefile.orig.mk " ++ Escape(Cmd1);
+			_ -> Escape(Cmd)
+		end
+	end,
 	fun() ->
 		case lists:keyfind(pre_hooks, 1, Conf) of
 			false -> ok;
 			{_, Hooks} ->
 				[case H of
-					{'get-deps', Command} ->
-						Write("\npre-deps::\n\t" ++ Escape(Command) ++ "\n");
-					{compile, Command} ->
-						Write("\npre-app::\n\t" ++ Escape(Command) ++ "\n");
-					{Regex, compile, Command0} ->
+					{'get-deps', Cmd} ->
+						Write("\npre-deps::\n\t" ++ PatchHook(Cmd) ++ "\n");
+					{compile, Cmd} ->
+						Write("\npre-app::\n\t" ++ PatchHook(Cmd) ++ "\n");
+					{Regex, compile, Cmd} ->
 						case rebar_utils:is_arch(Regex) of
-							true ->
-								Command = case Command0 of
-									"make -C" ++ _ -> Escape(Command0);
-									"gmake -C" ++ _ -> Escape(Command0);
-									"make " ++ Command1 -> "make -f Makefile.orig.mk " ++ Escape(Command1);
-									"gmake " ++ Command1 -> "gmake -f Makefile.orig.mk " ++ Escape(Command1);
-									_ -> Command0
-								end,
-								Write("\npre-app::\n\t" ++ Command ++ "\n");
-							false ->
-								ok
+							true -> Write("\npre-app::\n\t" ++ PatchHook(Cmd) ++ "\n");
+							false -> ok
 						end;
 					_ -> ok
 				end || H <- Hooks]
