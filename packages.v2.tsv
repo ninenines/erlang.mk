@@ -30,7 +30,6 @@ chronos	git	https://github.com/lehoff/chronos	master	https://github.com/lehoff/c
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	git	https://github.com/basho/clique	develop	https://github.com/basho/clique	CLI Framework for Erlang
 cluster_info	git	https://github.com/basho/cluster_info	master	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
-color	git	https://github.com/julianduque/erlang-color	master	https://github.com/julianduque/erlang-color	ANSI colors for your Erlang
 confetti	git	https://github.com/jtendo/confetti	master	https://github.com/jtendo/confetti	Erlang configuration provider / application:get_env/2 on steroids
 couchbeam	git	https://github.com/benoitc/couchbeam	master	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 couch	git	https://github.com/benoitc/opencouch	master	https://github.com/benoitc/opencouch	A embeddable document oriented database compatible with Apache CouchDB
@@ -75,7 +74,6 @@ elli	git	https://github.com/knutin/elli	master	https://github.com/knutin/elli	Si
 elvis	git	https://github.com/inaka/elvis	0.2.4	https://github.com/inaka/elvis	Erlang Style Reviewer
 emagick	git	https://github.com/kivra/emagick	master	https://github.com/kivra/emagick	Wrapper for Graphics/ImageMagick command line tool.
 emysql	git	https://github.com/Eonblast/Emysql	master	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
-enet	git	https://github.com/archaelus/enet	master	https://github.com/archaelus/enet	Pure Erlang network stack
 enm	git	https://github.com/basho/enm	master	https://github.com/basho/enm	Erlang driver for nanomsg
 entop	git	https://github.com/mazenharake/entop	master	https://github.com/mazenharake/entop	A top-like tool for monitoring an Erlang node
 epcap	git	https://github.com/msantos/epcap	master	https://github.com/msantos/epcap	Erlang packet capture interface using pcap
@@ -163,10 +161,8 @@ gproc	git	https://github.com/uwiger/gproc	master	https://github.com/uwiger/gproc
 grapherl	git	https://github.com/eproxus/grapherl	master	https://github.com/eproxus/grapherl	Create graphs of Erlang systems and programs
 gun	git	https://github.com/ninenines/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 hackney	git	https://github.com/benoitc/hackney	master	https://github.com/benoitc/hackney	simple HTTP client in Erlang
-hamcrest	git	https://github.com/hyperthunk/hamcrest-erlang	master	https://github.com/hyperthunk/hamcrest-erlang	Erlang port of Hamcrest
 hanoidb	git	https://github.com/krestenkrab/hanoidb	master	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 hottub	git	https://github.com/bfrog/hottub	master	https://github.com/bfrog/hottub	Permanent Erlang Worker Pool
-i18n	git	https://github.com/erlang-unicode/i18n	master	https://github.com/erlang-unicode/i18n	icu nif: international components for unicode from Erlang (unicode, date, string, number, format, locale, localization, transliteration, icu4e)
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	git	https://github.com/robbielynch/ierlang	master	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 ircbot	git	https://github.com/gdamjan/erlang-irc-bot	master	https://github.com/gdamjan/erlang-irc-bot	A simple extendable irc bot in Erlang

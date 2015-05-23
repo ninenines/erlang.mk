@@ -120,6 +120,12 @@ define dep_autopatch_rebar_utils
 	fi; \
 	if [ ! -f $(ERLANG_MK_TMP)/ebin/rebar_utils.beam ]; then \
 		erlc -o $(ERLANG_MK_TMP)/ebin $(ERLANG_MK_TMP)/rebar_utils.erl; \
+	fi; \
+	if [ ! -f $(ERLANG_MK_TMP)/rebar_log.erl ]; then \
+		$(call core_http_get,$(ERLANG_MK_TMP)/rebar_log.erl,https://raw.githubusercontent.com/rebar/rebar/791db716b5a3a7671e0b351f95ddf24b848ee173/src/rebar_log.erl); \
+	fi; \
+	if [ ! -f $(ERLANG_MK_TMP)/ebin/rebar_log.beam ]; then \
+		erlc -o $(ERLANG_MK_TMP)/ebin $(ERLANG_MK_TMP)/rebar_log.erl; \
 	fi
 endef
 
@@ -132,20 +138,23 @@ define dep_autopatch_rebar
 endef
 
 define dep_autopatch_rebar.erl
+	application:set_env(rebar, log_level, debug),
 	Conf1 = case file:consult("$(DEPS_DIR)/$(1)/rebar.config") of
 		{ok, Conf0} -> Conf0;
 		_ -> []
 	end,
-	{Conf, OsEnv} = case filelib:is_file("$(DEPS_DIR)/$(1)/rebar.config.script") of
-		false -> {Conf1, []};
-		true ->
-			Bindings0 = erl_eval:new_bindings(),
-			Bindings1 = erl_eval:add_binding('CONFIG', Conf1, Bindings0),
-			Bindings = erl_eval:add_binding('SCRIPT', "$(DEPS_DIR)/$(1)/rebar.config.script", Bindings1),
-			Before = os:getenv(),
-			{ok, Conf2} = file:script("$(DEPS_DIR)/$(1)/rebar.config.script", Bindings),
-			{Conf2, lists:foldl(fun(E, Acc) -> lists:delete(E, Acc) end, os:getenv(), Before)}
-	end,
+	{Conf, OsEnv} = fun() ->
+		case filelib:is_file("$(DEPS_DIR)/$(1)/rebar.config.script") of
+			false -> {Conf1, []};
+			true ->
+				Bindings0 = erl_eval:new_bindings(),
+				Bindings1 = erl_eval:add_binding('CONFIG', Conf1, Bindings0),
+				Bindings = erl_eval:add_binding('SCRIPT', "$(DEPS_DIR)/$(1)/rebar.config.script", Bindings1),
+				Before = os:getenv(),
+				{ok, Conf2} = file:script("$(DEPS_DIR)/$(1)/rebar.config.script", Bindings),
+				{Conf2, lists:foldl(fun(E, Acc) -> lists:delete(E, Acc) end, os:getenv(), Before)}
+		end
+	end(),
 	Write = fun (Text) ->
 		file:write_file("$(DEPS_DIR)/$(1)/Makefile", Text, [append])
 	end,
@@ -240,7 +249,8 @@ define dep_autopatch_rebar.erl
 		Write(["COMPILE_FIRST +=", [[" ", atom_to_list(M)] || M <- First,
 			lists:member("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", ErlFiles)], "\n"])
 	end(),
-	Write("\n\nrebar_dep: pre-deps deps pre-app app\n"),
+	Write("\n\nrebar_dep: preprocess pre-deps deps pre-app app\n"),
+	Write("\npreprocess::\n"),
 	Write("\npre-deps::\n"),
 	Write("\npre-app::\n"),
 	fun() ->
@@ -276,9 +286,11 @@ define dep_autopatch_rebar.erl
 	PortSpecs = fun() ->
 		case lists:keyfind(port_specs, 1, Conf) of
 			false ->
-				case filelib:wildcard("$(DEPS_DIR)/$(1)/c_src/*.c") of
-					[] -> [];
-					Src -> [{"priv/$(1)_drv.so", ["c_src/*.c"], []}]
+				case filelib:is_dir("$(DEPS_DIR)/$(1)/c_src") of
+					false -> [];
+					true ->
+						[{"priv/" ++ proplists:get_value(so_name, Conf, "$(1)_drv.so"),
+							proplists:get_value(port_sources, Conf, ["c_src/*.c"]), []}]
 				end;
 			{_, Specs} ->
 				lists:flatten([case S of
@@ -335,12 +347,13 @@ define dep_autopatch_rebar.erl
 				filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
 				Input = [[" ", I] || I <- Input0],
 				PortSpecWrite([
-					[["\n", K, " = ", ShellToMk(V)] || {K, V} <- lists:reverse(MergeEnv(PortEnv ++ FilterEnv(Env)))],
+					[["\n", K, " = ", ShellToMk(V)] || {K, V} <- lists:reverse(MergeEnv(PortEnv))],
 					"\n\nall:: ", Output, "\n\n",
 					"%.o: %.c\n\t$$$$\(CC) -c -o $$$$\@ $$$$\< $$$$\(CFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
 					"%.o: %.C\n\t$$$$\(CXX) -c -o $$$$\@ $$$$\< $$$$\(CXXFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
 					"%.o: %.cc\n\t$$$$\(CXX) -c -o $$$$\@ $$$$\< $$$$\(CXXFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
 					"%.o: %.cpp\n\t$$$$\(CXX) -c -o $$$$\@ $$$$\< $$$$\(CXXFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
+					[[Output, ": ", K, " = ", ShellToMk(V), "\n"] || {K, V} <- lists:reverse(MergeEnv(FilterEnv(Env)))],
 					Output, ": $$$$\(foreach ext,.c .C .cc .cpp,",
 						"$$$$\(patsubst %$$$$\(ext),%.o,$$$$\(filter %$$$$\(ext),$$$$\(wildcard", Input, "))))\n",
 					"\t$$$$\(CC) -o $$$$\@ $$$$\? $$$$\(LDFLAGS) $$$$\(ERL_LDFLAGS) $$$$\(DRV_LDFLAGS) $$$$\(EXE_LDFLAGS)",
@@ -352,19 +365,54 @@ define dep_autopatch_rebar.erl
 			[PortSpec(S) || S <- PortSpecs]
 	end,
 	Write("\ninclude ../../erlang.mk"),
+	PatchPlugin = fun(ErlFile) ->
+		{ok, F0} = file:read_file(ErlFile),
+		F = re:replace(F0, "rebar_config:", "rebar_config_", [global]),
+		ok = file:write_file(ErlFile, [F,
+			"\nrebar_config_get(_, current_command, _) -> compile.\n"
+		])
+	end,
+	RunPlugin = fun(Plugin, Step) ->
+		case erlang:function_exported(Plugin, Step, 2) of
+			false -> ok;
+			true ->
+				c:cd("$(DEPS_DIR)/$(1)/"),
+				Ret = Plugin:Step(Conf, undefined),
+				io:format("rebar plugin ~p step ~p ret ~p~n", [Plugin, Step, Ret])
+		end
+	end,
 	fun() ->
 		case lists:keyfind(plugins, 1, Conf) of
-			{_, [Plugin]} when is_atom(Plugin) ->
-				ErlFile = "$(DEPS_DIR)/$(1)/plugins/" ++ atom_to_list(Plugin) ++ ".erl",
-				try
-					{ok, Mod, Bin} = compile:file(ErlFile, [binary]),
-					{module, Mod} = code:load_binary(Mod, ErlFile, Bin),
-					c:cd("$(DEPS_DIR)/$(1)/"),
-					ok = Mod:pre_compile(Conf, undefined)
-				catch _:_ ->
-					ok
-				end;
-			_ -> ok
+			false -> ok;
+			{_, Plugins} ->
+				[begin
+					case lists:keyfind(deps, 1, Conf) of
+						false -> ok;
+						{_, Deps} ->
+							case lists:keyfind(P, 1, Deps) of
+								false -> ok;
+								_ ->
+									Path = "$(DEPS_DIR)/" ++ atom_to_list(P),
+									io:format("~s", [os:cmd("$(MAKE) -C $(DEPS_DIR)/$(1) " ++ Path)]),
+									io:format("~s", [os:cmd("$(MAKE) -C " ++ Path ++ " IS_DEP=1")]),
+									code:add_patha(Path ++ "/ebin")
+							end
+					end
+				end || P <- Plugins],
+				[case code:load_file(P) of
+					{module, P} -> ok;
+					_ ->
+						case lists:keyfind(plugin_dir, 1, Conf) of
+							false -> ok;
+							{_, PluginsDir} ->
+								ErlFile = "$(DEPS_DIR)/$(1)/" ++ PluginsDir ++ "/" ++ atom_to_list(P) ++ ".erl",
+								PatchPlugin(ErlFile),
+								{ok, P, Bin} = compile:file(ErlFile, [binary]),
+								{module, P} = code:load_binary(P, ErlFile, Bin)
+						end
+				end || P <- Plugins],
+				[RunPlugin(P, preprocess) || P <- Plugins],
+				[RunPlugin(P, pre_compile) || P <- Plugins]
 		end
 	end(),
 	halt()

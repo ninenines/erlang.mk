@@ -30,7 +30,6 @@ chronos	https://github.com/lehoff/chronos	https://github.com/lehoff/chronos	Time
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	https://github.com/basho/clique	https://github.com/basho/clique	CLI Framework for Erlang
 cluster_info	https://github.com/basho/cluster_info	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
-color	https://github.com/julianduque/erlang-color	https://github.com/julianduque/erlang-color	ANSI colors for your Erlang
 confetti	https://github.com/jtendo/confetti	https://github.com/jtendo/confetti	Erlang configuration provider / application:get_env/2 on steroids
 couchbeam	https://github.com/benoitc/couchbeam	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 couch	https://github.com/benoitc/opencouch	https://github.com/benoitc/opencouch	A embeddable document oriented database compatible with Apache CouchDB
@@ -75,7 +74,6 @@ elli	https://github.com/knutin/elli	https://github.com/knutin/elli	Simple, robus
 elvis	https://github.com/inaka/elvis	https://github.com/inaka/elvis	Erlang Style Reviewer
 emagick	https://github.com/kivra/emagick	https://github.com/kivra/emagick	Wrapper for Graphics/ImageMagick command line tool.
 emysql	https://github.com/Eonblast/Emysql	https://github.com/Eonblast/Emysql	Stable, pure Erlang MySQL driver.
-enet	https://github.com/archaelus/enet	https://github.com/archaelus/enet	Pure Erlang network stack
 enm	https://github.com/basho/enm	https://github.com/basho/enm	Erlang driver for nanomsg
 entop	https://github.com/mazenharake/entop	https://github.com/mazenharake/entop	A top-like tool for monitoring an Erlang node
 epcap	https://github.com/msantos/epcap	https://github.com/msantos/epcap	Erlang packet capture interface using pcap
@@ -163,10 +161,8 @@ gproc	https://github.com/uwiger/gproc	https://github.com/uwiger/gproc	Extended p
 grapherl	https://github.com/eproxus/grapherl	https://github.com/eproxus/grapherl	Create graphs of Erlang systems and programs
 gun	https://github.com/ninenines/gun	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 hackney	https://github.com/benoitc/hackney	https://github.com/benoitc/hackney	simple HTTP client in Erlang
-hamcrest	https://github.com/hyperthunk/hamcrest-erlang	https://github.com/hyperthunk/hamcrest-erlang	Erlang port of Hamcrest
 hanoidb	https://github.com/krestenkrab/hanoidb	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 hottub	https://github.com/bfrog/hottub	https://github.com/bfrog/hottub	Permanent Erlang Worker Pool
-i18n	https://github.com/erlang-unicode/i18n	https://github.com/erlang-unicode/i18n	icu nif: international components for unicode from Erlang (unicode, date, string, number, format, locale, localization, transliteration, icu4e)
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	https://github.com/robbielynch/ierlang	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 ircbot	https://github.com/gdamjan/erlang-irc-bot	https://github.com/gdamjan/erlang-irc-bot	A simple extendable irc bot in Erlang
