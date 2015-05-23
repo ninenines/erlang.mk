@@ -163,6 +163,7 @@ gun	git	https://github.com/ninenines/gun	master	http//ninenines.eu	Asynchronous 
 hackney	git	https://github.com/benoitc/hackney	master	https://github.com/benoitc/hackney	simple HTTP client in Erlang
 hanoidb	git	https://github.com/krestenkrab/hanoidb	master	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 hottub	git	https://github.com/bfrog/hottub	master	https://github.com/bfrog/hottub	Permanent Erlang Worker Pool
+hyper	git	https://github.com/GameAnalytics/hyper	master	https://github.com/GameAnalytics/hyper	Erlang implementation of HyperLogLog
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	git	https://github.com/robbielynch/ierlang	master	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 ircbot	git	https://github.com/gdamjan/erlang-irc-bot	master	https://github.com/gdamjan/erlang-irc-bot	A simple extendable irc bot in Erlang

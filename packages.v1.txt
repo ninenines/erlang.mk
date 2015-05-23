@@ -163,6 +163,7 @@ gun	https://github.com/ninenines/gun	http//ninenines.eu	Asynchronous SPDY, HTTP 
 hackney	https://github.com/benoitc/hackney	https://github.com/benoitc/hackney	simple HTTP client in Erlang
 hanoidb	https://github.com/krestenkrab/hanoidb	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 hottub	https://github.com/bfrog/hottub	https://github.com/bfrog/hottub	Permanent Erlang Worker Pool
+hyper	https://github.com/GameAnalytics/hyper	https://github.com/GameAnalytics/hyper	Erlang implementation of HyperLogLog
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	https://github.com/robbielynch/ierlang	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 ircbot	https://github.com/gdamjan/erlang-irc-bot	https://github.com/gdamjan/erlang-irc-bot	A simple extendable irc bot in Erlang
