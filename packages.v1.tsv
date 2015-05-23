@@ -264,6 +264,7 @@ pgsql	https://github.com/semiocast/pgsql	https://github.com/semiocast/pgsql	Erla
 pkgx	https://github.com/arjan/pkgx	https://github.com/arjan/pkgx	Build .deb packages from Erlang releases
 pkt	https://github.com/msantos/pkt	https://github.com/msantos/pkt	Erlang network protocol library
 plain_fsm	https://github.com/uwiger/plain_fsm	https://github.com/uwiger/plain_fsm	A behaviour/support library for writing plain Erlang FSMs.
+plumtree	https://github.com/helium/plumtree	https://github.com/helium/plumtree	Epidemic Broadcast Trees
 pmod_transform	https://github.com/erlang/pmod_transform	https://github.com/erlang/pmod_transform	Parse transform for parameterized modules
 pobox	https://github.com/ferd/pobox	https://github.com/ferd/pobox	External buffer processes to protect against mailbox overflow in Erlang
 ponos	https://github.com/klarna/ponos	https://github.com/klarna/ponos	ponos is a simple yet powerful load generator written in erlang
