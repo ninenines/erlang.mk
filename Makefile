@@ -28,5 +28,10 @@ pkg:
 	cat packages.v2.tsv | awk 'BEGIN { FS = "\t" }; { print $$1 "\t" $$3 "\t" $$5 "\t" $$6 }' > packages.v1.tsv
 	cp packages.v1.tsv packages.v1.txt
 
+ifeq ($(p),)
 check:
 	$(MAKE) -C test
+else
+check:
+	$(MAKE) -C test pkg-$(p)
+endif
