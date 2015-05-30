@@ -12,6 +12,12 @@ else
 	CT_SUITES ?=
 endif
 
+ifneq ($(wildcard $(TEST_DIR)),)
+	CT_CFG ?= $(shell find $(TEST_DIR) -name '*.cfg')
+else
+	CT_CFG ?=
+endif
+
 # Core targets.
 
 tests:: ct
@@ -28,12 +34,23 @@ help::
 
 # Plugin-specific targets.
 
+ifeq ($(CT_CFG),)
 CT_RUN = ct_run \
 	-no_auto_compile \
 	-noinput \
 	-pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin $(TEST_DIR) \
 	-dir $(TEST_DIR) \
 	-logdir $(CURDIR)/logs
+else
+CT_RUN = ct_run \
+	-no_auto_compile \
+	-noinput \
+	-pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin $(TEST_DIR) \
+	-dir $(TEST_DIR) \
+	-logdir $(CURDIR)/logs \
+	-config $(CT_CFG)
+endif
+
 
 ifeq ($(CT_SUITES),)
 ct:
