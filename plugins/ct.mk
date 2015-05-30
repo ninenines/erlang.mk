@@ -13,7 +13,7 @@ else
 endif
 
 ifneq ($(wildcard $(TEST_DIR)),)
-	CT_CFG ?= $(sort $(shell find $(TEST_DIR) -type f -name \*.cfg -exec basename {} \;))
+	CT_CFG ?= $(shell find $(TEST_DIR) -name '*.cfg')
 else
 	CT_CFG ?=
 endif
@@ -47,8 +47,8 @@ CT_RUN = ct_run \
 	-noinput \
 	-pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin $(TEST_DIR) \
 	-dir $(TEST_DIR) \
-	-logdir $(CURDIR)/logs
-	-config $(TEST_DIR)/$(CT_CFG)
+	-logdir $(CURDIR)/logs \
+	-config $(CT_CFG)
 endif
 
 
