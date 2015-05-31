@@ -66,7 +66,12 @@ define dep_autopatch
 		elif [ 0 != `find $(DEPS_DIR)/$(1)/ -type f -name \*.mk -not -name erlang.mk | xargs grep -ci rebar` ]; then \
 			$(call dep_autopatch2,$(1)); \
 		else \
-			$(call dep_autopatch_erlang_mk,$(1)); \
+			if [ -f $(DEPS_DIR)/$(1)/erlang.mk ]; then \
+				$(call erlang,$(call dep_autopatch_appsrc.erl,$(1))); \
+				$(call dep_autopatch_erlang_mk,$(1)); \
+			else \
+				$(call erlang,$(call dep_autopatch_app.erl,$(1))); \
+			fi \
 		fi \
 	else \
 		if [ ! -d $(DEPS_DIR)/$(1)/src/ ]; then \
@@ -78,6 +83,7 @@ define dep_autopatch
 endef
 
 define dep_autopatch2
+	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1))); \
 	if [ -f $(DEPS_DIR)/$(1)/rebar.config -o -f $(DEPS_DIR)/$(1)/rebar.config.script ]; then \
 		$(call dep_autopatch_rebar_utils); \
 		$(call dep_autopatch_rebar,$(1)); \
@@ -94,20 +100,18 @@ endef
 ifeq ($(NO_AUTOPATCH_ERLANG_MK),)
 define dep_autopatch_erlang_mk
 	rm -f $(DEPS_DIR)/$(1)/erlang.mk; \
-	cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk; \
-	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
+	cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk
 endef
 else
 define dep_autopatch_erlang_mk
-	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
+	echo -n
 endef
 endif
 
 define dep_autopatch_gen
 	printf "%s\n" \
 		"ERLC_OPTS = +debug_info" \
-		"include ../../erlang.mk" > $(DEPS_DIR)/$(1)/Makefile; \
-	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
+		"include ../../erlang.mk" > $(DEPS_DIR)/$(1)/Makefile
 endef
 
 define dep_autopatch_rebar_utils
@@ -133,8 +137,7 @@ define dep_autopatch_rebar
 	if [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
 		mv $(DEPS_DIR)/$(1)/Makefile $(DEPS_DIR)/$(1)/Makefile.orig.mk; \
 	fi; \
-	$(call erlang,$(call dep_autopatch_rebar.erl,$(1))); \
-	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1)))
+	$(call erlang,$(call dep_autopatch_rebar.erl,$(1)))
 endef
 
 define dep_autopatch_rebar.erl
@@ -174,6 +177,8 @@ define dep_autopatch_rebar.erl
 				lists:foreach(fun
 					({d, D}) ->
 						Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n");
+					({i, I}) ->
+						Write(["ERLC_OPTS += -I ", I, "\n"]);
 					({platform_define, Regex, D}) ->
 						case rebar_utils:is_arch(Regex) of
 							true -> Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n");
@@ -288,7 +293,8 @@ define dep_autopatch_rebar.erl
 		end
 	end(),
 	ShellToMk = fun(V) ->
-		re:replace(V, "(\\\\$$$$)(\\\\w*)", "\\\\1(\\\\2)", [{return, list}, global])
+		re:replace(re:replace(V, "(\\\\$$$$)(\\\\w*)", "\\\\1(\\\\2)", [global]),
+			"-Werror\\\\b", "", [{return, list}, global])
 	end,
 	PortSpecs = fun() ->
 		case lists:keyfind(port_specs, 1, Conf) of
@@ -427,18 +433,32 @@ define dep_autopatch_rebar.erl
 	halt()
 endef
 
+define dep_autopatch_app.erl
+	UpdateModules = fun(App) ->
+		case filelib:is_regular(App) of
+			false -> ok;
+			true ->
+				{ok, [{application, $(1), L0}]} = file:consult(App),
+				Mods = filelib:fold_files("$(DEPS_DIR)/$(1)/src", "\\\\.erl$$$$", true,
+					fun (F, Acc) -> [list_to_atom(filename:rootname(filename:basename(F)))|Acc] end, []),
+				L = lists:keystore(modules, 1, L0, {modules, Mods}),
+				ok = file:write_file(App, io_lib:format("~p.~n", [{application, $(1), L}]))
+		end
+	end,
+	UpdateModules("$(DEPS_DIR)/$(1)/ebin/$(1).app"),
+	halt()
+endef
+
 define dep_autopatch_appsrc.erl
 	AppSrcOut = "$(DEPS_DIR)/$(1)/src/$(1).app.src",
 	AppSrcIn = case filelib:is_regular(AppSrcOut) of false -> "$(DEPS_DIR)/$(1)/ebin/$(1).app"; true -> AppSrcOut end,
 	case filelib:is_regular(AppSrcIn) of
 		false -> ok;
 		true ->
-			fun() ->
-				{ok, [{application, $(1), L}]} = file:consult(AppSrcIn),
-				L2 = lists:keystore(modules, 1, L, {modules, []}),
-				L3 = case lists:keyfind(vsn, 1, L2) of {vsn, git} -> lists:keyreplace(vsn, 1, L2, {vsn, "git"}); _ -> L2 end,
-				ok = file:write_file(AppSrcOut, io_lib:format("~p.~n", [{application, $(1), L3}]))
-			end(),
+			{ok, [{application, $(1), L0}]} = file:consult(AppSrcIn),
+			L1 = lists:keystore(modules, 1, L0, {modules, []}),
+			L2 = case lists:keyfind(vsn, 1, L1) of {vsn, git} -> lists:keyreplace(vsn, 1, L1, {vsn, "git"}); _ -> L1 end,
+			ok = file:write_file(AppSrcOut, io_lib:format("~p.~n", [{application, $(1), L2}])),
 			case AppSrcOut of AppSrcIn -> ok; _ -> ok = file:delete(AppSrcIn) end
 	end,
 	halt()

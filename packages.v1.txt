@@ -30,7 +30,6 @@ chronos	https://github.com/lehoff/chronos	https://github.com/lehoff/chronos	Time
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	https://github.com/basho/clique	https://github.com/basho/clique	CLI Framework for Erlang
 cluster_info	https://github.com/basho/cluster_info	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
-concuerror	https://github.com/parapluu/Concuerror	http://www.concuerror.com/	Concuerror is a systematic testing tool for concurrent Erlang programs
 confetti	https://github.com/jtendo/confetti	https://github.com/jtendo/confetti	Erlang configuration provider / application:get_env/2 on steroids
 couchbeam	https://github.com/benoitc/couchbeam	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 couch	https://github.com/benoitc/opencouch	https://github.com/benoitc/opencouch	A embeddable document oriented database compatible with Apache CouchDB
@@ -129,7 +128,6 @@ eunit	https://github.com/richcarl/eunit	https://github.com/richcarl/eunit	The EU
 euthanasia	https://github.com/doubleyou/euthanasia	https://github.com/doubleyou/euthanasia	Merciful killer for your Erlang processes
 exec	https://github.com/saleyn/erlexec	http://saleyn.github.com/erlexec	Execute and control OS processes from Erlang/OTP.
 exml	https://github.com/paulgray/exml	https://github.com/paulgray/exml	XML parsing library in Erlang
-exmpp	https://github.com/processone/exmpp	https://github.com/processone/exmpp	Erlang XMPP library
 exometer	https://github.com/Feuerlabs/exometer	https://github.com/Feuerlabs/exometer	Basic measurement objects and probe behavior
 exs1024	https://github.com/jj1bdx/exs1024	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
 exs64	https://github.com/jj1bdx/exs64	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
@@ -172,7 +170,6 @@ hyper	https://github.com/GameAnalytics/hyper	https://github.com/GameAnalytics/hy
 ibrowse	https://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	https://github.com/robbielynch/ierlang	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 iota	https://github.com/jpgneves/iota	https://github.com/jpgneves/iota	iota (Inter-dependency Objective Testing Apparatus) - a tool to enforce clean separation of responsibilities in Erlang code
-ircbot	https://github.com/gdamjan/erlang-irc-bot	https://github.com/gdamjan/erlang-irc-bot	A simple extendable irc bot in Erlang
 ircd	https://github.com/tonyg/erlang-ircd	https://github.com/tonyg/erlang-ircd	A pluggable IRC daemon application/library for Erlang.
 irc_lib	https://github.com/OtpChatBot/irc_lib	https://github.com/OtpChatBot/irc_lib	Erlang irc client library
 iris	https://github.com/project-iris/iris-erl	https://github.com/project-iris/iris-erl	Iris Erlang binding
@@ -356,7 +353,6 @@ trane	https://github.com/massemanet/trane	https://github.com/massemanet/trane	SA
 transit	https://github.com/isaiah/transit-erlang	https://github.com/isaiah/transit-erlang	transit format for erlang
 trie	https://github.com/okeuday/trie	https://github.com/okeuday/trie	Erlang Trie Implementation
 triq	https://github.com/krestenkrab/triq	https://github.com/krestenkrab/triq	Trifork QuickCheck
-tsung	https://github.com/processone/tsung	https://github.com/processone/tsung	Tsung is a high-performance benchmark framework for various protocols including HTTP, XMPP, LDAP, etc.
 tunctl	https://github.com/msantos/tunctl	https://github.com/msantos/tunctl	Erlang TUN/TAP interface
 twerl	https://github.com/lucaspiller/twerl	https://github.com/lucaspiller/twerl	Erlang client for the Twitter Streaming API
 twitter_erlang	https://github.com/ngerakines/erlang_twitter	https://github.com/ngerakines/erlang_twitter	An Erlang twitter client

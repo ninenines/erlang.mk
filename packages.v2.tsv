@@ -30,7 +30,6 @@ chronos	git	https://github.com/lehoff/chronos	master	https://github.com/lehoff/c
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	git	https://github.com/basho/clique	develop	https://github.com/basho/clique	CLI Framework for Erlang
 cluster_info	git	https://github.com/basho/cluster_info	master	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
-concuerror	git	https://github.com/parapluu/Concuerror	master	http://www.concuerror.com/	Concuerror is a systematic testing tool for concurrent Erlang programs
 confetti	git	https://github.com/jtendo/confetti	master	https://github.com/jtendo/confetti	Erlang configuration provider / application:get_env/2 on steroids
 couchbeam	git	https://github.com/benoitc/couchbeam	master	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 couch	git	https://github.com/benoitc/opencouch	master	https://github.com/benoitc/opencouch	A embeddable document oriented database compatible with Apache CouchDB
@@ -129,7 +128,6 @@ eunit	git	https://github.com/richcarl/eunit	master	https://github.com/richcarl/e
 euthanasia	git	https://github.com/doubleyou/euthanasia	master	https://github.com/doubleyou/euthanasia	Merciful killer for your Erlang processes
 exec	git	https://github.com/saleyn/erlexec	master	http://saleyn.github.com/erlexec	Execute and control OS processes from Erlang/OTP.
 exml	git	https://github.com/paulgray/exml	master	https://github.com/paulgray/exml	XML parsing library in Erlang
-exmpp	git	https://github.com/processone/exmpp	master	https://github.com/processone/exmpp	Erlang XMPP library
 exometer	git	https://github.com/Feuerlabs/exometer	1.2	https://github.com/Feuerlabs/exometer	Basic measurement objects and probe behavior
 exs1024	git	https://github.com/jj1bdx/exs1024	master	https://github.com/jj1bdx/exs1024	Xorshift1024star pseudo random number generator for Erlang.
 exs64	git	https://github.com/jj1bdx/exs64	master	https://github.com/jj1bdx/exs64	Xorshift64star pseudo random number generator for Erlang.
@@ -172,7 +170,6 @@ hyper	git	https://github.com/GameAnalytics/hyper	master	https://github.com/GameA
 ibrowse	git	https://github.com/cmullaparthi/ibrowse	v4.1.1	https://github.com/cmullaparthi/ibrowse	Erlang HTTP client
 ierlang	git	https://github.com/robbielynch/ierlang	master	https://github.com/robbielynch/ierlang	An Erlang language kernel for IPython.
 iota	git	https://github.com/jpgneves/iota	master	https://github.com/jpgneves/iota	iota (Inter-dependency Objective Testing Apparatus) - a tool to enforce clean separation of responsibilities in Erlang code
-ircbot	git	https://github.com/gdamjan/erlang-irc-bot	master	https://github.com/gdamjan/erlang-irc-bot	A simple extendable irc bot in Erlang
 ircd	git	https://github.com/tonyg/erlang-ircd	master	https://github.com/tonyg/erlang-ircd	A pluggable IRC daemon application/library for Erlang.
 irc_lib	git	https://github.com/OtpChatBot/irc_lib	master	https://github.com/OtpChatBot/irc_lib	Erlang irc client library
 iris	git	https://github.com/project-iris/iris-erl	master	https://github.com/project-iris/iris-erl	Iris Erlang binding
@@ -216,7 +213,7 @@ locks	git	https://github.com/uwiger/locks	master	https://github.com/uwiger/locks
 log4erl	git	https://github.com/ahmednawras/log4erl	master	https://github.com/ahmednawras/log4erl	A logger for erlang in the spirit of Log4J.
 lol	git	https://github.com/b0oh/lol	master	https://github.com/b0oh/lol	Lisp on erLang, and programming is fun again
 lucid	git	https://github.com/tatsuhiro-t/lucid	master	https://github.com/tatsuhiro-t/lucid	HTTP/2 server written in Erlang
-luerl	git	https://github.com/rvirding/luerl	master	https://github.com/rvirding/luerl	Lua in Erlang
+luerl	git	https://github.com/rvirding/luerl	develop	https://github.com/rvirding/luerl	Lua in Erlang
 luwak	git	https://github.com/basho/luwak	master	https://github.com/basho/luwak	Large-object storage interface for Riak
 mad	git	https://github.com/synrc/mad	master	https://github.com/synrc/mad	Small and Fast Rebar Replacement
 mavg	git	https://github.com/EchoTeam/mavg	master	https://github.com/EchoTeam/mavg	Erlang :: Exponential moving average library
@@ -356,7 +353,6 @@ trane	git	https://github.com/massemanet/trane	master	https://github.com/masseman
 transit	git	https://github.com/isaiah/transit-erlang	master	https://github.com/isaiah/transit-erlang	transit format for erlang
 trie	git	https://github.com/okeuday/trie	master	https://github.com/okeuday/trie	Erlang Trie Implementation
 triq	git	https://github.com/krestenkrab/triq	master	https://github.com/krestenkrab/triq	Trifork QuickCheck
-tsung	git	https://github.com/processone/tsung	master	https://github.com/processone/tsung	Tsung is a high-performance benchmark framework for various protocols including HTTP, XMPP, LDAP, etc.
 tunctl	git	https://github.com/msantos/tunctl	master	https://github.com/msantos/tunctl	Erlang TUN/TAP interface
 twerl	git	https://github.com/lucaspiller/twerl	oauth	https://github.com/lucaspiller/twerl	Erlang client for the Twitter Streaming API
 twitter_erlang	git	https://github.com/ngerakines/erlang_twitter	master	https://github.com/ngerakines/erlang_twitter	An Erlang twitter client

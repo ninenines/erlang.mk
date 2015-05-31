@@ -101,12 +101,10 @@ ebin/$(PROJECT).app:: $(shell find mibs -type f -name \*.mib)
 	$(if $(strip $?),$(call compile_mib,$?))
 endif
 
-ebin/$(PROJECT).app:: $(shell find src -type f -name \*.erl) \
-		$(shell find src -type f -name \*.core)
+ebin/$(PROJECT).app:: $(shell find src -type f -name \*.erl -o -name \*.core)
 	$(if $(strip $?),$(call compile_erl,$?))
 
-ebin/$(PROJECT).app:: $(shell find src -type f -name \*.xrl) \
-		$(shell find src -type f -name \*.yrl)
+ebin/$(PROJECT).app:: $(shell find src -type f -name \*.xrl -o -name \*.yrl)
 	$(if $(strip $?),$(call compile_xyrl,$?))
 endif
 

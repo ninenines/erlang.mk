@@ -240,25 +240,21 @@ pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 	else \
 		if [ `find -type f -name erl_crash.dump` ]; then exit 33; fi \
 	fi
-	@if [ "$(1)" = "tsung" ]; then \
-		echo "Skipping module loading check for package $(1)..."; \
-	else \
-		erl +A0 -noinput -boot start_clean -pa app1/deps/*/ebin -eval " \
-			Apps = [list_to_atom(App) || \"app1/deps/\" ++ App <- filelib:wildcard(\"app1/deps/*\")], \
-			[begin \
-				io:format(\"Loading application ~p~n\", [App]), \
-				case application:load(App) of \
-					{error, _} -> ok; \
-					ok -> \
-						{ok, Mods} = application:get_key(App, modules), \
-						[try io:format(\"  Loading module ~p~n\", [Mod]), \
-							{module, Mod} = code:load_file(Mod) \
-						catch C:R -> timer:sleep(500), erlang:C(R) \
-						end || Mod <- Mods] \
-				end \
-			end || App <- Apps], \
-			halt()."; \
-	fi
+	erl +A0 -noinput -boot start_clean -pa app1/deps/*/ebin -eval " \
+		Apps = [list_to_atom(App) || \"app1/deps/\" ++ App <- filelib:wildcard(\"app1/deps/*\")], \
+		[begin \
+			io:format(\"Loading application ~p~n\", [App]), \
+			case application:load(App) of \
+				{error, _} -> ok; \
+				ok -> \
+					{ok, Mods} = application:get_key(App, modules), \
+					[try io:format(\"  Loading module ~p~n\", [Mod]), \
+						{module, Mod} = code:load_file(Mod) \
+					catch C:R -> timer:sleep(500), erlang:C(R) \
+					end || Mod <- Mods] \
+			end \
+		end || App <- Apps], \
+		halt()."
 endef
 
 $(foreach pkg,$(shell awk '{print $$1}' ../packages.v2.tsv),$(eval $(call pkg_test_target,$(pkg))))
