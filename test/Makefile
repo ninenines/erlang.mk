@@ -235,11 +235,7 @@ pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 	cp ../packages.v2.tsv app1/.erlang.mk.packages.v2
 	$t $(MAKE) -C app1
 	$t $(MAKE) -C app1
-	@if [ "$(1)" = "rack" ]; then \
-		echo "Skipping erl_crash.dump detection check for package $(1)..."; \
-	else \
-		if [ `find -type f -name erl_crash.dump` ]; then exit 33; fi \
-	fi
+	if [ `find -type f -name erl_crash.dump` ]; then exit 33; fi
 	erl +A0 -noinput -boot start_clean -pa app1/deps/*/ebin -eval " \
 		Apps = [list_to_atom(App) || \"app1/deps/\" ++ App <- filelib:wildcard(\"app1/deps/*\")], \
 		[begin \
