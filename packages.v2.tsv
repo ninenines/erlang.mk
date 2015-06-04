@@ -291,6 +291,7 @@ rafter	git	https://github.com/andrewjstone/rafter	master	https://github.com/andr
 ranch	git	https://github.com/ninenines/ranch	1.1.0	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 rbeacon	git	https://github.com/refuge/rbeacon	master	https://github.com/refuge/rbeacon	LAN discovery and presence in Erlang.
 rebar	git	https://github.com/rebar/rebar3	master	http://www.rebar3.org	Erlang build tool that makes it easy to compile and test Erlang applications, port drivers and releases.
+rebus	git	https://github.com/olle/rebus	master	https://github.com/olle/rebus	A stupid simple, internal, pub/sub event bus written in- and for Erlang.
 rec2json	git	https://github.com/lordnull/rec2json	master	https://github.com/lordnull/rec2json	Compile erlang record definitions into modules to convert them to/from json easily.
 recon	git	https://github.com/ferd/recon	2.2.1	https://github.com/ferd/recon	Collection of functions and scripts to debug Erlang in production.
 record_info	git	https://github.com/bipthelin/erlang-record_info	master	https://github.com/bipthelin/erlang-record_info	Convert between record and proplist

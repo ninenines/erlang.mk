@@ -291,6 +291,7 @@ rafter	https://github.com/andrewjstone/rafter	https://github.com/andrewjstone/ra
 ranch	https://github.com/ninenines/ranch	http://ninenines.eu	Socket acceptor pool for TCP protocols.
 rbeacon	https://github.com/refuge/rbeacon	https://github.com/refuge/rbeacon	LAN discovery and presence in Erlang.
 rebar	https://github.com/rebar/rebar3	http://www.rebar3.org	Erlang build tool that makes it easy to compile and test Erlang applications, port drivers and releases.
+rebus	https://github.com/olle/rebus	https://github.com/olle/rebus	A stupid simple, internal, pub/sub event bus written in- and for Erlang.
 rec2json	https://github.com/lordnull/rec2json	https://github.com/lordnull/rec2json	Compile erlang record definitions into modules to convert them to/from json easily.
 recon	https://github.com/ferd/recon	https://github.com/ferd/recon	Collection of functions and scripts to debug Erlang in production.
 record_info	https://github.com/bipthelin/erlang-record_info	https://github.com/bipthelin/erlang-record_info	Convert between record and proplist
