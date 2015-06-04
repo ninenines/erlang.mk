@@ -87,6 +87,7 @@ episcina	https://github.com/erlware/episcina	https://github.com/erlware/episcina
 eplot	https://github.com/psyeugenic/eplot	https://github.com/psyeugenic/eplot	A plot engine written in erlang.
 epocxy	https://github.com/duomark/epocxy	https://github.com/duomark/epocxy	Erlang Patterns of Concurrency
 epubnub	https://github.com/tsloughter/epubnub	https://github.com/tsloughter/epubnub	Erlang PubNub API
+eqm	https://github.com/loucash/eqm	https://github.com/loucash/eqm	Erlang pub sub with supply-demand channels
 eredis	https://github.com/wooga/eredis	https://github.com/wooga/eredis	Erlang Redis client
 eredis_pool	https://github.com/hiroeorz/eredis_pool	https://github.com/hiroeorz/eredis_pool	eredis_pool is Pool of Redis clients, using eredis and poolboy.
 erlang_js	https://github.com/basho/erlang_js	https://github.com/basho/erlang_js	A linked-in driver for Erlang to Mozilla's Spidermonkey Javascript runtime.
