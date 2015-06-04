@@ -370,6 +370,7 @@ uuid	git	https://github.com/okeuday/uuid	v1.4.0	https://github.com/okeuday/uuid	
 ux	git	https://github.com/erlang-unicode/ux	master	https://github.com/erlang-unicode/ux	Unicode eXtention for Erlang (Strings, Collation)
 vert	git	https://github.com/msantos/erlang-libvirt	master	https://github.com/msantos/erlang-libvirt	Erlang binding to libvirt virtualization API
 vmq_acl	git	https://github.com/erlio/vmq_acl	master	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
+vmq_bridge	git	https://github.com/erlio/vmq_bridge	master	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmq_graphite	git	https://github.com/erlio/vmq_graphite	master	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmq_passwd	git	https://github.com/erlio/vmq_passwd	master	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmstats	git	https://github.com/ferd/vmstats	master	https://github.com/ferd/vmstats	tiny Erlang app that works in conjunction with statsderl in order to generate information on the Erlang VM for graphite logs.
