@@ -373,6 +373,7 @@ vmq_acl	https://github.com/erlio/vmq_acl	https://verne.mq/	Component of VerneMQ:
 vmq_bridge	https://github.com/erlio/vmq_bridge	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmq_graphite	https://github.com/erlio/vmq_graphite	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmq_passwd	https://github.com/erlio/vmq_passwd	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
+vmq_systree	https://github.com/erlio/vmq_systree	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmstats	https://github.com/ferd/vmstats	https://github.com/ferd/vmstats	tiny Erlang app that works in conjunction with statsderl in order to generate information on the Erlang VM for graphite logs.
 walrus	https://github.com/devinus/walrus	https://github.com/devinus/walrus	Walrus - Mustache-like Templating
 webmachine	https://github.com/basho/webmachine	https://github.com/basho/webmachine	A REST-based system for building web applications.
