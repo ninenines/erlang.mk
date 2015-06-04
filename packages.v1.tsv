@@ -369,6 +369,7 @@ unsplit	https://github.com/uwiger/unsplit	https://github.com/uwiger/unsplit	Reso
 uuid	https://github.com/okeuday/uuid	https://github.com/okeuday/uuid	Erlang UUID Implementation
 ux	https://github.com/erlang-unicode/ux	https://github.com/erlang-unicode/ux	Unicode eXtention for Erlang (Strings, Collation)
 vert	https://github.com/msantos/erlang-libvirt	https://github.com/msantos/erlang-libvirt	Erlang binding to libvirt virtualization API
+vmq_acl	https://github.com/erlio/vmq_acl	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmstats	https://github.com/ferd/vmstats	https://github.com/ferd/vmstats	tiny Erlang app that works in conjunction with statsderl in order to generate information on the Erlang VM for graphite logs.
 walrus	https://github.com/devinus/walrus	https://github.com/devinus/walrus	Walrus - Mustache-like Templating
 webmachine	https://github.com/basho/webmachine	https://github.com/basho/webmachine	A REST-based system for building web applications.
