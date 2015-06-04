@@ -165,6 +165,7 @@ gproc	git	https://github.com/uwiger/gproc	master	https://github.com/uwiger/gproc
 grapherl	git	https://github.com/eproxus/grapherl	master	https://github.com/eproxus/grapherl	Create graphs of Erlang systems and programs
 gun	git	https://github.com/ninenines/gun	master	http//ninenines.eu	Asynchronous SPDY, HTTP and Websocket client written in Erlang.
 hackney	git	https://github.com/benoitc/hackney	master	https://github.com/benoitc/hackney	simple HTTP client in Erlang
+hamcrest	git	https://github.com/hyperthunk/hamcrest-erlang	master	https://github.com/hyperthunk/hamcrest-erlang	Erlang port of Hamcrest
 hanoidb	git	https://github.com/krestenkrab/hanoidb	master	https://github.com/krestenkrab/hanoidb	Erlang LSM BTree Storage
 hottub	git	https://github.com/bfrog/hottub	master	https://github.com/bfrog/hottub	Permanent Erlang Worker Pool
 hyper	git	https://github.com/GameAnalytics/hyper	master	https://github.com/GameAnalytics/hyper	Erlang implementation of HyperLogLog
