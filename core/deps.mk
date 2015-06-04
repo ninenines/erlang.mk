@@ -85,7 +85,7 @@ endef
 define dep_autopatch2
 	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1))); \
 	if [ -f $(DEPS_DIR)/$(1)/rebar.config -o -f $(DEPS_DIR)/$(1)/rebar.config.script ]; then \
-		$(call dep_autopatch_rebar_utils); \
+		$(call dep_autopatch_fetch_rebar); \
 		$(call dep_autopatch_rebar,$(1)); \
 	else \
 		$(call dep_autopatch_gen,$(1)); \
@@ -114,22 +114,14 @@ define dep_autopatch_gen
 		"include ../../erlang.mk" > $(DEPS_DIR)/$(1)/Makefile
 endef
 
-define dep_autopatch_rebar_utils
+define dep_autopatch_fetch_rebar
 	mkdir -p $(ERLANG_MK_TMP)/ebin; \
-	if [ ! -f $(ERLANG_MK_TMP)/rebar.hrl ]; then \
-		$(call core_http_get,$(ERLANG_MK_TMP)/rebar.hrl,https://raw.githubusercontent.com/rebar/rebar/791db716b5a3a7671e0b351f95ddf24b848ee173/include/rebar.hrl); \
-	fi; \
-	if [ ! -f $(ERLANG_MK_TMP)/rebar_utils.erl ]; then \
-		$(call core_http_get,$(ERLANG_MK_TMP)/rebar_utils.erl,https://raw.githubusercontent.com/rebar/rebar/791db716b5a3a7671e0b351f95ddf24b848ee173/src/rebar_utils.erl); \
-	fi; \
-	if [ ! -f $(ERLANG_MK_TMP)/ebin/rebar_utils.beam ]; then \
-		erlc -o $(ERLANG_MK_TMP)/ebin $(ERLANG_MK_TMP)/rebar_utils.erl; \
-	fi; \
-	if [ ! -f $(ERLANG_MK_TMP)/rebar_log.erl ]; then \
-		$(call core_http_get,$(ERLANG_MK_TMP)/rebar_log.erl,https://raw.githubusercontent.com/rebar/rebar/791db716b5a3a7671e0b351f95ddf24b848ee173/src/rebar_log.erl); \
-	fi; \
-	if [ ! -f $(ERLANG_MK_TMP)/ebin/rebar_log.beam ]; then \
-		erlc -o $(ERLANG_MK_TMP)/ebin $(ERLANG_MK_TMP)/rebar_log.erl; \
+	if [ ! -d $(ERLANG_MK_TMP)/rebar ]; then \
+		git clone -q -n -- https://github.com/rebar/rebar $(ERLANG_MK_TMP)/rebar; \
+		cd $(ERLANG_MK_TMP)/rebar; \
+		git checkout -q 791db716b5a3a7671e0b351f95ddf24b848ee173; \
+		make; \
+		cd -; \
 	fi
 endef
 
@@ -377,22 +369,13 @@ define dep_autopatch_rebar.erl
 			[PortSpec(S) || S <- PortSpecs]
 	end,
 	Write("\ninclude ../../erlang.mk"),
-	PatchPlugin = fun(ErlFile) ->
-		{ok, F0} = file:read_file(ErlFile),
-		case re:replace(F0, "rebar_config:", "rebar_config_", [global]) of
-			F0 -> ok;
-			F ->
-				ok = file:write_file(ErlFile, [F,
-					"\nrebar_config_get(_, current_command, _) -> compile.\n"
-				])
-		end
-	end,
 	RunPlugin = fun(Plugin, Step) ->
 		case erlang:function_exported(Plugin, Step, 2) of
 			false -> ok;
 			true ->
 				c:cd("$(DEPS_DIR)/$(1)/"),
-				Ret = Plugin:Step(Conf, undefined),
+				Ret = Plugin:Step({config, "", Conf, dict:new(), dict:new(), dict:new(),
+					dict:store(base_dir, "", dict:new())}, undefined),
 				io:format("rebar plugin ~p step ~p ret ~p~n", [Plugin, Step, Ret])
 		end
 	end,
@@ -421,7 +404,6 @@ define dep_autopatch_rebar.erl
 							false -> ok;
 							{_, PluginsDir} ->
 								ErlFile = "$(DEPS_DIR)/$(1)/" ++ PluginsDir ++ "/" ++ atom_to_list(P) ++ ".erl",
-								PatchPlugin(ErlFile),
 								{ok, P, Bin} = compile:file(ErlFile, [binary]),
 								{module, P} = code:load_binary(P, ErlFile, Bin)
 						end

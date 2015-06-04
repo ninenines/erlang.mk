@@ -124,7 +124,7 @@ endef
 
 # Adding erlang.mk to make Erlang scripts who call init:get_plain_arguments() happy.
 define erlang
-$(ERL) -pa $(ERLANG_MK_TMP)/ebin -eval "$(subst $(newline),,$(subst ",\",$(1)))" -- erlang.mk
+$(ERL) -pa $(ERLANG_MK_TMP)/rebar/ebin -eval "$(subst $(newline),,$(subst ",\",$(1)))" -- erlang.mk
 endef
 
 ifeq ($(shell which wget 2>/dev/null | wc -l), 1)
