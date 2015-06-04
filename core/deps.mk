@@ -115,7 +115,7 @@ define dep_autopatch_gen
 endef
 
 define dep_autopatch_fetch_rebar
-	mkdir -p $(ERLANG_MK_TMP)/ebin; \
+	mkdir -p $(ERLANG_MK_TMP); \
 	if [ ! -d $(ERLANG_MK_TMP)/rebar ]; then \
 		git clone -q -n -- https://github.com/rebar/rebar $(ERLANG_MK_TMP)/rebar; \
 		cd $(ERLANG_MK_TMP)/rebar; \
