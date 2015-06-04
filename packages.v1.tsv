@@ -150,6 +150,7 @@ fuse	https://github.com/jlouis/fuse	https://github.com/jlouis/fuse	A Circuit Bre
 gcm	https://github.com/pdincau/gcm-erlang	https://github.com/pdincau/gcm-erlang	An Erlang application for Google Cloud Messaging
 gcprof	https://github.com/knutin/gcprof	https://github.com/knutin/gcprof	Garbage Collection profiler for Erlang
 geas	https://github.com/crownedgrouse/geas	https://github.com/crownedgrouse/geas	Guess Erlang Application Scattering
+geef	https://github.com/carlosmn/geef	https://github.com/carlosmn/geef	Git NEEEEF (Erlang NIF)
 gen_cycle	https://github.com/aerosol/gen_cycle	https://github.com/aerosol/gen_cycle	Simple, generic OTP behaviour for recurring tasks
 gen_icmp	https://github.com/msantos/gen_icmp	https://github.com/msantos/gen_icmp	Erlang interface to ICMP sockets
 gen_nb_server	https://github.com/kevsmith/gen_nb_server	https://github.com/kevsmith/gen_nb_server	OTP behavior for writing non-blocking servers
