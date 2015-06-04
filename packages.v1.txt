@@ -383,4 +383,5 @@ zab_engine	https://github.com/xinmingyao/zab_engine	https://github.com/xinmingya
 zeta	https://github.com/s1n4/zeta	https://github.com/s1n4/zeta	HTTP access log parser in Erlang
 zippers	https://github.com/ferd/zippers	https://github.com/ferd/zippers	A library for functional zipper data structures in Erlang. Read more on zippers
 zlists	https://github.com/vjache/erlang-zlists	https://github.com/vjache/erlang-zlists	Erlang lazy lists library.
+zraft_lib	https://github.com/dreyk/zraft_lib	https://github.com/dreyk/zraft_lib	Erlang raft consensus protocol implementation
 zucchini	https://github.com/devinus/zucchini	https://github.com/devinus/zucchini	An Erlang INI parser
