@@ -353,6 +353,7 @@ tempo	https://github.com/selectel/tempo	https://github.com/selectel/tempo	NIF-ba
 ticktick	https://github.com/ericliang/ticktick	https://github.com/ericliang/ticktick	Ticktick is an id generator for message service.
 tinymq	https://github.com/ChicagoBoss/tinymq	https://github.com/ChicagoBoss/tinymq	TinyMQ - a diminutive, in-memory message queue
 tinymt	https://github.com/jj1bdx/tinymt-erlang	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+traffic_tools	https://github.com/systra/traffic_tools	https://github.com/systra/traffic_tools	Simple traffic limiting library
 trane	https://github.com/massemanet/trane	https://github.com/massemanet/trane	SAX style broken HTML parser in Erlang
 transit	https://github.com/isaiah/transit-erlang	https://github.com/isaiah/transit-erlang	transit format for erlang
 trie	https://github.com/okeuday/trie	https://github.com/okeuday/trie	Erlang Trie Implementation
