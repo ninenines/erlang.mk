@@ -165,6 +165,7 @@ gen_tracker	https://github.com/erlyvideo/gen_tracker	https://github.com/erlyvide
 gen_unix	https://github.com/msantos/gen_unix	https://github.com/msantos/gen_unix	Erlang Unix socket interface
 getopt	https://github.com/jcomellas/getopt	https://github.com/jcomellas/getopt	Module to parse command line arguments using the GNU getopt syntax
 gettext	https://github.com/etnt/gettext	https://github.com/etnt/gettext	Erlang internationalization library.
+giallo	https://github.com/kivra/giallo	https://github.com/kivra/giallo	Small and flexible web framework on top of Cowboy
 gin	https://github.com/mad-cocktail/gin	https://github.com/mad-cocktail/gin	The guards  and  for Erlang parse_transform
 gitty	https://github.com/maxlapshin/gitty	https://github.com/maxlapshin/gitty	Git access in erlang
 gpb	https://github.com/tomas-abrahamsson/gpb	https://github.com/tomas-abrahamsson/gpb	A Google Protobuf implementation for Erlang
