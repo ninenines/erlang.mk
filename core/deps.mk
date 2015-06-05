@@ -162,7 +162,7 @@ define dep_autopatch_rebar.erl
 	Write("DRV_CFLAGS = -fPIC\nexport DRV_CFLAGS\n"),
 	Write(["ERLANG_ARCH = ", rebar_utils:wordsize(), "\nexport ERLANG_ARCH\n"]),
 	fun() ->
-		Write("ERLC_OPTS = +debug_info\n"),
+		Write("ERLC_OPTS = +debug_info\nexport ERLC_OPTS\n"),
 		case lists:keyfind(erl_opts, 1, Conf) of
 			false -> ok;
 			{_, ErlOpts} ->
