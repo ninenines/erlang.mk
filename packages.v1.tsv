@@ -107,6 +107,7 @@ erlfsmon	https://github.com/proger/erlfsmon	https://github.com/proger/erlfsmon	E
 erlgit	https://github.com/gleber/erlgit	https://github.com/gleber/erlgit	Erlang convenience wrapper around git executable
 erlguten	https://github.com/richcarl/erlguten	https://github.com/richcarl/erlguten	ErlGuten is a system for high-quality typesetting, written purely in Erlang.
 erlmc	https://github.com/jkvor/erlmc	https://github.com/jkvor/erlmc	Erlang memcached binary protocol client
+erlmongo	https://github.com/SergejJurecko/erlmongo	https://github.com/SergejJurecko/erlmongo	Record based Erlang driver for MongoDB with gridfs support
 erlog	https://github.com/rvirding/erlog	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlpass	https://github.com/ferd/erlpass	https://github.com/ferd/erlpass	A library to handle password hashing and changing in a safe manner, independent from any kind of storage whatsoever.
 erlport	https://github.com/hdima/erlport	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
