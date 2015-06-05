@@ -220,6 +220,7 @@ lol	https://github.com/b0oh/lol	https://github.com/b0oh/lol	Lisp on erLang, and 
 lucid	https://github.com/tatsuhiro-t/lucid	https://github.com/tatsuhiro-t/lucid	HTTP/2 server written in Erlang
 luerl	https://github.com/rvirding/luerl	https://github.com/rvirding/luerl	Lua in Erlang
 luwak	https://github.com/basho/luwak	https://github.com/basho/luwak	Large-object storage interface for Riak
+lux	https://github.com/hawk/lux	https://github.com/hawk/lux	Lux (LUcid eXpect scripting) simplifies test automation and provides an Expect-style execution of commands
 mad	https://github.com/synrc/mad	https://github.com/synrc/mad	Small and Fast Rebar Replacement
 mavg	https://github.com/EchoTeam/mavg	https://github.com/EchoTeam/mavg	Erlang :: Exponential moving average library
 mcd	https://github.com/EchoTeam/mcd	https://github.com/EchoTeam/mcd	Fast memcached protocol client in pure Erlang
