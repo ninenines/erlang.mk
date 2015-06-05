@@ -493,9 +493,9 @@ else
 endif
 endif
 endif
-	@if [ -f $(DEPS_DIR)/$(1)/configure.ac ]; then \
+	@if [ -f $(DEPS_DIR)/$(1)/configure.ac -o -f $(DEPS_DIR)/$(1)/configure.in ]; then \
 		echo " AUTO  " $(1); \
-		cd $(DEPS_DIR)/$(1) && autoreconf -vif; \
+		cd $(DEPS_DIR)/$(1) && autoreconf -Wall -vif -I m4; \
 	fi
 	-@if [ -f $(DEPS_DIR)/$(1)/configure ]; then \
 		echo " CONF  " $(1); \
