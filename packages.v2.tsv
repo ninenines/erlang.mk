@@ -113,6 +113,7 @@ erlmongo	git	https://github.com/SergejJurecko/erlmongo	master	https://github.com
 erlog	git	https://github.com/rvirding/erlog	master	https://github.com/rvirding/erlog	Prolog interpreter in and for Erlang
 erlpass	git	https://github.com/ferd/erlpass	master	https://github.com/ferd/erlpass	A library to handle password hashing and changing in a safe manner, independent from any kind of storage whatsoever.
 erlport	git	https://github.com/hdima/erlport	master	https://github.com/hdima/erlport	ErlPort - connect Erlang to other languages
+erlsha2	git	https://github.com/vinoski/erlsha2	master	https://github.com/vinoski/erlsha2	SHA-224, SHA-256, SHA-384, SHA-512 implemented in Erlang NIFs.
 erlsh	git	https://github.com/proger/erlsh	master	https://github.com/proger/erlsh	Erlang shell tools
 erlsom	git	https://github.com/willemdj/erlsom	master	https://github.com/willemdj/erlsom	XML parser for Erlang
 erl_streams	git	https://github.com/epappas/erl_streams	master	https://github.com/epappas/erl_streams	Streams in Erlang
