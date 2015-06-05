@@ -24,6 +24,7 @@ bullet	git	https://github.com/extend/bullet	master	http://ninenines.eu	Simple, r
 cache	git	https://github.com/fogfish/cache	master	https://github.com/fogfish/cache	Erlang in-memory cache
 cake	git	https://github.com/darach/cake-erl	v0.1.2	https://github.com/darach/cake-erl	Really simple terminal colorization
 carotene	git	https://github.com/carotene/carotene	master	https://github.com/carotene/carotene	Real-time server
+cberl	git	https://github.com/chitika/cberl	master	https://github.com/chitika/cberl	NIF based Erlang bindings for Couchbase
 cecho	git	https://github.com/mazenharake/cecho	master	https://github.com/mazenharake/cecho	An ncurses library for Erlang
 cferl	git	https://github.com/ddossot/cferl	master	https://github.com/ddossot/cferl	Rackspace / Open Stack Cloud Files Erlang Client
 chaos_monkey	git	https://github.com/dLuna/chaos_monkey	master	https://github.com/dLuna/chaos_monkey	This is The CHAOS MONKEY.  It will kill your processes.
