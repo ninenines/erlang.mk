@@ -7,6 +7,7 @@ azdht	https://github.com/arcusfelis/azdht	https://github.com/arcusfelis/azdht	Az
 backoff	https://github.com/ferd/backoff	https://github.com/ferd/backoff	Simple exponential backoffs in Erlang
 barrel	https://github.com/benoitc/barrel	https://github.com/benoitc/barrel	barrel is a generic TCP acceptor pool with low latency in Erlang.
 basho_bench	https://github.com/basho/basho_bench	https://github.com/basho/basho_bench	A load-generation and testing tool for basically whatever you can write a returning Erlang function for.
+beam	https://github.com/tonyrog/beam	https://github.com/tonyrog/beam	BEAM emulator written in Erlang
 beanstalk	https://github.com/tim/erlang-beanstalk	https://github.com/tim/erlang-beanstalk	An Erlang client for beanstalkd
 bear	https://github.com/boundary/bear	https://github.com/boundary/bear	a set of statistics functions for erlang
 bertconf	https://github.com/ferd/bertconf	https://github.com/ferd/bertconf	Make ETS tables out of statc BERT files that are auto-reloaded
