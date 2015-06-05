@@ -274,10 +274,10 @@ define dep_autopatch_rebar.erl
 					{'get-deps', Cmd} ->
 						Write("\npre-deps::\n\t" ++ PatchHook(Cmd) ++ "\n");
 					{compile, Cmd} ->
-						Write("\npre-app::\n\t" ++ PatchHook(Cmd) ++ "\n");
+						Write("\npre-app::\n\tCC=$$$$\(CC) " ++ PatchHook(Cmd) ++ "\n");
 					{Regex, compile, Cmd} ->
 						case rebar_utils:is_arch(Regex) of
-							true -> Write("\npre-app::\n\t" ++ PatchHook(Cmd) ++ "\n");
+							true -> Write("\npre-app::\n\tCC=$$$$\(CC) " ++ PatchHook(Cmd) ++ "\n");
 							false -> ok
 						end;
 					_ -> ok
