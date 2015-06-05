@@ -379,6 +379,7 @@ vmq_acl	git	https://github.com/erlio/vmq_acl	master	https://verne.mq/	Component 
 vmq_bridge	git	https://github.com/erlio/vmq_bridge	master	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmq_graphite	git	https://github.com/erlio/vmq_graphite	master	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmq_passwd	git	https://github.com/erlio/vmq_passwd	master	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
+vmq_server	git	https://github.com/erlio/vmq_server	master	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmq_snmp	git	https://github.com/erlio/vmq_snmp	master	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmq_systree	git	https://github.com/erlio/vmq_systree	master	https://verne.mq/	Component of VerneMQ: A distributed MQTT message broker
 vmstats	git	https://github.com/ferd/vmstats	master	https://github.com/ferd/vmstats	tiny Erlang app that works in conjunction with statsderl in order to generate information on the Erlang VM for graphite logs.
