@@ -214,8 +214,13 @@ define dep_autopatch_rebar.erl
 	end(),
 	FindFirst = fun(F, Fd) ->
 		case io:parse_erl_form(Fd, undefined) of
-			{ok, {attribute, _,compile, {parse_transform, PT}}, _} ->
+			{ok, {attribute, _, compile, {parse_transform, PT}}, _} ->
 				[PT, F(F, Fd)];
+			{ok, {attribute, _, compile, CompileOpts}, _} when is_list(CompileOpts) ->
+				case proplists:get_value(parse_transform, CompileOpts) of
+					undefined -> [F(F, Fd)];
+					PT -> [PT, F(F, Fd)]
+				end;
 			{ok, {attribute, _, include, Hrl}, _} ->
 				case file:open("$(DEPS_DIR)/$(1)/include/" ++ Hrl, [read]) of
 					{ok, HrlFd} -> [F(F, HrlFd), F(F, Fd)];
@@ -228,6 +233,11 @@ define dep_autopatch_rebar.erl
 			{ok, {attribute, _, include_lib, "$(1)/include/" ++ Hrl}, _} ->
 				{ok, HrlFd} = file:open("$(DEPS_DIR)/$(1)/include/" ++ Hrl, [read]),
 				[F(F, HrlFd), F(F, Fd)];
+			{ok, {attribute, _, include_lib, Hrl}, _} ->
+				case file:open("$(DEPS_DIR)/$(1)/include/" ++ Hrl, [read]) of
+					{ok, HrlFd} -> [F(F, HrlFd), F(F, Fd)];
+					_ -> [F(F, Fd)]
+				end;
 			{ok, {attribute, _, import, {Imp, _}}, _} ->
 				case file:open("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(Imp) ++ ".erl", [read]) of
 					{ok, ImpFd} -> [Imp, F(F, ImpFd), F(F, Fd)];
