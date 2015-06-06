@@ -206,10 +206,14 @@ define dep_autopatch_rebar.erl
 		end
 	end(),
 	fun() ->
-		First = case lists:keyfind(erl_first_files, 1, Conf) of false -> []; {_, Files} ->
-			Names = [[" ", begin "lre." ++ Elif = lists:reverse(F), lists:reverse(Elif) end]
-				 || "src/" ++ F <- Files],
-			Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
+		case lists:keyfind(erl_first_files, 1, Conf) of
+			false -> ok;
+			{_, Files} ->
+				Names = [[" ", case lists:reverse(F) of
+					"lre." ++ Elif -> lists:reverse(Elif);
+					Elif -> lists:reverse(Elif)
+				end] || "src/" ++ F <- Files],
+				Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
 		end
 	end(),
 	FindFirst = fun(F, Fd) ->
