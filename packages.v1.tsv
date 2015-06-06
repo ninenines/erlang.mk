@@ -136,6 +136,7 @@ etoml	https://github.com/kalta/etoml	https://github.com/kalta/etoml	TOML languag
 eunit_formatters	https://github.com/seancribbs/eunit_formatters	https://github.com/seancribbs/eunit_formatters	Because eunit's output sucks. Let's make it better.
 eunit	https://github.com/richcarl/eunit	https://github.com/richcarl/eunit	The EUnit lightweight unit testing framework for Erlang - this is the canonical development repository.
 euthanasia	https://github.com/doubleyou/euthanasia	https://github.com/doubleyou/euthanasia	Merciful killer for your Erlang processes
+evum	https://github.com/msantos/evum	https://github.com/msantos/evum	Spawn Linux VMs as Erlang processes in the Erlang VM
 exec	https://github.com/saleyn/erlexec	http://saleyn.github.com/erlexec	Execute and control OS processes from Erlang/OTP.
 exml	https://github.com/paulgray/exml	https://github.com/paulgray/exml	XML parsing library in Erlang
 exometer	https://github.com/Feuerlabs/exometer	https://github.com/Feuerlabs/exometer	Basic measurement objects and probe behavior

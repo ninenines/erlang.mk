@@ -136,6 +136,7 @@ etoml	git	https://github.com/kalta/etoml	master	https://github.com/kalta/etoml	T
 eunit_formatters	git	https://github.com/seancribbs/eunit_formatters	master	https://github.com/seancribbs/eunit_formatters	Because eunit's output sucks. Let's make it better.
 eunit	git	https://github.com/richcarl/eunit	master	https://github.com/richcarl/eunit	The EUnit lightweight unit testing framework for Erlang - this is the canonical development repository.
 euthanasia	git	https://github.com/doubleyou/euthanasia	master	https://github.com/doubleyou/euthanasia	Merciful killer for your Erlang processes
+evum	git	https://github.com/msantos/evum	master	https://github.com/msantos/evum	Spawn Linux VMs as Erlang processes in the Erlang VM
 exec	git	https://github.com/saleyn/erlexec	master	http://saleyn.github.com/erlexec	Execute and control OS processes from Erlang/OTP.
 exml	git	https://github.com/paulgray/exml	master	https://github.com/paulgray/exml	XML parsing library in Erlang
 exometer	git	https://github.com/Feuerlabs/exometer	1.2	https://github.com/Feuerlabs/exometer	Basic measurement objects and probe behavior
