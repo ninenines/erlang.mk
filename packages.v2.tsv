@@ -1,6 +1,7 @@
 aberth	git	https://github.com/a13x/aberth	master	https://github.com/a13x/aberth	Generic BERT-RPC server in Erlang
 active	git	https://github.com/proger/active	master	https://github.com/proger/active	Active development for Erlang: rebuild and reload source/binary files while the VM is running
 aleppo	git	https://github.com/ErlyORM/aleppo	master	https://github.com/ErlyORM/aleppo	Alternative Erlang Pre-Processor
+alog	git	https://github.com/siberian-fast-food/alogger	master	https://github.com/siberian-fast-food/alogger	Simply the best logging framework for Erlang
 annotations	git	https://github.com/hyperthunk/annotations	master	https://github.com/hyperthunk/annotations	Simple code instrumentation utilities
 apns	git	https://github.com/inaka/apns4erl	1.0.4	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 azdht	git	https://github.com/arcusfelis/azdht	master	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang

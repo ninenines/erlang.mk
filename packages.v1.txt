@@ -1,6 +1,7 @@
 aberth	https://github.com/a13x/aberth	https://github.com/a13x/aberth	Generic BERT-RPC server in Erlang
 active	https://github.com/proger/active	https://github.com/proger/active	Active development for Erlang: rebuild and reload source/binary files while the VM is running
 aleppo	https://github.com/ErlyORM/aleppo	https://github.com/ErlyORM/aleppo	Alternative Erlang Pre-Processor
+alog	https://github.com/siberian-fast-food/alogger	https://github.com/siberian-fast-food/alogger	Simply the best logging framework for Erlang
 annotations	https://github.com/hyperthunk/annotations	https://github.com/hyperthunk/annotations	Simple code instrumentation utilities
 apns	https://github.com/inaka/apns4erl	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 azdht	https://github.com/arcusfelis/azdht	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
