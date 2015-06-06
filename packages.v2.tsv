@@ -30,6 +30,7 @@ cberl	git	https://github.com/chitika/cberl	master	https://github.com/chitika/cbe
 cecho	git	https://github.com/mazenharake/cecho	master	https://github.com/mazenharake/cecho	An ncurses library for Erlang
 cferl	git	https://github.com/ddossot/cferl	master	https://github.com/ddossot/cferl	Rackspace / Open Stack Cloud Files Erlang Client
 chaos_monkey	git	https://github.com/dLuna/chaos_monkey	master	https://github.com/dLuna/chaos_monkey	This is The CHAOS MONKEY.  It will kill your processes.
+check_node	git	https://github.com/basho-labs/riak_nagios	master	https://github.com/basho-labs/riak_nagios	Nagios Scripts for monitoring Riak
 chronos	git	https://github.com/lehoff/chronos	master	https://github.com/lehoff/chronos	Timer module for Erlang that makes it easy to abstact time out of the tests.
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	git	https://github.com/basho/clique	develop	https://github.com/basho/clique	CLI Framework for Erlang
