@@ -216,6 +216,7 @@ lager_amqp_backend	git	https://github.com/jbrisbin/lager_amqp_backend	master	htt
 lager	git	https://github.com/basho/lager	master	https://github.com/basho/lager	A logging framework for Erlang/OTP.
 lager_syslog	git	https://github.com/basho/lager_syslog	master	https://github.com/basho/lager_syslog	Syslog backend for lager
 lambdapad	git	https://github.com/gar1t/lambdapad	master	https://github.com/gar1t/lambdapad	Static site generator using Erlang. Yes, Erlang.
+lasp	git	https://github.com/lasp-lang/lasp	master	http://lasp-lang.org/	A Language for Distributed, Eventually Consistent Computations
 lasse	git	https://github.com/inaka/lasse	0.1.0	https://github.com/inaka/lasse	SSE handler for Cowboy
 ldap	git	https://github.com/spawnproc/ldap	master	https://github.com/spawnproc/ldap	LDAP server written in Erlang
 lethink	git	https://github.com/taybin/lethink	master	https://github.com/taybin/lethink	erlang driver for rethinkdb
