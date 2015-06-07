@@ -360,6 +360,7 @@ statsderl	https://github.com/lpgauth/statsderl	https://github.com/lpgauth/statsd
 stdinout_pool	https://github.com/mattsta/erlang-stdinout-pool	https://github.com/mattsta/erlang-stdinout-pool	stdinout_pool    : stuff goes in, stuff goes out. there's never any miscommunication.
 stockdb	https://github.com/maxlapshin/stockdb	https://github.com/maxlapshin/stockdb	Database for storing Stock Exchange quotes in erlang
 stripe	https://github.com/mattsta/stripe-erlang	https://github.com/mattsta/stripe-erlang	Erlang interface to the stripe.com API
+surrogate	https://github.com/skruger/Surrogate	https://github.com/skruger/Surrogate	Proxy server written in erlang. Supports reverse proxy load balancing and forward proxy with http (including CONNECT), socks4, socks5, and transparent proxy modes.
 swab	https://github.com/crownedgrouse/swab	https://github.com/crownedgrouse/swab	General purpose buffer handling module
 swarm	https://github.com/jeremey/swarm	https://github.com/jeremey/swarm	Fast and simple acceptor pool for Erlang
 switchboard	https://github.com/thusfresh/switchboard	https://github.com/thusfresh/switchboard	A framework for processing email using worker plugins.
