@@ -35,6 +35,30 @@ check_node	https://github.com/basho-labs/riak_nagios	https://github.com/basho-la
 chronos	https://github.com/lehoff/chronos	https://github.com/lehoff/chronos	Timer module for Erlang that makes it easy to abstact time out of the tests.
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	https://github.com/basho/clique	https://github.com/basho/clique	CLI Framework for Erlang
+cloudi_core	https://github.com/CloudI/cloudi_core	http://cloudi.org/	CloudI internal service runtime
+cloudi_service_api_requests	https://github.com/CloudI/cloudi_service_api_requests	http://cloudi.org/	CloudI Service API requests (JSON-RPC/Erlang-term support)
+cloudi_service_db_cassandra_cql	https://github.com/CloudI/cloudi_service_db_cassandra_cql	http://cloudi.org/	Cassandra CQL CloudI Service
+cloudi_service_db_cassandra	https://github.com/CloudI/cloudi_service_db_cassandra	http://cloudi.org/	Cassandra CloudI Service
+cloudi_service_db_couchdb	https://github.com/CloudI/cloudi_service_db_couchdb	http://cloudi.org/	CouchDB CloudI Service
+cloudi_service_db_elasticsearch	https://github.com/CloudI/cloudi_service_db_elasticsearch	http://cloudi.org/	elasticsearch CloudI Service
+cloudi_service_db	https://github.com/CloudI/cloudi_service_db	http://cloudi.org/	CloudI Database (in-memory/testing/generic)
+cloudi_service_db_memcached	https://github.com/CloudI/cloudi_service_db_memcached	http://cloudi.org/	memcached CloudI Service
+cloudi_service_db_mysql	https://github.com/CloudI/cloudi_service_db_mysql	http://cloudi.org/	MySQL CloudI Service
+cloudi_service_db_riak	https://github.com/CloudI/cloudi_service_db_riak	http://cloudi.org/	Riak CloudI Service
+cloudi_service_db_tokyotyrant	https://github.com/CloudI/cloudi_service_db_tokyotyrant	http://cloudi.org/	Tokyo Tyrant CloudI Service
+cloudi_service_filesystem	https://github.com/CloudI/cloudi_service_filesystem	http://cloudi.org/	Filesystem CloudI Service
+cloudi_service_http_client	https://github.com/CloudI/cloudi_service_http_client	http://cloudi.org/	HTTP client CloudI Service
+cloudi_service_http_cowboy	https://github.com/CloudI/cloudi_service_http_cowboy	http://cloudi.org/	cowboy HTTP/HTTPS CloudI Service
+cloudi_service_http_elli	https://github.com/CloudI/cloudi_service_http_elli	http://cloudi.org/	elli HTTP CloudI Service
+cloudi_service_map_reduce	https://github.com/CloudI/cloudi_service_map_reduce	http://cloudi.org/	Map/Reduce CloudI Service
+cloudi_service_queue	https://github.com/CloudI/cloudi_service_queue	http://cloudi.org/	Persistent Queue Service
+cloudi_service_quorum	https://github.com/CloudI/cloudi_service_quorum	http://cloudi.org/	CloudI Quorum Service
+cloudi_service_router	https://github.com/CloudI/cloudi_service_router	http://cloudi.org/	CloudI Router Service
+cloudi_service_tcp	https://github.com/CloudI/cloudi_service_tcp	http://cloudi.org/	TCP CloudI Service
+cloudi_service_timers	https://github.com/CloudI/cloudi_service_timers	http://cloudi.org/	Timers CloudI Service
+cloudi_service_udp	https://github.com/CloudI/cloudi_service_udp	http://cloudi.org/	UDP CloudI Service
+cloudi_service_validate	https://github.com/CloudI/cloudi_service_validate	http://cloudi.org/	CloudI Validate Service
+cloudi_service_zeromq	https://github.com/CloudI/cloudi_service_zeromq	http://cloudi.org/	ZeroMQ CloudI Service
 cluster_info	https://github.com/basho/cluster_info	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
 confetti	https://github.com/jtendo/confetti	https://github.com/jtendo/confetti	Erlang configuration provider / application:get_env/2 on steroids
 couchbeam	https://github.com/benoitc/couchbeam	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
@@ -336,6 +360,7 @@ rivus_cep	https://github.com/vascokk/rivus_cep	https://github.com/vascokk/rivus_
 rlimit	https://github.com/jlouis/rlimit	https://github.com/jlouis/rlimit	Magnus Klaar's rate limiter code from etorrent
 safetyvalve	https://github.com/jlouis/safetyvalve	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node
 seestar	https://github.com/iamaleksey/seestar	https://github.com/iamaleksey/seestar	The Erlang client for Cassandra 1.2+ binary protocol
+service	https://github.com/CloudI/service	http://cloudi.org/	A minimal Erlang behavior for creating CloudI internal services
 setup	https://github.com/uwiger/setup	https://github.com/uwiger/setup	Generic setup utility for Erlang-based systems
 sext	https://github.com/uwiger/sext	https://github.com/uwiger/sext	Sortable Erlang Term Serialization
 sfmt	https://github.com/jj1bdx/sfmt-erlang	https://github.com/jj1bdx/sfmt-erlang	SFMT pseudo random number generator for Erlang.

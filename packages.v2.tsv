@@ -35,6 +35,30 @@ check_node	git	https://github.com/basho-labs/riak_nagios	master	https://github.c
 chronos	git	https://github.com/lehoff/chronos	master	https://github.com/lehoff/chronos	Timer module for Erlang that makes it easy to abstact time out of the tests.
 classifier	git	https://github.com/inaka/classifier	master	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
 clique	git	https://github.com/basho/clique	develop	https://github.com/basho/clique	CLI Framework for Erlang
+cloudi_core	git	https://github.com/CloudI/cloudi_core	master	http://cloudi.org/	CloudI internal service runtime
+cloudi_service_api_requests	git	https://github.com/CloudI/cloudi_service_api_requests	master	http://cloudi.org/	CloudI Service API requests (JSON-RPC/Erlang-term support)
+cloudi_service_db_cassandra_cql	git	https://github.com/CloudI/cloudi_service_db_cassandra_cql	master	http://cloudi.org/	Cassandra CQL CloudI Service
+cloudi_service_db_cassandra	git	https://github.com/CloudI/cloudi_service_db_cassandra	master	http://cloudi.org/	Cassandra CloudI Service
+cloudi_service_db_couchdb	git	https://github.com/CloudI/cloudi_service_db_couchdb	master	http://cloudi.org/	CouchDB CloudI Service
+cloudi_service_db_elasticsearch	git	https://github.com/CloudI/cloudi_service_db_elasticsearch	master	http://cloudi.org/	elasticsearch CloudI Service
+cloudi_service_db	git	https://github.com/CloudI/cloudi_service_db	master	http://cloudi.org/	CloudI Database (in-memory/testing/generic)
+cloudi_service_db_memcached	git	https://github.com/CloudI/cloudi_service_db_memcached	master	http://cloudi.org/	memcached CloudI Service
+cloudi_service_db_mysql	git	https://github.com/CloudI/cloudi_service_db_mysql	master	http://cloudi.org/	MySQL CloudI Service
+cloudi_service_db_riak	git	https://github.com/CloudI/cloudi_service_db_riak	master	http://cloudi.org/	Riak CloudI Service
+cloudi_service_db_tokyotyrant	git	https://github.com/CloudI/cloudi_service_db_tokyotyrant	master	http://cloudi.org/	Tokyo Tyrant CloudI Service
+cloudi_service_filesystem	git	https://github.com/CloudI/cloudi_service_filesystem	master	http://cloudi.org/	Filesystem CloudI Service
+cloudi_service_http_client	git	https://github.com/CloudI/cloudi_service_http_client	master	http://cloudi.org/	HTTP client CloudI Service
+cloudi_service_http_cowboy	git	https://github.com/CloudI/cloudi_service_http_cowboy	master	http://cloudi.org/	cowboy HTTP/HTTPS CloudI Service
+cloudi_service_http_elli	git	https://github.com/CloudI/cloudi_service_http_elli	master	http://cloudi.org/	elli HTTP CloudI Service
+cloudi_service_map_reduce	git	https://github.com/CloudI/cloudi_service_map_reduce	master	http://cloudi.org/	Map/Reduce CloudI Service
+cloudi_service_queue	git	https://github.com/CloudI/cloudi_service_queue	master	http://cloudi.org/	Persistent Queue Service
+cloudi_service_quorum	git	https://github.com/CloudI/cloudi_service_quorum	master	http://cloudi.org/	CloudI Quorum Service
+cloudi_service_router	git	https://github.com/CloudI/cloudi_service_router	master	http://cloudi.org/	CloudI Router Service
+cloudi_service_tcp	git	https://github.com/CloudI/cloudi_service_tcp	master	http://cloudi.org/	TCP CloudI Service
+cloudi_service_timers	git	https://github.com/CloudI/cloudi_service_timers	master	http://cloudi.org/	Timers CloudI Service
+cloudi_service_udp	git	https://github.com/CloudI/cloudi_service_udp	master	http://cloudi.org/	UDP CloudI Service
+cloudi_service_validate	git	https://github.com/CloudI/cloudi_service_validate	master	http://cloudi.org/	CloudI Validate Service
+cloudi_service_zeromq	git	https://github.com/CloudI/cloudi_service_zeromq	master	http://cloudi.org/	ZeroMQ CloudI Service
 cluster_info	git	https://github.com/basho/cluster_info	master	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
 confetti	git	https://github.com/jtendo/confetti	master	https://github.com/jtendo/confetti	Erlang configuration provider / application:get_env/2 on steroids
 couchbeam	git	https://github.com/benoitc/couchbeam	master	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
@@ -336,6 +360,7 @@ rivus_cep	git	https://github.com/vascokk/rivus_cep	master	https://github.com/vas
 rlimit	git	https://github.com/jlouis/rlimit	master	https://github.com/jlouis/rlimit	Magnus Klaar's rate limiter code from etorrent
 safetyvalve	git	https://github.com/jlouis/safetyvalve	master	https://github.com/jlouis/safetyvalve	A safety valve for your erlang node
 seestar	git	https://github.com/iamaleksey/seestar	master	https://github.com/iamaleksey/seestar	The Erlang client for Cassandra 1.2+ binary protocol
+service	git	https://github.com/CloudI/service	master	http://cloudi.org/	A minimal Erlang behavior for creating CloudI internal services
 setup	git	https://github.com/uwiger/setup	master	https://github.com/uwiger/setup	Generic setup utility for Erlang-based systems
 sext	git	https://github.com/uwiger/sext	master	https://github.com/uwiger/sext	Sortable Erlang Term Serialization
 sfmt	git	https://github.com/jj1bdx/sfmt-erlang	master	https://github.com/jj1bdx/sfmt-erlang	SFMT pseudo random number generator for Erlang.
