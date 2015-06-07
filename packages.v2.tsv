@@ -259,6 +259,7 @@ neo4j	git	https://github.com/dmitriid/neo4j-erlang	master	https://github.com/dmi
 neotoma	git	https://github.com/seancribbs/neotoma	master	https://github.com/seancribbs/neotoma	Erlang library and packrat parser-generator for parsing expression grammars.
 newrelic	git	https://github.com/wooga/newrelic-erlang	master	https://github.com/wooga/newrelic-erlang	Erlang library for sending metrics to New Relic
 nifty	git	https://github.com/parapluu/nifty	master	https://github.com/parapluu/nifty	Erlang NIF wrapper generator
+nkbase	git	https://github.com/Nekso/nkbase	develop	https://github.com/Nekso/nkbase	NkBASE distributed database
 nkdocker	git	https://github.com/Nekso/nkdocker	master	https://github.com/Nekso/nkdocker	Erlang Docker client
 nkpacket	git	https://github.com/Nekso/nkpacket	master	https://github.com/Nekso/nkpacket	Generic Erlang transport layer
 nodefinder	git	https://github.com/okeuday/nodefinder	master	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast

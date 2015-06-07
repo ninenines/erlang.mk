@@ -259,6 +259,7 @@ neo4j	https://github.com/dmitriid/neo4j-erlang	https://github.com/dmitriid/neo4j
 neotoma	https://github.com/seancribbs/neotoma	https://github.com/seancribbs/neotoma	Erlang library and packrat parser-generator for parsing expression grammars.
 newrelic	https://github.com/wooga/newrelic-erlang	https://github.com/wooga/newrelic-erlang	Erlang library for sending metrics to New Relic
 nifty	https://github.com/parapluu/nifty	https://github.com/parapluu/nifty	Erlang NIF wrapper generator
+nkbase	https://github.com/Nekso/nkbase	https://github.com/Nekso/nkbase	NkBASE distributed database
 nkdocker	https://github.com/Nekso/nkdocker	https://github.com/Nekso/nkdocker	Erlang Docker client
 nkpacket	https://github.com/Nekso/nkpacket	https://github.com/Nekso/nkpacket	Generic Erlang transport layer
 nodefinder	https://github.com/okeuday/nodefinder	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
