@@ -366,6 +366,10 @@ define dep_autopatch_rebar.erl
 				Input = [[" ", I] || I <- Input0],
 				PortSpecWrite([
 					[["\n", K, " = ", ShellToMk(V)] || {K, V} <- lists:reverse(MergeEnv(PortEnv))],
+					case $(PLATFORM) of
+						darwin -> "\n\nLDFLAGS += -flat_namespace -undefined suppress";
+						_ -> ""
+					end,
 					"\n\nall:: ", Output, "\n\n",
 					"%.o: %.c\n\t$$$$\(CC) -c -o $$$$\@ $$$$\< $$$$\(CFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
 					"%.o: %.C\n\t$$$$\(CXX) -c -o $$$$\@ $$$$\< $$$$\(CXXFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
