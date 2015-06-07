@@ -48,7 +48,7 @@ all: clean app ct eunit tests-cover docs pkgs
 	$i '+---------------------+'
 
 clean:
-	$t rm -rf app1 $(ERLANG_MK_TMP)
+	$t rm -rf app1 pkgs.log $(ERLANG_MK_TMP)
 
 app: app1
 	$i "app: Testing the 'app' target."
@@ -233,29 +233,49 @@ pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 		"include erlang.mk" \
 		> app1/Makefile
 	cp ../packages.v2.tsv app1/.erlang.mk.packages.v2
-	$t $(MAKE) -C app1
-	$t $(MAKE) -C app1
-	if [ `find -type f -name erl_crash.dump` ]; then exit 33; fi
-	erl +A0 -noinput -boot start_clean -pa app1/deps/*/ebin -eval " \
-		Apps = [list_to_atom(App) || \"app1/deps/\" ++ App <- filelib:wildcard(\"app1/deps/*\")], \
-		[begin \
-			io:format(\"Loading application ~p~n\", [App]), \
-			case application:load(App) of \
-				{error, _} -> ok; \
-				ok -> \
-					{ok, Mods} = application:get_key(App, modules), \
-					[try io:format(\"  Loading module ~p~n\", [Mod]), \
-						{module, Mod} = code:load_file(Mod) \
-					catch C:R -> timer:sleep(500), erlang:C(R) \
-					end || Mod <- Mods] \
-			end \
-		end || App <- Apps], \
-		halt()."
+	$t \
+	$(MAKE) -C app1; if [ $$$$? -ne 0 ]; then \
+		echo "$(1): make error" >> pkgs.log; \
+	else \
+		$(MAKE) -C app1; if [ $$$$? -ne 0 ]; then \
+			echo "$(1): re-make error" >> pkgs.log; \
+		else \
+			find -type f -name erl_crash.dump; if [ $$$$? -ne 0 ]; then \
+				echo "$(1): erl_crash.dump found" >> pkgs.log; \
+			else \
+				erl +A0 -noinput -boot start_clean -pa app1/deps/*/ebin -eval " \
+						Apps = [list_to_atom(App) || \"app1/deps/\" ++ App \
+							<- filelib:wildcard(\"app1/deps/*\")], \
+						[begin \
+							io:format(\"Loading application ~p~n\", [App]), \
+							case application:load(App) of \
+								{error, _} -> ok; \
+								ok -> \
+									{ok, Mods} = application:get_key(App, modules), \
+									[try io:format(\"  Loading module ~p~n\", [Mod]), \
+										{module, Mod} = code:load_file(Mod) \
+									catch C:R -> timer:sleep(500), erlang:C(R) \
+									end || Mod <- Mods] \
+							end \
+						end || App <- Apps], \
+						halt()."; if [ $$$$? -ne 0 ]; then \
+					echo "$(1): load error" >> pkgs.log; \
+				fi \
+			fi \
+		fi \
+	fi
 endef
 
 $(foreach pkg,$(shell awk '{print $$1}' ../packages.v2.tsv),$(eval $(call pkg_test_target,$(pkg))))
 
 pkgs: $(foreach pkg,$(shell awk '{print $$1}' ../packages.v2.tsv),pkg-$(pkg))
+	@if [ -f pkgs.log ]; then \
+		echo "+-------------------------------+"; \
+		echo "| ERRORS WHILE TESTING PACKAGES |"; \
+		echo "+-------------------------------+"; \
+		cat pkgs.log; \
+		exit 33; \
+	fi
 
 # Test application used for testing.
 app1:
