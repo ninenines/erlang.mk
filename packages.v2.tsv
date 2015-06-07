@@ -266,6 +266,7 @@ nkbase	git	https://github.com/Nekso/nkbase	develop	https://github.com/Nekso/nkba
 nkdocker	git	https://github.com/Nekso/nkdocker	master	https://github.com/Nekso/nkdocker	Erlang Docker client
 nkpacket	git	https://github.com/Nekso/nkpacket	master	https://github.com/Nekso/nkpacket	Generic Erlang transport layer
 nodefinder	git	https://github.com/okeuday/nodefinder	master	https://github.com/erlanger/nodefinder	automatic node discovery via UDP multicast
+nprocreg	git	https://github.com/nitrogen/nprocreg	master	http://nitrogenproject.com/	Minimal Distributed Erlang Process Registry
 oauth2c	git	https://github.com/kivra/oauth2_client	master	https://github.com/kivra/oauth2_client	Erlang OAuth2 Client
 oauth2	git	https://github.com/kivra/oauth2	master	https://github.com/kivra/oauth2	Erlang Oauth2 implementation
 oauth	git	https://github.com/tim/erlang-oauth	master	https://github.com/tim/erlang-oauth	An Erlang OAuth 1.0 implementation
