@@ -3,6 +3,7 @@ active	git	https://github.com/proger/active	master	https://github.com/proger/act
 aleppo	git	https://github.com/ErlyORM/aleppo	master	https://github.com/ErlyORM/aleppo	Alternative Erlang Pre-Processor
 alog	git	https://github.com/siberian-fast-food/alogger	master	https://github.com/siberian-fast-food/alogger	Simply the best logging framework for Erlang
 annotations	git	https://github.com/hyperthunk/annotations	master	https://github.com/hyperthunk/annotations	Simple code instrumentation utilities
+antidote	git	https://github.com/SyncFree/antidote	master	https://syncfree.lip6.fr/	Large-scale computation without synchronisation
 apns	git	https://github.com/inaka/apns4erl	1.0.4	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 azdht	git	https://github.com/arcusfelis/azdht	master	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
 backoff	git	https://github.com/ferd/backoff	master	https://github.com/ferd/backoff	Simple exponential backoffs in Erlang

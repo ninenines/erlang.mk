@@ -3,6 +3,7 @@ active	https://github.com/proger/active	https://github.com/proger/active	Active 
 aleppo	https://github.com/ErlyORM/aleppo	https://github.com/ErlyORM/aleppo	Alternative Erlang Pre-Processor
 alog	https://github.com/siberian-fast-food/alogger	https://github.com/siberian-fast-food/alogger	Simply the best logging framework for Erlang
 annotations	https://github.com/hyperthunk/annotations	https://github.com/hyperthunk/annotations	Simple code instrumentation utilities
+antidote	https://github.com/SyncFree/antidote	https://syncfree.lip6.fr/	Large-scale computation without synchronisation
 apns	https://github.com/inaka/apns4erl	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
 azdht	https://github.com/arcusfelis/azdht	https://github.com/arcusfelis/azdht	Azureus Distributed Hash Table (DHT) in Erlang
 backoff	https://github.com/ferd/backoff	https://github.com/ferd/backoff	Simple exponential backoffs in Erlang
