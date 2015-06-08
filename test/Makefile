@@ -240,7 +240,7 @@ pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 		$(MAKE) -C app1; if [ $$$$? -ne 0 ]; then \
 			echo "$(1): re-make error" >> pkgs.log; \
 		else \
-			find -type f -name erl_crash.dump; if [ $$$$? -ne 0 ]; then \
+			find . -type f -name erl_crash.dump; if [ $$$$? -ne 0 ]; then \
 				echo "$(1): erl_crash.dump found" >> pkgs.log; \
 			else \
 				erl +A0 -noinput -boot start_clean -pa app1/deps/*/ebin -eval " \
