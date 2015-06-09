@@ -60,6 +60,7 @@ cloudi_service_udp	git	https://github.com/CloudI/cloudi_service_udp	master	http:
 cloudi_service_validate	git	https://github.com/CloudI/cloudi_service_validate	master	http://cloudi.org/	CloudI Validate Service
 cloudi_service_zeromq	git	https://github.com/CloudI/cloudi_service_zeromq	master	http://cloudi.org/	ZeroMQ CloudI Service
 cluster_info	git	https://github.com/basho/cluster_info	master	https://github.com/basho/cluster_info	Fork of Hibari's nifty cluster_info OTP app
+color	git	https://github.com/julianduque/erlang-color	master	https://github.com/julianduque/erlang-color	ANSI colors for your Erlang
 confetti	git	https://github.com/jtendo/confetti	master	https://github.com/jtendo/confetti	Erlang configuration provider / application:get_env/2 on steroids
 couchbeam	git	https://github.com/benoitc/couchbeam	master	https://github.com/benoitc/couchbeam	Apache CouchDB client in Erlang
 couch	git	https://github.com/benoitc/opencouch	master	https://github.com/benoitc/opencouch	A embeddable document oriented database compatible with Apache CouchDB
