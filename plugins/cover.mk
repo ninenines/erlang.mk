@@ -78,9 +78,7 @@ coverdata-clean:
 
 # Merge all coverdata files into one.
 all.coverdata: $(COVERDATA)
-	$(gen_verbose) $(ERL) -eval ' \
-		$(foreach f,$(COVERDATA),cover:import("$(f)") == ok orelse halt(1),) \
-		cover:export("$@"), halt(0).'
+	$(gen_verbose) $(ERL) -eval '$(foreach f,$(COVERDATA),cover:import("$(f)") == ok orelse halt(1),) cover:export("$@"), halt(0).'
 
 # These are only defined if COVER_REPORT_DIR is non-empty. Set COVER_REPORT_DIR to
 # empty if you want the coverdata files but not the HTML report.
