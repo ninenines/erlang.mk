@@ -232,6 +232,7 @@ kafka	https://github.com/wooga/kafka-erlang	https://github.com/wooga/kafka-erlan
 kai	https://github.com/synrc/kai	https://github.com/synrc/kai	DHT storage by Takeshi Inoue
 katja	https://github.com/nifoc/katja	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 kdht	https://github.com/kevinlynx/kdht	https://github.com/kevinlynx/kdht	kdht is an erlang DHT implementation
+kinetic	https://github.com/AdRoll/kinetic	https://github.com/AdRoll/kinetic	Erlang Kinesis Client
 kjell	https://github.com/karlll/kjell	https://github.com/karlll/kjell	Erlang Shell
 kraken	https://github.com/Asana/kraken	https://github.com/Asana/kraken	Distributed Pubsub Server for Realtime Apps
 kucumberl	https://github.com/openshine/kucumberl	https://github.com/openshine/kucumberl	A pure-erlang, open-source, implementation of Cucumber
