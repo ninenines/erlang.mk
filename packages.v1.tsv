@@ -199,6 +199,7 @@ gettext	https://github.com/etnt/gettext	https://github.com/etnt/gettext	Erlang i
 giallo	https://github.com/kivra/giallo	https://github.com/kivra/giallo	Small and flexible web framework on top of Cowboy
 gin	https://github.com/mad-cocktail/gin	https://github.com/mad-cocktail/gin	The guards  and  for Erlang parse_transform
 gitty	https://github.com/maxlapshin/gitty	https://github.com/maxlapshin/gitty	Git access in erlang
+gold_fever	https://github.com/inaka/gold_fever	https://github.com/inaka/gold_fever	A Treasure Hunt for Erlangers
 gpb	https://github.com/tomas-abrahamsson/gpb	https://github.com/tomas-abrahamsson/gpb	A Google Protobuf implementation for Erlang
 gproc	https://github.com/uwiger/gproc	https://github.com/uwiger/gproc	Extended process registry for Erlang
 grapherl	https://github.com/eproxus/grapherl	https://github.com/eproxus/grapherl	Create graphs of Erlang systems and programs
