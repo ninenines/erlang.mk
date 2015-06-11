@@ -1,4 +1,4 @@
-# Copyright (c) 2015, Euen Lopez <euen@inakanetworks.com>
+# Copyright (c) 2015, Erlang Solutions Ltd.
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: xref distclean-xref
@@ -14,7 +14,7 @@ endif
 XREFR ?= $(CURDIR)/xrefr
 export XREFR
 
-XREFR_URL ?= https://github.com/inaka/xref_runner/releases/download/0.2.0/xrefr
+XREFR_URL ?= https://github.com/inaka/xref_runner/releases/download/0.2.2/xrefr
 
 # Core targets.
 
