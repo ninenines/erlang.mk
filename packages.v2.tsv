@@ -377,6 +377,7 @@ simhash	git	https://github.com/ferd/simhash	master	https://github.com/ferd/simha
 simple_bridge	git	https://github.com/nitrogen/simple_bridge	master	https://github.com/nitrogen/simple_bridge	A simple, standardized interface library to Erlang HTTP Servers.
 simple_oauth2	git	https://github.com/virtan/simple_oauth2	master	https://github.com/virtan/simple_oauth2	Simple erlang OAuth2 client module for any http server framework (Google, Facebook, Yandex, Vkontakte are preconfigured)
 skel	git	https://github.com/ParaPhrase/skel	master	https://github.com/ParaPhrase/skel	A Streaming Process-based Skeleton Library for Erlang
+smother	git	https://github.com/ramsay-t/Smother	master	https://ramsay-t.github.io/Smother/	Extended code coverage metrics for Erlang.
 social	git	https://github.com/dvv/social	master	https://github.com/dvv/social	Cowboy handler for social login via OAuth2 providers
 spapi_router	git	https://github.com/spilgames/spapi-router	master	https://github.com/spilgames/spapi-router	Partially-connected Erlang clustering
 sqerl	git	https://github.com/hairyhum/sqerl	master	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL

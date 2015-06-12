@@ -377,6 +377,7 @@ simhash	https://github.com/ferd/simhash	https://github.com/ferd/simhash	Simhashi
 simple_bridge	https://github.com/nitrogen/simple_bridge	https://github.com/nitrogen/simple_bridge	A simple, standardized interface library to Erlang HTTP Servers.
 simple_oauth2	https://github.com/virtan/simple_oauth2	https://github.com/virtan/simple_oauth2	Simple erlang OAuth2 client module for any http server framework (Google, Facebook, Yandex, Vkontakte are preconfigured)
 skel	https://github.com/ParaPhrase/skel	https://github.com/ParaPhrase/skel	A Streaming Process-based Skeleton Library for Erlang
+smother	https://github.com/ramsay-t/Smother	https://ramsay-t.github.io/Smother/	Extended code coverage metrics for Erlang.
 social	https://github.com/dvv/social	https://github.com/dvv/social	Cowboy handler for social login via OAuth2 providers
 spapi_router	https://github.com/spilgames/spapi-router	https://github.com/spilgames/spapi-router	Partially-connected Erlang clustering
 sqerl	https://github.com/hairyhum/sqerl	https://github.com/hairyhum/sqerl	An Erlang-flavoured SQL DSL
