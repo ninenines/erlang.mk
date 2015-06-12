@@ -432,6 +432,7 @@ websocket_client	https://github.com/jeremyong/websocket_client	https://github.co
 worker_pool	https://github.com/inaka/worker_pool	https://github.com/inaka/worker_pool	a simple erlang worker pool
 wrangler	https://github.com/RefactoringTools/wrangler	http://www.cs.kent.ac.uk/projects/wrangler/Home.html	Import of the Wrangler svn repository.
 wsock	https://github.com/madtrick/wsock	https://github.com/madtrick/wsock	Erlang library to build WebSocket clients and servers
+xhttpc	https://github.com/seriyps/xhttpc	https://github.com/seriyps/xhttpc	Extensible HTTP Client for Erlang
 xref_runner	https://github.com/inaka/xref_runner	https://github.com/inaka/xref_runner	Erlang Xref Runner (inspired in rebar xref)
 yamerl	https://github.com/yakaz/yamerl	https://github.com/yakaz/yamerl	YAML 1.2 parser in pure Erlang
 yamler	https://github.com/goertzenator/yamler	https://github.com/goertzenator/yamler	libyaml-based yaml loader for Erlang
