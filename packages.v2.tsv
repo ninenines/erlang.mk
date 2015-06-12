@@ -280,6 +280,7 @@ mongodb	git	https://github.com/comtihon/mongodb-erlang	master	https://github.com
 mongooseim	git	https://github.com/esl/MongooseIM	master	https://www.erlang-solutions.com/products/mongooseim-massively-scalable-ejabberd-platform	Jabber / XMPP server with focus on performance and scalability, by Erlang Solutions
 moyo	git	https://github.com/dwango/moyo	master	https://github.com/dwango/moyo	Erlang utility functions library
 msgpack	git	https://github.com/msgpack/msgpack-erlang	master	https://github.com/msgpack/msgpack-erlang	MessagePack (de)serializer implementation for Erlang
+mu2	git	https://github.com/ramsay-t/mu2	master	https://github.com/ramsay-t/mu2	Erlang mutation testing tool
 mustache	git	https://github.com/mojombo/mustache.erl	master	https://github.com/mojombo/mustache.erl	Mustache template engine for Erlang.
 myproto	git	https://github.com/altenwald/myproto	master	https://github.com/altenwald/myproto	MySQL Server Protocol in Erlang
 mysql	git	https://github.com/dizzyd/erlang-mysql-driver	master	https://github.com/dizzyd/erlang-mysql-driver	Erlang MySQL Driver (from code.google.com)
