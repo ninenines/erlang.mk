@@ -200,6 +200,7 @@ giallo	git	https://github.com/kivra/giallo	master	https://github.com/kivra/giall
 gin	git	https://github.com/mad-cocktail/gin	master	https://github.com/mad-cocktail/gin	The guards  and  for Erlang parse_transform
 gitty	git	https://github.com/maxlapshin/gitty	master	https://github.com/maxlapshin/gitty	Git access in erlang
 gold_fever	git	https://github.com/inaka/gold_fever	master	https://github.com/inaka/gold_fever	A Treasure Hunt for Erlangers
+gossiperl	git	https://github.com/gossiperl/gossiperl	master	http://gossiperl.com/	Gossip middleware in Erlang
 gpb	git	https://github.com/tomas-abrahamsson/gpb	master	https://github.com/tomas-abrahamsson/gpb	A Google Protobuf implementation for Erlang
 gproc	git	https://github.com/uwiger/gproc	master	https://github.com/uwiger/gproc	Extended process registry for Erlang
 grapherl	git	https://github.com/eproxus/grapherl	master	https://github.com/eproxus/grapherl	Create graphs of Erlang systems and programs
