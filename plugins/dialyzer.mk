@@ -28,7 +28,7 @@ help::
 # Plugin-specific targets.
 
 $(DIALYZER_PLT): deps app
-	@dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(ALL_DEPS_DIRS)
+	@dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(OTP_DEPS) $(ALL_DEPS_DIRS)
 
 plt: $(DIALYZER_PLT)
 

@@ -21,6 +21,8 @@ ERLANG_MK_VERSION = 1
 PROJECT ?= $(notdir $(CURDIR))
 PROJECT := $(strip $(PROJECT))
 
+PROJECT_VERSION ?= rolling
+
 # Verbosity.
 
 V ?= 0
@@ -117,9 +119,17 @@ help::
 
 # Core functions.
 
+empty :=
+space := $(empty) $(empty)
+comma := ,
+
 define newline
 
 
+endef
+
+define erlang_list
+[$(subst $(space),$(comma),$(strip $(1)))]
 endef
 
 # Adding erlang.mk to make Erlang scripts who call init:get_plain_arguments() happy.

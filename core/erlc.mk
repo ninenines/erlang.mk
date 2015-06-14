@@ -18,6 +18,9 @@ COMPILE_MIB_FIRST_PATHS = $(addprefix mibs/,$(addsuffix .mib,$(COMPILE_MIB_FIRST
 
 # Verbosity.
 
+app_verbose_0 = @echo " APP   " $(PROJECT);
+app_verbose = $(app_verbose_$(V))
+
 appsrc_verbose_0 = @echo " APP   " $(PROJECT).app.src;
 appsrc_verbose = $(appsrc_verbose_$(V))
 
@@ -42,18 +45,48 @@ else
 app:: clean app-build
 endif
 
+ifeq ($(wildcard src/$(PROJECT)_app.erl),)
+define app_file
+{application, $(PROJECT), [
+	{description, "$(PROJECT_DESCRIPTION)"},
+	{vsn, "$(PROJECT_VERSION)"},
+	{id, "$(1)"},
+	{modules, [$(MODULES)]},
+	{registered, []},
+	{applications, $(call erlang_list,kernel stdlib $(OTP_DEPS) $(DEPS))}
+]}.
+endef
+else
+define app_file
+{application, $(PROJECT), [
+	{description, "$(PROJECT_DESCRIPTION)"},
+	{vsn, "$(PROJECT_VERSION)"},
+	{id, "$(1)"},
+	{modules, [$(MODULES)]},
+	{registered, $(call erlang_list,$(PROJECT)_sup $(PROJECT_REGISTERED))},
+	{applications, $(call erlang_list,kernel stdlib $(OTP_DEPS) $(DEPS))},
+	{mod, {$(PROJECT)_app, []}}
+]}.
+endef
+endif
+
 app-build: erlc-include ebin/$(PROJECT).app
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
+	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
+ifeq ($(wildcard src/$(PROJECT).app.src),)
+	$(app_verbose) echo $(subst $(newline),,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))) \
+		> ebin/$(PROJECT).app
+else
 	@if [ -z "$$(grep -E '^[^%]*{\s*modules\s*,' src/$(PROJECT).app.src)" ]; then \
 		echo "Empty modules entry not found in $(PROJECT).app.src. Please consult the erlang.mk README for instructions." >&2; \
 		exit 1; \
 	fi
-	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
 		| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
 		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(GITDESCRIBE)\"}/" \
 		> ebin/$(PROJECT).app
+endif
 
 erlc-include:
 	-@if [ -d ebin/ ]; then \
