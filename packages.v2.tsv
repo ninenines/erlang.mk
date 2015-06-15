@@ -106,6 +106,7 @@ ej	git	https://github.com/seth/ej	master	https://github.com/seth/ej	Helper modul
 ekaf	git	https://github.com/helpshift/ekaf	master	https://github.com/helpshift/ekaf	A minimal, high-performance Kafka client in Erlang.
 elarm	git	https://github.com/esl/elarm	master	https://github.com/esl/elarm	Alarm Manager for Erlang.
 eleveldb	git	https://github.com/basho/eleveldb	master	https://github.com/basho/eleveldb	Erlang LevelDB API
+elixir	git	https://github.com/elixir-lang/elixir.git	master	http://elixir-lang.org	 Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
 elli	git	https://github.com/knutin/elli	master	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
 elvis	git	https://github.com/inaka/elvis	0.2.4	https://github.com/inaka/elvis	Erlang Style Reviewer
 emagick	git	https://github.com/kivra/emagick	master	https://github.com/kivra/emagick	Wrapper for Graphics/ImageMagick command line tool.

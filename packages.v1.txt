@@ -106,6 +106,7 @@ ej	https://github.com/seth/ej	https://github.com/seth/ej	Helper module for worki
 ekaf	https://github.com/helpshift/ekaf	https://github.com/helpshift/ekaf	A minimal, high-performance Kafka client in Erlang.
 elarm	https://github.com/esl/elarm	https://github.com/esl/elarm	Alarm Manager for Erlang.
 eleveldb	https://github.com/basho/eleveldb	https://github.com/basho/eleveldb	Erlang LevelDB API
+elixir	https://github.com/elixir-lang/elixir.git	http://elixir-lang.org	 Elixir is a dynamic, functional language designed for building scalable and maintainable applications.
 elli	https://github.com/knutin/elli	https://github.com/knutin/elli	Simple, robust and performant Erlang web server
 elvis	https://github.com/inaka/elvis	https://github.com/inaka/elvis	Erlang Style Reviewer
 emagick	https://github.com/kivra/emagick	https://github.com/kivra/emagick	Wrapper for Graphics/ImageMagick command line tool.
