@@ -83,7 +83,7 @@ else
 		exit 1; \
 	fi
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
-		| sed "s/{modules,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
+		| sed "s/{[[:space:]]*modules[[:space:]]*,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
 		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(GITDESCRIBE)\"}/" \
 		> ebin/$(PROJECT).app
 endif
