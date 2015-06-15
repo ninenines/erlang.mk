@@ -44,6 +44,7 @@ cloudi_service_db_elasticsearch	https://github.com/CloudI/cloudi_service_db_elas
 cloudi_service_db	https://github.com/CloudI/cloudi_service_db	http://cloudi.org/	CloudI Database (in-memory/testing/generic)
 cloudi_service_db_memcached	https://github.com/CloudI/cloudi_service_db_memcached	http://cloudi.org/	memcached CloudI Service
 cloudi_service_db_mysql	https://github.com/CloudI/cloudi_service_db_mysql	http://cloudi.org/	MySQL CloudI Service
+cloudi_service_db_pgsql	https://github.com/CloudI/cloudi_service_db_pgsql	http://cloudi.org/	PostgreSQL CloudI Service
 cloudi_service_db_riak	https://github.com/CloudI/cloudi_service_db_riak	http://cloudi.org/	Riak CloudI Service
 cloudi_service_db_tokyotyrant	https://github.com/CloudI/cloudi_service_db_tokyotyrant	http://cloudi.org/	Tokyo Tyrant CloudI Service
 cloudi_service_filesystem	https://github.com/CloudI/cloudi_service_filesystem	http://cloudi.org/	Filesystem CloudI Service

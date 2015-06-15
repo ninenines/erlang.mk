@@ -44,6 +44,7 @@ cloudi_service_db_elasticsearch	git	https://github.com/CloudI/cloudi_service_db_
 cloudi_service_db	git	https://github.com/CloudI/cloudi_service_db	master	http://cloudi.org/	CloudI Database (in-memory/testing/generic)
 cloudi_service_db_memcached	git	https://github.com/CloudI/cloudi_service_db_memcached	master	http://cloudi.org/	memcached CloudI Service
 cloudi_service_db_mysql	git	https://github.com/CloudI/cloudi_service_db_mysql	master	http://cloudi.org/	MySQL CloudI Service
+cloudi_service_db_pgsql	git	https://github.com/CloudI/cloudi_service_db_pgsql	master	http://cloudi.org/	PostgreSQL CloudI Service
 cloudi_service_db_riak	git	https://github.com/CloudI/cloudi_service_db_riak	master	http://cloudi.org/	Riak CloudI Service
 cloudi_service_db_tokyotyrant	git	https://github.com/CloudI/cloudi_service_db_tokyotyrant	master	http://cloudi.org/	Tokyo Tyrant CloudI Service
 cloudi_service_filesystem	git	https://github.com/CloudI/cloudi_service_filesystem	master	http://cloudi.org/	Filesystem CloudI Service
