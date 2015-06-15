@@ -126,6 +126,7 @@ erlang_cep	git	https://github.com/danmacklin/erlang_cep	master	https://github.co
 erlang_js	git	https://github.com/basho/erlang_js	master	https://github.com/basho/erlang_js	A linked-in driver for Erlang to Mozilla's Spidermonkey Javascript runtime.
 erlang_localtime	git	https://github.com/dmitryme/erlang_localtime	master	https://github.com/dmitryme/erlang_localtime	Erlang library for conversion from one local time to another
 erlang_smtp	git	https://github.com/tonyg/erlang-smtp	master	https://github.com/tonyg/erlang-smtp	Erlang SMTP and POP3 server code.
+erlang_term	git	https://github.com/okeuday/erlang_term	master	https://github.com/okeuday/erlang_term	Erlang Term Info
 erlasticsearch	git	https://github.com/dieswaytoofast/erlasticsearch	master	https://github.com/dieswaytoofast/erlasticsearch	Erlang thrift interface to elastic_search
 erlastic_search	git	https://github.com/tsloughter/erlastic_search	master	https://github.com/tsloughter/erlastic_search	An Erlang app for communicating with Elastic Search's rest interface.
 erlbrake	git	https://github.com/kenpratt/erlbrake	master	https://github.com/kenpratt/erlbrake	Erlang Airbrake notification client
