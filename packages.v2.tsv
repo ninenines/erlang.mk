@@ -236,6 +236,7 @@ kai	git	https://github.com/synrc/kai	master	https://github.com/synrc/kai	DHT sto
 katja	git	https://github.com/nifoc/katja	master	https://github.com/nifoc/katja	A simple Riemann client written in Erlang.
 kdht	git	https://github.com/kevinlynx/kdht	master	https://github.com/kevinlynx/kdht	kdht is an erlang DHT implementation
 key2value	git	https://github.com/okeuday/key2value	master	https://github.com/okeuday/key2value	Erlang 2-way map
+keys1value	git	https://github.com/okeuday/keys1value	master	https://github.com/okeuday/keys1value	Erlang set associative map for key lists
 kinetic	git	https://github.com/AdRoll/kinetic	master	https://github.com/AdRoll/kinetic	Erlang Kinesis Client
 kjell	git	https://github.com/karlll/kjell	master	https://github.com/karlll/kjell	Erlang Shell
 kraken	git	https://github.com/Asana/kraken	master	https://github.com/Asana/kraken	Distributed Pubsub Server for Realtime Apps
