@@ -320,7 +320,6 @@ pobox	https://github.com/ferd/pobox	https://github.com/ferd/pobox	External buffe
 ponos	https://github.com/klarna/ponos	https://github.com/klarna/ponos	ponos is a simple yet powerful load generator written in erlang
 poolboy	https://github.com/devinus/poolboy	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 pooler	https://github.com/seth/pooler	https://github.com/seth/pooler	An OTP Process Pool Application
-poxa	https://github.com/edgurgel/poxa-erlang	https://github.com/edgurgel/poxa-erlang	Open Pusher server implementation compatible with Pusher libraries.
 pqueue	https://github.com/okeuday/pqueue	https://github.com/okeuday/pqueue	Erlang Priority Queues
 procket	https://github.com/msantos/procket	http://blog.listincomprehension.com/search/label/procket	Erlang interface to low level socket operations
 proper	https://github.com/manopapad/proper	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.

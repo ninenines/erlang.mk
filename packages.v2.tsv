@@ -320,7 +320,6 @@ pobox	git	https://github.com/ferd/pobox	master	https://github.com/ferd/pobox	Ext
 ponos	git	https://github.com/klarna/ponos	master	https://github.com/klarna/ponos	ponos is a simple yet powerful load generator written in erlang
 poolboy	git	https://github.com/devinus/poolboy	master	https://github.com/devinus/poolboy	A hunky Erlang worker pool factory
 pooler	git	https://github.com/seth/pooler	master	https://github.com/seth/pooler	An OTP Process Pool Application
-poxa	git	https://github.com/edgurgel/poxa-erlang	master	https://github.com/edgurgel/poxa-erlang	Open Pusher server implementation compatible with Pusher libraries.
 pqueue	git	https://github.com/okeuday/pqueue	master	https://github.com/okeuday/pqueue	Erlang Priority Queues
 procket	git	https://github.com/msantos/procket	master	http://blog.listincomprehension.com/search/label/procket	Erlang interface to low level socket operations
 proper	git	https://github.com/manopapad/proper	master	http://proper.softlab.ntua.gr	PropEr: a QuickCheck-inspired property-based testing tool for Erlang.
