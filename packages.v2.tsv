@@ -411,6 +411,7 @@ tempo	git	https://github.com/selectel/tempo	master	https://github.com/selectel/t
 ticktick	git	https://github.com/ericliang/ticktick	master	https://github.com/ericliang/ticktick	Ticktick is an id generator for message service.
 tinymq	git	https://github.com/ChicagoBoss/tinymq	master	https://github.com/ChicagoBoss/tinymq	TinyMQ - a diminutive, in-memory message queue
 tinymt	git	https://github.com/jj1bdx/tinymt-erlang	master	https://github.com/jj1bdx/tinymt-erlang	TinyMT pseudo random number generator for Erlang.
+tirerl	git	https://github.com/inaka/tirerl	master	https://github.com/inaka/tirerl	Erlang interface to Elastic Search
 traffic_tools	git	https://github.com/systra/traffic_tools	master	https://github.com/systra/traffic_tools	Simple traffic limiting library
 trane	git	https://github.com/massemanet/trane	master	https://github.com/massemanet/trane	SAX style broken HTML parser in Erlang
 transit	git	https://github.com/isaiah/transit-erlang	master	https://github.com/isaiah/transit-erlang	transit format for erlang
