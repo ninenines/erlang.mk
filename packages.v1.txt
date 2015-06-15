@@ -335,6 +335,7 @@ push_service	https://github.com/hairyhum/push_service	https://github.com/hairyhu
 qdate	https://github.com/choptastic/qdate	https://github.com/choptastic/qdate	Date, time, and timezone parsing, formatting, and conversion for Erlang.
 qrcode	https://github.com/komone/qrcode	https://github.com/komone/qrcode	QR Code encoder in Erlang
 quest	https://github.com/eriksoe/ErlangQuest	https://github.com/eriksoe/ErlangQuest	Learn Erlang through this set of challenges. An interactive system for getting to know Erlang.
+quickrand	https://github.com/okeuday/quickrand	https://github.com/okeuday/quickrand	Quick Erlang Random Number Generation
 rabbit_exchange_type_riak	https://github.com/jbrisbin/riak-exchange	https://github.com/jbrisbin/riak-exchange	Custom RabbitMQ exchange type for sticking messages in Riak
 rack	https://github.com/erlyvideo/rack	https://github.com/erlyvideo/rack	Rack handler for erlang
 radierl	https://github.com/vances/radierl	https://github.com/vances/radierl	RADIUS protocol stack implemented in Erlang.
