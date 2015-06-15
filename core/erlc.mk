@@ -51,7 +51,7 @@ define app_file
 	{description, "$(PROJECT_DESCRIPTION)"},
 	{vsn, "$(PROJECT_VERSION)"},
 	{id, "$(1)"},
-	{modules, [$(MODULES)]},
+	{modules, [$(2)]},
 	{registered, []},
 	{applications, $(call erlang_list,kernel stdlib $(OTP_DEPS) $(DEPS))}
 ]}.
@@ -62,7 +62,7 @@ define app_file
 	{description, "$(PROJECT_DESCRIPTION)"},
 	{vsn, "$(PROJECT_VERSION)"},
 	{id, "$(1)"},
-	{modules, [$(MODULES)]},
+	{modules, [$(2)]},
 	{registered, $(call erlang_list,$(PROJECT)_sup $(PROJECT_REGISTERED))},
 	{applications, $(call erlang_list,kernel stdlib $(OTP_DEPS) $(DEPS))},
 	{mod, {$(PROJECT)_app, []}}
@@ -71,9 +71,9 @@ endef
 endif
 
 app-build: erlc-include ebin/$(PROJECT).app
+	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
 	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
 		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
-	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
 	$(app_verbose) echo $(subst $(newline),,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))) \
 		> ebin/$(PROJECT).app
