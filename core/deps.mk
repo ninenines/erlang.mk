@@ -502,18 +502,18 @@ ifeq (,$(dep_$(1)))
 else
 ifeq (1,$(words $(dep_$(1))))
 	$(dep_verbose) VS=git; \
-	REPO=$(dep_$(1)); \
+	REPO=$(patsubst git://github.com/%,https://github.com/%,$(dep_$(1))); \
 	COMMIT=master; \
 	$(call dep_fetch,$(1))
 else
 ifeq (2,$(words $(dep_$(1))))
 	$(dep_verbose) VS=git; \
-	REPO=$(word 1,$(dep_$(1))); \
+	REPO=$(patsubst git://github.com/%,https://github.com/%,$(word 1,$(dep_$(1)))); \
 	COMMIT=$(word 2,$(dep_$(1))); \
 	$(call dep_fetch,$(1))
 else
 	$(dep_verbose) VS=$(word 1,$(dep_$(1))); \
-	REPO=$(word 2,$(dep_$(1))); \
+	REPO=$(patsubst git://github.com/%,https://github.com/%,$(word 2,$(dep_$(1)))); \
 	COMMIT=$(word 3,$(dep_$(1))); \
 	$(call dep_fetch,$(1))
 endif
