@@ -40,13 +40,21 @@ ifneq ($(SKIP_DEPS),)
 deps::
 else
 deps:: $(ALL_DEPS_DIRS)
+ifneq ($(IS_DEP),1)
+	@rm -f $(ERLANG_MK_TMP)/deps.log
+endif
 	@for dep in $(ALL_DEPS_DIRS) ; do \
-		if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ] ; then \
-			$(MAKE) -C $$dep IS_DEP=1 || exit $$? ; \
+		if grep -q ^$$dep$$$$ $(ERLANG_MK_TMP)/deps.log; then \
+			echo -n; \
 		else \
-			echo "ERROR: No Makefile to build dependency $$dep." ; \
-			exit 1 ; \
-		fi ; \
+			echo $$dep >> $(ERLANG_MK_TMP)/deps.log; \
+			if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
+				$(MAKE) -C $$dep IS_DEP=1 || exit $$?; \
+			else \
+				echo "ERROR: No Makefile to build dependency $$dep."; \
+				exit 1; \
+			fi \
+		fi \
 	done
 endif
 
