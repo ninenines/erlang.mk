@@ -3,11 +3,6 @@
 
 COVER_REPORT_DIR = cover
 
-# utility variables for representing special symbols
-empty :=
-space := $(empty) $(empty)
-comma := ,
-
 # Hook in coverage to eunit
 
 ifdef COVER
@@ -25,7 +20,6 @@ endif
 
 ifdef COVER
 ifdef CT_RUN
-
 # All modules in 'ebin'
 COVER_MODS = $(notdir $(basename $(shell echo ebin/*.beam)))
 
