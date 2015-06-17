@@ -2,6 +2,7 @@ aberth	https://github.com/a13x/aberth	https://github.com/a13x/aberth	Generic BER
 active	https://github.com/proger/active	https://github.com/proger/active	Active development for Erlang: rebuild and reload source/binary files while the VM is running
 aleppo	https://github.com/ErlyORM/aleppo	https://github.com/ErlyORM/aleppo	Alternative Erlang Pre-Processor
 alog	https://github.com/siberian-fast-food/alogger	https://github.com/siberian-fast-food/alogger	Simply the best logging framework for Erlang
+amqp_client	https://github.com/rabbitmq/rabbitmq-erlang-client.git	https://www.rabbitmq.com/erlang-client-user-guide.html	RabbitMQ Erlang AMQP client
 annotations	https://github.com/hyperthunk/annotations	https://github.com/hyperthunk/annotations	Simple code instrumentation utilities
 antidote	https://github.com/SyncFree/antidote	https://syncfree.lip6.fr/	Large-scale computation without synchronisation
 apns	https://github.com/inaka/apns4erl	http://inaka.github.com/apns4erl	Apple Push Notification Server for Erlang
