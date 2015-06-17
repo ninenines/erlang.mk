@@ -234,7 +234,15 @@ pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 		> app1/Makefile
 	cp ../packages.v2.tsv app1/.erlang.mk.packages.v2
 	$t \
-	$(MAKE) -C app1; if [ $$$$? -ne 0 ]; then \
+	if [ "$(1)" = "amqp_client" ]; then \
+		virtualenv -p /usr/bin/python2.7 --distribute temp-python; \
+		source temp-python/bin/activate; \
+		$(MAKE) -C app1 RABBITMQ_CLIENT_PATCH=1; \
+		deactivate; \
+	else \
+		$(MAKE) -C app1; \
+	fi; \
+	if [ $$$$? -ne 0 ]; then \
 		echo "$(1): make error" >> pkgs.log; \
 	else \
 		$(MAKE) -C app1; if [ $$$$? -ne 0 ]; then \
