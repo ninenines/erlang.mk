@@ -531,7 +531,8 @@ ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 	@if [ "$(RABBITMQ_CLIENT_PATCH)" ]; then \
 		echo " PATCH  Downloading extra RabbitMQ repositories..."; \
 		git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \
-		git clone https://github.com/rabbitmq/rabbitmq-server.git $(DEPS_DIR)/rabbitmq-server; \
+		git clone https://github.com/rabbitmq/rabbitmq-server.git $(DEPS_DIR)/rabbit; \
+		ln -s $(DEPS_DIR)/rabbit $(DEPS_DIR)/rabbitmq-server; \
 	else \
 		$(call dep_autopatch,$(1)) \
 	fi
