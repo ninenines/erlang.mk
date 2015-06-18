@@ -14,6 +14,8 @@
 
 .PHONY: all deps app rel docs install-docs tests check clean distclean help erlang-mk
 
+ERLANG_MK_FILENAME := $(realpath $(lastword $(MAKEFILE_LIST)))
+
 ERLANG_MK_VERSION = 1
 
 # Core configuration.

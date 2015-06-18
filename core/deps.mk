@@ -107,8 +107,7 @@ endef
 # Overwrite erlang.mk with the current file by default.
 ifeq ($(NO_AUTOPATCH_ERLANG_MK),)
 define dep_autopatch_erlang_mk
-	rm -f $(DEPS_DIR)/$(1)/erlang.mk; \
-	cd $(DEPS_DIR)/$(1)/ && ln -s ../../erlang.mk
+	echo "include $(ERLANG_MK_FILENAME)" > $(DEPS_DIR)/$(1)/erlang.mk
 endef
 else
 define dep_autopatch_erlang_mk
@@ -394,7 +393,7 @@ define dep_autopatch_rebar.erl
 			end,
 			[PortSpec(S) || S <- PortSpecs]
 	end,
-	Write("\ninclude ../../erlang.mk"),
+	Write("\ninclude $(ERLANG_MK_FILENAME)"),
 	RunPlugin = fun(Plugin, Step) ->
 		case erlang:function_exported(Plugin, Step, 2) of
 			false -> ok;
