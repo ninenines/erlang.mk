@@ -529,10 +529,20 @@ endif
 	fi
 ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 	@if [ "$(RABBITMQ_CLIENT_PATCH)" ]; then \
-		echo " PATCH  Downloading extra RabbitMQ repositories..."; \
-		git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \
-		git clone https://github.com/rabbitmq/rabbitmq-server.git $(DEPS_DIR)/rabbit; \
-		ln -s $(DEPS_DIR)/rabbit $(DEPS_DIR)/rabbitmq-server; \
+		if [ ! -d $(DEPS_DIR)/rabbitmq-codegen ]; then \
+			echo " PATCH  Downloading rabbitmq-codegen"; \
+			git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \
+		fi; \
+		if [ ! -d $(DEPS_DIR)/rabbit ]; then \
+			echo " PATCH  Downloading rabbitmq-server"; \
+			git clone https://github.com/rabbitmq/rabbitmq-server.git $(DEPS_DIR)/rabbit; \
+			ln -s $(DEPS_DIR)/rabbit $(DEPS_DIR)/rabbitmq-server; \
+		fi \
+	elif [ "$(RABBITMQ_SERVER_PATCH)" ]; then \
+		if [ ! -d $(DEPS_DIR)/rabbitmq-codegen ]; then \
+			echo " PATCH  Downloading rabbitmq-codegen"; \
+			git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \
+		fi \
 	else \
 		$(call dep_autopatch,$(1)) \
 	fi
