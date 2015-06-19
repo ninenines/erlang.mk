@@ -1,4 +1,4 @@
-# Copyright (c) 2014, Juan Facorro <juan@inaka.net>
+# Copyright (c) 2015, Erlang Solutions Ltd.
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: elvis distclean-elvis
