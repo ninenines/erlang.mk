@@ -79,6 +79,7 @@ damocles	git	https://github.com/lostcolony/damocles	master	https://github.com/lo
 debbie	git	https://github.com/crownedgrouse/debbie	master	https://github.com/crownedgrouse/debbie	.DEB Built In Erlang
 decimal	git	https://github.com/tim/erlang-decimal	master	https://github.com/tim/erlang-decimal	An Erlang decimal arithmetic library
 detergent	git	https://github.com/devinus/detergent	master	https://github.com/devinus/detergent	An emulsifying Erlang SOAP library
+detest	git	https://github.com/biokoda/detest	master	https://github.com/biokoda/detest	Tool for running tests on a cluster of erlang nodes
 dh_date	git	https://github.com/daleharvey/dh_date	master	https://github.com/daleharvey/dh_date	Date formatting / parsing library for erlang
 dhtcrawler	git	https://github.com/kevinlynx/dhtcrawler	master	https://github.com/kevinlynx/dhtcrawler	dhtcrawler is a DHT crawler written in erlang. It can join a DHT network and crawl many P2P torrents.
 dirbusterl	git	https://github.com/silentsignal/DirBustErl	master	https://github.com/silentsignal/DirBustErl	DirBuster successor in Erlang
