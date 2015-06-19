@@ -43,6 +43,7 @@ deps:: $(ALL_DEPS_DIRS)
 ifneq ($(IS_DEP),1)
 	@rm -f $(ERLANG_MK_TMP)/deps.log
 endif
+	@mkdir -p $(ERLANG_MK_TMP)
 	@for dep in $(ALL_DEPS_DIRS) ; do \
 		if grep -qs ^$$dep$$$$ $(ERLANG_MK_TMP)/deps.log; then \
 			echo -n; \
