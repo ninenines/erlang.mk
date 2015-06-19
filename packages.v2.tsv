@@ -106,6 +106,7 @@ egeoip	git	https://github.com/mochi/egeoip	master	https://github.com/mochi/egeoi
 ehsa	hg	https://bitbucket.org/a12n/ehsa	2.0.4	https://bitbucket.org/a12n/ehsa	Erlang HTTP server basic and digest authentication modules
 ejabberd	git	https://github.com/processone/ejabberd	master	https://github.com/processone/ejabberd	Robust, ubiquitous and massively scalable Jabber / XMPP Instant Messaging platform
 ej	git	https://github.com/seth/ej	master	https://github.com/seth/ej	Helper module for working with Erlang terms representing JSON
+ejwt	git	https://github.com/artefactop/ejwt	master	https://github.com/artefactop/ejwt	erlang library for JSON Web Token
 ekaf	git	https://github.com/helpshift/ekaf	master	https://github.com/helpshift/ekaf	A minimal, high-performance Kafka client in Erlang.
 elarm	git	https://github.com/esl/elarm	master	https://github.com/esl/elarm	Alarm Manager for Erlang.
 eleveldb	git	https://github.com/basho/eleveldb	master	https://github.com/basho/eleveldb	Erlang LevelDB API
