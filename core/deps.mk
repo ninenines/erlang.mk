@@ -281,10 +281,10 @@ define dep_autopatch_rebar.erl
 	Write("\npre-app::\n"),
 	PatchHook = fun(Cmd) ->
 		case Cmd of
-			"make -C" ++ _ -> Escape(Cmd);
-			"gmake -C" ++ _ -> Escape(Cmd);
-			"make " ++ Cmd1 -> "make -f Makefile.orig.mk " ++ Escape(Cmd1);
-			"gmake " ++ Cmd1 -> "gmake -f Makefile.orig.mk " ++ Escape(Cmd1);
+			"make -C" ++ Cmd1 -> "$$$$\(MAKE) -C" ++ Escape(Cmd1);
+			"gmake -C" ++ Cmd1 -> "$$$$\(MAKE) -C" ++ Escape(Cmd1);
+			"make " ++ Cmd1 -> "$$$$\(MAKE) -f Makefile.orig.mk " ++ Escape(Cmd1);
+			"gmake " ++ Cmd1 -> "$$$$\(MAKE) -f Makefile.orig.mk " ++ Escape(Cmd1);
 			_ -> Escape(Cmd)
 		end
 	end,
