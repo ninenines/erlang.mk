@@ -235,13 +235,13 @@ pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 	cp ../packages.v2.tsv app1/.erlang.mk.packages.v2
 	$t \
 	if [ "$(1)" = "amqp_client" ]; then \
-		virtualenv -p /usr/bin/python2.7 --distribute temp-python; \
-		source temp-python/bin/activate; \
+		virtualenv -p python2.7 --distribute temp-python; \
+		. temp-python/bin/activate; \
 		$(MAKE) -C app1 RABBITMQ_CLIENT_PATCH=1; \
 		deactivate; \
 	elif [ "$(1)" = "rabbit" ]; then \
-		virtualenv -p /usr/bin/python2.7 --distribute temp-python; \
-		source temp-python/bin/activate; \
+		virtualenv -p python2.7 --distribute temp-python; \
+		. temp-python/bin/activate; \
 		$(MAKE) -C app1 RABBITMQ_SERVER_PATCH=1; \
 		deactivate; \
 	else \
