@@ -35,6 +35,7 @@ chaos_monkey	https://github.com/dLuna/chaos_monkey	https://github.com/dLuna/chao
 check_node	https://github.com/basho-labs/riak_nagios	https://github.com/basho-labs/riak_nagios	Nagios Scripts for monitoring Riak
 chronos	https://github.com/lehoff/chronos	https://github.com/lehoff/chronos	Timer module for Erlang that makes it easy to abstact time out of the tests.
 classifier	https://github.com/inaka/classifier	https://github.com/inaka/classifier	An Erlang Bayesian Filter and Text Classifier
+cl	https://github.com/tonyrog/cl	https://github.com/tonyrog/cl	OpenCL binding for Erlang
 clique	https://github.com/basho/clique	https://github.com/basho/clique	CLI Framework for Erlang
 cloudi_core	https://github.com/CloudI/cloudi_core	http://cloudi.org/	CloudI internal service runtime
 cloudi_service_api_requests	https://github.com/CloudI/cloudi_service_api_requests	http://cloudi.org/	CloudI Service API requests (JSON-RPC/Erlang-term support)
