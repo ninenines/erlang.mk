@@ -533,11 +533,11 @@ ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 			echo " PATCH  Downloading rabbitmq-codegen"; \
 			git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \
 		fi; \
-		if [ ! -d $(DEPS_DIR)/rabbit ]; then \
+		if [ ! -d $(DEPS_DIR)/rabbitmq-server ]; then \
 			echo " PATCH  Downloading rabbitmq-server"; \
-			git clone https://github.com/rabbitmq/rabbitmq-server.git $(DEPS_DIR)/rabbit; \
-			ln -s $(DEPS_DIR)/rabbit $(DEPS_DIR)/rabbitmq-server; \
-		fi \
+			git clone https://github.com/rabbitmq/rabbitmq-server.git $(DEPS_DIR)/rabbitmq-server; \
+		fi; \
+		ln -s $(DEPS_DIR)/amqp_client/deps/rabbit_common-0.0.0 $(DEPS_DIR)/rabbit_common; \
 	elif [ "$(1)" = "rabbit" -a "$(RABBITMQ_SERVER_PATCH)" ]; then \
 		if [ ! -d $(DEPS_DIR)/rabbitmq-codegen ]; then \
 			echo " PATCH  Downloading rabbitmq-codegen"; \
