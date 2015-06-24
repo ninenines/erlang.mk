@@ -1,6 +1,7 @@
 aberth	git	https://github.com/a13x/aberth	master	https://github.com/a13x/aberth	Generic BERT-RPC server in Erlang
 active	git	https://github.com/proger/active	master	https://github.com/proger/active	Active development for Erlang: rebuild and reload source/binary files while the VM is running
 actordb_core	git	https://github.com/biokoda/actordb_core	master	http://www.actordb.com/	ActorDB main source
+actordb_thrift	git	https://github.com/biokoda/actordb_thrift	master	http://www.actordb.com/	Thrift API for ActorDB
 aleppo	git	https://github.com/ErlyORM/aleppo	master	https://github.com/ErlyORM/aleppo	Alternative Erlang Pre-Processor
 alog	git	https://github.com/siberian-fast-food/alogger	master	https://github.com/siberian-fast-food/alogger	Simply the best logging framework for Erlang
 amqp_client	git	https://github.com/rabbitmq/rabbitmq-erlang-client.git	master	https://www.rabbitmq.com/erlang-client-user-guide.html	RabbitMQ Erlang AMQP client

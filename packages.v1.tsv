@@ -1,6 +1,7 @@
 aberth	https://github.com/a13x/aberth	https://github.com/a13x/aberth	Generic BERT-RPC server in Erlang
 active	https://github.com/proger/active	https://github.com/proger/active	Active development for Erlang: rebuild and reload source/binary files while the VM is running
 actordb_core	https://github.com/biokoda/actordb_core	http://www.actordb.com/	ActorDB main source
+actordb_thrift	https://github.com/biokoda/actordb_thrift	http://www.actordb.com/	Thrift API for ActorDB
 aleppo	https://github.com/ErlyORM/aleppo	https://github.com/ErlyORM/aleppo	Alternative Erlang Pre-Processor
 alog	https://github.com/siberian-fast-food/alogger	https://github.com/siberian-fast-food/alogger	Simply the best logging framework for Erlang
 amqp_client	https://github.com/rabbitmq/rabbitmq-erlang-client.git	https://www.rabbitmq.com/erlang-client-user-guide.html	RabbitMQ Erlang AMQP client
