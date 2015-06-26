@@ -45,7 +45,7 @@ ifneq ($(IS_DEP),1)
 endif
 	@mkdir -p $(ERLANG_MK_TMP)
 	@for dep in $(ALL_DEPS_DIRS) ; do \
-		if grep -qs ^$$dep$$$$ $(ERLANG_MK_TMP)/deps.log; then \
+		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/deps.log; then \
 			echo -n; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/deps.log; \
