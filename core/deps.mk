@@ -137,7 +137,8 @@ define dep_autopatch_rebar
 	if [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
 		mv $(DEPS_DIR)/$(1)/Makefile $(DEPS_DIR)/$(1)/Makefile.orig.mk; \
 	fi; \
-	$(call erlang,$(call dep_autopatch_rebar.erl,$(1)))
+	$(call erlang,$(call dep_autopatch_rebar.erl,$(1))); \
+	rm -f $(DEPS_DIR)/$(1)/ebin/$(1).app
 endef
 
 define dep_autopatch_rebar.erl
