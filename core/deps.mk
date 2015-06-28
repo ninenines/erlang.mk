@@ -1,7 +1,7 @@
 # Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: distclean-deps distclean-pkg pkg-list pkg-search
+.PHONY: distclean-deps distclean-pkg
 
 # Configuration.
 
@@ -23,11 +23,6 @@ else
 endif
 endif
 export ERL_LIBS
-
-PKG_FILE2 ?= $(CURDIR)/.erlang.mk.packages.v2
-export PKG_FILE2
-
-PKG_FILE_URL ?= https://raw.githubusercontent.com/ninenines/erlang.mk/master/packages.v2.tsv
 
 # Verbosity.
 
@@ -475,16 +470,16 @@ define dep_autopatch_appsrc.erl
 endef
 
 define dep_fetch
-	if [ "$$$$VS" = "git" ]; then \
-		git clone -q -n -- $$$$REPO $(DEPS_DIR)/$(1); \
-		cd $(DEPS_DIR)/$(1) && git checkout -q $$$$COMMIT; \
-	elif [ "$$$$VS" = "hg" ]; then \
-		hg clone -q -U $$$$REPO $(DEPS_DIR)/$(1); \
-		cd $(DEPS_DIR)/$(1) && hg update -q $$$$COMMIT; \
-	elif [ "$$$$VS" = "svn" ]; then \
-		svn checkout -q $$$$REPO $(DEPS_DIR)/$(1); \
-	elif [ "$$$$VS" = "cp" ]; then \
-		cp -R $$$$REPO $(DEPS_DIR)/$(1); \
+	if [ "$(2)" = "git" ]; then \
+		git clone -q -n -- $(3) $(DEPS_DIR)/$(1); \
+		cd $(DEPS_DIR)/$(1) && git checkout -q $(4); \
+	elif [ "$(2)" = "hg" ]; then \
+		hg clone -q -U $(3) $(DEPS_DIR)/$(1); \
+		cd $(DEPS_DIR)/$(1) && hg update -q $(4); \
+	elif [ "$(2)" = "svn" ]; then \
+		svn checkout -q $(3) $(DEPS_DIR)/$(1); \
+	elif [ "$(2)" = "cp" ]; then \
+		cp -R $(3) $(DEPS_DIR)/$(1); \
 	else \
 		echo "Unknown or invalid dependency: $(1). Please consult the erlang.mk README for instructions." >&2; \
 		exit 78; \
@@ -495,29 +490,23 @@ define dep_target
 $(DEPS_DIR)/$(1):
 	@mkdir -p $(DEPS_DIR)
 ifeq (,$(dep_$(1)))
-	@if [ ! -f $(PKG_FILE2) ]; then $(call core_http_get,$(PKG_FILE2),$(PKG_FILE_URL)); fi
-	$(dep_verbose) DEPPKG=$$$$(awk 'BEGIN { FS = "\t" }; $$$$1 == "$(1)" { print $$$$2 " " $$$$3 " " $$$$4 }' $(PKG_FILE2);); \
-	VS=$$$$(echo $$$$DEPPKG | cut -d " " -f1); \
-	REPO=$$$$(echo $$$$DEPPKG | cut -d " " -f2); \
-	COMMIT=$$$$(echo $$$$DEPPKG | cut -d " " -f3); \
-	$(call dep_fetch,$(1))
+	$(dep_verbose) $(call dep_fetch,$(pkg_$(1)_name),$(pkg_$(1)_fetch), \
+		$(patsubst git://github.com/%,https://github.com/%,$(pkg_$(1)_repo)), \
+		$(pkg_$(1)_commit))
 else
 ifeq (1,$(words $(dep_$(1))))
-	$(dep_verbose) VS=git; \
-	REPO=$(patsubst git://github.com/%,https://github.com/%,$(dep_$(1))); \
-	COMMIT=master; \
-	$(call dep_fetch,$(1))
+	$(dep_verbose) $(call dep_fetch,$(1),git, \
+		$(patsubst git://github.com/%,https://github.com/%,$(dep_$(1))), \
+		master)
 else
 ifeq (2,$(words $(dep_$(1))))
-	$(dep_verbose) VS=git; \
-	REPO=$(patsubst git://github.com/%,https://github.com/%,$(word 1,$(dep_$(1)))); \
-	COMMIT=$(word 2,$(dep_$(1))); \
-	$(call dep_fetch,$(1))
+	$(dep_verbose) $(call dep_fetch,$(1),git, \
+		$(patsubst git://github.com/%,https://github.com/%,$(word 1,$(dep_$(1)))), \
+		$(word 2,$(dep_$(1))))
 else
-	$(dep_verbose) VS=$(word 1,$(dep_$(1))); \
-	REPO=$(patsubst git://github.com/%,https://github.com/%,$(word 2,$(dep_$(1)))); \
-	COMMIT=$(word 3,$(dep_$(1))); \
-	$(call dep_fetch,$(1))
+	$(dep_verbose) $(call dep_fetch,$(1),$(word 1,$(dep_$(1))), \
+		$(patsubst git://github.com/%,https://github.com/%,$(word 2,$(dep_$(1)))), \
+		$(word 3,$(dep_$(1))))
 endif
 endif
 endif
@@ -555,38 +544,3 @@ $(foreach dep,$(DEPS),$(eval $(call dep_target,$(dep))))
 
 distclean-deps:
 	$(gen_verbose) rm -rf $(DEPS_DIR)
-
-# Packages related targets.
-
-$(PKG_FILE2):
-	@$(call core_http_get,$(PKG_FILE2),$(PKG_FILE_URL))
-
-pkg-list: $(PKG_FILE2)
-	@cat $(PKG_FILE2) | awk 'BEGIN { FS = "\t" }; { print \
-		"Name:\t\t" $$1 "\n" \
-		"Repository:\t" $$3 "\n" \
-		"Website:\t" $$5 "\n" \
-		"Description:\t" $$6 "\n" }'
-
-ifdef q
-pkg-search: $(PKG_FILE2)
-	@cat $(PKG_FILE2) | grep -i ${q} | awk 'BEGIN { FS = "\t" }; { print \
-		"Name:\t\t" $$1 "\n" \
-		"Repository:\t" $$3 "\n" \
-		"Website:\t" $$5 "\n" \
-		"Description:\t" $$6 "\n" }'
-else
-pkg-search:
-	$(error Usage: $(MAKE) pkg-search q=STRING)
-endif
-
-ifeq ($(PKG_FILE2),$(CURDIR)/.erlang.mk.packages.v2)
-distclean-pkg:
-	$(gen_verbose) rm -f $(PKG_FILE2)
-endif
-
-help::
-	@printf "%s\n" "" \
-		"Package-related targets:" \
-		"  pkg-list              List all known packages" \
-		"  pkg-search q=STRING   Search for STRING in the package index"

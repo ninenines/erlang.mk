@@ -12,7 +12,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-.PHONY: all deps app rel docs install-docs tests check clean distclean help erlang-mk
+.PHONY: all app deps search rel docs install-docs check tests clean distclean help erlang-mk
 
 ERLANG_MK_FILENAME := $(realpath $(lastword $(MAKEFILE_LIST)))
 
@@ -96,28 +96,24 @@ distclean:: clean
 help::
 	@printf "%s\n" \
 		"erlang.mk (version $(ERLANG_MK_VERSION)) is distributed under the terms of the ISC License." \
-		"Copyright (c) 2013-2014 Loïc Hoguin <essen@ninenines.eu>" \
+		"Copyright (c) 2013-2015 Loïc Hoguin <essen@ninenines.eu>" \
 		"" \
-		"Usage: [V=1] $(MAKE) [-jNUM] [target]" \
+		"Usage: [V=1] $(MAKE) [-jNUM] [target]..." \
 		"" \
 		"Core targets:" \
 		"  all           Run deps, app and rel targets in that order" \
-		"  deps          Fetch dependencies (if needed) and compile them" \
 		"  app           Compile the project" \
+		"  deps          Fetch dependencies (if needed) and compile them" \
+		"  search q=...  Search for a package in the built-in index" \
 		"  rel           Build a release for this project, if applicable" \
 		"  docs          Build the documentation for this project" \
 		"  install-docs  Install the man pages for this project" \
-		"  tests         Run the tests for this project" \
 		"  check         Compile and run all tests and analysis for this project" \
+		"  tests         Run the tests for this project" \
 		"  clean         Delete temporary and output files from most targets" \
 		"  distclean     Delete all temporary and output files" \
 		"  help          Display this help and exit" \
-		"" \
-		"The target clean only removes files that are commonly removed." \
-		"Dependencies and releases are left untouched." \
-		"" \
-		"Setting V=1 when calling $(MAKE) enables verbose mode." \
-		"Parallel execution is supported through the -j $(MAKE) flag."
+		"  erlang-mk     Update erlang.mk to the latest version"
 
 # Core functions.
 
@@ -164,6 +160,10 @@ define core_http_get
 endef
 endif
 
+core_eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
+
+core_lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$(1)))))))))))))))))))))))))))
+
 # Automated update.
 
 ERLANG_MK_BUILD_CONFIG ?= build.config
@@ -175,3 +175,6 @@ erlang-mk:
 	cd $(ERLANG_MK_BUILD_DIR) && $(MAKE)
 	cp $(ERLANG_MK_BUILD_DIR)/erlang.mk ./erlang.mk
 	rm -rf $(ERLANG_MK_BUILD_DIR)
+
+# The erlang.mk package index is bundled in the default erlang.mk build.
+# Search for the string "copyright" to skip to the rest of the code.

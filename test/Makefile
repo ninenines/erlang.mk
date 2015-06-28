@@ -232,7 +232,6 @@ pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 		"DEPS = $(1)" \
 		"include erlang.mk" \
 		> app1/Makefile
-	cp ../packages.v2.tsv app1/.erlang.mk.packages.v2
 	$t \
 	if [ "$(1)" = "amqp_client" ]; then \
 		virtualenv -p python2.7 --distribute temp-python; \
@@ -279,9 +278,11 @@ pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
 	fi
 endef
 
-$(foreach pkg,$(shell awk '{print $$1}' ../packages.v2.tsv),$(eval $(call pkg_test_target,$(pkg))))
+PACKAGES = $(foreach pkg,$(sort $(wildcard ../index/*.mk)),$(notdir $(basename $(pkg))))
 
-pkgs: $(foreach pkg,$(shell awk '{print $$1}' ../packages.v2.tsv),pkg-$(pkg))
+$(foreach pkg,$(PACKAGES),$(eval $(call pkg_test_target,$(pkg))))
+
+pkgs: $(addprefix pkg-,$(PACKAGES))
 	@if [ -f pkgs.log ]; then \
 		echo "+-------------------------------+"; \
 		echo "| ERRORS WHILE TESTING PACKAGES |"; \
