@@ -192,6 +192,7 @@ define dep_autopatch_rebar.erl
 			false -> [];
 			{_, Deps} ->
 				[begin case case Dep of
+							{N, S} when is_atom(N), is_list(S) -> {N, {hex, S}};
 							{N, S} when is_tuple(S) -> {N, S};
 							{N, _, S} -> {N, S};
 							{N, _, S, _} -> {N, S};
@@ -200,6 +201,7 @@ define dep_autopatch_rebar.erl
 					false -> ok;
 					{Name, Source} ->
 						{Method, Repo, Commit} = case Source of
+							{hex, V} -> {hex, undefined, V};
 							{git, R} -> {git, R, master};
 							{M, R, {branch, C}} -> {M, R, C};
 							{M, R, {tag, C}} -> {M, R, C};
@@ -469,6 +471,18 @@ define dep_autopatch_appsrc.erl
 	halt()
 endef
 
+define hex_fetch.erl
+	ssl:start(),
+	inets:start(),
+	{ok, {{_, 200, _}, _, Body}} = httpc:request(get,
+		{"https://s3.amazonaws.com/s3.hex.pm/tarballs/$(1)-$(2).tar", []},
+		[], [{body_format, binary}]),
+	{ok, Files} = erl_tar:extract({binary, Body}, [memory]),
+	{_, Source} = lists:keyfind("contents.tar.gz", 1, Files),
+	ok = erl_tar:extract({binary, Source}, [{cwd, "$(DEPS_DIR)/$(1)"}, compressed]),
+	halt()
+endef
+
 define dep_fetch
 	if [ "$(2)" = "git" ]; then \
 		git clone -q -n -- $(3) $(DEPS_DIR)/$(1); \
@@ -480,6 +494,8 @@ define dep_fetch
 		svn checkout -q $(3) $(DEPS_DIR)/$(1); \
 	elif [ "$(2)" = "cp" ]; then \
 		cp -R $(3) $(DEPS_DIR)/$(1); \
+	elif [ "$(2)" = "hex" ]; then \
+		$(call erlang,$(call hex_fetch.erl,$(1),$(strip $(4)))); \
 	else \
 		echo "Unknown or invalid dependency: $(1). Please consult the erlang.mk README for instructions." >&2; \
 		exit 78; \
