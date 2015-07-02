@@ -51,9 +51,9 @@ define app_file
 	{description, "$(PROJECT_DESCRIPTION)"},
 	{vsn, "$(PROJECT_VERSION)"},
 	{id, "$(1)"},
-	{modules, [$(2)]},
+	{modules, [$(call comma_list,$(2))]},
 	{registered, []},
-	{applications, $(call erlang_list,kernel stdlib $(OTP_DEPS) $(DEPS))}
+	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(DEPS))]}
 ]}.
 endef
 else
@@ -62,9 +62,9 @@ define app_file
 	{description, "$(PROJECT_DESCRIPTION)"},
 	{vsn, "$(PROJECT_VERSION)"},
 	{id, "$(1)"},
-	{modules, [$(2)]},
-	{registered, $(call erlang_list,$(PROJECT)_sup $(PROJECT_REGISTERED))},
-	{applications, $(call erlang_list,kernel stdlib $(OTP_DEPS) $(DEPS))},
+	{modules, [$(call comma_list,$(2))]},
+	{registered, [$(call comma_list,$(PROJECT)_sup $(PROJECT_REGISTERED))]},
+	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(DEPS))]},
 	{mod, {$(PROJECT)_app, []}}
 ]}.
 endef
@@ -72,8 +72,7 @@ endif
 
 app-build: erlc-include ebin/$(PROJECT).app
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
-	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
-		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
+	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(wildcard ebin/*.beam))))))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
 	$(app_verbose) echo $(subst $(newline),,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))) \
 		> ebin/$(PROJECT).app
@@ -83,7 +82,7 @@ else
 		exit 1; \
 	fi
 	$(appsrc_verbose) cat src/$(PROJECT).app.src \
-		| sed "s/{[[:space:]]*modules[[:space:]]*,[[:space:]]*\[\]}/{modules, \[$(MODULES)\]}/" \
+		| sed "s/{[[:space:]]*modules[[:space:]]*,[[:space:]]*\[\]}/{modules, \[$(call comma_list,$(MODULES))\]}/" \
 		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(GITDESCRIBE)\"}/" \
 		> ebin/$(PROJECT).app
 endif
@@ -123,21 +122,21 @@ ebin/$(PROJECT).app::
 	@mkdir -p ebin/
 
 ifneq ($(wildcard asn1/),)
-ebin/$(PROJECT).app:: $(shell find asn1 -type f -name \*.asn1)
+ebin/$(PROJECT).app:: $(sort $(call core_find,asn1/,*.asn1))
 	@mkdir -p include
 	$(if $(strip $?),$(call compile_asn1,$?))
 endif
 
 ifneq ($(wildcard mibs/),)
-ebin/$(PROJECT).app:: $(shell find mibs -type f -name \*.mib)
+ebin/$(PROJECT).app:: $(sort $(call core_find,mibs/,*.mib))
 	@mkdir -p priv/mibs/ include
 	$(if $(strip $?),$(call compile_mib,$?))
 endif
 
-ebin/$(PROJECT).app:: $(shell find src -type f -name \*.erl -o -name \*.core)
+ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.erl *.core))
 	$(if $(strip $?),$(call compile_erl,$?))
 
-ebin/$(PROJECT).app:: $(shell find src -type f -name \*.xrl -o -name \*.yrl)
+ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.xrl *.yrl))
 	$(if $(strip $?),$(call compile_xyrl,$?))
 endif
 
@@ -145,4 +144,4 @@ clean:: clean-app
 
 clean-app:
 	$(gen_verbose) rm -rf ebin/ priv/mibs/ \
-		$(addprefix include/,$(addsuffix .hrl,$(notdir $(basename $(wildcard mibs/*.mib)))))
+		$(addprefix include/,$(addsuffix .hrl,$(notdir $(basename $(call core_find,mibs/,*.mib)))))

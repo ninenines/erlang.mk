@@ -6,27 +6,7 @@
 
 # Configuration
 
-# All modules in TEST_DIR
-ifeq ($(strip $(TEST_DIR)),)
-TEST_DIR_MODS = 
-else
-TEST_DIR_MODS = $(notdir $(basename $(shell find $(TEST_DIR) -type f -name *.beam)))
-endif
-
-# All modules in 'ebin'
-EUNIT_EBIN_MODS = $(notdir $(basename $(shell find ebin -type f -name *.beam)))
-# Only those modules in TEST_DIR with no matching module in 'ebin'.
-# This is done to avoid some tests being executed twice.
-EUNIT_MODS = $(filter-out $(patsubst %,%_tests,$(EUNIT_EBIN_MODS)),$(TEST_DIR_MODS))
-TAGGED_EUNIT_TESTS = $(foreach mod,$(EUNIT_EBIN_MODS) $(EUNIT_MODS),{module,$(mod)})
-
 EUNIT_OPTS ?=
-
-# Utility functions
-
-define str-join
-	$(shell echo '$(strip $(1))' | sed -e "s/ /,/g")
-endef
 
 # Core targets.
 
@@ -39,16 +19,32 @@ help::
 
 # Plugin-specific targets.
 
-EUNIT_RUN_BEFORE ?=
-EUNIT_RUN_AFTER ?=
-EUNIT_RUN = $(ERL) \
-	-pa $(TEST_DIR) $(DEPS_DIR)/*/ebin \
-	-pz ebin \
-	$(EUNIT_RUN_BEFORE) \
-	-eval 'case eunit:test([$(call str-join,$(TAGGED_EUNIT_TESTS))],\
-		[$(EUNIT_OPTS)]) of ok -> ok; error -> halt(1) end.' \
-	$(EUNIT_RUN_AFTER) \
-	-eval 'halt(0).'
+define eunit.erl
+	case "$(COVER)" of
+		"" -> ok;
+		_ ->
+			case cover:compile_beam_directory("ebin") of
+				{error, _} -> halt(1);
+				_ -> ok
+			end
+	end,
+	case eunit:test([$(call comma_list,$(1))], [$(EUNIT_OPTS)]) of
+		ok -> ok;
+		error -> halt(2)
+	end,
+	case "$(COVER)" of
+		"" -> ok;
+		_ ->
+			cover:export("eunit.coverdata")
+	end,
+	halt()
+endef
+
+EUNIT_EBIN_MODS = $(notdir $(basename $(call core_find,ebin/,*.beam)))
+EUNIT_TEST_MODS = $(notdir $(basename $(call core_find,$(TEST_DIR)/,*.beam)))
+EUNIT_MODS = $(foreach mod,$(EUNIT_EBIN_MODS) $(filter-out \
+	$(patsubst %,%_tests,$(EUNIT_EBIN_MODS)),$(EUNIT_TEST_MODS)),{module,'$(mod)'})
 
 eunit: test-build
-	$(gen_verbose) $(EUNIT_RUN)
+	$(gen_verbose) $(ERL) -pa $(TEST_DIR) $(DEPS_DIR)/*/ebin ebin \
+		-eval "$(subst $(newline),,$(subst ",\",$(call eunit.erl,$(EUNIT_MODS))))"

@@ -64,7 +64,7 @@ clean::
 else
 
 ifeq ($(SOURCES),)
-SOURCES := $(shell find $(C_SRC_DIR) -type f \( -name "*.c" -o -name "*.C" -o -name "*.cc" -o -name "*.cpp" \))
+SOURCES := $(sort $(call core_find,$(C_SRC_DIR)/,*.c *.C *.cc *.cpp))
 endif
 OBJECTS = $(addsuffix .o, $(basename $(SOURCES)))
 

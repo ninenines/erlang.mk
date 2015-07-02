@@ -12,7 +12,7 @@ define triq_check.erl
 	code:add_pathsa(["$(CURDIR)/ebin", "$(DEPS_DIR)/*/ebin"]),
 	try
 		case $(1) of
-			all -> [true] =:= lists:usort([triq:check(M) || M <- [$(MODULES)]]);
+			all -> [true] =:= lists:usort([triq:check(M) || M <- [$(call comma_list,$(3))]]);
 			module -> triq:check($(2));
 			function -> triq:check($(2))
 		end
@@ -36,8 +36,7 @@ triq: test-build
 endif
 else
 triq: test-build
-	$(eval MODULES := $(shell find ebin -type f -name \*.beam \
-		| sed "s/ebin\//'/;s/\.beam/',/" | sed '$$s/.$$//'))
-	$(gen_verbose) $(call erlang,$(call triq_check.erl,all,undefined))
+	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(wildcard ebin/*.beam))))))
+	$(gen_verbose) $(call erlang,$(call triq_check.erl,all,undefined,$(MODULES)))
 endif
 endif

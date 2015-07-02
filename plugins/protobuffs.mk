@@ -26,6 +26,6 @@ define compile_proto.erl
 endef
 
 ifneq ($(wildcard src/),)
-ebin/$(PROJECT).app:: $(shell find src -type f -name \*.proto 2>/dev/null)
+ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.proto))
 	$(if $(strip $?),$(call compile_proto,$?))
 endif

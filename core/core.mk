@@ -126,13 +126,13 @@ define newline
 
 endef
 
-define erlang_list
-[$(subst $(space),$(comma),$(strip $(1)))]
+define comma_list
+$(subst $(space),$(comma),$(strip $(1)))
 endef
 
 # Adding erlang.mk to make Erlang scripts who call init:get_plain_arguments() happy.
 define erlang
-$(ERL) -pa $(ERLANG_MK_TMP)/rebar/ebin -eval "$(subst $(newline),,$(subst ",\",$(1)))" -- erlang.mk
+$(ERL) -pz $(ERLANG_MK_TMP)/rebar/ebin -eval "$(subst $(newline),,$(subst ",\",$(1)))" -- erlang.mk
 endef
 
 ifeq ($(shell which wget 2>/dev/null | wc -l), 1)
@@ -162,7 +162,12 @@ endif
 
 core_eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 
+core_find = $(foreach d,$(call core_ls,$1*),$(call core_find,$d/,$2) $(filter $(subst *,%,$2),$d))
+
 core_lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$(1)))))))))))))))))))))))))))
+
+# @todo On Windows: $(shell dir /B $(1)); make sure to handle when no file exists.
+core_ls = $(filter-out $(1),$(shell echo $(1)))
 
 # Automated update.
 

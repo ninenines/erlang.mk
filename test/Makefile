@@ -108,6 +108,7 @@ eunit: app1
 	$i "eunit: Testing the 'eunit' target."
 	$i "Running eunit test case inside module src/t.erl"
 	$t $(call create-module-t)
+	$t $(MAKE) -C app1 distclean $v
 	$t $(MAKE) -C app1 eunit $v
 	$i "Checking that the eunit test in module t."
 	$t echo t | cmp app1/test-eunit.log -
@@ -128,6 +129,7 @@ eunit: app1
 		'	?assertEqual(2, t:succ(1)),' \
 		'	os:cmd("echo x_tests >> test-eunit.log").' \
 		> app1/eunit/x_tests.erl
+	$t $(MAKE) -C app1 distclean TEST_DIR=eunit $v
 	$t $(MAKE) -C app1 eunit TEST_DIR=eunit $v
 	$i "Checking that '$(MAKE) eunit' didn't run the tests in t_tests twice, etc."
 	$t printf "%s\n" t t_tests x_tests | cmp app1/test-eunit.log -
@@ -140,6 +142,7 @@ eunit: app1
 		"succ_test() ->" \
 		"	?assertEqual(42, t:succ(1))." \
 		> app1/eunit/t_tests.erl
+	$t $(MAKE) -C app1 distclean TEST_DIR=eunit $v
 	$t if $(MAKE) -C app1 eunit TEST_DIR=eunit $v ; then false ; fi
 	$t rm -rf app1/eunit app1/src/t.erl app1/test-eunit.log
 	$i "Test 'eunit' passed."

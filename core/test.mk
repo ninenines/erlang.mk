@@ -23,10 +23,10 @@ test-deps: $(ALL_TEST_DEPS_DIRS)
 	@for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
 endif
 
-ifneq ($(strip $(TEST_DIR)),)
+ifneq ($(wildcard $(TEST_DIR)),)
 test-dir:
 	$(gen_verbose) erlc -v $(TEST_ERLC_OPTS) -I include/ -o $(TEST_DIR) \
-		$(wildcard $(TEST_DIR)/*.erl $(TEST_DIR)/*/*.erl) -pa ebin/
+		$(call core_find,$(TEST_DIR)/,*.erl) -pa ebin/
 endif
 
 ifeq ($(wildcard ebin/test),)

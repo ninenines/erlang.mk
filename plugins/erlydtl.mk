@@ -26,6 +26,6 @@ define compile_erlydtl
 endef
 
 ifneq ($(wildcard src/),)
-ebin/$(PROJECT).app:: $(shell find templates -type f -name \*.dtl 2>/dev/null)
+ebin/$(PROJECT).app:: $(sort $(call core_find,templates/,*.dtl))
 	$(if $(strip $?),$(call compile_erlydtl,$?))
 endif
