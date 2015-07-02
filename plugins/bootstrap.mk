@@ -16,33 +16,35 @@ help::
 
 # Bootstrap templates.
 
+WS ?= $(tab)
+
 define bs_appsrc
 {application, $(PROJECT), [
-	{description, ""},
-	{vsn, "0.1.0"},
-	{id, "git"},
-	{modules, []},
-	{registered, []},
-	{applications, [
-		kernel,
-		stdlib
-	]},
-	{mod, {$(PROJECT)_app, []}},
-	{env, []}
+$(WS){description, ""},
+$(WS){vsn, "0.1.0"},
+$(WS){id, "git"},
+$(WS){modules, []},
+$(WS){registered, []},
+$(WS){applications, [
+$(WS)$(WS)kernel,
+$(WS)$(WS)stdlib
+$(WS)]},
+$(WS){mod, {$(PROJECT)_app, []}},
+$(WS){env, []}
 ]}.
 endef
 
 define bs_appsrc_lib
 {application, $(PROJECT), [
-	{description, ""},
-	{vsn, "0.1.0"},
-	{id, "git"},
-	{modules, []},
-	{registered, []},
-	{applications, [
-		kernel,
-		stdlib
-	]}
+$(WS){description, ""},
+$(WS){vsn, "0.1.0"},
+$(WS){id, "git"},
+$(WS){modules, []},
+$(WS){registered, []},
+$(WS){applications, [
+$(WS)$(WS)kernel,
+$(WS)$(WS)stdlib
+$(WS)]}
 ]}.
 endef
 
@@ -59,10 +61,10 @@ define bs_app
 -export([stop/1]).
 
 start(_Type, _Args) ->
-	$(PROJECT)_sup:start_link().
+$(WS)$(PROJECT)_sup:start_link().
 
 stop(_State) ->
-	ok.
+$(WS)ok.
 endef
 
 define bs_relx_config
@@ -93,11 +95,11 @@ define tpl_supervisor
 -export([init/1]).
 
 start_link() ->
-	supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+$(WS)supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-	Procs = [],
-	{ok, {{one_for_one, 1, 5}, Procs}}.
+$(WS)Procs = [],
+$(WS){ok, {{one_for_one, 1, 5}, Procs}}.
 endef
 
 define tpl_gen_server
@@ -122,27 +124,27 @@ define tpl_gen_server
 
 -spec start_link() -> {ok, pid()}.
 start_link() ->
-	gen_server:start_link(?MODULE, [], []).
+$(WS)gen_server:start_link(?MODULE, [], []).
 
 %% gen_server.
 
 init([]) ->
-	{ok, #state{}}.
+$(WS){ok, #state{}}.
 
 handle_call(_Request, _From, State) ->
-	{reply, ignored, State}.
+$(WS){reply, ignored, State}.
 
 handle_cast(_Msg, State) ->
-	{noreply, State}.
+$(WS){noreply, State}.
 
 handle_info(_Info, State) ->
-	{noreply, State}.
+$(WS){noreply, State}.
 
 terminate(_Reason, _State) ->
-	ok.
+$(WS)ok.
 
 code_change(_OldVsn, State, _Extra) ->
-	{ok, State}.
+$(WS){ok, State}.
 endef
 
 define tpl_cowboy_http
@@ -157,14 +159,14 @@ define tpl_cowboy_http
 }).
 
 init(_, Req, _Opts) ->
-	{ok, Req, #state{}}.
+$(WS){ok, Req, #state{}}.
 
 handle(Req, State=#state{}) ->
-	{ok, Req2} = cowboy_req:reply(200, Req),
-	{ok, Req2, State}.
+$(WS){ok, Req2} = cowboy_req:reply(200, Req),
+$(WS){ok, Req2, State}.
 
 terminate(_Reason, _Req, _State) ->
-	ok.
+$(WS)ok.
 endef
 
 define tpl_gen_fsm
@@ -191,33 +193,33 @@ define tpl_gen_fsm
 
 -spec start_link() -> {ok, pid()}.
 start_link() ->
-	gen_fsm:start_link(?MODULE, [], []).
+$(WS)gen_fsm:start_link(?MODULE, [], []).
 
 %% gen_fsm.
 
 init([]) ->
-	{ok, state_name, #state{}}.
+$(WS){ok, state_name, #state{}}.
 
 state_name(_Event, StateData) ->
-	{next_state, state_name, StateData}.
+$(WS){next_state, state_name, StateData}.
 
 handle_event(_Event, StateName, StateData) ->
-	{next_state, StateName, StateData}.
+$(WS){next_state, StateName, StateData}.
 
 state_name(_Event, _From, StateData) ->
-	{reply, ignored, state_name, StateData}.
+$(WS){reply, ignored, state_name, StateData}.
 
 handle_sync_event(_Event, _From, StateName, StateData) ->
-	{reply, ignored, StateName, StateData}.
+$(WS){reply, ignored, StateName, StateData}.
 
 handle_info(_Info, StateName, StateData) ->
-	{next_state, StateName, StateData}.
+$(WS){next_state, StateName, StateData}.
 
 terminate(_Reason, _StateName, _StateData) ->
-	ok.
+$(WS)ok.
 
 code_change(_OldVsn, StateName, StateData, _Extra) ->
-	{ok, StateName, StateData}.
+$(WS){ok, StateName, StateData}.
 endef
 
 define tpl_cowboy_loop
@@ -232,13 +234,13 @@ define tpl_cowboy_loop
 }).
 
 init(_, Req, _Opts) ->
-	{loop, Req, #state{}, 5000, hibernate}.
+$(WS){loop, Req, #state{}, 5000, hibernate}.
 
 info(_Info, Req, State) ->
-	{loop, Req, State, hibernate}.
+$(WS){loop, Req, State, hibernate}.
 
 terminate(_Reason, _Req, _State) ->
-	ok.
+$(WS)ok.
 endef
 
 define tpl_cowboy_rest
@@ -249,13 +251,13 @@ define tpl_cowboy_rest
 -export([get_html/2]).
 
 init(_, _Req, _Opts) ->
-	{upgrade, protocol, cowboy_rest}.
+$(WS){upgrade, protocol, cowboy_rest}.
 
 content_types_provided(Req, State) ->
-	{[{{<<"text">>, <<"html">>, '*'}, get_html}], Req, State}.
+$(WS){[{{<<"text">>, <<"html">>, '*'}, get_html}], Req, State}.
 
 get_html(Req, State) ->
-	{<<"<html><body>This is REST!</body></html>">>, Req, State}.
+$(WS){<<"<html><body>This is REST!</body></html>">>, Req, State}.
 endef
 
 define tpl_cowboy_ws
@@ -272,24 +274,24 @@ define tpl_cowboy_ws
 }).
 
 init(_, _, _) ->
-	{upgrade, protocol, cowboy_websocket}.
+$(WS){upgrade, protocol, cowboy_websocket}.
 
 websocket_init(_, Req, _Opts) ->
-	Req2 = cowboy_req:compact(Req),
-	{ok, Req2, #state{}}.
+$(WS)Req2 = cowboy_req:compact(Req),
+$(WS){ok, Req2, #state{}}.
 
 websocket_handle({text, Data}, Req, State) ->
-	{reply, {text, Data}, Req, State};
+$(WS){reply, {text, Data}, Req, State};
 websocket_handle({binary, Data}, Req, State) ->
-	{reply, {binary, Data}, Req, State};
+$(WS){reply, {binary, Data}, Req, State};
 websocket_handle(_Frame, Req, State) ->
-	{ok, Req, State}.
+$(WS){ok, Req, State}.
 
 websocket_info(_Info, Req, State) ->
-	{ok, Req, State}.
+$(WS){ok, Req, State}.
 
 websocket_terminate(_Reason, _Req, _State) ->
-	ok.
+$(WS)ok.
 endef
 
 define tpl_ranch_protocol
@@ -303,21 +305,21 @@ define tpl_ranch_protocol
 -export_type([opts/0]).
 
 -record(state, {
-	socket :: inet:socket(),
-	transport :: module()
+$(WS)socket :: inet:socket(),
+$(WS)transport :: module()
 }).
 
 start_link(Ref, Socket, Transport, Opts) ->
-	Pid = spawn_link(?MODULE, init, [Ref, Socket, Transport, Opts]),
-	{ok, Pid}.
+$(WS)Pid = spawn_link(?MODULE, init, [Ref, Socket, Transport, Opts]),
+$(WS){ok, Pid}.
 
 -spec init(ranch:ref(), inet:socket(), module(), opts()) -> ok.
 init(Ref, Socket, Transport, _Opts) ->
-	ok = ranch:accept_ack(Ref),
-	loop(#state{socket=Socket, transport=Transport}).
+$(WS)ok = ranch:accept_ack(Ref),
+$(WS)loop(#state{socket=Socket, transport=Transport}).
 
 loop(State) ->
-	loop(State).
+$(WS)loop(State).
 endef
 
 # Plugin-specific targets.
