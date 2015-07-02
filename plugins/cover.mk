@@ -3,25 +3,12 @@
 
 COVER_REPORT_DIR = cover
 
-# Hook in coverage to eunit
-
-ifdef COVER
-ifdef EUNIT_RUN
-EUNIT_RUN_BEFORE += -eval \
-	'case cover:compile_beam_directory("ebin") of \
-		{error, _} -> halt(1); \
-		_ -> ok \
-	end.'
-EUNIT_RUN_AFTER += -eval 'cover:export("eunit.coverdata").'
-endif
-endif
-
 # Hook in coverage to ct
 
 ifdef COVER
 ifdef CT_RUN
 # All modules in 'ebin'
-COVER_MODS = $(notdir $(basename $(shell echo ebin/*.beam)))
+COVER_MODS = $(notdir $(basename $(call core_ls,ebin/*.beam)))
 
 test-build:: $(TEST_DIR)/ct.cover.spec
 
