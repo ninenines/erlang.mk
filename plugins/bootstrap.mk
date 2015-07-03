@@ -46,10 +46,21 @@ define bs_appsrc_lib
 ]}.
 endef
 
+ifdef SP
+define bs_Makefile
+PROJECT = $(PROJECT)
+
+# Whitespace to be used when creating files from templates.
+SP = $(SP)
+
+include erlang.mk
+endef
+else
 define bs_Makefile
 PROJECT = $(PROJECT)
 include erlang.mk
 endef
+endif
 
 define bs_app
 -module($(PROJECT)_app).
@@ -323,11 +334,20 @@ endef
 # Plugin-specific targets.
 
 define render_template
-	@echo "$${$(1)}" > $(2)
+	@echo "$${_$(1)}" > $(2)
 endef
 
-$(foreach template,$(filter bs_%,$(.VARIABLES)),$(eval export $(template)))
-$(foreach template,$(filter tpl_%,$(.VARIABLES)),$(eval export $(template)))
+ifndef WS
+ifdef SP
+WS = $(subst a,,a $(wordlist 1,$(SP),a a a a a a a a a a a a a a a a a a a a))
+else
+WS = $(tab)
+endif
+endif
+
+$(foreach template,$(filter bs_% tpl_%,$(.VARIABLES)), \
+	$(eval _$(template) = $$(subst $$(tab),$$(WS),$$($(template)))) \
+	$(eval export _$(template)))
 
 bootstrap:
 ifneq ($(wildcard src/),)
