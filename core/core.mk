@@ -119,6 +119,7 @@ help::
 
 empty :=
 space := $(empty) $(empty)
+tab := $(empty)	$(empty)
 comma := ,
 
 define newline
