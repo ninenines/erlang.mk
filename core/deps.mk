@@ -204,6 +204,7 @@ define dep_autopatch_rebar.erl
 							{hex, V} -> {hex, undefined, V};
 							{git, R} -> {git, R, master};
 							{M, R, {branch, C}} -> {M, R, C};
+							{M, R, {ref, C}} -> {M, R, C};
 							{M, R, {tag, C}} -> {M, R, C};
 							{M, R, C} -> {M, R, C}
 						end,
