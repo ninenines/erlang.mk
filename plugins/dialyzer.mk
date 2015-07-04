@@ -20,7 +20,7 @@ check:: dialyze
 distclean:: distclean-plt
 
 help::
-	@printf "%s\n" "" \
+	$(verbose) printf "%s\n" "" \
 		"Dialyzer targets:" \
 		"  plt         Build a PLT file for this project" \
 		"  dialyze     Analyze the project using Dialyzer"
@@ -28,7 +28,7 @@ help::
 # Plugin-specific targets.
 
 $(DIALYZER_PLT): deps app
-	@dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(OTP_DEPS) $(ALL_DEPS_DIRS)
+	$(verbose) dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(OTP_DEPS) $(ALL_DEPS_DIRS)
 
 plt: $(DIALYZER_PLT)
 
@@ -40,4 +40,4 @@ dialyze:
 else
 dialyze: $(DIALYZER_PLT)
 endif
-	@dialyzer --no_native $(DIALYZER_DIRS) $(DIALYZER_OPTS)
+	$(verbose) dialyzer --no_native $(DIALYZER_DIRS) $(DIALYZER_OPTS)

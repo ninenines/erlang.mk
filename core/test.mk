@@ -20,7 +20,7 @@ ifneq ($(SKIP_DEPS),)
 test-deps:
 else
 test-deps: $(ALL_TEST_DEPS_DIRS)
-	@for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
+	$(verbose) for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
 endif
 
 ifneq ($(wildcard $(TEST_DIR)),)
@@ -32,12 +32,12 @@ endif
 ifeq ($(wildcard ebin/test),)
 test-build:: ERLC_OPTS=$(TEST_ERLC_OPTS)
 test-build:: clean deps test-deps
-	@$(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
+	$(verbose) $(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
 	$(gen_verbose) touch ebin/test
 else
 test-build:: ERLC_OPTS=$(TEST_ERLC_OPTS)
 test-build:: deps test-deps
-	@$(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
+	$(verbose) $(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
 endif
 
 clean:: clean-test-dir

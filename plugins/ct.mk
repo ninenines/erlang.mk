@@ -19,7 +19,7 @@ tests:: ct
 distclean:: distclean-ct
 
 help::
-	@printf "%s\n" "" \
+	$(verbose) printf "%s\n" "" \
 		"Common_test targets:" \
 		"  ct          Run all the common_test suites for this project" \
 		"" \
@@ -39,13 +39,13 @@ ifeq ($(CT_SUITES),)
 ct:
 else
 ct: test-build
-	@mkdir -p $(CURDIR)/logs/
+	$(verbose) mkdir -p $(CURDIR)/logs/
 	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS)
 endif
 
 define ct_suite_target
 ct-$(1): test-build
-	@mkdir -p $(CURDIR)/logs/
+	$(verbose) mkdir -p $(CURDIR)/logs/
 	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_OPTS)
 endef
 

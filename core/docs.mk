@@ -15,5 +15,5 @@ ifneq ($(SKIP_DEPS),)
 doc-deps:
 else
 doc-deps: $(ALL_DOC_DEPS_DIRS)
-	@for dep in $(ALL_DOC_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
+	$(verbose) for dep in $(ALL_DOC_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
 endif

@@ -4,7 +4,7 @@
 .PHONY: search
 
 define pkg_print
-	@printf "%s\n" \
+	$(verbose) printf "%s\n" \
 		$(if $(call core_eq,$(1),$(pkg_$(1)_name)),,"Pkg name:    $(1)") \
 		"App name:    $(pkg_$(1)_name)" \
 		"Description: $(pkg_$(1)_description)" \

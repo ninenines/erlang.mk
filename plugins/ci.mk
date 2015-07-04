@@ -42,16 +42,12 @@ endef
 
 $(foreach otp,$(CI_OTP),$(eval $(call ci_otp_target,$(otp))))
 
-define kerl_fetch
-	$(call core_http_get,$(KERL),$(KERL_URL))
-	chmod +x $(KERL)
-endef
-
 $(KERL):
-	@$(call kerl_fetch)
+	$(gen_verbose) $(call core_http_get,$(KERL),$(KERL_URL))
+	$(verbose) chmod +x $(KERL)
 
 help::
-	@printf "%s\n" "" \
+	$(verbose) printf "%s\n" "" \
 		"Continuous Integration targets:" \
 		"  ci          Run '$(MAKE) tests' on all configured Erlang versions." \
 		"" \

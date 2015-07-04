@@ -6,7 +6,7 @@
 # Core targets.
 
 help::
-	@printf "%s\n" "" \
+	$(verbose) printf "%s\n" "" \
 		"Bootstrap targets:" \
 		"  bootstrap          Generate a skeleton of an OTP application" \
 		"  bootstrap-lib      Generate a skeleton of an OTP library" \
@@ -334,7 +334,7 @@ endef
 # Plugin-specific targets.
 
 define render_template
-	@echo "$${_$(1)}" > $(2)
+	$(verbose) echo "$${_$(1)}" > $(2)
 endef
 
 ifndef WS
@@ -354,7 +354,7 @@ ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif
 	$(call render_template,bs_Makefile,Makefile)
-	@mkdir src/
+	$(verbose) mkdir src/
 	$(call render_template,bs_appsrc,src/$(PROJECT).app.src)
 	$(call render_template,bs_app,src/$(PROJECT)_app.erl)
 	$(eval n := $(PROJECT)_sup)
@@ -365,7 +365,7 @@ ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif
 	$(call render_template,bs_Makefile,Makefile)
-	@mkdir src/
+	$(verbose) mkdir src/
 	$(call render_template,bs_appsrc_lib,src/$(PROJECT).app.src)
 
 bootstrap-rel:
@@ -376,7 +376,7 @@ ifneq ($(wildcard rel/),)
 	$(error Error: rel/ directory already exists)
 endif
 	$(call render_template,bs_relx_config,relx.config)
-	@mkdir rel/
+	$(verbose) mkdir rel/
 	$(call render_template,bs_sys_config,rel/sys.config)
 	$(call render_template,bs_vm_args,rel/vm.args)
 
@@ -396,4 +396,4 @@ endif
 	$(call render_template,tpl_$(t),src/$(n).erl)
 
 list-templates:
-	@echo Available templates: $(sort $(patsubst tpl_%,%,$(filter tpl_%,$(.VARIABLES))))
+	$(verbose) echo Available templates: $(sort $(patsubst tpl_%,%,$(filter tpl_%,$(.VARIABLES))))

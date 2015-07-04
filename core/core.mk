@@ -29,6 +29,9 @@ PROJECT_VERSION ?= rolling
 
 V ?= 0
 
+verbose_0 = @
+verbose = $(verbose_$(V))
+
 gen_verbose_0 = @echo " GEN   " $@;
 gen_verbose = $(gen_verbose_$(V))
 
@@ -75,12 +78,12 @@ ifneq ($(words $(MAKECMDGOALS)),1)
 endif
 
 all:: deps
-	@$(MAKE) --no-print-directory app
-	@$(MAKE) --no-print-directory rel
+	$(verbose) $(MAKE) --no-print-directory app
+	$(verbose) $(MAKE) --no-print-directory rel
 
 # Noop to avoid a Make warning when there's nothing to do.
 rel::
-	@echo -n
+	$(verbose) echo -n
 
 check:: clean app tests
 
@@ -94,7 +97,7 @@ endif
 distclean:: clean
 
 help::
-	@printf "%s\n" \
+	$(verbose) printf "%s\n" \
 		"erlang.mk (version $(ERLANG_MK_VERSION)) is distributed under the terms of the ISC License." \
 		"Copyright (c) 2013-2015 Loïc Hoguin <essen@ninenines.eu>" \
 		"" \

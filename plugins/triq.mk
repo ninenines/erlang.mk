@@ -28,11 +28,11 @@ endef
 ifdef t
 ifeq (,$(findstring :,$(t)))
 triq: test-build
-	@$(call erlang,$(call triq_check.erl,module,$(t)))
+	$(verbose) $(call erlang,$(call triq_check.erl,module,$(t)))
 else
 triq: test-build
-	@echo Testing $(t)/0
-	@$(call erlang,$(call triq_check.erl,function,$(t)()))
+	$(verbose) echo Testing $(t)/0
+	$(verbose) $(call erlang,$(call triq_check.erl,function,$(t)()))
 endif
 else
 triq: test-build

@@ -13,7 +13,7 @@ EUNIT_OPTS ?=
 tests:: eunit
 
 help::
-	@printf "%s\n" "" \
+	$(verbose) printf "%s\n" "" \
 		"EUnit targets:" \
 		"  eunit       Run all the EUnit tests for this project"
 

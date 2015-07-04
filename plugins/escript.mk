@@ -21,7 +21,7 @@ ESCRIPT_STATIC ?= "deps/*/priv/**", "priv/**"
 distclean:: distclean-escript
 
 help::
-	@printf "%s\n" "" \
+	$(verbose) printf "%s\n" "" \
 		"Escript targets:" \
 		"  escript     Build an executable escript archive" \
 

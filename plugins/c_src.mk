@@ -76,7 +76,7 @@ app:: $(C_SRC_ENV) $(C_SRC_OUTPUT)
 test-build:: $(C_SRC_ENV) $(C_SRC_OUTPUT)
 
 $(C_SRC_OUTPUT): $(OBJECTS)
-	@mkdir -p priv/
+	$(verbose) mkdir -p priv/
 	$(link_verbose) $(CC) $(OBJECTS) $(LDFLAGS) $(LDLIBS) -o $(C_SRC_OUTPUT)
 
 %.o: %.c
@@ -100,7 +100,7 @@ endif
 
 ifneq ($(wildcard $(C_SRC_DIR)),)
 $(C_SRC_ENV):
-	@$(ERL) -eval "file:write_file(\"$(C_SRC_ENV)\", \
+	$(verbose) $(ERL) -eval "file:write_file(\"$(C_SRC_ENV)\", \
 		io_lib:format( \
 			\"ERTS_INCLUDE_DIR ?= ~s/erts-~s/include/~n\" \
 			\"ERL_INTERFACE_INCLUDE_DIR ?= ~s~n\" \

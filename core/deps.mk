@@ -36,10 +36,10 @@ deps::
 else
 deps:: $(ALL_DEPS_DIRS)
 ifneq ($(IS_DEP),1)
-	@rm -f $(ERLANG_MK_TMP)/deps.log
+	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
 endif
-	@mkdir -p $(ERLANG_MK_TMP)
-	@for dep in $(ALL_DEPS_DIRS) ; do \
+	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+	$(verbose) for dep in $(ALL_DEPS_DIRS) ; do \
 		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/deps.log; then \
 			echo -n; \
 		else \
@@ -505,7 +505,7 @@ endef
 
 define dep_target
 $(DEPS_DIR)/$(1):
-	@mkdir -p $(DEPS_DIR)
+	$(verbose) mkdir -p $(DEPS_DIR)
 ifeq (,$(dep_$(1)))
 	$(dep_verbose) $(call dep_fetch,$(pkg_$(1)_name),$(pkg_$(1)_fetch), \
 		$(patsubst git://github.com/%,https://github.com/%,$(pkg_$(1)_repo)), \
@@ -527,16 +527,16 @@ else
 endif
 endif
 endif
-	@if [ -f $(DEPS_DIR)/$(1)/configure.ac -o -f $(DEPS_DIR)/$(1)/configure.in ]; then \
+	$(verbose) if [ -f $(DEPS_DIR)/$(1)/configure.ac -o -f $(DEPS_DIR)/$(1)/configure.in ]; then \
 		echo " AUTO  " $(1); \
 		cd $(DEPS_DIR)/$(1) && autoreconf -Wall -vif -I m4; \
 	fi
-	-@if [ -f $(DEPS_DIR)/$(1)/configure ]; then \
+	- $(verbose) if [ -f $(DEPS_DIR)/$(1)/configure ]; then \
 		echo " CONF  " $(1); \
 		cd $(DEPS_DIR)/$(1) && ./configure; \
 	fi
 ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
-	@if [ "$(1)" = "amqp_client" -a "$(RABBITMQ_CLIENT_PATCH)" ]; then \
+	$(verbose) if [ "$(1)" = "amqp_client" -a "$(RABBITMQ_CLIENT_PATCH)" ]; then \
 		if [ ! -d $(DEPS_DIR)/rabbitmq-codegen ]; then \
 			echo " PATCH  Downloading rabbitmq-codegen"; \
 			git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \

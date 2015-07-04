@@ -17,7 +17,7 @@ ELVIS_OPTS ?=
 # Core targets.
 
 help::
-	@printf "%s\n" "" \
+	$(verbose) printf "%s\n" "" \
 		"Elvis targets:" \
 		"  elvis       Run Elvis using the local elvis.config or download the default otherwise"
 
@@ -26,14 +26,14 @@ distclean:: distclean-elvis
 # Plugin-specific targets.
 
 $(ELVIS):
-	@$(call core_http_get,$(ELVIS),$(ELVIS_URL))
-	@chmod +x $(ELVIS)
+	$(gen_verbose) $(call core_http_get,$(ELVIS),$(ELVIS_URL))
+	$(verbose) chmod +x $(ELVIS)
 
 $(ELVIS_CONFIG):
-	@$(call core_http_get,$(ELVIS_CONFIG),$(ELVIS_CONFIG_URL))
+	$(verbose) $(call core_http_get,$(ELVIS_CONFIG),$(ELVIS_CONFIG_URL))
 
 elvis: $(ELVIS) $(ELVIS_CONFIG)
-	@$(ELVIS) rock -c $(ELVIS_CONFIG) $(ELVIS_OPTS)
+	$(verbose) $(ELVIS) rock -c $(ELVIS_CONFIG) $(ELVIS_OPTS)
 
 distclean-elvis:
 	$(gen_verbose) rm -rf $(ELVIS)

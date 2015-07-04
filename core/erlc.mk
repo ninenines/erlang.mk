@@ -77,7 +77,7 @@ ifeq ($(wildcard src/$(PROJECT).app.src),)
 	$(app_verbose) echo $(subst $(newline),,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))) \
 		> ebin/$(PROJECT).app
 else
-	@if [ -z "$$(grep -E '^[^%]*{\s*modules\s*,' src/$(PROJECT).app.src)" ]; then \
+	$(verbose) if [ -z "$$(grep -E '^[^%]*{\s*modules\s*,' src/$(PROJECT).app.src)" ]; then \
 		echo "Empty modules entry not found in $(PROJECT).app.src. Please consult the erlang.mk README for instructions." >&2; \
 		exit 1; \
 	fi
@@ -88,7 +88,7 @@ else
 endif
 
 erlc-include:
-	-@if [ -d ebin/ ]; then \
+	- $(verbose) if [ -d ebin/ ]; then \
 		find include/ src/ -type f -name \*.hrl -newer ebin -exec touch $(shell find src/ -type f -name "*.erl") \; 2>/dev/null || printf ''; \
 	fi
 
@@ -101,14 +101,14 @@ endef
 define compile_xyrl
 	$(xyrl_verbose) erlc -v -o ebin/ $(1)
 	$(xyrl_verbose) erlc $(ERLC_OPTS) -o ebin/ ebin/*.erl
-	@rm ebin/*.erl
+	$(verbose) rm ebin/*.erl
 endef
 
 define compile_asn1
 	$(asn1_verbose) erlc -v -I include/ -o ebin/ $(1)
-	@mv ebin/*.hrl include/
-	@mv ebin/*.asn1db include/
-	@rm ebin/*.erl
+	$(verbose) mv ebin/*.hrl include/
+	$(verbose) mv ebin/*.asn1db include/
+	$(verbose) rm ebin/*.erl
 endef
 
 define compile_mib
@@ -119,17 +119,17 @@ endef
 
 ifneq ($(wildcard src/),)
 ebin/$(PROJECT).app::
-	@mkdir -p ebin/
+	$(verbose) mkdir -p ebin/
 
 ifneq ($(wildcard asn1/),)
 ebin/$(PROJECT).app:: $(sort $(call core_find,asn1/,*.asn1))
-	@mkdir -p include
+	$(verbose) mkdir -p include
 	$(if $(strip $?),$(call compile_asn1,$?))
 endif
 
 ifneq ($(wildcard mibs/),)
 ebin/$(PROJECT).app:: $(sort $(call core_find,mibs/,*.mib))
-	@mkdir -p priv/mibs/ include
+	$(verbose) mkdir -p priv/mibs/ include
 	$(if $(strip $?),$(call compile_mib,$?))
 endif
 

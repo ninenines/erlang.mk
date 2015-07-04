@@ -13,7 +13,7 @@ COVER_MODS = $(notdir $(basename $(call core_ls,ebin/*.beam)))
 test-build:: $(TEST_DIR)/ct.cover.spec
 
 $(TEST_DIR)/ct.cover.spec:
-	@echo Cover mods: $(COVER_MODS)
+	$(verbose) echo Cover mods: $(COVER_MODS)
 	$(gen_verbose) printf "%s\n" \
 		'{incl_mods,[$(subst $(space),$(comma),$(COVER_MODS))]}.' \
 		'{export,"$(CURDIR)/ct.coverdata"}.' > $@
@@ -27,7 +27,7 @@ endif
 ifdef COVER
 ifneq ($(COVER_REPORT_DIR),)
 tests::
-	@$(MAKE) --no-print-directory cover-report
+	$(verbose) $(MAKE) --no-print-directory cover-report
 endif
 endif
 
@@ -38,7 +38,7 @@ distclean:: cover-report-clean
 endif
 
 help::
-	@printf "%s\n" "" \
+	$(verbose) printf "%s\n" "" \
 		"Cover targets:" \
 		"  cover-report  Generate a HTML coverage report from previously collected" \
 		"                cover data." \

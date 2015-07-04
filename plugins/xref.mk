@@ -19,7 +19,7 @@ XREFR_URL ?= https://github.com/inaka/xref_runner/releases/download/0.2.2/xrefr
 # Core targets.
 
 help::
-	@printf "%s\n" "" \
+	$(verbose) printf "%s\n" "" \
 		"Xref targets:" \
 		"  xref        Run Xrefr using $XREF_CONFIG as config file if defined"
 
@@ -28,8 +28,8 @@ distclean:: distclean-xref
 # Plugin-specific targets.
 
 $(XREFR):
-	@$(call core_http_get,$(XREFR),$(XREFR_URL))
-	@chmod +x $(XREFR)
+	$(gen_verbose) $(call core_http_get,$(XREFR),$(XREFR_URL))
+	$(verbose) chmod +x $(XREFR)
 
 xref: deps app $(XREFR)
 	$(gen_verbose) $(XREFR) $(XREFR_ARGS)

@@ -32,16 +32,12 @@ distclean:: distclean-relx-rel distclean-relx
 
 # Plugin-specific targets.
 
-define relx_fetch
-	$(call core_http_get,$(RELX),$(RELX_URL))
-	chmod +x $(RELX)
-endef
-
 $(RELX):
-	@$(call relx_fetch)
+	$(gen_verbose) $(call core_http_get,$(RELX),$(RELX_URL))
+	$(verbose) chmod +x $(RELX)
 
 relx-rel: $(RELX)
-	@$(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
 distclean-relx-rel:
 	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)
@@ -65,10 +61,10 @@ endef
 RELX_RELEASE = `$(call erlang,$(get_relx_release.erl))`
 
 run: all
-	@$(RELX_OUTPUT_DIR)/$(RELX_RELEASE)/bin/$(RELX_RELEASE) console
+	$(verbose) $(RELX_OUTPUT_DIR)/$(RELX_RELEASE)/bin/$(RELX_RELEASE) console
 
 help::
-	@printf "%s\n" "" \
+	$(verbose) printf "%s\n" "" \
 		"Relx targets:" \
 		"  run         Compile the project, build the release and run it"
 

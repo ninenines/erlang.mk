@@ -9,10 +9,10 @@ proto_verbose = $(proto_verbose_$(V))
 # Core targets.
 
 define compile_proto
-	@mkdir -p ebin/ include/
+	$(verbose) mkdir -p ebin/ include/
 	$(proto_verbose) $(call erlang,$(call compile_proto.erl,$(1)))
 	$(proto_verbose) erlc +debug_info -o ebin/ ebin/*.erl
-	@rm ebin/*.erl
+	$(verbose) rm ebin/*.erl
 endef
 
 define compile_proto.erl
