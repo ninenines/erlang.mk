@@ -170,6 +170,12 @@ core_lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,
 # @todo On Windows: $(shell dir /B $(1)); make sure to handle when no file exists.
 core_ls = $(filter-out $(1),$(shell echo $(1)))
 
+ifeq ($(PLATFORM),darwin)
+core_xargs = xargs
+else
+core_xargs = xargs -r
+endif
+
 # Automated update.
 
 ERLANG_MK_BUILD_CONFIG ?= build.config
