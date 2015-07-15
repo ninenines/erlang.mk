@@ -517,9 +517,8 @@ ifeq (1,$(words $(dep_$(1))))
 		master)
 else
 ifeq (2,$(words $(dep_$(1))))
-	$(dep_verbose) $(call dep_fetch,$(1),git, \
-		$(patsubst git://github.com/%,https://github.com/%,$(word 1,$(dep_$(1)))), \
-		$(word 2,$(dep_$(1))))
+	$(dep_verbose) $(call dep_fetch,$(1),$(word 1,$(dep_$(1))), \
+		$(patsubst git://github.com/%,https://github.com/%,$(word 2,$(dep_$(1)))))
 else
 	$(dep_verbose) $(call dep_fetch,$(1),$(word 1,$(dep_$(1))), \
 		$(patsubst git://github.com/%,https://github.com/%,$(word 2,$(dep_$(1)))), \
