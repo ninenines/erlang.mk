@@ -495,6 +495,8 @@ define dep_fetch
 		svn checkout -q $(3) $(DEPS_DIR)/$(1); \
 	elif [ "$(2)" = "cp" ]; then \
 		cp -R $(3) $(DEPS_DIR)/$(1); \
+	elif [ "$(2)" = "ln" ]; then \
+		ln -s $(3) $(DEPS_DIR)/$(1); \
 	elif [ "$(2)" = "hex" ]; then \
 		$(call erlang,$(call hex_fetch.erl,$(1),$(strip $(4)))); \
 	else \
