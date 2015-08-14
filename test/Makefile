@@ -187,7 +187,7 @@ docs: app1
 	$t printf "%s\n" \
 		"PROJECT = app1" \
 		"DOC_DEPS = edown" \
-		"dep_edown = git https://github.com/uwiger/edown.git 0.5" \
+		"dep_edown = git https://github.com/uwiger/edown.git 0.7" \
 		"EDOC_OPTS = {doclet, edown_doclet}" \
 		"include erlang.mk" \
 		"distclean:: distclean-doc-md" \
