@@ -72,7 +72,7 @@ endif
 
 app-build: erlc-include ebin/$(PROJECT).app
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
-	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(wildcard ebin/*.beam))))))
+	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(shell find ebin -type f -name *.beam))))))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
 	$(app_verbose) echo $(subst $(newline),,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))) \
 		> ebin/$(PROJECT).app
