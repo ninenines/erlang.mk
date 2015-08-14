@@ -1,3 +1,7 @@
+general:
+  artifacts:
+    - "test/pkgs.log"
+
 dependencies:
   cache_directories:
     - "~/.kerl"
