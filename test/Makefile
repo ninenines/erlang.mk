@@ -54,7 +54,7 @@ app: app1
 	$i "app: Testing the 'app' target."
 	$t $(MAKE) -C app1 app $v
 	$i "Checking the modules line in the generated .app file."
-	$t [ `grep -E "{modules, *\['m'\]}" app1/ebin/app1.app | wc -l` == 1 ]
+	$t [ `grep -E "{modules, *\['m'\]}" app1/ebin/app1.app | wc -l` -eq 1 ]
 	$t [ -e app1/ebin/m.beam ]
 	$i "Checking that '$(MAKE) clean-app' deletes ebin."
 	$t $(MAKE) -C app1 clean-app $v
@@ -200,7 +200,7 @@ docs: app1
 	$t [ -e app1/doc/m.md ]
 	$i "Checking that '$(MAKE) distclean' deletes all generated doc files."
 	$t $(MAKE) -C app1 -f Makefile-doc distclean $v
-	$t [ "`ls app1/doc/`" == "" ]
+	$t [ "`ls app1/doc/`" = "" ]
 	$i "Cleaning up test data."
 	$t rm app1/Makefile-doc
 	$i "Test 'docs' passed."
