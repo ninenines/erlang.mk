@@ -6,6 +6,7 @@
 
 # Configuration
 
+EUNIT_ERL_OPTS ?=
 EUNIT_OPTS ?=
 
 # Core targets.
@@ -46,5 +47,5 @@ EUNIT_MODS = $(foreach mod,$(EUNIT_EBIN_MODS) $(filter-out \
 	$(patsubst %,%_tests,$(EUNIT_EBIN_MODS)),$(EUNIT_TEST_MODS)),{module,'$(mod)'})
 
 eunit: test-build
-	$(gen_verbose) $(ERL) -pa $(TEST_DIR) $(DEPS_DIR)/*/ebin ebin \
+	$(gen_verbose) $(ERL) $(EUNIT_ERL_OPTS) -pa $(TEST_DIR) $(DEPS_DIR)/*/ebin ebin \
 		-eval "$(subst $(newline),,$(subst ",\",$(call eunit.erl,$(EUNIT_MODS))))"
