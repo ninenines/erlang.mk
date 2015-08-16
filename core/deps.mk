@@ -201,7 +201,7 @@ define dep_autopatch_rebar.erl
 					false -> ok;
 					{Name, Source} ->
 						{Method, Repo, Commit} = case Source of
-							{hex, V} -> {hex, undefined, V};
+							{hex, V} -> {hex, V, undefined};
 							{git, R} -> {git, R, master};
 							{M, R, {branch, C}} -> {M, R, C};
 							{M, R, {ref, C}} -> {M, R, C};
@@ -472,7 +472,25 @@ define dep_autopatch_appsrc.erl
 	halt()
 endef
 
-define hex_fetch.erl
+define dep_fetch_git
+	git clone -q -n -- $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1)); \
+	cd $(DEPS_DIR)/$(call dep_name,$(1)) && git checkout -q $(call dep_commit,$(1));
+endef
+
+define dep_fetch_hg
+	hg clone -q -U $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1)); \
+	cd $(DEPS_DIR)/$(call dep_name,$(1)) && hg update -q $(call dep_commit,$(1));
+endef
+
+define dep_fetch_svn
+	svn checkout -q $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1));
+endef
+
+define dep_fetch_cp
+	cp -R $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1));
+endef
+
+define dep_fetch_hex.erl
 	ssl:start(),
 	inets:start(),
 	{ok, {{_, 200, _}, _, Body}} = httpc:request(get,
@@ -484,49 +502,42 @@ define hex_fetch.erl
 	halt()
 endef
 
-define dep_fetch
-	if [ "$(2)" = "git" ]; then \
-		git clone -q -n -- $(3) $(DEPS_DIR)/$(1); \
-		cd $(DEPS_DIR)/$(1) && git checkout -q $(4); \
-	elif [ "$(2)" = "hg" ]; then \
-		hg clone -q -U $(3) $(DEPS_DIR)/$(1); \
-		cd $(DEPS_DIR)/$(1) && hg update -q $(4); \
-	elif [ "$(2)" = "svn" ]; then \
-		svn checkout -q $(3) $(DEPS_DIR)/$(1); \
-	elif [ "$(2)" = "cp" ]; then \
-		cp -R $(3) $(DEPS_DIR)/$(1); \
-	elif [ "$(2)" = "hex" ]; then \
-		$(call erlang,$(call hex_fetch.erl,$(1),$(strip $(4)))); \
-	else \
-		echo "Unknown or invalid dependency: $(1). Please consult the erlang.mk README for instructions." >&2; \
-		exit 78; \
-	fi
+# Hex only has a package version. No need to look in the Erlang.mk packages.
+define dep_fetch_hex
+	$(call erlang,$(call dep_fetch_hex.erl,$(1),$(strip $(word 2,$(dep_$(1))))));
 endef
+
+define dep_fetch_fail
+	echo "Unknown or invalid dependency: $(1). Please consult the erlang.mk README for instructions." >&2; \
+	exit 78;
+endef
+
+# Kept for compatibility purposes with older Erlang.mk configuration.
+define dep_fetch_legacy
+	$(warning WARNING: '$(1)' dependency configuration uses deprecated format.) \
+	git clone -q -n -- $(word 1,$(dep_$(1))) $(DEPS_DIR)/$(1); \
+	cd $(DEPS_DIR)/$(1) && git checkout -q $(if $(word 2,$(dep_$(1))),$(word 2,$(dep_$(1))),master);
+endef
+
+define dep_fetch
+	$(if $(dep_$(1)), \
+		$(if $(dep_fetch_$(word 1,$(dep_$(1)))), \
+			$(word 1,$(dep_$(1))), \
+			legacy), \
+		$(if $(filter $(1),$(PACKAGES)), \
+			$(pkg_$(1)_fetch), \
+			fail))
+endef
+
+dep_name = $(if $(dep_$(1)),$(1),$(pkg_$(1)_name))
+dep_repo = $(patsubst git://github.com/%,https://github.com/%, \
+	$(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo)))
+dep_commit = $(if $(dep_$(1)),$(word 3,$(dep_$(1))),$(pkg_$(1)_commit))
 
 define dep_target
 $(DEPS_DIR)/$(1):
 	$(verbose) mkdir -p $(DEPS_DIR)
-ifeq (,$(dep_$(1)))
-	$(dep_verbose) $(call dep_fetch,$(pkg_$(1)_name),$(pkg_$(1)_fetch), \
-		$(patsubst git://github.com/%,https://github.com/%,$(pkg_$(1)_repo)), \
-		$(pkg_$(1)_commit))
-else
-ifeq (1,$(words $(dep_$(1))))
-	$(dep_verbose) $(call dep_fetch,$(1),git, \
-		$(patsubst git://github.com/%,https://github.com/%,$(dep_$(1))), \
-		master)
-else
-ifeq (2,$(words $(dep_$(1))))
-	$(dep_verbose) $(call dep_fetch,$(1),git, \
-		$(patsubst git://github.com/%,https://github.com/%,$(word 1,$(dep_$(1)))), \
-		$(word 2,$(dep_$(1))))
-else
-	$(dep_verbose) $(call dep_fetch,$(1),$(word 1,$(dep_$(1))), \
-		$(patsubst git://github.com/%,https://github.com/%,$(word 2,$(dep_$(1)))), \
-		$(word 3,$(dep_$(1))))
-endif
-endif
-endif
+	$(dep_verbose) $(call dep_fetch_$(strip $(call dep_fetch,$(1))),$(1))
 	$(verbose) if [ -f $(DEPS_DIR)/$(1)/configure.ac -o -f $(DEPS_DIR)/$(1)/configure.in ]; then \
 		echo " AUTO  " $(1); \
 		cd $(DEPS_DIR)/$(1) && autoreconf -Wall -vif -I m4; \
