@@ -5,6 +5,8 @@ Common Makefile rules for building and testing Erlang applications.
 
 Also features support for dependencies and a package index.
 
+[Check out our upcoming documentation!](doc/src/guide/book.asciidoc)
+
 Why erlang.mk?
 --------------
 

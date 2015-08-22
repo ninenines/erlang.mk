@@ -1,0 +1,62 @@
+== Updating Erlang.mk
+
+This chapter describes how to update the 'erlang.mk' file
+in your repository.
+
+=== Initial bootstrap
+
+The first time you use Erlang.mk, it will bootstrap itself.
+It always uses the most recent version for this, so you don't
+have to update after creating your project.
+
+=== Updating
+
+Later on though, updating becomes a necessity. Erlang.mk
+developers and contributors relentlessly improve the project
+and add new features; it would be a waste not to benefit
+from this.
+
+That's why updating Erlang.mk is so simple. All you need
+to do is to call `make erlang-mk`:
+
+[source,bash]
+----
+$ make erlang-mk
+git clone https://github.com/ninenines/erlang.mk .erlang.mk.build
+Cloning into '.erlang.mk.build'...
+remote: Counting objects: 4035, done.
+remote: Compressing objects: 100% (12/12), done.
+remote: Total 4035 (delta 8), reused 4 (delta 4), pack-reused 4019
+Receiving objects: 100% (4035/4035), 1.10 MiB | 1000.00 KiB/s, done.
+Resolving deltas: 100% (2442/2442), done.
+Checking connectivity... done.
+if [ -f build.config ]; then cp build.config .erlang.mk.build; fi
+cd .erlang.mk.build && make
+make[1]: Entering directory '/home/essen/tmp/emkg/hello_joe/.erlang.mk.build'
+awk 'FNR==1 && NR!=1{print ""}1' core/core.mk index/*.mk core/index.mk core/deps.mk plugins/protobuffs.mk core/erlc.mk core/docs.mk core/test.mk plugins/asciidoc.mk plugins/bootstrap.mk plugins/c_src.mk plugins/ci.mk plugins/ct.mk plugins/dialyzer.mk plugins/edoc.mk plugins/elvis.mk plugins/erlydtl.mk plugins/escript.mk plugins/eunit.mk plugins/relx.mk plugins/shell.mk plugins/triq.mk plugins/xref.mk plugins/cover.mk \
+	| sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = 1.2.0-642-gccd2b9f/' > erlang.mk
+make[1]: Leaving directory '/home/essen/tmp/emkg/hello_joe/.erlang.mk.build'
+cp .erlang.mk.build/erlang.mk ./erlang.mk
+rm -rf .erlang.mk.build
+----
+
+All that's left to do is to commit the file!
+
+Yep, it's that easy.
+
+=== Customizing the build
+
+Erlang.mk allows you to customize which plugins are to be included
+in the 'erlang.mk' file. You can do so by maintaining your own
+'build.config' file in your repository. Erlang.mk will automatically
+use it the next time you run `make erlang-mk`.
+
+The 'build.config' file contains the list of all files that will
+be built into the resulting 'erlang.mk' file. You can start from
+the https://github.com/ninenines/erlang.mk/blob/master/build.config[most recent version]
+and customize to your needs.
+
+You can also name the file differently or put it in a separate folder
+by modifying the value for `ERLANG_MK_BUILD_CONFIG`. You can also
+tell Erlang.mk to use a different temporary directory by changing
+the `ERLANG_MK_BUILD_DIR` variable.

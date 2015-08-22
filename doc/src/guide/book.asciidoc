@@ -1,0 +1,11 @@
+// a2x: --dblatex-opts "-P latex.output.revhistory=0 -P doc.publisher.show=0 -P index.numbered=0"
+// a2x: -d book --attribute tabsize=4
+
+= Erlang.mk User Guide
+Loïc Hoguin <essen@ninenines.eu>
+
+include::getting_started.asciidoc[Getting started]
+
+include::overview.asciidoc[Overview]
+
+include::updating.asciidoc[Updating Erlang.mk]

@@ -1,0 +1,88 @@
+== Overview
+
+Now that you know how to get started, let's take a look at
+what Erlang.mk can do for you.
+
+=== Building your project
+
+Erlang.mk is first and foremost a build tool. It is especially
+tailored for Erlang developers and follows widely accepted
+practices in the Erlang community.
+
+Erlang.mk will happily build all link:app.asciidoc[Erlang-specific files]
+you throw at it. Other kinds of files too, like C or C++ code
+when you are working on link:ports.asciidoc[a NIF or a port driver].
+
+Erlang.mk embraces the concept of link:deps.asciidoc[source dependencies].
+It can fetch dependency source code using a variety of mechanisms,
+including fetching from Git, Mercurial or SVN.
+
+Erlang.mk will automatically link:relx.asciidoc[generate releases]
+when applicable. It can also link:escripts.asciidoc[generate escripts].
+
+=== Exploring the package index
+
+Erlang.mk comes with a link:deps.asciidoc[built-in package index].
+It is built as an extension of the dependency system and is
+meant to be used for discovery purposes.
+
+No package is ever installed, they are only used as dependencies
+and are always project-specific. They can be thought of as a
+shortcut over plain dependencies.
+
+You can get a list of all packages known to Erlang.mk by using
+the `search` target:
+
+[source,bash]
+$ make search
+
+You can also use this target to search across all packages, for
+example to find all packages related to Cowboy:
+
+[source,bash]
+$ make search q=cowboy
+
+=== Generating documentation
+
+Erlang.mk supports _EDoc_ and _Asciidoc_.
+
+link:edoc.asciidoc[EDoc] generates HTML documentation directly from
+your source code.
+
+While it is convenient, ask yourself: if all the documentation is
+inside the source code, why not just open the source code directly?
+That's where _Asciidoc_ comes in.
+
+The link:asciidoc.asciidoc[Asciidoc] plugin expects all documentation
+to be separate from source. It will generate HTML, PDF, man pages and
+more from the documentation you write in the 'doc/src/' folder in
+your repository.
+
+=== Running tests
+
+Erlang.mk supports a lot of different testing and static
+analysis tools.
+
+The link:shell.asciidoc[make shell] command allows you
+to test your project manually. You can automate these
+unit tests with link:eunit.asciidoc[EUnit] and test
+your entire system with link:common_test.asciidoc[Common Test].
+link:property_based_testing.asciidoc[Property based testing]
+with Triq is a strong alternative to writing unit tests
+manually. link:coverage.asciidoc[Code coverage] can of course
+be enabled during tests.
+
+Erlang.mk comes with features to make your life easier when
+setting up and using link:ci.asciidoc[Continuous integration].
+
+On the static analysis side of things, Erlang.mk comes with
+support for link:dialyzer.asciidoc[Dialyzer], link:xref.asciidoc[Xref]
+and link:elvis.asciidoc[Elvis], performing success typing
+analysis, cross reference and style reviewing.
+
+=== Need more?
+
+Not convinced yet? You can read about link:why.asciidoc[why you should use Erlang.mk]
+and its link:history.asciidoc[history]. And if you're still not
+convinced after that, it's OK! The world would be boring if
+everyone agreed on everything all the time.

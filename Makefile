@@ -31,3 +31,6 @@ else
 check:
 	$(MAKE) -C test pkg-$(p)
 endif
+
+docs:
+	$(MAKE) -f core/core.mk -f core/docs.mk -f plugins/asciidoc.mk asciidoc
