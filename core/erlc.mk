@@ -70,7 +70,7 @@ define app_file
 endef
 endif
 
-app-build: erlc-include ebin/$(PROJECT).app
+app-build: $(EXTRA_SOURCES) erlc-include ebin/$(PROJECT).app
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
 	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(shell find ebin -type f -name *.beam))))))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
@@ -87,7 +87,7 @@ else
 		> ebin/$(PROJECT).app
 endif
 
-erlc-include:
+erlc-include: $(filter %.erl %.hrl,$(EXTRA_SOURCES))
 	- $(verbose) if [ -d ebin/ ]; then \
 		find include/ src/ -type f -name \*.hrl -newer ebin -exec touch $(shell find src/ -type f -name "*.erl") \; 2>/dev/null || printf ''; \
 	fi
@@ -118,25 +118,25 @@ define compile_mib
 endef
 
 ifneq ($(wildcard src/),)
-ebin/$(PROJECT).app::
+ebin/$(PROJECT).app:: erlc-include
 	$(verbose) mkdir -p ebin/
 
 ifneq ($(wildcard asn1/),)
-ebin/$(PROJECT).app:: $(sort $(call core_find,asn1/,*.asn1))
+ebin/$(PROJECT).app:: $(sort $(call core_find,asn1/,*.asn1) $(filter %.asn1,$(EXTRA_SOURCES)))
 	$(verbose) mkdir -p include
 	$(if $(strip $?),$(call compile_asn1,$?))
 endif
 
 ifneq ($(wildcard mibs/),)
-ebin/$(PROJECT).app:: $(sort $(call core_find,mibs/,*.mib))
+ebin/$(PROJECT).app:: $(sort $(call core_find,mibs/,*.mib) $(filter %.mib,$(EXTRA_SOURCES)))
 	$(verbose) mkdir -p priv/mibs/ include
 	$(if $(strip $?),$(call compile_mib,$?))
 endif
 
-ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.erl *.core))
+ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.erl *.core) $(filter %.erl %.core,$(EXTRA_SOURCES)))
 	$(if $(strip $?),$(call compile_erl,$?))
 
-ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.xrl *.yrl))
+ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.xrl *.yrl) $(filter %.xrl %.yrl,$(EXTRA_SOURCES)))
 	$(if $(strip $?),$(call compile_xyrl,$?))
 endif
 
@@ -145,3 +145,4 @@ clean:: clean-app
 clean-app:
 	$(gen_verbose) rm -rf ebin/ priv/mibs/ \
 		$(addprefix include/,$(addsuffix .hrl,$(notdir $(basename $(call core_find,mibs/,*.mib)))))
+	$(gen_verbose) rm -f $(EXTRA_SOURCES)
