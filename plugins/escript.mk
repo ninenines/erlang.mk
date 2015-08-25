@@ -1,6 +1,8 @@
 # Copyright (c) 2014 Dave Cottlehuber <dch@skunkwerks.at>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring escript,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: distclean-escript escript
 
 # Configuration.
@@ -62,3 +64,5 @@ escript:: distclean-escript deps app
 
 distclean-escript:
 	$(gen_verbose) rm -f $(ESCRIPT_NAME)
+
+endif # ERLANG_MK_DISABLE_PLUGINS

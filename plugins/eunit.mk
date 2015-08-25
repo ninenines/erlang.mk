@@ -2,6 +2,8 @@
 # Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is contributed to erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring eunit,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: eunit
 
 # Configuration
@@ -48,3 +50,5 @@ EUNIT_MODS = $(foreach mod,$(EUNIT_EBIN_MODS) $(filter-out \
 eunit: test-build
 	$(gen_verbose) $(ERL) -pa $(TEST_DIR) $(DEPS_DIR)/*/ebin ebin \
 		-eval "$(subst $(newline),,$(subst ",\",$(call eunit.erl,$(EUNIT_MODS))))"
+
+endif # ERLANG_MK_DISABLE_PLUGINS

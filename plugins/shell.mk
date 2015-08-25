@@ -1,6 +1,8 @@
 # Copyright (c) 2014, M Robert Martin <rob@version2beta.com>
 # This file is contributed to erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring shell,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: shell
 
 # Configuration.
@@ -26,3 +28,5 @@ build-shell-deps: $(ALL_SHELL_DEPS_DIRS)
 
 shell: build-shell-deps
 	$(gen_verbose) erl $(SHELL_PATH) $(SHELL_OPTS)
+
+endif # ERLANG_MK_DISABLE_PLUGINS

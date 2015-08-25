@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring ci,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: ci ci-setup distclean-kerl
 
 KERL ?= $(CURDIR)/kerl
@@ -63,3 +65,5 @@ distclean:: distclean-kerl
 distclean-kerl:
 	$(gen_verbose) rm -rf $(KERL)
 endif
+
+endif # ERLANG_MK_DISABLE_PLUGINS

@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring triq,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 ifeq ($(filter triq,$(DEPS) $(TEST_DEPS)),triq)
 .PHONY: triq
 
@@ -40,3 +42,5 @@ triq: test-build
 	$(gen_verbose) $(call erlang,$(call triq_check.erl,all,undefined,$(MODULES)))
 endif
 endif
+
+endif # ERLANG_MK_DISABLE_PLUGINS

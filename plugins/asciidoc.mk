@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring asciidoc,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: asciidoc asciidoc-guide asciidoc-manual install-asciidoc distclean-asciidoc
 
 MAN_INSTALL_PATH ?= /usr/local/share/man
@@ -44,3 +46,5 @@ distclean:: distclean-asciidoc
 
 distclean-asciidoc:
 	$(gen_verbose) rm -rf doc/html/ doc/guide.pdf doc/man3/ doc/man7/
+
+endif # ERLANG_MK_DISABLE_PLUGINS

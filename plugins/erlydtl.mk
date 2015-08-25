@@ -1,6 +1,8 @@
 # Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring erlydtl,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 # Configuration.
 
 DTL_FULL_PATH ?= 0
@@ -37,3 +39,5 @@ ebin/$(PROJECT).app:: $(sort $(call core_find,$(DTL_PATH),*.dtl))
 	$(if $(strip $?),\
 		$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$?,-pa ebin/ $(DEPS_DIR)/erlydtl/ebin/)))
 endif
+
+endif # ERLANG_MK_DISABLE_PLUGINS

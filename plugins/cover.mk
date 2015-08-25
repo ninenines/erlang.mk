@@ -1,6 +1,8 @@
 # Copyright 2015, Viktor Söderqvist <viktor@zuiderkwast.se>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring cover,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 COVER_REPORT_DIR = cover
 
 # Hook in coverage to ct
@@ -118,3 +120,5 @@ cover-report:
 
 endif
 endif # ifneq ($(COVER_REPORT_DIR),)
+
+endif # ERLANG_MK_DISABLE_PLUGINS
