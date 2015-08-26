@@ -4,6 +4,8 @@
 # Configuration.
 
 DTL_FULL_PATH ?= 0
+DTL_PATH ?= templates/
+DTL_SUFFIX ?= _dtl
 
 # Verbosity.
 
@@ -12,20 +14,26 @@ dtl_verbose = $(dtl_verbose_$(V))
 
 # Core targets.
 
-define compile_erlydtl
-	$(dtl_verbose) $(ERL) -pa ebin/ $(DEPS_DIR)/erlydtl/ebin/ -eval ' \
-		Compile = fun(F) -> \
-			S = fun (1) -> re:replace(filename:rootname(string:sub_string(F, 11), ".dtl"), "/",  "_",  [{return, list}, global]); \
-				(0) -> filename:basename(F, ".dtl") \
-			end, \
-			Module = list_to_atom(string:to_lower(S($(DTL_FULL_PATH))) ++ "_dtl"), \
-			{ok, _} = erlydtl:compile(F, Module, [{out_dir, "ebin/"}, return_errors, {doc_root, "templates"}]) \
-		end, \
-		_ = [Compile(F) || F <- string:tokens("$(1)", " ")], \
-		halt().'
+define erlydtl_compile.erl
+	[begin
+		Module0 = case $(DTL_FULL_PATH) of
+			0 ->
+				filename:basename(F, ".dtl");
+			1 ->
+				"$(DTL_PATH)" ++ F2 = filename:rootname(F, ".dtl"),
+				re:replace(F2, "/",  "_",  [{return, list}, global])
+		end,
+		Module = list_to_atom(string:to_lower(Module0) ++ "$(DTL_SUFFIX)"),
+		case erlydtl:compile(F, Module, [{out_dir, "ebin/"}, return_errors, {doc_root, "templates"}]) of
+			ok -> ok;
+			{ok, _} -> ok
+		end
+	end || F <- string:tokens("$(1)", " ")],
+	halt().
 endef
 
 ifneq ($(wildcard src/),)
-ebin/$(PROJECT).app:: $(sort $(call core_find,templates/,*.dtl))
-	$(if $(strip $?),$(call compile_erlydtl,$?))
+ebin/$(PROJECT).app:: $(sort $(call core_find,$(DTL_PATH),*.dtl))
+	$(if $(strip $?),\
+		$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$?,-pa ebin/ $(DEPS_DIR)/erlydtl/ebin/)))
 endif
