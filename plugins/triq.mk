@@ -1,7 +1,7 @@
 # Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-ifneq ($(wildcard $(DEPS_DIR)/triq),)
+ifeq ($(filter triq,$(DEPS) $(TEST_DEPS)),triq)
 .PHONY: triq
 
 # Targets.
