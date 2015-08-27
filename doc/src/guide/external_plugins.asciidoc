@@ -1,0 +1,73 @@
+== External plugins
+
+It is often convenient to be able to keep the build files
+used by all your projects in one place. Those files could
+be Makefiles, configuration files, templates and more.
+
+Erlang.mk allows you to automatically load plugins from
+dependencies. Plugins can do anything, including defining
+new variables, defining file templates, hooking themselves
+inside the normal Erlang.mk processing or even adding new
+rules.
+
+You can load plugins using one of two methods. You can
+either load all plugins from a dependency, or just one.
+We will also cover conventions about writing external
+plugins.
+
+=== Loading all plugins from a dependency
+
+To load plugins from a dependency, all you need to do is add
+the dependency name to `DEP_PLUGINS` in addition to the list
+of dependencies.
+
+For example, if you have `cowboy` in `DEPS`, add `cowboy` in
+`DEP_PLUGINS` also:
+
+[source,make]
+DEPS = cowboy
+DEP_PLUGINS = cowboy
+
+This will load the file 'plugins.mk' in the root folder of
+the Cowboy repository.
+
+=== Loading one plugin from a dependency
+
+Now that we know how to load all plugins, let's take a look
+at how to load one specific plugin from a dependency.
+
+To do this, instead of writing only the name of the dependency,
+we will write its name and the path to the plugin file. This
+means that writing `DEP_PLUGINS = cowboy` is equivalent to
+writing `DEP_PLUGINS = cowboy/plugins.mk`.
+
+Knowing this, if we were to load the plugin 'mk/dist.mk'
+from Cowboy and no other, we would write the following in
+our Makefile:
+
+[source,make]
+DEPS = cowboy
+DEP_PLUGINS = cowboy/mk/dist.mk
+
+=== Writing external plugins
+
+The 'plugins.mk' file is a convention. It is meant to load
+all the plugins from the dependency. The code for the plugin
+can be written directly in 'plugins.mk' or be separate.
+
+If you are providing more than one plugin with your repository,
+the recommended way is to create one file per plugin in the
+'mk/' folder in your repository, and then include those
+individual plugins in 'plugins.mk'.
+
+For eaxmple, if you have two plugins 'mk/dist.mk' and
+'mk/templates.mk', you could write the following 'plugins.mk'
+file:
+
+[source,make]
+include mk/dist.mk
+include mk/templates.mk
+
+This allows users to not only be able to select individual
+plugins, but also select all plugins from the dependency
+in one go if they wish to do so.

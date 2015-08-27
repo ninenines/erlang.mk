@@ -9,3 +9,7 @@ include::getting_started.asciidoc[Getting started]
 include::overview.asciidoc[Overview]
 
 include::updating.asciidoc[Updating Erlang.mk]
+
+= Advanced
+
+include::external_plugins.asciidoc[External plugins]
