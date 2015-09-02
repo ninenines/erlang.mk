@@ -24,6 +24,9 @@ app_verbose = $(app_verbose_$(V))
 appsrc_verbose_0 = @echo " APP   " $(PROJECT).app.src;
 appsrc_verbose = $(appsrc_verbose_$(V))
 
+makedep_verbose_0 = @echo " DEPEND" $(PROJECT).d;
+makedep_verbose = $(makedep_verbose_$(V))
+
 erlc_verbose_0 = @echo " ERLC  " $(filter-out $(patsubst %,%.erl,$(ERLC_EXCLUDE)),\
 	$(filter %.erl %.core,$(?F)));
 erlc_verbose = $(erlc_verbose_$(V))
@@ -40,9 +43,11 @@ mib_verbose = $(mib_verbose_$(V))
 # Targets.
 
 ifeq ($(wildcard ebin/test),)
-app:: app-build
+app::
+	$(verbose) $(MAKE) --no-print-directory app-build
 else
-app:: clean app-build
+app:: clean
+	$(verbose) $(MAKE) --no-print-directory app-build
 endif
 
 ifeq ($(wildcard src/$(PROJECT)_app.erl),)
@@ -70,7 +75,7 @@ define app_file
 endef
 endif
 
-app-build: erlc-include ebin/$(PROJECT).app
+app-build: ebin/$(PROJECT).app
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
 	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(shell find ebin -type f -name *.beam))))))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
@@ -87,61 +92,127 @@ else
 		> ebin/$(PROJECT).app
 endif
 
-erlc-include:
-	- $(verbose) if [ -d ebin/ ]; then \
-		find include/ src/ -type f -name \*.hrl -newer ebin -exec touch $(shell find src/ -type f -name "*.erl") \; 2>/dev/null || printf ''; \
-	fi
-
-define compile_erl
-	$(erlc_verbose) erlc -v $(if $(IS_DEP),$(filter-out -Werror,$(ERLC_OPTS)),$(ERLC_OPTS)) -o ebin/ \
-		-pa ebin/ -I include/ $(filter-out $(ERLC_EXCLUDE_PATHS),\
-		$(COMPILE_FIRST_PATHS) $(1))
-endef
-
-define compile_xyrl
-	$(xyrl_verbose) erlc -v -o ebin/ $(1)
-	$(xyrl_verbose) erlc $(ERLC_OPTS) -o ebin/ ebin/*.erl
-	$(verbose) rm ebin/*.erl
-endef
-
-define compile_asn1
-	$(asn1_verbose) erlc -v -I include/ -o ebin/ $(1)
-	$(verbose) mv ebin/*.hrl include/
-	$(verbose) mv ebin/*.asn1db include/
-	$(verbose) rm ebin/*.erl
-endef
-
-define compile_mib
-	$(mib_verbose) erlc -v $(ERLC_MIB_OPTS) -o priv/mibs/ \
-		-I priv/mibs/ $(COMPILE_MIB_FIRST_PATHS) $(1)
-	$(mib_verbose) erlc -o include/ -- priv/mibs/*.bin
-endef
+# Source files.
 
 ifneq ($(wildcard src/),)
-ebin/$(PROJECT).app::
-	$(verbose) mkdir -p ebin/
+ERL_FILES = $(sort $(call core_find,src/,*.erl))
+CORE_FILES = $(sort $(call core_find,src/,*.core))
+
+# ASN.1 files.
 
 ifneq ($(wildcard asn1/),)
-ebin/$(PROJECT).app:: $(sort $(call core_find,asn1/,*.asn1))
-	$(verbose) mkdir -p include
+ASN1_FILES = $(sort $(call core_find,asn1/,*.asn1))
+ERL_FILES += $(addprefix src/,$(patsubst %.asn1,%.erl,$(notdir $(ASN1_FILES))))
+
+define compile_asn1
+	$(verbose) mkdir -p include/
+	$(asn1_verbose) erlc -v -I include/ -o asn1/ +noobj $(1)
+	$(verbose) mv asn1/*.erl src/
+	$(verbose) mv asn1/*.hrl include/
+	$(verbose) mv asn1/*.asn1db include/
+endef
+
+$(PROJECT).d:: $(ASN1_FILES)
 	$(if $(strip $?),$(call compile_asn1,$?))
 endif
 
+# SNMP MIB files.
+
 ifneq ($(wildcard mibs/),)
-ebin/$(PROJECT).app:: $(sort $(call core_find,mibs/,*.mib))
-	$(verbose) mkdir -p priv/mibs/ include
-	$(if $(strip $?),$(call compile_mib,$?))
+MIB_FILES = $(sort $(call core_find,mibs/,*.mib))
+
+$(PROJECT).d:: $(MIB_FILES)
+	$(verbose) mkdir -p include/ priv/mibs/
+	$(mib_verbose) erlc -v $(ERLC_MIB_OPTS) -o priv/mibs/ -I priv/mibs/ $(COMPILE_MIB_FIRST_PATHS) $(MIB_FILES)
+	$(mib_verbose) erlc -o include/ -- priv/mibs/*.bin
 endif
 
-ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.erl *.core))
+# Leex and Yecc files.
+
+XRL_FILES = $(sort $(call core_find,src/,*.xrl))
+XRL_ERL_FILES = $(addprefix src/,$(patsubst %.xrl,%.erl,$(notdir $(XRL_FILES))))
+ERL_FILES += $(XRL_ERL_FILES)
+
+YRL_FILES = $(sort $(call core_find,src/,*.yrl))
+YRL_ERL_FILES = $(addprefix src/,$(patsubst %.yrl,%.erl,$(notdir $(YRL_FILES))))
+ERL_FILES += $(YRL_ERL_FILES)
+
+$(PROJECT).d:: $(XRL_FILES) $(YRL_FILES)
+	$(if $(strip $?),$(xyrl_verbose) erlc -v -o src/ $?)
+
+# Erlang and Core Erlang files.
+
+define makedep.erl
+	ErlFiles = lists:usort(string:tokens("$(ERL_FILES)", " ")),
+	Modules = [{filename:basename(F, ".erl"), F} || F <- ErlFiles],
+	Add = fun (Dep, Acc) ->
+		case lists:keyfind(atom_to_list(Dep), 1, Modules) of
+			{_, DepFile} -> [DepFile|Acc];
+			false -> Acc
+		end
+	end,
+	AddHd = fun (Dep, Acc) ->
+		case {Dep, lists:keymember(Dep, 2, Modules)} of
+			{"src/" ++ _, false} -> [Dep|Acc];
+			{"include/" ++ _, false} -> [Dep|Acc];
+			_ -> Acc
+		end
+	end,
+	CompileFirst = fun (Deps) ->
+		First0 = [case filename:extension(D) of
+			".erl" -> filename:basename(D, ".erl");
+			_ -> []
+		end || D <- Deps],
+		case lists:usort(First0) of
+			[] -> [];
+			[[]] -> [];
+			First -> ["COMPILE_FIRST +=", [[" ", F] || F <- First], "\n"]
+		end
+	end,
+	Depend = [begin
+		case epp:parse_file(F, [{includes, ["include/"]}]) of
+			{ok, Forms} ->
+				Deps = lists:usort(lists:foldl(fun
+					({attribute, _, behavior, Dep}, Acc) -> Add(Dep, Acc);
+					({attribute, _, behaviour, Dep}, Acc) -> Add(Dep, Acc);
+					({attribute, _, compile, {parse_transform, Dep}}, Acc) -> Add(Dep, Acc);
+					({attribute, _, file, {Dep, _}}, Acc) -> AddHd(Dep, Acc);
+					(_, Acc) -> Acc
+				end, [], Forms)),
+				[F, ":", [[" ", D] || D <- Deps], "\n", CompileFirst(Deps)];
+			{error, enoent} ->
+				[]
+		end
+	end || F <- ErlFiles],
+	ok = file:write_file("$(1)", Depend),
+	halt()
+endef
+
+$(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl)
+	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))
+
+-include $(PROJECT).d
+
+ebin/$(PROJECT).app:: $(PROJECT).d
+	$(verbose) mkdir -p ebin/
+
+define compile_erl
+	$(erlc_verbose) erlc -v $(if $(IS_DEP),$(filter-out -Werror,$(ERLC_OPTS)),$(ERLC_OPTS)) -o ebin/ \
+		-pa ebin/ -I include/ $(filter-out $(ERLC_EXCLUDE_PATHS),$(COMPILE_FIRST_PATHS) $(1))
+endef
+
+ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES)
 	$(if $(strip $?),$(call compile_erl,$?))
 
-ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.xrl *.yrl))
-	$(if $(strip $?),$(call compile_xyrl,$?))
+$(sort $(ERL_FILES) $(CORE_FILES)):
+	@touch $@
 endif
 
 clean:: clean-app
 
 clean-app:
-	$(gen_verbose) rm -rf ebin/ priv/mibs/ \
-		$(addprefix include/,$(addsuffix .hrl,$(notdir $(basename $(call core_find,mibs/,*.mib)))))
+	$(gen_verbose) rm -rf $(PROJECT).d ebin/ priv/mibs/ $(XRL_ERL_FILES) $(YRL_ERL_FILES) \
+		$(addprefix include/,$(patsubst %.mib,.hrl,$(notdir $(MIB_FILES)))) \
+		$(addprefix include/,$(patsubst %.asn1,.hrl,$(notdir $(ASN1_FILES)))) \
+		$(addprefix include/,$(patsubst %.asn1,.asn1db,$(notdir $(ASN1_FILES)))) \
+		$(addprefix src/,$(patsubst %.erl,.asn1db,$(notdir $(ASN1_FILES))))
