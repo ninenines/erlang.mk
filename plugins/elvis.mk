@@ -10,8 +10,8 @@ ELVIS_CONFIG ?= $(CURDIR)/elvis.config
 ELVIS ?= $(CURDIR)/elvis
 export ELVIS
 
-ELVIS_URL ?= https://github.com/inaka/elvis/releases/download/0.2.5-beta2/elvis
-ELVIS_CONFIG_URL ?= https://github.com/inaka/elvis/releases/download/0.2.5-beta2/elvis.config
+ELVIS_URL ?= https://github.com/inaka/elvis/releases/download/0.2.5/elvis
+ELVIS_CONFIG_URL ?= https://github.com/inaka/elvis/releases/download/0.2.5/elvis.config
 ELVIS_OPTS ?=
 
 # Core targets.
