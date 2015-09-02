@@ -73,13 +73,9 @@ endif
 
 # Core targets.
 
-ifneq ($(words $(MAKECMDGOALS)),1)
 .NOTPARALLEL:
-endif
 
-all:: deps
-	$(verbose) $(MAKE) --no-print-directory app
-	$(verbose) $(MAKE) --no-print-directory rel
+all:: deps app rel
 
 # Noop to avoid a Make warning when there's nothing to do.
 rel::
@@ -101,7 +97,7 @@ help::
 		"erlang.mk (version $(ERLANG_MK_VERSION)) is distributed under the terms of the ISC License." \
 		"Copyright (c) 2013-2015 Loïc Hoguin <essen@ninenines.eu>" \
 		"" \
-		"Usage: [V=1] $(MAKE) [-jNUM] [target]..." \
+		"Usage: [V=1] $(MAKE) [target]..." \
 		"" \
 		"Core targets:" \
 		"  all           Run deps, app and rel targets in that order" \
