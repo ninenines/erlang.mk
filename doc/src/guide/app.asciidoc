@@ -225,7 +225,7 @@ NOTE: This section is about the dependency tracking between files
 inside your project, not application dependencies.
 
 Erlang.mk keeps track of the dependencies between the different
-files in your project. This information is kept in the '$(PROJECT).d'
+files in your project. This information is kept in the `$(PROJECT).d`
 file in your directory. It is generated if missing, and will be
 generated again after every file change, by default.
 
@@ -234,6 +234,29 @@ rebuild Erlang files when header files, behaviors or parse
 transforms have changed. Erlang.mk also automatically keeps
 track of which files should be compiled first, for example
 when you have behaviors used by other modules in your project.
+
+=== Generated source files ===
+
+Generated source files are supported: they should be listed as
+dependencies to `$(PROJECT).d`:
+
+[source,make]
+----
+PROJECT = example
+
+.DEFAULT_GOAL = all
+
+$(PROJECT).d:: src/generated_mod.erl
+
+include erlang.mk
+
+src/generated_mod.erl::
+	$(gen_verbose) ./gen-mod.sh $@
+----
+
+Note how `.DEFAULT_GOAL` is set to `all` near the beginning. Without
+this, `$(PROJECT).d` would become the default target, changing the
+expected behavior of this `Makefile`.
 
 === Cleaning
 
