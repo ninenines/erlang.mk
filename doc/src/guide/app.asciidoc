@@ -225,7 +225,7 @@ NOTE: This section is about the dependency tracking between files
 inside your project, not application dependencies.
 
 Erlang.mk keeps track of the dependencies between the different
-files in your project. This information is kept in the '$(PROJECT).d'
+files in your project. This information is kept in the `$(PROJECT).d`
 file in your directory. It is generated if missing, and will be
 generated again after every file change, by default.
 
