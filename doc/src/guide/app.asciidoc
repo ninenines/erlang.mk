@@ -235,6 +235,29 @@ transforms have changed. Erlang.mk also automatically keeps
 track of which files should be compiled first, for example
 when you have behaviors used by other modules in your project.
 
+=== Generated source files ===
+
+Generated source files are supported: they should be listed as
+dependencies to `$(PROJECT).d`:
+
+[source,make]
+----
+PROJECT = example
+
+.DEFAULT_GOAL = all
+
+$(PROJECT).d:: src/generated_mod.erl
+
+include erlang.mk
+
+src/generated_mod.erl::
+	$(gen_verbose) ./gen-mod.sh $@
+----
+
+Note how `.DEFAULT_GOAL` is set to `all` near the beginning. Without
+this, `$(PROJECT).d` would become the default target, changing the
+expected behavior of this `Makefile`.
+
 === Cleaning
 
 Building typically involves creating a lot of new files. Some
