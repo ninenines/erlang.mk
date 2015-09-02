@@ -203,9 +203,6 @@ endef
 
 ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES)
 	$(if $(strip $?),$(call compile_erl,$?))
-
-$(sort $(ERL_FILES) $(CORE_FILES))::
-	@touch $@
 endif
 
 clean:: clean-app
