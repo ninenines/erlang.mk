@@ -51,17 +51,91 @@ endif
 
 .NOTPARALLEL:
 
-all: clean bootstrap app ct eunit tests-cover docs pkgs
+all: clean core bootstrap app ct eunit tests-cover docs pkgs
 	$i '+---------------------+'
 	$i '|  All tests passed.  |'
 	$i '+---------------------+'
 
-clean: clean-bootstrap
+clean: clean-core clean-bootstrap
 	$t rm -rf app1 pkgs.log $(ERLANG_MK_TMP)
 
 build:
 	$i "Generate a bleeding edge Erlang.mk"
 	$t cd .. && $(MAKE) $v
+
+# Core.
+
+.PHONY: core clean-core
+
+core: core-upgrade
+
+clean-core: clean-core-upgrade
+
+# Core: Erlang.mk upgrade.
+
+CORE_UPGRADE_CASES = no-config custom-config renamed-config
+CORE_UPGRADE_TARGETS = $(addprefix core-upgrade-,$(CORE_UPGRADE_CASES))
+CORE_UPGRADE_CLEAN_TARGETS = $(addprefix clean-,$(CORE_UPGRADE_TARGETS))
+
+.PHONY: core-upgrade $(CORE_UPGRADE_TARGETS) $(CORE_UPGRADE_CLEAN_TARGETS)
+
+core-upgrade: $(CORE_UPGRADE_TARGETS)
+
+core-upgrade-no-config: build clean-core-upgrade-no-config
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Append a rule to the Erlang.mk file for testing purposes"
+	$t echo "erlang_mk_upgrade_test_rule: ; @echo FAIL" >> $(APP)/erlang.mk
+
+	$i "Upgrade Erlang.mk"
+	$t $(MAKE) -C $(APP) erlang-mk $v
+
+	$i "Check that the rule is gone"
+	$t if $(MAKE) -C $(APP) erlang_mk_upgrade_test_rule $v; then false; fi
+
+core-upgrade-custom-config: build clean-core-upgrade-custom-config
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a custom build.config file without plugins"
+	$t echo "core/*" > $(APP)/build.config
+
+	$i "Upgrade Erlang.mk"
+	$t $(MAKE) -C $(APP) erlang-mk $v
+
+	$i "Check that the bootstrap plugin is gone"
+	$t if $(MAKE) -C $(APP) list-templates $v; then false; fi
+
+core-upgrade-renamed-config: build clean-core-upgrade-renamed-config
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a custom build.config file without plugins; name it my.build.config"
+	$t echo "core/*" > $(APP)/my.build.config
+
+	$i "Set ERLANG_MK_BUILD_CONFIG=my.build.config in the Makefile"
+	$t echo "ERLANG_MK_BUILD_CONFIG = my.build.config" >> $(APP)/Makefile
+
+	$i "Upgrade Erlang.mk"
+	$t $(MAKE) -C $(APP) erlang-mk $v
+
+	$i "Check that the bootstrap plugin is gone"
+	$t if $(MAKE) -C $(APP) list-templates $v; then false; fi
+
+clean-core-upgrade: $(CORE_UPGRADE_CLEAN_TARGETS)
+
+$(CORE_UPGRADE_CLEAN_TARGETS):
+	$t rm -rf $(APP_TO_CLEAN)/
 
 # Bootstrap plugin.
 
