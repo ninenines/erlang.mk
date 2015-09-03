@@ -91,6 +91,9 @@ core-upgrade-no-config: build clean-core-upgrade-no-config
 	$i "Append a rule to the Erlang.mk file for testing purposes"
 	$t echo "erlang_mk_upgrade_test_rule: ; @echo FAIL" >> $(APP)/erlang.mk
 
+	$i "Check that the test rule works as intended"
+	$t test "FAIL" = "`$(MAKE) -C $(APP) --no-print-directory erlang_mk_upgrade_test_rule V=0`"
+
 	$i "Upgrade Erlang.mk"
 	$t $(MAKE) -C $(APP) erlang-mk $v
 
