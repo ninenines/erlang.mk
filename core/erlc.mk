@@ -179,7 +179,10 @@ define makedep.erl
 					({attribute, _, file, {Dep, _}}, Acc) -> AddHd(Dep, Acc);
 					(_, Acc) -> Acc
 				end, [], Forms)),
-				[F, "::", [[" ", D] || D <- Deps], "\n", CompileFirst(Deps)];
+				case Deps of
+					[] -> "";
+					_ -> [F, "::", [[" ", D] || D <- Deps], "\n\t@touch \$$@\n", CompileFirst(Deps), "\n"]
+				end;
 			{error, enoent} ->
 				[]
 		end
