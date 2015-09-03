@@ -73,7 +73,7 @@ clean-core: clean-core-upgrade
 
 # Core: Erlang.mk upgrade.
 
-CORE_UPGRADE_CASES = no-config custom-config renamed-config
+CORE_UPGRADE_CASES = no-config custom-config renamed-config custom-build-dir
 CORE_UPGRADE_TARGETS = $(addprefix core-upgrade-,$(CORE_UPGRADE_CASES))
 CORE_UPGRADE_CLEAN_TARGETS = $(addprefix clean-,$(CORE_UPGRADE_TARGETS))
 
@@ -134,6 +134,32 @@ core-upgrade-renamed-config: build clean-core-upgrade-renamed-config
 
 	$i "Check that the bootstrap plugin is gone"
 	$t if $(MAKE) -C $(APP) list-templates $v; then false; fi
+
+core-upgrade-custom-build-dir: build clean-core-upgrade-custom-build-dir
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Append a rule to the Erlang.mk file for testing purposes"
+	$t echo "erlang_mk_upgrade_test_rule: ; @echo FAIL" >> $(APP)/erlang.mk
+
+	$i "Check that the test rule works as intended"
+	$t test "FAIL" = "`$(MAKE) -C $(APP) --no-print-directory erlang_mk_upgrade_test_rule V=0`"
+
+	$i "Create the custom build directory"
+	$t mkdir $(APP)/custom/
+	$t test -d $(APP)/custom/
+
+	$i "Upgrade Erlang.mk with a custom build directory"
+	$t ERLANG_MK_BUILD_DIR=custom $(MAKE) -C $(APP) erlang-mk $v
+
+	$i "Check that the rule is gone"
+	$t if $(MAKE) -C $(APP) erlang_mk_upgrade_test_rule $v; then false; fi
+
+	$i "Check that the custom build directory is gone"
+	$t test ! -d $(APP)/custom/
 
 clean-core-upgrade: $(CORE_UPGRADE_CLEAN_TARGETS)
 
