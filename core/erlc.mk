@@ -215,7 +215,7 @@ clean:: clean-app
 
 clean-app:
 	$(gen_verbose) rm -rf $(PROJECT).d ebin/ priv/mibs/ $(XRL_ERL_FILES) $(YRL_ERL_FILES) \
-		$(addprefix include/,$(patsubst %.mib,.hrl,$(notdir $(MIB_FILES)))) \
-		$(addprefix include/,$(patsubst %.asn1,.hrl,$(notdir $(ASN1_FILES)))) \
-		$(addprefix include/,$(patsubst %.asn1,.asn1db,$(notdir $(ASN1_FILES)))) \
-		$(addprefix src/,$(patsubst %.erl,.asn1db,$(notdir $(ASN1_FILES))))
+		$(addprefix include/,$(patsubst %.mib,%.hrl,$(notdir $(MIB_FILES)))) \
+		$(addprefix include/,$(patsubst %.asn1,%.hrl,$(notdir $(ASN1_FILES)))) \
+		$(addprefix include/,$(patsubst %.asn1,%.asn1db,$(notdir $(ASN1_FILES)))) \
+		$(addprefix src/,$(patsubst %.asn1,%.erl,$(notdir $(ASN1_FILES))))
