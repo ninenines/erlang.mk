@@ -73,7 +73,7 @@ build:
 
 core: core-app core-upgrade
 
-clean-core: clean-core-upgrade
+clean-core: clean-core-app clean-core-upgrade
 
 # Core: Building applications.
 
