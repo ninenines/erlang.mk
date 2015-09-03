@@ -76,21 +76,6 @@ endef
 endif
 
 app-build: ebin/$(PROJECT).app
-	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
-	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(shell find ebin -type f -name *.beam))))))
-ifeq ($(wildcard src/$(PROJECT).app.src),)
-	$(app_verbose) echo $(subst $(newline),,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))) \
-		> ebin/$(PROJECT).app
-else
-	$(verbose) if [ -z "$$(grep -E '^[^%]*{\s*modules\s*,' src/$(PROJECT).app.src)" ]; then \
-		echo "Empty modules entry not found in $(PROJECT).app.src. Please consult the erlang.mk README for instructions." >&2; \
-		exit 1; \
-	fi
-	$(appsrc_verbose) cat src/$(PROJECT).app.src \
-		| sed "s/{[[:space:]]*modules[[:space:]]*,[[:space:]]*\[\]}/{modules, \[$(call comma_list,$(MODULES))\]}/" \
-		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(GITDESCRIBE)\"}/" \
-		> ebin/$(PROJECT).app
-endif
 
 # Source files.
 
@@ -179,7 +164,7 @@ define makedep.erl
 					({attribute, _, file, {Dep, _}}, Acc) -> AddHd(Dep, Acc);
 					(_, Acc) -> Acc
 				end, [], Forms)),
-				[F, "::", [[" ", D] || D <- Deps], "\n", CompileFirst(Deps)];
+				[F, ":", [[" ", D] || D <- Deps], "; touch \$$@\n", CompileFirst(Deps)];
 			{error, enoent} ->
 				[]
 		end
@@ -191,9 +176,11 @@ endef
 $(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl)
 	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))
 
--include $(PROJECT).d
+include $(PROJECT).d
 
-ebin/$(PROJECT).app:: $(PROJECT).d
+ebin/$(PROJECT).app:: ebin/
+
+ebin/:
 	$(verbose) mkdir -p ebin/
 
 define compile_erl
@@ -203,6 +190,22 @@ endef
 
 ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES)
 	$(if $(strip $?),$(call compile_erl,$?))
+	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
+	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(shell find ebin -type f -name *.beam))))))
+ifeq ($(wildcard src/$(PROJECT).app.src),)
+	$(app_verbose) echo $(subst $(newline),,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))) \
+		> ebin/$(PROJECT).app
+else
+	$(verbose) if [ -z "$$(grep -E '^[^%]*{\s*modules\s*,' src/$(PROJECT).app.src)" ]; then \
+		echo "Empty modules entry not found in $(PROJECT).app.src. Please consult the erlang.mk README for instructions." >&2; \
+		exit 1; \
+	fi
+	$(appsrc_verbose) cat src/$(PROJECT).app.src \
+		| sed "s/{[[:space:]]*modules[[:space:]]*,[[:space:]]*\[\]}/{modules, \[$(call comma_list,$(MODULES))\]}/" \
+		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(GITDESCRIBE)\"}/" \
+		> ebin/$(PROJECT).app
+endif
+
 endif
 
 clean:: clean-app
