@@ -43,10 +43,10 @@ mib_verbose = $(mib_verbose_$(V))
 # Targets.
 
 ifeq ($(wildcard ebin/test),)
-app::
+app:: $(PROJECT).d
 	$(verbose) $(MAKE) --no-print-directory app-build
 else
-app:: clean
+app:: clean $(PROJECT).d
 	$(verbose) $(MAKE) --no-print-directory app-build
 endif
 
@@ -75,7 +75,7 @@ define app_file
 endef
 endif
 
-app-build: ebin/$(PROJECT).app
+app-build: ebin/$(PROJECT).app ; @echo -n
 
 # Source files.
 
@@ -164,7 +164,10 @@ define makedep.erl
 					({attribute, _, file, {Dep, _}}, Acc) -> AddHd(Dep, Acc);
 					(_, Acc) -> Acc
 				end, [], Forms)),
-				[F, ":", [[" ", D] || D <- Deps], "; touch \$$@\n", CompileFirst(Deps)];
+				case Deps of
+					[] -> "";
+					_ -> [F, "::", [[" ", D] || D <- Deps], "; @touch \$$@\n", CompileFirst(Deps)]
+				end;
 			{error, enoent} ->
 				[]
 		end
@@ -176,7 +179,7 @@ endef
 $(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl)
 	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))
 
-include $(PROJECT).d
+-include $(PROJECT).d
 
 ebin/$(PROJECT).app:: ebin/
 
