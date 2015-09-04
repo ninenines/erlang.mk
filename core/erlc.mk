@@ -106,10 +106,10 @@ endif
 ifneq ($(wildcard mibs/),)
 MIB_FILES = $(sort $(call core_find,mibs/,*.mib))
 
-$(PROJECT).d:: $(MIB_FILES)
+$(PROJECT).d:: $(COMPILE_MIB_FIRST_PATHS) $(MIB_FILES)
 	$(verbose) mkdir -p include/ priv/mibs/
-	$(mib_verbose) erlc -v $(ERLC_MIB_OPTS) -o priv/mibs/ -I priv/mibs/ $(COMPILE_MIB_FIRST_PATHS) $(MIB_FILES)
-	$(mib_verbose) erlc -o include/ -- priv/mibs/*.bin
+	$(mib_verbose) erlc -v $(ERLC_MIB_OPTS) -o priv/mibs/ -I priv/mibs/ $?
+	$(mib_verbose) erlc -o include/ -- $(addprefix priv/mibs/,$(patsubst %.mib,%.bin,$(notdir $?)))
 endif
 
 # Leex and Yecc files.
