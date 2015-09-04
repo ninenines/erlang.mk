@@ -571,8 +571,12 @@ endef
 
 $(foreach dep,$(BUILD_DEPS) $(DEPS),$(eval $(call dep_target,$(dep))))
 
+ifneq ($(SKIP_DEPS),)
+distclean-deps: ; @echo -n
+else
 distclean-deps:
 	$(gen_verbose) rm -rf $(DEPS_DIR)
+endif
 
 # External plugins.
 
