@@ -470,6 +470,103 @@ core-app-mib: build clean-core-app-mib
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
+core-app-xrl: build clean-core-app-xrl
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .xrl files"
+	$t curl -s -o $(APP)/src/erlang_scan.xrl https://raw.githubusercontent.com/rvirding/leex/master/examples/erlang_scan.xrl
+	$t curl -s -o $(APP)/src/lfe_scan.xrl https://raw.githubusercontent.com/rvirding/leex/master/examples/lfe_scan.xrl
+
+	$i "Generate unrelated .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Disable warnings; our test .xrl files aren't perfect"
+	$t echo "ERLC_OPTS=+debug_info" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/erlang_scan.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/ebin/lfe_scan.beam
+	$t test -f $(APP)/src/erlang_scan.erl
+	$t test -f $(APP)/src/lfe_scan.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, erlang_scan, girl, lfe_scan]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch one .xrl file; check that only required files are rebuilt"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/erlang_scan.beam \
+		$(APP)/src/erlang_scan.erl | sort > $(APP)/EXPECT
+	$t touch $(APP)/src/erlang_scan.xrl
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/src/erlang_scan.xrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, erlang_scan, girl, lfe_scan]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/src/$(APP).app.src
+	$t test -f $(APP)/src/boy.erl
+	$t test -f $(APP)/src/erlang_scan.xrl
+	$t test -f $(APP)/src/girl.erl
+	$t test -f $(APP)/src/lfe_scan.xrl
+
+	$i "Check that all build artifacts are removed, including intermediates"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/
+	$t test ! -e $(APP)/src/erlang_scan.erl
+	$t test ! -e $(APP)/src/lfe_scan.erl
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/erlang_scan.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/ebin/lfe_scan.beam
+	$t test -f $(APP)/src/erlang_scan.erl
+	$t test -f $(APP)/src/lfe_scan.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, erlang_scan, girl, lfe_scan]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
 clean-core-app: $(CORE_APP_CLEAN_TARGETS)
 
 $(CORE_APP_CLEAN_TARGETS):
