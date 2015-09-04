@@ -447,8 +447,7 @@ core-app-mib: build clean-core-app-mib
 	$t test ! -e $(APP)/ebin/
 	$t test ! -e $(APP)/include/EX1-MIB.hrl
 	$t test ! -e $(APP)/include/OTP-REG.hrl
-	$t test ! -e $(APP)/priv/mibs/EX1-MIB.bin
-	$t test ! -e $(APP)/priv/mibs/OTP-REG.bin
+	$t test ! -e $(APP)/priv/mibs/
 
 	$i "Build the application again"
 	$t $(MAKE) -C $(APP) $v
