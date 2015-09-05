@@ -77,7 +77,7 @@ clean-core: clean-core-app clean-core-upgrade
 
 # Core: Building applications.
 
-CORE_APP_CASES = asn1 hrl hrl-recursive mib xrl yrl
+CORE_APP_CASES = asn1 hrl hrl-recursive mib xrl xrl-include yrl
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
@@ -477,7 +477,7 @@ core-app-xrl: build clean-core-app-xrl
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Generate .xrl files"
+	$i "Download .xrl files from Robert"
 	$t curl -s -o $(APP)/src/erlang_scan.xrl https://raw.githubusercontent.com/rvirding/leex/master/examples/erlang_scan.xrl
 	$t curl -s -o $(APP)/src/lfe_scan.xrl https://raw.githubusercontent.com/rvirding/leex/master/examples/lfe_scan.xrl
 
@@ -563,6 +563,142 @@ core-app-xrl: build clean-core-app-xrl
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:start($(APP)), \
 		{ok, Mods = [boy, erlang_scan, girl, lfe_scan]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-xrl-include: build clean-core-app-xrl-include
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Download a .xrl file with numerous includes from Gordon"
+	$t curl -s -o $(APP)/src/xfl_lexer.xrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/formula_engine-1.0/priv/xfl_lexer.xrl
+	$t curl -s -o $(APP)/src/errvals.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/errvals.hrl
+	$t curl -s -o $(APP)/src/muin_proc_dict.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/muin_proc_dict.hrl
+	$t curl -s -o $(APP)/src/muin_records.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/muin_records.hrl
+	$t curl -s -o $(APP)/src/typechecks.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/typechecks.hrl
+
+	$i "Generate unrelated .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Disable warnings; our test .xrl files aren't perfect"
+	$t echo "ERLC_OPTS=+debug_info" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/ebin/xfl_lexer.beam
+	$t test -f $(APP)/src/xfl_lexer.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl, xfl_lexer]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch the .xrl file; check that only required files are rebuilt"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/xfl_lexer.beam \
+		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
+	$t touch $(APP)/src/xfl_lexer.xrl
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/src/xfl_lexer.xrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl, xfl_lexer]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch a .hrl file included directly; check that only required files are rebuilt"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/xfl_lexer.beam \
+		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
+	$t touch $(APP)/src/typechecks.hrl
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/src/typechecks.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl, xfl_lexer]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch a .hrl file included indirectly; check that only required files are rebuilt"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/xfl_lexer.beam \
+		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
+	$t touch $(APP)/src/errvals.hrl
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/src/errvals.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl, xfl_lexer]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/src/$(APP).app.src
+	$t test -f $(APP)/src/boy.erl
+	$t test -f $(APP)/src/girl.erl
+	$t test -f $(APP)/src/errvals.hrl
+	$t test -f $(APP)/src/muin_proc_dict.hrl
+	$t test -f $(APP)/src/muin_records.hrl
+	$t test -f $(APP)/src/typechecks.hrl
+	$t test -f $(APP)/src/xfl_lexer.xrl
+
+	$i "Check that all build artifacts are removed, including intermediates"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/
+	$t test ! -e $(APP)/src/xfl_lexer.erl
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/ebin/xfl_lexer.beam
+	$t test -f $(APP)/src/xfl_lexer.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl, xfl_lexer]} \
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
