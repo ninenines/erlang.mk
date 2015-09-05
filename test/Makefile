@@ -703,6 +703,100 @@ core-app-xrl-include: build clean-core-app-xrl-include
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
+core-app-yrl: build clean-core-app-yrl
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Download .yrl files from Erlang/OTP"
+	$t curl -s -o $(APP)/src/xmerl_xpath_parse.yrl $(OTP_MASTER)/lib/xmerl/src/xmerl_xpath_parse.yrl
+	$t curl -s -o $(APP)/src/xref_parser.yrl $(OTP_MASTER)/lib/tools/src/xref_parser.yrl
+
+	$i "Generate unrelated .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/ebin/xmerl_xpath_parse.beam
+	$t test -f $(APP)/ebin/xref_parser.beam
+	$t test -f $(APP)/src/xmerl_xpath_parse.erl
+	$t test -f $(APP)/src/xref_parser.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl, xmerl_xpath_parse, xref_parser]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch one .yrl file; check that only required files are rebuilt"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/xref_parser.beam \
+		$(APP)/src/xref_parser.erl | sort > $(APP)/EXPECT
+	$t touch $(APP)/src/xref_parser.yrl
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/src/xref_parser.yrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl, xmerl_xpath_parse, xref_parser]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/src/$(APP).app.src
+	$t test -f $(APP)/src/boy.erl
+	$t test -f $(APP)/src/girl.erl
+	$t test -f $(APP)/src/xmerl_xpath_parse.yrl
+	$t test -f $(APP)/src/xref_parser.yrl
+
+	$i "Check that all build artifacts are removed, including intermediates"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/
+	$t test ! -e $(APP)/src/xmerl_xpath_parse.erl
+	$t test ! -e $(APP)/src/xref_parser.erl
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/ebin/xmerl_xpath_parse.beam
+	$t test -f $(APP)/ebin/xref_parser.beam
+	$t test -f $(APP)/src/xmerl_xpath_parse.erl
+	$t test -f $(APP)/src/xref_parser.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl, xmerl_xpath_parse, xref_parser]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
 clean-core-app: $(CORE_APP_CLEAN_TARGETS)
 
 $(CORE_APP_CLEAN_TARGETS):
