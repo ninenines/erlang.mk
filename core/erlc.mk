@@ -155,7 +155,7 @@ define makedep.erl
 		end
 	end,
 	Depend = [begin
-		case epp:parse_file(F, [{includes, ["include/"]}]) of
+		case epp:parse_file(F, ["include/"], []) of
 			{ok, Forms} ->
 				Deps = lists:usort(lists:foldl(fun
 					({attribute, _, behavior, Dep}, Acc) -> Add(Dep, Acc);
