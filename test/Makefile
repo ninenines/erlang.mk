@@ -313,7 +313,7 @@ core-app-generate-erl-include: build clean-core-app-generate-erl-include
 	$i "Append rules to the Makefile to generate a .erl module"
 	$t echo "\$$(PROJECT).d:: src/generated.erl" >> $(APP)/Makefile
 	$t echo "src/generated.erl:: script.sh;" \
-		"printf \"%s\n\"" \
+		"printf \"%s\\n\"" \
 			"\"-module(generated).\"" \
 			"\"-include(\\\"included.hrl\\\").\" > \$$@" >> $(APP)/Makefile
 
