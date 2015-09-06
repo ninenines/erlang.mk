@@ -77,7 +77,7 @@ clean-core: clean-core-app clean-core-upgrade
 
 # Core: Building applications.
 
-CORE_APP_CASES = asn1 hrl hrl-recursive mib xrl xrl-include yrl yrl-include
+CORE_APP_CASES = asn1 generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
@@ -194,6 +194,276 @@ core-app-asn1: build clean-core-app-asn1
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:start($(APP)), \
 		{ok, Mods = ['CAP', 'Def', use_cap, use_def]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-generate-erl: build clean-core-app-generate-erl
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a fake script file to be used as dependency"
+	$t touch $(APP)/script.sh
+
+	$i "Append rules to the Makefile to generate a .erl module"
+	$t echo "\$$(PROJECT).d:: src/generated.erl" >> $(APP)/Makefile
+	$t echo "src/generated.erl:: script.sh; echo \"-module(generated).\" > \$$@" >> $(APP)/Makefile
+
+	$i "Generate unrelated .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/generated.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/src/generated.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, generated, girl]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch the script file; check that only required files are rebuilt"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/generated.beam \
+		$(APP)/src/generated.erl | sort > $(APP)/EXPECT
+	$t touch $(APP)/script.sh
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/script.sh | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, generated, girl]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/script.sh
+	$t test -f $(APP)/src/$(APP).app.src
+	$t test -f $(APP)/src/boy.erl
+	$t test -f $(APP)/src/girl.erl
+
+	$i "Check that the generated .erl file still exists"
+	$t test -f $(APP)/src/generated.erl
+
+	$i "Check that all build artifacts are removed"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/
+
+	$i "Add a rule to remove the generated .erl file on clean"
+	$t echo "clean:: ; rm src/generated.erl" >> $(APP)/Makefile
+
+	$i "Clean the application again"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the generated .erl file was removed"
+	$t test ! -e $(APP)/src/generated.erl
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/generated.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/src/generated.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, generated, girl]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-generate-erl-include: build clean-core-app-generate-erl-include
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a fake script file to be used as dependency"
+	$t touch $(APP)/script.sh
+
+	$i "Append rules to the Makefile to generate a .erl module"
+	$t echo "\$$(PROJECT).d:: src/generated.erl" >> $(APP)/Makefile
+	$t echo "src/generated.erl:: script.sh;" \
+		"printf \"%s\n\"" \
+			"\"-module(generated).\"" \
+			"\"-include(\\\"included.hrl\\\").\" > \$$@" >> $(APP)/Makefile
+
+	$i "Generate the .hrl file"
+	$t mkdir $(APP)/include/
+	$t touch $(APP)/include/included.hrl
+
+	$i "Generate unrelated .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/generated.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/src/generated.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, generated, girl]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch the .hrl file; check that only required files are rebuilt"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/generated.beam \
+		$(APP)/src/generated.erl | sort > $(APP)/EXPECT
+	$t touch $(APP)/include/included.hrl
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/include/included.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, generated, girl]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-generate-erl-prepend: build clean-core-app-generate-erl-prepend
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a fake script file to be used as dependency"
+	$t touch $(APP)/script.sh
+
+	$i "Generate a Makefile and prepend rules that generate a .erl module"
+	$t echo "PROJECT = $(APP)" > $(APP)/Makefile
+	$t echo ".DEFAULT_GOAL = all" >> $(APP)/Makefile
+	$t echo "\$$(PROJECT).d:: src/generated.erl" >> $(APP)/Makefile
+	$t echo "src/generated.erl:: script.sh; echo \"-module(generated).\" > \$$@" >> $(APP)/Makefile
+	$t echo "include erlang.mk" >> $(APP)/Makefile
+
+	$i "Generate unrelated .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/generated.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/src/generated.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, generated, girl]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch the script file; check that only required files are rebuilt"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/generated.beam \
+		$(APP)/src/generated.erl | sort > $(APP)/EXPECT
+	$t touch $(APP)/script.sh
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/script.sh | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, generated, girl]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/script.sh
+	$t test -f $(APP)/src/$(APP).app.src
+	$t test -f $(APP)/src/boy.erl
+	$t test -f $(APP)/src/girl.erl
+
+	$i "Check that the generated .erl file still exists"
+	$t test -f $(APP)/src/generated.erl
+
+	$i "Check that all build artifacts are removed"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/
+
+	$i "Add a rule to remove the generated .erl file on clean"
+	$t echo "clean:: ; rm src/generated.erl" >> $(APP)/Makefile
+
+	$i "Clean the application again"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the generated .erl file was removed"
+	$t test ! -e $(APP)/src/generated.erl
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/generated.beam
+	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/src/generated.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, generated, girl]} \
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"

@@ -235,10 +235,44 @@ transforms have changed. Erlang.mk also automatically keeps
 track of which files should be compiled first, for example
 when you have behaviors used by other modules in your project.
 
-=== Generated source files ===
+Erlang.mk can also keep track of the source files generated
+by other means, for example if you generate code from a data
+file in your repository.
 
-Generated source files are supported: they should be listed as
-dependencies to `$(PROJECT).d`:
+=== Generating Erlang source
+
+Erlang.mk provides hooks at different stages of the build process.
+When your goal is to generate Erlang source files, you can
+add your own rules before or after the dependency tracking
+file is generated. To do this, you would add your hook before
+or after including the 'erlang.mk' file.
+
+The easiest way is after:
+
+[source,make]
+----
+PROJECT = example
+
+include erlang.mk
+
+$(PROJECT).d:: src/generated_mod.erl
+
+src/generated_mod.erl:: gen-mod.sh
+	$(gen_verbose) ./gen-mod.sh $@
+----
+
+In this case we use `$(gen_verbose)` to hide the details of
+the build by default. Erlang.mk will simply say what file
+is it currently generating.
+
+When using an external script to generate the Erlang source
+file, it is recommended to depend on that script, so that
+the source file gets generated again when the script gets
+modified.
+
+If for whatever reason you prefer to hook before including
+Erlang.mk, don't forget to set the `.DEFAULT_GOAL` variable,
+otherwise nothing will get built:
 
 [source,make]
 ----
@@ -250,13 +284,9 @@ $(PROJECT).d:: src/generated_mod.erl
 
 include erlang.mk
 
-src/generated_mod.erl::
+src/generated_mod.erl:: gen-mod.sh
 	$(gen_verbose) ./gen-mod.sh $@
 ----
-
-Note how `.DEFAULT_GOAL` is set to `all` near the beginning. Without
-this, `$(PROJECT).d` would become the default target, changing the
-expected behavior of this `Makefile`.
 
 === Cleaning
 
