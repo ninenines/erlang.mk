@@ -55,7 +55,7 @@ endif
 
 .NOTPARALLEL:
 
-all: clean core bootstrap app ct eunit tests-cover docs pkgs
+all: clean core bootstrap ct eunit tests-cover docs pkgs
 	$i '+---------------------+'
 	$i '|  All tests passed.  |'
 	$i '+---------------------+'
@@ -77,7 +77,7 @@ clean-core: clean-core-app clean-core-upgrade
 
 # Core: Building applications.
 
-CORE_APP_CASES = asn1 generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-makedep xrl xrl-include yrl yrl-include
+CORE_APP_CASES = asn1 error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-makedep xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
@@ -197,6 +197,23 @@ core-app-asn1: build clean-core-app-asn1
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+core-app-error: build clean-core-app-error
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate a bad .erl files"
+	$t touch $(APP)/src/breaking.erl
+
+	$i "Generate unrelated .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Check that trying to build returns non-zero"
+	$t if $(MAKE) -C $(APP) $v; then false; fi
 
 core-app-generate-erl: build clean-core-app-generate-erl
 
@@ -1520,24 +1537,6 @@ $(BOOTSTRAP_CLEAN_TARGETS):
 
 ########################################
 # Legacy tests.
-
-app: app1
-	$i "app: Testing the 'app' target."
-	$t $(MAKE) -C app1 app $v
-	$i "Checking the modules line in the generated .app file."
-	$t [ `grep -E "{modules, *\['m'\]}" app1/ebin/app1.app | wc -l` -eq 1 ]
-	$t [ -e app1/ebin/m.beam ]
-	$i "Checking that '$(MAKE) clean-app' deletes ebin."
-	$t $(MAKE) -C app1 clean-app $v
-	$t [ ! -e app1/ebin ]
-	$i "Checking that '$(MAKE) app' returns non-zero on compile errors."
-	$t printf "%s\n" \
-		"-module(syntax_error)." \
-		"foo lorem_ipsum dolor sit amet." \
-	 > app1/src/syntax_error.erl
-	$t if $(MAKE) -C app1 app $v ; then false ; fi
-	$t rm app1/src/syntax_error.erl
-	$i "Test 'app' passed."
 
 ct: app1
 	$i "ct: Testing ct and related targets."
