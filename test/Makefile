@@ -77,7 +77,7 @@ clean-core: clean-core-app clean-core-upgrade
 
 # Core: Building applications.
 
-CORE_APP_CASES = asn1 generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib xrl xrl-include yrl yrl-include
+CORE_APP_CASES = asn1 generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-makedep xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
@@ -733,6 +733,113 @@ core-app-mib: build clean-core-app-mib
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:start($(APP)), \
 		{ok, Mods = [use_v1, use_v2]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-no-makedep: build clean-core-app-no-makedep
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Set NO_MAKEDEP ?= 1 in the Makefile"
+	$t sed -i '2iNO_MAKEDEP ?= 1' $(APP)/Makefile
+
+	$i "Generate .hrl files"
+	$t mkdir $(APP)/include/
+	$t touch $(APP)/include/blue.hrl $(APP)/include/red.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include(\"blue.hrl\")." > $(APP)/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include(\"red.hrl\")." > $(APP)/src/use_red.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/use_blue.beam
+	$t test -f $(APP)/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch one .hrl file; check that only required files are rebuilt"
+# The use_red.erl gets touched because of its dependency to red.hrl.
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam \
+		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+	$t touch $(APP)/include/red.hrl
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/include/red.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch one .hrl file; disable NO_MAKEDEP and check that only required files are rebuilt"
+# The use_red.erl gets touched because of its dependency to red.hrl.
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam \
+		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+	$t touch $(APP)/include/red.hrl
+	$t NO_MAKEDEP= $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/include/red.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/include/blue.hrl
+	$t test -f $(APP)/include/red.hrl
+	$t test -f $(APP)/src/$(APP).app.src
+	$t test -f $(APP)/src/use_blue.erl
+	$t test -f $(APP)/src/use_red.erl
+
+	$i "Check that all build artifacts are removed"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/use_blue.beam
+	$t test -f $(APP)/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"

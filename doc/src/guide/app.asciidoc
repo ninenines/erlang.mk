@@ -235,6 +235,26 @@ transforms have changed. Erlang.mk also automatically keeps
 track of which files should be compiled first, for example
 when you have behaviors used by other modules in your project.
 
+If your project is stable, you may want to disable generating
+the dependency tracking file every time you compile. You can
+do this by adding the following line to your 'Makefile':
+
+[source,make]
+NO_MAKEDEP ?= 1
+
+As you can see, the snippet above uses `?=` instead of a
+simple equal sign. This is to allow you to temporarily override
+this value when you do make substantial changes to your project
+(including a new header file, new module with dependencies, etc.)
+and want to rebuild the dependency tracking file. You'll be
+able to use the following command:
+
+[source,bash]
+$ NO_MAKEDEP= make
+
+Otherwise, `make clean app` will of course force the
+recompilation of your project.
+
 Erlang.mk can also keep track of the source files generated
 by other means, for example if you generate code from a data
 file in your repository.

@@ -176,8 +176,10 @@ define makedep.erl
 	halt()
 endef
 
+ifeq ($(if $(NO_MAKEDEP),$(wildcard $(PROJECT).d),),)
 $(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl)
 	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))
+endif
 
 -include $(PROJECT).d
 
