@@ -1,0 +1,45 @@
+== Limitations
+
+No software is perfect.
+
+It's very important, when evaluating and when using a tool,
+to understand its limitations, so as to avoid making mistakes
+and wasting valuable time.
+
+This chapter lists all known limitations of Erlang.mk.
+
+=== Erlang must be available
+
+Currently Erlang.mk requires you to install Erlang beforehand.
+Installing Erlang is not always easy, particularly if you need
+a specific version of Erlang for a specific project.
+
+In addition, the Erlang being used must be in your `$PATH`
+before you use Erlang.mk.
+
+In the future we envision, Erlang.mk could manage the Erlang
+version you need to use a project. Erlang.mk already does this
+for running tests when using `make ci`, so doing this during
+development is just a step away.
+
+=== Spaces in path
+
+Erlang.mk will currently not work properly if the path to the
+project contains spaces. To check if that is the case, use the
+command `pwd`.
+
+This issue is due to how Makefiles work. There might be ways
+to solve it, we have not given up on it, but it's very low
+priority considering how simple the workaround is.
+
+=== Dependency tracking and modification times
+
+Erlang source files that depend on other files will have their
+modification time updated when they need to be recompiled due
+to a dependency having changed. This could cause some editors to
+think the file changed when it didn't.
+
+Erlang.mk must use this method in order to be able to compile
+files in one `erlc` invocation. The benefits greatly outweigh
+the issue in this case and so there are currently no plans to
+fix this behavior.
