@@ -770,7 +770,9 @@ core-app-no-makedep: build clean-core-app-no-makedep
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Set NO_MAKEDEP ?= 1 in the Makefile"
-	$t sed -i '2iNO_MAKEDEP ?= 1' $(APP)/Makefile
+	$t sed -i.bak '2i\
+NO_MAKEDEP ?= 1\
+' $(APP)/Makefile
 
 	$i "Generate .hrl files"
 	$t mkdir $(APP)/include/
