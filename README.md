@@ -1,23 +1,12 @@
 erlang.mk
 =========
 
-Common Makefile rules for building and testing Erlang applications.
+A build tool for Erlang that just works.
 
-Also features support for dependencies and a package index.
+[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
 
-[Check out our upcoming documentation!](doc/src/guide/book.asciidoc)
-
-Why erlang.mk?
---------------
-
-A number of reasons might push someone to use erlang.mk instead of
-an Erlang-based build tool, including but not limited to the following:
-
- *  You want a very fast compilation and test cycle
- *  You want the full power of Unix at your disposal when hooking into your build tool
- *  You want to be able to easily edit the damn build tool and fix it when it fails
- *  You want to use the deps mechanism with non-Erlang Makefile-based projects
- *  Your project will be part of a larger make or automake based environment
+The README only contains legacy documentation that was not moved to
+the guide yet. Check there if you don't find what you're looking for.
 
 Requirements
 ------------
@@ -25,52 +14,14 @@ Requirements
 `erlang.mk` requires GNU Make and expects to be ran in a standard
 unix environment with Erlang installed and in the `$PATH`.
 
-`erlang.mk` uses `wget` for downloading the package index file.
-
-`erlang.mk` will NOT work if the path contains spaces. This is a
-limitation of POSIX compatible make build tools.
-
-Usage
------
-
-Add the file `erlang.mk` to your project, then use the following base
-Makefile:
-
-``` Makefile
-PROJECT = my_project
-include erlang.mk
-```
-
-Alternatively you can use the following command to generate a skeleton
-of an OTP application:
-
-``` bash
-$ make -f erlang.mk bootstrap
-```
-
-To generate a skeleton of an OTP library:
-
-``` bash
-$ make -f erlang.mk bootstrap-lib
-```
-
-Finally if you are going to create a release of this project you may
-want to also use the `bootstrap-rel` target.
-
-You can combine targets to perform many operations. For example, the
-shell command `make clean app` will have the effect of recompiling
-the application fully, without touching the dependencies.
+Common workflow
+---------------
 
 A common workflow when editing a file would be to run `make` regularly
 to see if it compiles (or less often `make clean app` if you want to
 recompile everything), followed by `make dialyze` to see if there are
 any type errors and then `make tests` to run the test suites. The
 result of the test runs can be browsed from the `logs/index.html` file.
-
-Getting help
-------------
-
-You can use `make help` to get help about erlang.mk or its plugins.
 
 Packages
 --------
@@ -152,11 +103,11 @@ when used as dependency.
 The patching occurs only once, immediately after the package has
 been fetched.
 
-erlang.mk defines a number of packages to be patched. You can add
-more packages to the list by appending the `AUTOPATCH` variable.
+The autopatch feature is applied to all dependencies. To disable
+it for a dependency, use the `NO_AUTOPATCH` variable:
 
 ``` Makefile
-AUTOPATCH += gproc
+NO_AUTOPATCH += gproc
 ```
 
 Releases
@@ -226,6 +177,11 @@ You can enable verbose mode by calling Make with the variable
 $ V=1 make
 ```
 
+Parallel execution
+------------------
+
+*Parallel execution is currently disabled.*
+
 Parallel execution can be enabled through the use of the
 `-j` option. The following output showcases concurrent
 downloading of dependencies.
@@ -255,14 +211,11 @@ Core package functionality
 
 The following targets are specific to packages:
 
-`pkg-list` lists all packages in the index.
+`search` lists all packages in the index.
 
-`pkg-search q=STRING` searches the index for STRING.
+`search q=STRING` searches the index for STRING.
 
 Packages are downloaded into `DEPS_DIR` (`./deps/` by default).
-
-The package index file is downloaded from `PKG_FILE_URL`
-and saved in `PKG_FILE2`.
 
 Core compiler functionality
 ---------------------------
@@ -293,39 +246,6 @@ is required).
 If `{id, "git"},` is found in your project's `.app.src`, the
 extended output of `git describe ...` will replace it. This
 can be retrieved at runtime via `application:get_key/2`.
-
-Updating erlang.mk
-------------------
-
-You can update erlang.mk by running `make erlang-mk`. This automated
-update will always take the latest erlang.mk version, compile it and
-replace the erlang.mk of your project with the updated version.
-
-If your project includes a `build.config`, erlang.mk will use it
-when building the updated version.
-
-The `ERLANG_MK_BUILD_CONFIG` variable can be used to rename the
-`build.config` file.
-
-The `ERLANG_MK_BUILD_DIR` variable contains the path to the
-temporary directory used to build the updated erlang.mk.
-
-Bootstrap plugin
-----------------
-
-This plugin is available by default. It adds the following
-targets:
-
-`bootstrap` generates a skeleton of an OTP application.
-
-`bootstrap-lib` generates a skeleton of an OTP library.
-
-`bootstrap-rel` generates the files needed to build a release.
-
-`new` generate a skeleton module based on one of the available
-templates.
-
-`list-templates` lists the available templates.
 
 C/C++ compiler plugin
 ---------------------
@@ -436,7 +356,6 @@ By default it ignores names of subdirectories and compiles
 subdirectories names in the compiled module name add 
 `DTL_FULL_PATH=1` into your Makefile - `a/b/templatename.dtl`
 will be compiled into `a_b_templatename_dtl.beam`.
-
 
 Escript plugin
 --------------
