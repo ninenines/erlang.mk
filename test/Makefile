@@ -101,6 +101,10 @@ core-app-asn1: build clean-core-app-asn1
 	$t printf "%s\n" "-module(use_cap)." "-include(\"CAP.hrl\")." > $(APP)/src/use_cap.erl
 	$t printf "%s\n" "-module(use_def)." "-include(\"Def.hrl\")." > $(APP)/src/use_def.erl
 
+	$i "Generate an unrelated .hrl file"
+	$t mkdir $(APP)/include/
+	$t touch $(APP)/include/unrelated.hrl
+
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
@@ -158,7 +162,7 @@ core-app-asn1: build clean-core-app-asn1
 	$t test -f $(APP)/erlang.mk
 	$t test -f $(APP)/asn1/CAP.asn1
 	$t test -f $(APP)/asn1/Def.asn1
-	$t test -d $(APP)/include/
+	$t test -f $(APP)/include/unrelated.hrl
 	$t test -f $(APP)/src/$(APP).app.src
 	$t test -f $(APP)/src/use_cap.erl
 	$t test -f $(APP)/src/use_def.erl
@@ -670,6 +674,10 @@ core-app-mib: build clean-core-app-mib
 	$t printf "%s\n" "-module(use_v1)." "-include(\"EX1-MIB.hrl\")." > $(APP)/src/use_v1.erl
 	$t printf "%s\n" "-module(use_v2)." "-include(\"OTP-REG.hrl\")." > $(APP)/src/use_v2.erl
 
+	$i "Generate an unrelated .hrl file"
+	$t mkdir $(APP)/include/
+	$t touch $(APP)/include/unrelated.hrl
+
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
@@ -719,7 +727,7 @@ core-app-mib: build clean-core-app-mib
 	$i "Check that source files still exist"
 	$t test -f $(APP)/Makefile
 	$t test -f $(APP)/erlang.mk
-	$t test -d $(APP)/include/
+	$t test -f $(APP)/include/unrelated.hrl
 	$t test -f $(APP)/mibs/EX1-MIB.mib
 	$t test -f $(APP)/mibs/OTP-REG.mib
 	$t test -f $(APP)/src/$(APP).app.src
