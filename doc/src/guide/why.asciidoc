@@ -1,0 +1,80 @@
+== Why Erlang.mk
+
+Why would you choose Erlang.mk, if not for its
+link:overview.asciidoc[many features]? This chapter will
+attempt to answer that.
+
+=== Erlang.mk is fast
+
+Erlang.mk is as fast as it gets.
+
+Erlang.mk will group the compilation of files so as to avoid
+running the BEAM more than necessary. This saves many seconds
+compared to traditional Makefiles, even on small projects.
+
+Erlang.mk will not try to be too smart. It provides a simple
+solution that works for most people, and gives additional
+options for projects that run into edge cases, often in the
+form of extra variables or rules to be defined.
+
+=== Erlang.mk gives you the full power of Unix
+
+Erlang.mk is a Makefile.
+
+You could use Erlang.mk directly without configuring anything
+and it would just work. But you can also extend it greatly
+either through configuration or hooks, and you can of course
+add your own rules to the Makefile.
+
+In all cases: for configuration, hooks or custom rules, you
+have all the power of Unix at your disposal, and can call
+any utility _or even any language interpreter_ you want,
+every time you need to. Erlang.mk also allows you to write
+scripts in this small language called Erlang directly inside
+your Makefile if you ever need to...
+
+=== Erlang.mk is a text file
+
+Erlang.mk is a Makefile.
+
+Which means Erlang.mk is a simple text file. You can edit a
+text file. Nothing stops you. If you run into any bug, or
+behavior that does not suit you, you can just open the
+'erlang.mk' file in your favorite editor, fix and/or comment
+a few lines, save, and try again. It's as simple as it gets.
+
+Currently using a binary build tool? Good luck with that.
+
+=== Erlang.mk can manage Erlang itself
+
+Erlang.mk isn't written in Erlang.
+
+That's not a good thing, you say? Well, here's one thing
+that Erlang.mk and Makefiles can do for you that Erlang
+build tool can't easily: choose what version of Erlang is
+to be used for compiling the project.
+
+This really is a one-liner in Erlang.mk (a few more lines
+if you also let it download about build Erlang directly)
+and allows for even greater things, like testing your
+project across all supported Erlang versions in one small
+command: `make -k ci`.
+
+=== Erlang.mk can do more than Erlang
+
+Erlang.mk doesn't care what your dependencies are written in.
+
+Erlang.mk will happily compile any dependency, as long as
+they come with a Makefile. The dependency can be written
+in C, C++ or even Javascript... Who cares, really? If you
+need Erlang.mk to fetch it, then Erlang.mk will fetch it
+and compile it as needed.
+
+=== Erlang.mk integrates nicely in Make and Automake projects
+
+If you are planning to put your project in the middle of
+a Make or Automake-based build environment, then the most
+logical thing to do is to use a Makefile.
+
+Erlang.mk will happily sit in such an environment and behave
+as you expect it to.

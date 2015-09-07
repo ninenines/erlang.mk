@@ -19,3 +19,7 @@ include::app.asciidoc[Building]
 = Advanced
 
 include::external_plugins.asciidoc[External plugins]
+
+= About Erlang.mk
+
+include::why.asciidoc[Why erlang.mk?]
