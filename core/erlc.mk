@@ -40,6 +40,8 @@ asn1_verbose = $(asn1_verbose_$(V))
 mib_verbose_0 = @echo " MIB   " $(filter %.bin %.mib,$(?F));
 mib_verbose = $(mib_verbose_$(V))
 
+ifneq ($(wildcard src/),)
+
 # Targets.
 
 ifeq ($(wildcard ebin/test),)
@@ -79,7 +81,6 @@ app-build: ebin/$(PROJECT).app ; @echo -n
 
 # Source files.
 
-ifneq ($(wildcard src/),)
 ERL_FILES = $(sort $(call core_find,src/,*.erl))
 CORE_FILES = $(sort $(call core_find,src/,*.core))
 
@@ -211,8 +212,6 @@ else
 		> ebin/$(PROJECT).app
 endif
 
-endif
-
 clean:: clean-app
 
 clean-app:
@@ -221,3 +220,5 @@ clean-app:
 		$(addprefix include/,$(patsubst %.asn1,%.hrl,$(notdir $(ASN1_FILES)))) \
 		$(addprefix include/,$(patsubst %.asn1,%.asn1db,$(notdir $(ASN1_FILES)))) \
 		$(addprefix src/,$(patsubst %.asn1,%.erl,$(notdir $(ASN1_FILES))))
+
+endif

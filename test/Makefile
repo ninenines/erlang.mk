@@ -77,7 +77,7 @@ clean-core: clean-core-app clean-core-upgrade
 
 # Core: Building applications.
 
-CORE_APP_CASES = asn1 error generate-erl generate-erl-include generate-erl-prepend help hrl hrl-recursive mib no-makedep xrl xrl-include yrl yrl-include
+CORE_APP_CASES = asn1 error generate-erl generate-erl-include generate-erl-prepend help hrl hrl-recursive mib no-app no-makedep xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
@@ -771,6 +771,17 @@ core-app-mib: build clean-core-app-mib
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+core-app-no-app: build clean-core-app-no-app
+
+	$i "Bootstrap a project without an OTP library"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+	$t rm -rf $(APP)/src
+
+	$i "Build the project"
+	$t $(MAKE) -C $(APP) $v
 
 core-app-no-makedep: build clean-core-app-no-makedep
 
