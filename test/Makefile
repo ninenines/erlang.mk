@@ -1323,13 +1323,41 @@ $(CORE_APP_CLEAN_TARGETS):
 
 # Core: Erlang.mk upgrade.
 
-CORE_UPGRADE_CASES = no-config custom-config renamed-config custom-build-dir
+CORE_UPGRADE_CASES = alt-erlangmk-repo no-config custom-config renamed-config custom-build-dir
 CORE_UPGRADE_TARGETS = $(addprefix core-upgrade-,$(CORE_UPGRADE_CASES))
 CORE_UPGRADE_CLEAN_TARGETS = $(addprefix clean-,$(CORE_UPGRADE_TARGETS))
 
 .PHONY: core-upgrade $(CORE_UPGRADE_TARGETS) $(CORE_UPGRADE_CLEAN_TARGETS)
 
 core-upgrade: $(CORE_UPGRADE_TARGETS)
+
+core-upgrade-alt-erlangmk-repo: build clean-core-upgrade-alt-erlangmk-repo
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Fork erlang.mk locally and modify it"
+	$t git clone -q file://$(abspath $(CURDIR)/..) $(APP)/alt-erlangmk-repo
+	$t sed -i.bak '1i\
+# Copyright (c) erlang.mk Testsuite!\
+' $(APP)/alt-erlangmk-repo/core/core.mk
+	$t (cd $(APP)/alt-erlangmk-repo && \
+		git checkout -q -b test-copyright && \
+		git commit -q -a -m 'Add Testsuite copyright')
+
+	$i "Point application to an alternate erlang.mk repository"
+	$t sed -i.bak '2i\
+ERLANG_MK_REPO = file://$(abspath $(APP)/alt-erlangmk-repo)\
+ERLANG_MK_COMMIT = test-copyright\
+' $(APP)/Makefile
+
+	$i "Update erlang.mk"
+	$t $(MAKE) -C $(APP) erlang-mk $v
+
+	$i "Check our modification is there"
+	$t grep -q "# Copyright (c) erlang.mk Testsuite!" $(APP)/erlang.mk
 
 core-upgrade-no-config: build clean-core-upgrade-no-config
 
