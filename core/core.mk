@@ -64,6 +64,8 @@ else ifeq ($(UNAME_S),NetBSD)
 PLATFORM = netbsd
 else ifeq ($(UNAME_S),OpenBSD)
 PLATFORM = openbsd
+else ifeq ($(UNAME_S),DragonFly)
+PLATFORM = dragonfly
 else
 $(error Unable to detect platform. Please open a ticket with the output of uname -a.)
 endif
