@@ -1339,7 +1339,7 @@ core-upgrade-alt-erlangmk-repo: build clean-core-upgrade-alt-erlangmk-repo
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Fork erlang.mk locally and modify it"
-	$t git clone -q file://$(abspath $(CURDIR)/..) $(APP)/alt-erlangmk-repo
+	$t git clone -q https://github.com/ninenines/erlang.mk $(APP)/alt-erlangmk-repo
 	$t sed -i.bak '1i\
 # Copyright (c) erlang.mk Testsuite!\
 ' $(APP)/alt-erlangmk-repo/core/core.mk
