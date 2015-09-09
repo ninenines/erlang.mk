@@ -494,7 +494,7 @@ core-app-help: build clean-core-app-help
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Run 'make help' and check that it prints help"
-	$t test -n "`make -C $(APP) help` | grep Usage"
+	$t test -n "`$(MAKE) -C $(APP) help` | grep Usage"
 
 core-app-hrl: build clean-core-app-hrl
 
