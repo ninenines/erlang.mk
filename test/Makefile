@@ -1345,6 +1345,8 @@ core-upgrade-alt-erlangmk-repo: build clean-core-upgrade-alt-erlangmk-repo
 ' $(APP)/alt-erlangmk-repo/core/core.mk
 	$t (cd $(APP)/alt-erlangmk-repo && \
 		git checkout -q -b test-copyright && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
 		git commit -q -a -m 'Add Testsuite copyright')
 
 	$i "Point application to an alternate erlang.mk repository"
