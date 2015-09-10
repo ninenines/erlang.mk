@@ -119,12 +119,6 @@ core-help: build clean-core-help
 	$i "Run 'make help' and check that it prints help"
 	$t test -n "`$(MAKE) -C $(APP) help` | grep Usage"
 
-# @todo what about ERLC_OPTS etc.
-# @todo test AND document COMPILE_FIRST and COMPILE_MIB_FIRST
-# @todo when .app.src becomes legacy, test legacy
-# @todo tests for https://github.com/ninenines/erlang.mk/blob/master/doc/src/guide/external_plugins.asciidoc
-# @todo test that clean removes crash dump
-
 # Legacy tests.
 #
 # The following tests are slowly being converted.
