@@ -1,0 +1,138 @@
+# Bootstrap plugin.
+
+BOOTSTRAP_CASES = app lib rel templates
+BOOTSTRAP_TARGETS = $(addprefix bootstrap-,$(BOOTSTRAP_CASES))
+BOOTSTRAP_CLEAN_TARGETS = $(addprefix clean-,$(BOOTSTRAP_TARGETS))
+
+.PHONY: bootstrap $(BOOTSTRAP_TARGETS) clean-bootstrap $(BOOTSTRAP_CLEAN_TARGETS)
+
+clean-bootstrap: $(BOOTSTRAP_CLEAN_TARGETS)
+
+$(BOOTSTRAP_CLEAN_TARGETS):
+	$t rm -rf $(APP_TO_CLEAN)/
+
+bootstrap: $(BOOTSTRAP_TARGETS)
+
+bootstrap-app: build clean-bootstrap-app
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Check that all bootstrapped files exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/src/$(APP).app.src
+	$t test -f $(APP)/src/$(APP)_app.erl
+	$t test -f $(APP)/src/$(APP)_sup.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/$(APP)_app.beam
+	$t test -f $(APP)/ebin/$(APP)_sup.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, [$(APP)_app, $(APP)_sup]} = application:get_key($(APP), modules), \
+		{module, $(APP)_app} = code:load_file($(APP)_app), \
+		{module, $(APP)_sup} = code:load_file($(APP)_sup), \
+		halt()"
+
+bootstrap-lib: build clean-bootstrap-lib
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Check that all bootstrapped files exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/src/$(APP).app.src
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/ebin/$(APP).app
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, []} = application:get_key($(APP), modules), \
+		halt()"
+
+bootstrap-rel: build clean-bootstrap-rel
+
+	$i "Bootstrap a new release-enabled OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Check that all bootstrapped files exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/relx.config
+	$t test -f $(APP)/rel/sys.config
+	$t test -f $(APP)/rel/vm.args
+	$t test -f $(APP)/src/$(APP).app.src
+	$t test -f $(APP)/src/$(APP)_app.erl
+	$t test -f $(APP)/src/$(APP)_sup.erl
+
+	$i "Build the application and the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/$(APP)_app.beam
+	$t test -f $(APP)/ebin/$(APP)_sup.beam
+
+	$i "Check that the release was generated"
+	$t test -f $(APP)/_rel/$(APP)_release/bin/$(APP)_release
+
+	$i "Check that the release can be started and stopped"
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release start $v
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
+
+	$i "Check that there's no erl_crash.dump file"
+	$t test ! -f $(APP)/_rel/$(APP)_release/erl_crash.dump
+
+bootstrap-templates: build clean-bootstrap-templates
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Check that we can get the list of templates"
+	$t test `$(MAKE) -C $(APP) --no-print-directory list-templates V=0 | wc -l` -eq 1
+
+	$i "Generate one of each template"
+	$t $(MAKE) -C $(APP) --no-print-directory new t=gen_fsm n=my_fsm
+	$t $(MAKE) -C $(APP) --no-print-directory new t=gen_server n=my_server
+	$t $(MAKE) -C $(APP) --no-print-directory new t=supervisor n=my_sup
+	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_http n=my_http
+	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_loop n=my_loop
+	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_rest n=my_rest
+	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_ws n=my_ws
+	$t $(MAKE) -C $(APP) --no-print-directory new t=ranch_protocol n=my_protocol
+
+# Here we disable warnings because templates contain missing behaviors.
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) ERLC_OPTS=+debug_info $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/my_fsm.beam
+	$t test -f $(APP)/ebin/my_server.beam
+	$t test -f $(APP)/ebin/my_sup.beam
+
+	$i "Check that all the modules can be loaded"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [my_fsm, my_http, my_loop, my_protocol, my_rest, my_server, my_sup, my_ws]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
