@@ -90,6 +90,8 @@ $(eval $(foreach t,$(patsubst %.mk,%,$(patsubst plugin_%,%,$(wildcard plugin_*.m
 core:: core-clean-crash-dump core-help
 clean-core:: clean-core-clean-crash-dump clean-core-help
 
+.PHONY: core-clean-crash-dump core-help clean-core-clean-crash-dump clean-core-help
+
 clean-core-clean-crash-dump clean-core-help:
 	$t rm -rf $(APP_TO_CLEAN)/
 
