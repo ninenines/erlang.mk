@@ -50,7 +50,7 @@ endif
 
 .PHONY: all clean build
 
-all:: core bootstrap
+all:: core
 	$i "Success!"
 
 clean:: clean-core
