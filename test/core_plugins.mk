@@ -29,7 +29,12 @@ core-plugins-all: build clean-core-plugins-all
 	$t printf "%s\n" "include \$$(THIS)/mk/plugin2.mk" >> $(APP)/plugin_dep/plugins.mk
 # We check that overriding THIS doesn't cause an error.
 	$t echo "THIS :=" >> $(APP)/plugin_dep/plugins.mk
-	$t cd $(APP)/plugin_dep && git init && git add . && git commit -m "Tests"
+	$t cd $(APP)/plugin_dep && \
+		git init -q && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q -m "Tests"
 
 	$i "Add dependency and plugins to the Makefile"
 	$t sed -i.bak '2i\
@@ -60,7 +65,12 @@ core-plugins-one: build clean-core-plugins-one
 	$t printf "%s\n" "include \$$(THIS)/mk/plugin2.mk" >> $(APP)/plugin_dep/plugins.mk
 # We check that overriding THIS doesn't cause an error.
 	$t echo "THIS :=" >> $(APP)/plugin_dep/plugins.mk
-	$t cd $(APP)/plugin_dep && git init && git add . && git commit -m "Tests"
+	$t cd $(APP)/plugin_dep && \
+		git init -q && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q -m "Tests"
 
 	$i "Add dependency and plugins to the Makefile"
 	$t sed -i.bak '2i\
