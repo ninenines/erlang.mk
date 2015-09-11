@@ -92,7 +92,10 @@ ifneq ($(wildcard erl_crash.dump),)
 	$(gen_verbose) rm -f erl_crash.dump
 endif
 
-distclean:: clean
+distclean:: clean distclean-tmp
+
+distclean-tmp:
+	$(gen_verbose) rm -rf $(ERLANG_MK_TMP)
 
 help::
 	$(verbose) printf "%s\n" \

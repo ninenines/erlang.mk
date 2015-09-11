@@ -88,12 +88,12 @@ $(eval $(foreach t,$(patsubst %.mk,%,$(patsubst plugin_%,%,$(wildcard plugin_*.m
 
 # Tests that don't easily fit into other categories.
 
-core:: core-clean-crash-dump core-help
-clean-core:: clean-core-clean-crash-dump clean-core-help
+core:: core-clean-crash-dump core-distclean-tmp core-help
+clean-core:: clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-help
 
-.PHONY: core-clean-crash-dump core-help clean-core-clean-crash-dump clean-core-help
+.PHONY: core-clean-crash-dump core-distclean-tmp core-help clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-help
 
-clean-core-clean-crash-dump clean-core-help:
+clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-help:
 	$t rm -rf $(APP_TO_CLEAN)/
 
 core-clean-crash-dump: build clean-core-clean-crash-dump
@@ -111,6 +111,22 @@ core-clean-crash-dump: build clean-core-clean-crash-dump
 
 	$i "Check that the crash dump is removed"
 	$t test ! -e $(APP)/erl_crash.dump
+
+core-distclean-tmp: build clean-core-distclean-tmp
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap all $v
+
+	$i "Check that a .erlang.mk directory exists"
+	$t test -d $(APP)/.erlang.mk
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check if .erlang.mk directory got removed"
+	$t test ! -e $(APP)/.erlang.mk
 
 core-help: build clean-core-help
 
