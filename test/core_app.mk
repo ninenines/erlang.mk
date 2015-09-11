@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = asn1 erlc-opts error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-app no-makedep xrl xrl-include yrl yrl-include
+CORE_APP_CASES = asn1 erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-app no-makedep xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
@@ -139,6 +139,33 @@ core-app-erlc-opts: build clean-core-app-erlc-opts
 
 	$i "Define an empty ERLC_OPTS (without debug_info)"
 	$t echo "ERLC_OPTS =" >> $(APP)/Makefile
+
+	$i "Generate .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the application was compiled correctly (without debug_info)"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		false = proplists:is_defined(debug_info, proplists:get_value(options, boy:module_info(compile))), \
+		false = proplists:is_defined(debug_info, proplists:get_value(options, girl:module_info(compile))), \
+		halt()"
+
+core-app-erlc-opts-filter: build clean-core-app-erlc-opts-filter
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Define ERLC_OPTS filtering out debug_info"
+	$t echo "ERLC_OPTS := \$$(filter-out +debug_info,\$$(ERLC_OPTS))" >> $(APP)/Makefile
 
 	$i "Generate .erl files"
 	$t echo "-module(boy)." > $(APP)/src/boy.erl
