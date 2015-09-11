@@ -201,6 +201,44 @@ Erlang.mk also comes with plugins for the following formats:
 | .proto    | src/       | Protocol buffers | ebin/*.beam
 |===
 
+=== Compilation options
+
+Erlang.mk provides a few variables that you can use to customize
+the build process and the resulting files.
+
+==== ERLC_OPTS
+
+`ERLC_OPTS` can be used to pass some options to `erlc`, the Erlang
+compiler. Erlang.mk does not restrict any option. Please refer to
+the http://www.erlang.org/doc/man/erlc.html[erlc Manual] for the
+full list.
+
+By default, Erlang.mk will set the following options:
+
+[source,make]
+ERLC_OPTS = -Werror +debug_info +warn_export_vars +warn_shadow_vars +warn_obsolete_guard
+
+In other words: warnings as errors, debug info (recommended) and
+enable warnings for exported variables, shadow variables and
+obsolete guard functions.
+
+You can redefine this variable in your Makefile to change it
+completely, either before or after including Erlang.mk:
+
+[source,make]
+ERLC_OPTS = +debug_info
+
+You can also filter out some options from the defaults Erlang.mk
+sets, by defining ERLC_OPTS after including Erlang.mk using the
+`:=` operator.
+
+[source,make]
+----
+include erlang.mk
+
+ERLC_OPTS := $(filter-out -Werror,$(ERLC_OPTS))
+----
+
 === Cold and hot builds
 
 The first time you run `make`, Erlang.mk will build everything.
