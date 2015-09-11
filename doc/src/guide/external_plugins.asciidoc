@@ -65,8 +65,11 @@ For eaxmple, if you have two plugins 'mk/dist.mk' and
 file:
 
 [source,make]
-include mk/dist.mk
-include mk/templates.mk
+THIS := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+include $(THIS)/mk/dist.mk
+include $(THIS)/mk/templates.mk
+
+The `THIS` variable is required to relatively include files.
 
 This allows users to not only be able to select individual
 plugins, but also select all plugins from the dependency
