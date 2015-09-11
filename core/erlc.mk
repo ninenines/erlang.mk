@@ -198,7 +198,8 @@ endef
 ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES)
 	$(if $(strip $?),$(call compile_erl,$?))
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null || true))
-	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(ERL_FILES) $(CORE_FILES))))))
+	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename \
+		$(filter-out $(ERLC_EXCLUDE_PATHS),$(ERL_FILES) $(CORE_FILES)))))))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
 	$(app_verbose) echo $(subst $(newline),,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))) \
 		> ebin/$(PROJECT).app
