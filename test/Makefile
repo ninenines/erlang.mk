@@ -54,6 +54,7 @@ all:: core
 	$i "Success!"
 
 clean:: clean-core
+	$t rm -f erl_crash.dump
 
 build:
 	$i "Generate a bleeding edge Erlang.mk"
