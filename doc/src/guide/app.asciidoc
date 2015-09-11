@@ -239,6 +239,18 @@ include erlang.mk
 ERLC_OPTS := $(filter-out -Werror,$(ERLC_OPTS))
 ----
 
+==== ERLC_EXCLUDE
+
+`ERLC_EXCLUDE` can be used to exclude some modules from the
+compilation. It's there for handling special cases, you should
+not normally need it.
+
+To exclude a module, simply list it in the variable, either
+before or after including Erlang.mk:
+
+[source,make]
+ERLC_EXCLUDE = cowboy_http2
+
 === Cold and hot builds
 
 The first time you run `make`, Erlang.mk will build everything.
