@@ -45,7 +45,6 @@ export ERLANG_MK_TMP
 ERL = erl +A0 -noinput -boot start_clean
 
 # Platform detection.
-# @todo Add Windows/Cygwin detection eventually.
 
 ifeq ($(PLATFORM),)
 UNAME_S := $(shell uname -s)
@@ -66,6 +65,8 @@ else ifeq ($(UNAME_S),OpenBSD)
 PLATFORM = openbsd
 else ifeq ($(UNAME_S),DragonFly)
 PLATFORM = dragonfly
+else ifeq ($(shell uname -o),Msys)
+PLATFORM = msys2
 else
 $(error Unable to detect platform. Please open a ticket with the output of uname -a.)
 endif
