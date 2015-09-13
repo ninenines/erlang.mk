@@ -1,0 +1,123 @@
+== Installation
+
+This chapter explains how to setup your system in
+order to use Erlang.mk.
+
+=== On Unix
+
+Erlang.mk requires GNU Make to be installed. GNU Make 3.81
+or later is required. GNU Make 4.1 or later is recommended,
+as this is the version Erlang.mk is developed on.
+
+Some functionality requires that Autoconf 2.59 or later be
+installed, in order to compile Erlang/OTP. Erlang/OTP may
+have further requirements depending on your needs.
+
+Erlang.mk currently requires Erlang/OTP to be installed in
+order to compile Erlang projects.
+
+Some packages may require additional libraries.
+
+=== On Windows
+
+Erlang.mk can be used on Windows inside an MSYS2 environment.
+Cygwin, MSYS (the original) and native Windows (both Batch
+and PowerShell) are currently not supported.
+
+The rest of this section details how to setup Erlang/OTP and
+MSYS2 in order to use Erlang.mk.
+
+==== Installing Erlang/OTP
+
+Erlang.mk requires Erlang/OTP to be installed. The OTP team
+provides binaries of Erlang/OTP for all major and minor releases,
+available from the http://www.erlang.org/download.html[official download page].
+It is recommended that you use the 64-bit installer unless
+technically impossible. Please follow the instructions from
+the installer to complete the installation.
+
+The OTP team also provides a short guide to
+http://www.erlang.org/download.html[installing Erlang/OTP on Windows]
+if you need additional references.
+
+You can install Erlang/OTP silently using the `/S` switch
+on the command line:
+
+[source,batch]
+C:\Users\essen\Downloads> otp_win64_18.0.exe /S
+
+==== Installing MSYS2
+
+The only supported environment on Windows is MSYS2. MSYS2 is
+a lightweight Unix-like environment for Windows that comes
+with the Arch Linux package manager, `pacman`.
+
+The MSYS2 project provides a http://msys2.github.io[one click installer]
+and instructions to set things up post-installation.
+
+It is currently not possible to use the installer silently.
+Thankfully, the MSYS2 project provides an archive that can
+be used in lieu of the installer. The archive however requires
+_7zip_ to decompress it.
+
+First, download the
+http://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20150512.tar.xz/download[MSYS2 base archive]
+and extract it under 'C:\'. Assuming you downloaded the
+archive as 'msys2.tar.xz' and put it in 'C:\', you can
+use the following commands to extract it:
+
+[source,batch]
+C:\> 7z x msys2.tar.xz
+C:\> 7z x msys2.tar > NUL
+
+Then you can run the two commands needed to perform the
+post-installation setup:
+
+[source,batch]
+C:\> C:\msys64\usr\bin\bash -lc "pacman --needed --noconfirm -Sy bash pacman pacman-mirrors msys2-runtime"
+C:\> C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syu"
+
+==== Installing the required MSYS2 packages
+
+After following these instructions, you can install GNU Make,
+Git and any other required softwares. From an MSYS2 shell,
+you can call `pacman` directly:
+
+[source,bash]
+$ pacman -S git make
+
+You can use `pacman -Ss` to search packages. For example,
+to find all packages related to GCC:
+
+[source,bash]
+$ pacman -Ss gcc
+
+You can also run commands under the MSYS2 environment from
+the Windows command line or batch files. This command will
+install GNU Make and Git:
+
+[source,batch]
+C:\> C:\msys64\usr\bin\bash -lc "pacman --noconfirm -S git make"
+
+You can use similar `bash` commands if you need to run programs
+inside the MSYS2 environment from a batch file.
+
+==== Gotchas
+
+While most of the basic functionality will just work, there are
+still some issues. Erlang.mk needs to be fixed to pass the
+right paths when running Erlang scripts. We are working on it.
+
+Running a release also currently does not seem to work except
+when using a workaround. If you start the release manually,
+by calling `erl` with the right options, the release will boot
+as intended:
+
+[source,bash]
+$ erts-6.4/bin/erl.exe -boot releases/1/hello_release ...
+
+It will work from both the MSYS2 environment and a normal
+Command window.
+
+Make sure to not include the `.boot` extension from the boot
+filename, as it is automatically appended.

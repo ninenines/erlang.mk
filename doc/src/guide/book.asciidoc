@@ -4,6 +4,8 @@
 = Erlang.mk User Guide
 Loïc Hoguin <essen@ninenines.eu>
 
+include::installation.asciidoc[Installation]
+
 include::getting_started.asciidoc[Getting started]
 
 include::overview.asciidoc[Overview]
