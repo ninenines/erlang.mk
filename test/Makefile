@@ -51,7 +51,6 @@ endif
 .PHONY: all clean build
 
 all:: core
-	$i "Success!"
 
 clean:: clean-core
 	$t rm -f erl_crash.dump
