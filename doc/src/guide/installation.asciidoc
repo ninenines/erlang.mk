@@ -107,17 +107,6 @@ inside the MSYS2 environment from a batch file.
 While most of the basic functionality will just work, there are
 still some issues. Erlang.mk needs to be fixed to pass the
 right paths when running Erlang scripts. We are working on it.
-
-Running a release also currently does not seem to work except
-when using a workaround. If you start the release manually,
-by calling `erl` with the right options, the release will boot
-as intended:
-
-[source,bash]
-$ erts-6.4/bin/erl.exe -boot releases/1/hello_release ...
-
-It will work from both the MSYS2 environment and a normal
-Command window.
-
-Make sure to not include the `.boot` extension from the boot
-filename, as it is automatically appended.
+Erlang.mk is fully tested on both Linux and Windows, but is
+lacking tests in the areas not yet covered by this guide,
+so expect bugs to be fixed as more tests are added.
