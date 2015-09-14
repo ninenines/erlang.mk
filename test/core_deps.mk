@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-build-count apps-conflict apps-deep-conflict apps-dir apps-dir-include-lib apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
+CORE_DEPS_CASES = apps apps-build-count apps-conflict apps-deep-conflict apps-dir apps-dir-include-lib apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore list-deps mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 
 .PHONY: core-deps $(CORE_DEPS_TARGETS)
@@ -982,6 +982,141 @@ endif
 
 	$i "Check that the correct dependencies were fetched"
 	$t test -d $(APP)/deps/ranch
+
+define add_dep_and_subdep
+	$i "Bootstrap a new OTP library named $(APP)-$(1)subdep"
+	$t mkdir $(APP)-$(1)subdep/
+	$t cp ../erlang.mk $(APP)-$(1)subdep/
+	$t $(MAKE) -C $(APP)-$(1)subdep --no-print-directory -f erlang.mk bootstrap-lib $$v
+
+	$i "Create a Git repository for $(APP)-$(1)subdep"
+	$t (cd $(APP)-$(1)subdep && \
+		git init -q && \
+		git config user.name "Testsuite" && \
+		git config user.email "testsuite@erlang.mk" && \
+		git add . && \
+		git commit -q -m "Initial commit")
+
+	$i "Bootstrap a new OTP library named $(APP)-$(1)dep"
+	$t mkdir $(APP)-$(1)dep/
+	$t cp ../erlang.mk $(APP)-$(1)dep/
+	$t $(MAKE) -C $(APP)-$(1)dep --no-print-directory -f erlang.mk bootstrap-lib $$v
+
+	$i "Add $(APP)-$(1)subdep as a dependency"
+	$t perl -ni.bak -e \
+		'print;if ($$.==1) {print "DEPS = $(1)subdep\ndep_$(1)subdep = git file://$(abspath $(APP)-$(1)subdep) master\n"}' \
+		$(APP)-$(1)dep/Makefile
+	$t rm $(APP)-$(1)dep/Makefile.bak
+
+	$i "Create a Git repository for $(APP)-$(1)dep"
+	$t (cd $(APP)-$(1)dep && \
+		git init -q && \
+		git config user.name "Testsuite" && \
+		git config user.email "testsuite@erlang.mk" && \
+		git add . && \
+		git commit -q -m "Initial commit")
+endef
+
+core-deps-list-deps: build clean
+
+	$(call add_dep_and_subdep,)
+	$(call add_dep_and_subdep,doc)
+	$(call add_dep_and_subdep,rel)
+	$(call add_dep_and_subdep,test)
+	$(call add_dep_and_subdep,shell)
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add $(APP)-dep and $(APP)-testdep as a dependency"
+	$t sed -i.bak '2i\
+DEPS = dep\
+DOC_DEPS = docdep\
+REL_DEPS = reldep\
+TEST_DEPS = testdep\
+SHELL_DEPS = shelldep\
+dep_dep = git file://$(abspath $(APP)-dep) master\
+dep_docdep = git file://$(abspath $(APP)-docdep) master\
+dep_reldep = git file://$(abspath $(APP)-reldep) master\
+dep_testdep = git file://$(abspath $(APP)-testdep) master\
+dep_shelldep = git file://$(abspath $(APP)-shelldep) master\
+' $(APP)/Makefile
+	$t rm $(APP)/Makefile.bak
+
+	$i "Create a Git repository for $(APP)"
+	$t (cd $(APP) && \
+		git init -q && \
+		git config user.name "Testsuite" && \
+		git config user.email "testsuite@erlang.mk" && \
+		git add . && \
+		git commit -q -m "Initial commit")
+
+	$i "List application dependencies"
+	$t $(MAKE) -C $(APP) --no-print-directory list-deps $v
+	$t test -d $(APP)/deps/subdep
+	$t printf "%s\n%s\n" $(abspath $(APP)/deps/dep $(APP)/deps/subdep) > $(APP)/expected-deps.txt
+	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
+	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
+
+	$i "List application doc dependencies"
+	$t $(MAKE) -C $(APP) --no-print-directory list-doc-deps $v
+	$t test -d $(APP)/deps/subdep
+	$t test -d $(APP)/deps/docsubdep
+	$t printf "%s\n%s\n%s\n%s\n" \
+		$(abspath $(APP)/deps/dep $(APP)/deps/subdep $(APP)/deps/docdep $(APP)/deps/docsubdep) \
+		| sort > $(APP)/expected-doc-deps.txt
+	$t cmp $(APP)/expected-doc-deps.txt $(APP)/.erlang.mk/recursive-doc-deps-list.log
+	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
+
+	$i "List application rel dependencies"
+	$t $(MAKE) -C $(APP) --no-print-directory list-rel-deps $v
+	$t test -d $(APP)/deps/subdep
+	$t test -d $(APP)/deps/relsubdep
+	$t printf "%s\n%s\n%s\n%s\n" \
+		$(abspath $(APP)/deps/dep $(APP)/deps/subdep $(APP)/deps/reldep $(APP)/deps/relsubdep) \
+		| sort > $(APP)/expected-rel-deps.txt
+	$t cmp $(APP)/expected-rel-deps.txt $(APP)/.erlang.mk/recursive-rel-deps-list.log
+	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
+
+	$i "List application test dependencies"
+	$t $(MAKE) -C $(APP) --no-print-directory list-test-deps $v
+	$t test -d $(APP)/deps/subdep
+	$t test -d $(APP)/deps/testsubdep
+	$t printf "%s\n%s\n%s\n%s\n" \
+		$(abspath $(APP)/deps/dep $(APP)/deps/subdep $(APP)/deps/testdep $(APP)/deps/testsubdep) \
+		| sort > $(APP)/expected-test-deps.txt
+	$t cmp $(APP)/expected-test-deps.txt $(APP)/.erlang.mk/recursive-test-deps-list.log
+	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
+
+	$i "List application shell dependencies"
+	$t $(MAKE) -C $(APP) --no-print-directory list-shell-deps $v
+	$t test -d $(APP)/deps/subdep
+	$t test -d $(APP)/deps/shellsubdep
+	$t printf "%s\n%s\n%s\n%s\n" \
+		$(abspath $(APP)/deps/dep $(APP)/deps/subdep $(APP)/deps/shelldep $(APP)/deps/shellsubdep) \
+		| sort > $(APP)/expected-shell-deps.txt
+	$t cmp $(APP)/expected-shell-deps.txt $(APP)/.erlang.mk/recursive-shell-deps-list.log
+	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
+
+	$i "List application all dependencies (all kinds)"
+	$t $(MAKE) -C $(APP) --no-print-directory list-deps DEP_TYPES='doc rel test shell' $v
+	$t test -d $(APP)/deps/subdep
+	$t test -d $(APP)/deps/docsubdep
+	$t test -d $(APP)/deps/relsubdep
+	$t test -d $(APP)/deps/testsubdep
+	$t test -d $(APP)/deps/shellsubdep
+	$t printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
+		$(abspath \
+			$(APP)/deps/dep $(APP)/deps/subdep \
+			$(APP)/deps/docdep $(APP)/deps/docsubdep \
+			$(APP)/deps/reldep $(APP)/deps/relsubdep \
+			$(APP)/deps/testdep $(APP)/deps/testsubdep \
+			$(APP)/deps/shelldep $(APP)/deps/shellsubdep) \
+		| sort > $(APP)/expected-all-deps.txt
+	$t cmp $(APP)/expected-all-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
+	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
 
 core-deps-mv: build clean
 
