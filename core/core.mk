@@ -121,6 +121,8 @@ help::
 		"  all           Run deps, app and rel targets in that order" \
 		"  app           Compile the project" \
 		"  deps          Fetch dependencies (if needed) and compile them" \
+		"  fetch-deps    Fetch dependencies recursively (if needed) without compiling them" \
+		"  list-deps     List dependencies recursively on stdout" \
 		"  search q=...  Search for a package in the built-in index" \
 		"  rel           Build a release for this project, if applicable" \
 		"  docs          Build the documentation for this project" \

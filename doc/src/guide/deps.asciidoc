@@ -286,6 +286,55 @@ different version of D, it will always be A's version
 that wins, because we fetch all dependencies of A before
 fetching those from B or C.
 
+=== Fetching and listing dependencies only
+
+You can fetch all dependencies recursively without building anything,
+with the `make fetch-deps` command. It follows the same rules described
+in the section above.
+
+You can list all dependencies recursively, again without building
+anything, with the `make list-deps` command. It will obviously need
+to fetch all dependencies exactly like `make fetch-deps`. Once
+everything is fetched, it prints a sorted list of absolute paths to the
+dependencies.
+
+By default, `fetch-deps` and `list-deps` work on the `BUILD_DEPS`
+and `DEPS` lists only. To also fetch/list `TEST_DEPS`, `DOC_DEPS`,
+`REL_DEPS` and/or `SHELL_DEPS`, you have two possibilities:
+
+* You can use `make fetch-test-deps`, `make fetch-doc-deps`, `make
+  fetch-rel-deps` and `make fetch-shell-deps` commands respectively.
+  If you want to list them, you can use `make list-test-deps`, `make
+  list-doc-deps`, `make list-rel-deps` and `make list-shell-deps`
+  respectively.
+* You can use `make fetch-deps` or `make list-deps` with the Makefile
+  variable `DEP_TYPES` set to a list of dependency types you want.
+  The types are `test`, `doc`, `rel` and `shell` respectively. For
+  example, you can list test and doc dependencies with `make list-deps
+  DEP_TYPES='test doc'`.
+
+Note that only first level `TEST_DEPS`, `DOC_DEPS`, `REL_DEPS` and
+`SHELL_DEPS` are included, not dependencies' one. In other word,
+`make list-test-deps` lists the `TEST_DEPS` of your project, but not
+`TEST_DEPS` of the projects yours depend on.
+
+No matter which method you use, `BUILD_DEPS` and `DEPS` are always
+included.
+
+Internally, the `make fetch-*` commands store the complete list of
+dependencies in files named `$(ERLANG_MK_RECURSIVE_DEPS_LIST)`,
+`$(ERLANG_MK_RECURSIVE_TEST_DEPS_LIST)`,
+`$(ERLANG_MK_RECURSIVE_DOC_DEPS_LIST)`,
+`$(ERLANG_MK_RECURSIVE_REL_DEPS_LIST)` and
+`$(ERLANG_MK_RECURSIVE_SHELL_DEPS_LIST)`. Those files are simply printed
+by the `make list-*` commands.
+
+`make list-*` commands are made for human beings. If you need the list
+of dependencies in a Makefile or a script, you should use the content
+of those files directly instead. The reason is that `make fetch-*` and
+`make list-*` may have unwanted content in their output, such as actual
+fetching of dependencies.
+
 === Ignoring unwanted dependencies
 
 Sometimes, you may want to ignore dependencies entirely.

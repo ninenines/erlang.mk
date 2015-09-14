@@ -603,6 +603,15 @@ distclean-deps:
 	$(gen_verbose) rm -rf $(DEPS_DIR)
 endif
 
+# Forward-declare variables used in core/deps-tools.mk. This is required
+# in case plugins use them.
+
+ERLANG_MK_RECURSIVE_DEPS_LIST = $(ERLANG_MK_TMP)/recursive-deps-list.log
+ERLANG_MK_RECURSIVE_DOC_DEPS_LIST = $(ERLANG_MK_TMP)/recursive-doc-deps-list.log
+ERLANG_MK_RECURSIVE_REL_DEPS_LIST = $(ERLANG_MK_TMP)/recursive-rel-deps-list.log
+ERLANG_MK_RECURSIVE_TEST_DEPS_LIST = $(ERLANG_MK_TMP)/recursive-test-deps-list.log
+ERLANG_MK_RECURSIVE_SHELL_DEPS_LIST = $(ERLANG_MK_TMP)/recursive-shell-deps-list.log
+
 # External plugins.
 
 DEP_PLUGINS ?=
