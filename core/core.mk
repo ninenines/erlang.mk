@@ -141,6 +141,12 @@ define erlang
 $(ERL) $(2) -pz $(ERLANG_MK_TMP)/rebar/ebin -eval "$(subst $(newline),,$(subst ",\",$(1)))" -- erlang.mk
 endef
 
+ifeq ($(PLATFORM),msys2)
+core_native_path = $(subst \,\\\\,$(shell cygpath -w $1))
+else
+core_native_path = $1
+endif
+
 ifeq ($(shell which wget 2>/dev/null | wc -l), 1)
 define core_http_get
 	wget --no-check-certificate -O $(1) $(2)|| rm $(1)
@@ -162,7 +168,7 @@ define core_http_get.erl
 endef
 
 define core_http_get
-	$(call erlang,$(call core_http_get.erl,$(1),$(2)))
+	$(call erlang,$(call core_http_get.erl,$(call core_native_path,$1),$2))
 endef
 endif
 

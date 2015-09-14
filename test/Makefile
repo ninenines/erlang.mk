@@ -11,6 +11,14 @@ APP_TO_CLEAN = $(subst -,_,$(patsubst clean-%,%,$@))
 
 ERL = erl +A0 -noinput -boot start_clean
 
+# Platform, condensed version.
+
+ifeq ($(shell uname -o),Msys)
+	PLATFORM = msys2
+else
+	PLATFORM = unix
+endif
+
 # OTP master, for downloading files for testing.
 
 OTP_MASTER = https://raw.githubusercontent.com/erlang/otp/master

@@ -5,10 +5,8 @@
 
 # Configuration.
 
-RELX_CONFIG ?= $(CURDIR)/relx.config
-
 RELX ?= $(CURDIR)/relx
-export RELX
+RELX_CONFIG ?= $(CURDIR)/relx.config
 
 RELX_URL ?= https://github.com/erlware/relx/releases/download/v2.0.0/relx
 RELX_OPTS ?=
