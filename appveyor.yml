@@ -1,6 +1,6 @@
 build_script:
 - cd C:\
-- C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syu"
+- C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Sy"
 - C:\msys64\usr\bin\bash -lc "pacman --noconfirm -S git make"
 test_script:
 - C:\msys64\usr\bin\bash -lc "cd $APPVEYOR_BUILD_FOLDER && make -k check"
