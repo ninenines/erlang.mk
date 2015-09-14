@@ -1,10 +1,5 @@
 build_script:
 - cd C:\
-- dir
-- appveyor DownloadFile http://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20150512.tar.xz/download -FileName "msys2.tar.xz"
-- 7z x msys2.tar.xz
-- 7z x msys2.tar
-- C:\msys64\usr\bin\bash -lc "pacman --needed --noconfirm -Sy bash pacman pacman-mirrors msys2-runtime"
 - C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syu"
 - C:\msys64\usr\bin\bash -lc "pacman --noconfirm -S git make"
 test_script:
