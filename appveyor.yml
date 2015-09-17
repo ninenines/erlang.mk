@@ -1,5 +1,4 @@
 build_script:
-- cd C:\
 - C:\msys64\usr\bin\bash -lc "pacman --needed --noconfirm -Sy pacman-mirrors"
 - C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Sy"
 - C:\msys64\usr\bin\bash -lc "pacman --noconfirm -S git make"
