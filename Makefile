@@ -32,5 +32,9 @@ check:
 	$(MAKE) -C test pkg-$(p)
 endif
 
+clean:
+	$(MAKE) -C test clean
+	rm -rf doc/guide.pdf doc/html
+
 docs:
 	$(MAKE) -f core/core.mk -f core/docs.mk -f plugins/asciidoc.mk asciidoc
