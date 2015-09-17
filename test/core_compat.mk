@@ -6,6 +6,8 @@ CORE_COMPAT_CASES = auto-rebar rebar rebar-deps rebar-deps-pkg rebar-erlc-opts
 CORE_COMPAT_TARGETS = $(addprefix core-compat-,$(CORE_COMPAT_CASES))
 CORE_COMPAT_CLEAN_TARGETS = $(addprefix clean-,$(CORE_COMPAT_TARGETS))
 
+REBAR_BINARY = https://github.com/rebar/rebar/releases/download/2.6.0/rebar
+
 .PHONY: core-compat $(CORE_COMPAT_TARGETS) clean-core-compat $(CORE_COMPAT_CLEAN_TARGETS)
 
 clean-core-compat: $(CORE_COMPAT_CLEAN_TARGETS)
@@ -49,6 +51,16 @@ core-compat-auto-rebar: build clean-core-compat-auto-rebar
 	$i "Check that rebar.config can be loaded"
 	$t $(ERL) -eval "{ok, _} = file:consult(\"$(APP)/rebar.config\"), halt()"
 
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Download rebar"
+	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t chmod +x $(APP)/rebar
+
+	$i "Use rebar to build the application"
+	$t cd $(APP) && ./rebar compile $v
+
 core-compat-rebar: build clean-core-compat-rebar
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -80,6 +92,16 @@ core-compat-rebar: build clean-core-compat-rebar
 	$i "Check that rebar.config can be loaded"
 	$t $(ERL) -eval "{ok, _} = file:consult(\"$(APP)/rebar.config\"), halt()"
 
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Download rebar"
+	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t chmod +x $(APP)/rebar
+
+	$i "Use rebar to build the application"
+	$t cd $(APP) && ./rebar compile $v
+
 core-compat-rebar-deps: build clean-core-compat-rebar-deps
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -90,7 +112,7 @@ core-compat-rebar-deps: build clean-core-compat-rebar-deps
 	$i "Add Cowboy as a dependency"
 	$t sed -i.bak '2i\
 DEPS = cowboy\
-dep_cowboy = git repo commit\
+dep_cowboy = git https://github.com/ninenines/cowboy master\
 ' $(APP)/Makefile
 
 	$i "Run 'make rebar.config'"
@@ -102,8 +124,18 @@ dep_cowboy = git repo commit\
 	$i "Check that Cowboy is listed in rebar.config"
 	$t $(ERL) -eval " \
 		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
-		{_, [{cowboy, _, {git, \"repo\", \"commit\"}}]} = lists:keyfind(deps, 1, C), \
+		{_, [{cowboy, _, {git, _, \"master\"}}]} = lists:keyfind(deps, 1, C), \
 		halt()"
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Download rebar"
+	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t chmod +x $(APP)/rebar
+
+	$i "Use rebar to build the application"
+	$t cd $(APP) && ./rebar get-deps compile $v
 
 core-compat-rebar-deps-pkg: build clean-core-compat-rebar-deps-pkg
 
@@ -128,6 +160,16 @@ DEPS = cowboy\
 		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
 		{_, [{cowboy, _, {git, \"https://github.com/\" ++ _, _}}]} = lists:keyfind(deps, 1, C), \
 		halt()"
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Download rebar"
+	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t chmod +x $(APP)/rebar
+
+	$i "Use rebar to build the application"
+	$t cd $(APP) && ./rebar get-deps compile $v
 
 core-compat-rebar-erlc-opts: build clean-core-compat-rebar-erlc-opts
 
@@ -167,3 +209,13 @@ core-compat-rebar-erlc-opts: build clean-core-compat-rebar-erlc-opts
 		true = lists:member(warn_missing_spec, Opts), \
 		true = lists:member(warn_untyped_record, Opts), \
 		halt()"
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Download rebar"
+	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t chmod +x $(APP)/rebar
+
+	$i "Use rebar to build the application"
+	$t cd $(APP) && ./rebar compile $v
