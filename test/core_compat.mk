@@ -112,7 +112,7 @@ core-compat-rebar-deps: build clean-core-compat-rebar-deps
 	$i "Add Cowboy as a dependency"
 	$t sed -i.bak '2i\
 DEPS = cowboy\
-dep_cowboy = git https://github.com/ninenines/cowboy master\
+dep_cowboy = git https://github.com/ninenines/cowboy 1.0.0\
 ' $(APP)/Makefile
 
 	$i "Run 'make rebar.config'"
@@ -124,7 +124,7 @@ dep_cowboy = git https://github.com/ninenines/cowboy master\
 	$i "Check that Cowboy is listed in rebar.config"
 	$t $(ERL) -eval " \
 		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
-		{_, [{cowboy, _, {git, _, \"master\"}}]} = lists:keyfind(deps, 1, C), \
+		{_, [{cowboy, _, {git, _, \"1.0.0\"}}]} = lists:keyfind(deps, 1, C), \
 		halt()"
 
 	$i "Distclean the application"
