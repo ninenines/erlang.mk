@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = asn1 erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-app no-makedep xrl xrl-include yrl yrl-include
+CORE_APP_CASES = asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-app no-makedep xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
@@ -130,6 +130,43 @@ endif
 		{ok, Mods = ['CAP', 'Def', use_cap, use_def]} \
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-auto-git-id: build clean-core-app-auto-git-id
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Make it a git repository"
+	$t cd $(APP) && \
+		git init -q && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q -m "Tests"
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the generated .app file has no id key"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, []} = application:get_key($(APP), id), \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Build the application with IS_DEP=1"
+	$t $(MAKE) -C $(APP) IS_DEP=1 $v
+
+	$i "Check that the generated .app file has an id key"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, ID} = application:get_key($(APP), id), \
+		true = ID =/= [], \
 		halt()"
 
 core-app-erlc-exclude: build clean-core-app-erlc-exclude
