@@ -150,11 +150,22 @@ core-app-auto-git-id: build clean-core-app-auto-git-id
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
+ifdef LEGACY
+# Legacy replaces {id, "git"} always regardless of built as a dependency.
+	$i "Check that the generated .app file has an id key"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, ID} = application:get_key($(APP), id), \
+		true = ID =/= [], \
+		halt()"
+else
+# If there is no .app.src though, only fill in id when built as a dependency.
 	$i "Check that the generated .app file has no id key"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:start($(APP)), \
 		{ok, []} = application:get_key($(APP), id), \
 		halt()"
+endif
 
 	$i "Clean the application"
 	$t $(MAKE) -C $(APP) clean $v
