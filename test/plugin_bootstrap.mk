@@ -22,7 +22,9 @@ bootstrap-app: build clean-bootstrap-app
 
 	$i "Check that all bootstrapped files exist"
 	$t test -f $(APP)/Makefile
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/$(APP)_app.erl
 	$t test -f $(APP)/src/$(APP)_sup.erl
 
@@ -51,7 +53,9 @@ bootstrap-lib: build clean-bootstrap-lib
 
 	$i "Check that all bootstrapped files exist"
 	$t test -f $(APP)/Makefile
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -77,7 +81,9 @@ bootstrap-rel: build clean-bootstrap-rel
 	$t test -f $(APP)/relx.config
 	$t test -f $(APP)/rel/sys.config
 	$t test -f $(APP)/rel/vm.args
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/$(APP)_app.erl
 	$t test -f $(APP)/src/$(APP)_sup.erl
 

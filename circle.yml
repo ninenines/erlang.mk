@@ -17,5 +17,5 @@ dependencies:
 
 test:
   override:
-    - source $HOME/erlang/OTP-18.0.2/activate && make check:
-        timeout: 7200
+    - source $HOME/erlang/OTP-18.0.2/activate && make -j 32 -k check:
+    - source $HOME/erlang/OTP-18.0.2/activate && make -j 32 -k check LEGACY=1:

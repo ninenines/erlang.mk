@@ -91,7 +91,9 @@ core-app-asn1: build clean-core-app-asn1
 	$t test -f $(APP)/asn1/CAP.asn1
 	$t test -f $(APP)/asn1/Def.asn1
 	$t test -f $(APP)/include/unrelated.hrl
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/use_cap.erl
 	$t test -f $(APP)/src/use_def.erl
 
@@ -292,7 +294,9 @@ core-app-generate-erl: build clean-core-app-generate-erl
 	$t test -f $(APP)/Makefile
 	$t test -f $(APP)/erlang.mk
 	$t test -f $(APP)/script.sh
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/boy.erl
 	$t test -f $(APP)/src/girl.erl
 
@@ -457,7 +461,9 @@ core-app-generate-erl-prepend: build clean-core-app-generate-erl-prepend
 	$t test -f $(APP)/Makefile
 	$t test -f $(APP)/erlang.mk
 	$t test -f $(APP)/script.sh
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/boy.erl
 	$t test -f $(APP)/src/girl.erl
 
@@ -556,7 +562,9 @@ core-app-hrl: build clean-core-app-hrl
 	$t test -f $(APP)/erlang.mk
 	$t test -f $(APP)/include/blue.hrl
 	$t test -f $(APP)/include/red.hrl
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/use_blue.erl
 	$t test -f $(APP)/src/use_red.erl
 
@@ -643,7 +651,9 @@ core-app-hrl-recursive: build clean-core-app-hrl-recursive
 	$t test -f $(APP)/include/blue.hrl
 	$t test -f $(APP)/include/pill.hrl
 	$t test -f $(APP)/include/red.hrl
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/use_blue.erl
 	$t test -f $(APP)/src/use_red.erl
 
@@ -740,7 +750,9 @@ core-app-mib: build clean-core-app-mib
 	$t test -f $(APP)/include/unrelated.hrl
 	$t test -f $(APP)/mibs/EX1-MIB.mib
 	$t test -f $(APP)/mibs/OTP-REG.mib
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/use_v1.erl
 	$t test -f $(APP)/src/use_v2.erl
 
@@ -867,7 +879,9 @@ NO_MAKEDEP ?= 1\
 	$t test -f $(APP)/erlang.mk
 	$t test -f $(APP)/include/blue.hrl
 	$t test -f $(APP)/include/red.hrl
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/use_blue.erl
 	$t test -f $(APP)/src/use_red.erl
 
@@ -956,7 +970,9 @@ core-app-xrl: build clean-core-app-xrl
 	$i "Check that source files still exist"
 	$t test -f $(APP)/Makefile
 	$t test -f $(APP)/erlang.mk
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/boy.erl
 	$t test -f $(APP)/src/erlang_scan.xrl
 	$t test -f $(APP)/src/girl.erl
@@ -1092,7 +1108,9 @@ core-app-xrl-include: build clean-core-app-xrl-include
 	$i "Check that source files still exist"
 	$t test -f $(APP)/Makefile
 	$t test -f $(APP)/erlang.mk
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/boy.erl
 	$t test -f $(APP)/src/girl.erl
 	$t test -f $(APP)/src/errvals.hrl
@@ -1186,7 +1204,9 @@ core-app-yrl: build clean-core-app-yrl
 	$i "Check that source files still exist"
 	$t test -f $(APP)/Makefile
 	$t test -f $(APP)/erlang.mk
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/boy.erl
 	$t test -f $(APP)/src/girl.erl
 	$t test -f $(APP)/src/xmerl_xpath_parse.yrl
@@ -1297,7 +1317,9 @@ core-app-yrl-include: build clean-core-app-yrl-include
 	$i "Check that source files still exist"
 	$t test -f $(APP)/Makefile
 	$t test -f $(APP)/erlang.mk
+ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
+endif
 	$t test -f $(APP)/src/boy.erl
 	$t test -f $(APP)/src/core_parse.hrl
 	$t test -f $(APP)/src/core_parse.yrl

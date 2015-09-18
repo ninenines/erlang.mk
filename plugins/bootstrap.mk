@@ -49,6 +49,8 @@ endef
 ifdef SP
 define bs_Makefile
 PROJECT = $(PROJECT)
+PROJECT_DESCRIPTION = New project
+PROJECT_VERSION = 0.0.1
 
 # Whitespace to be used when creating files from templates.
 SP = $(SP)
@@ -355,7 +357,9 @@ ifneq ($(wildcard src/),)
 endif
 	$(call render_template,bs_Makefile,Makefile)
 	$(verbose) mkdir src/
+ifdef LEGACY
 	$(call render_template,bs_appsrc,src/$(PROJECT).app.src)
+endif
 	$(call render_template,bs_app,src/$(PROJECT)_app.erl)
 	$(eval n := $(PROJECT)_sup)
 	$(call render_template,tpl_supervisor,src/$(PROJECT)_sup.erl)
@@ -366,7 +370,9 @@ ifneq ($(wildcard src/),)
 endif
 	$(call render_template,bs_Makefile,Makefile)
 	$(verbose) mkdir src/
+ifdef LEGACY
 	$(call render_template,bs_appsrc_lib,src/$(PROJECT).app.src)
+endif
 
 bootstrap-rel:
 ifneq ($(wildcard relx.config),)

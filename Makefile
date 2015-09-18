@@ -24,12 +24,17 @@ all:
 	awk 'FNR==1 && NR!=1{print ""}1' $(patsubst %,%.mk,$(BUILD_CONFIG)) \
 		| sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = $(ERLANG_MK_VERSION)/' > $(ERLANG_MK)
 
-ifeq ($(p),)
+ifdef p
 check:
-	$(MAKE) -C test
+	$(MAKE) -C test pkg-$p
+else
+ifdef c
+check:
+	$(MAKE) -C test $c LEGACY=$(LEGACY)
 else
 check:
-	$(MAKE) -C test pkg-$(p)
+	$(MAKE) -C test LEGACY=$(LEGACY)
+endif
 endif
 
 clean:
