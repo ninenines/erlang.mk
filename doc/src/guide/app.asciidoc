@@ -165,6 +165,28 @@ key from dependencies automatically, which means you need to
 add them to Erlang.mk and to the '.app.src' at the same time,
 duplicating the work.
 
+=== Automatic application resource file values
+
+When building the application resource file, Erlang.mk may
+automatically add an `id` key with information about the
+Git commit (if using Git), or an empty string otherwise.
+It will only do this under specific conditions:
+
+* The application was built as a dependency of another, or
+* The legacy method was used, and the '.app.src' file contained `{id, "git"}`
+
+This value is most useful when you need to help your users,
+as it allows you to know which version they run exactly by
+asking them to look in the file, or by running a simple
+command on their production server:
+
+[source,erlang]
+----
+1> application:get_all_key(cowboy).
+{ok,[{description,"Small, fast, modular HTTP server."},
+     {id,"2.0.0-pre.2-25-g0ffde50-dirty"},
+----
+
 === File formats
 
 Erlang.mk supports a variety of different source file formats.
