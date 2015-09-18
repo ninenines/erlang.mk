@@ -18,6 +18,8 @@ include::limitations.asciidoc[Limitations]
 
 include::app.asciidoc[Building]
 
+include::compat.asciidoc[Compatibility with other build tools]
+
 = Advanced
 
 include::external_plugins.asciidoc[External plugins]

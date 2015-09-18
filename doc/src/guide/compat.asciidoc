@@ -1,0 +1,88 @@
+== Compatibility with other build tools
+
+Erlang.mk tries its best to be compatible with the other Erlang
+build tools. It can use dependencies written with other build
+tools in mind, and can also make your projects usable by those
+build tools as well. Erlang.mk is like the cool kid that gets
+along with everybody.
+
+In this chapter I will use the term _Rebar project_ to refer
+to a project built using Rebar 2, Rebar 3 or Mad. These three
+build tools are very similar and share the same configuration
+file.
+
+=== Rebar projects as Erlang.mk dependencies
+
+Erlang.mk comes with a feature called _Autoload_ which will
+use Rebar 2 to patch any Rebar project and make it compatible
+with Erlang.mk. This feature essentially patches Rebar out
+and adds a Makefile to the project that Erlang.mk can then
+use for building:
+
+_Autoload_ is documented in more details in the
+link:deps.asciidoc[Packages and dependencies] chapter.
+
+=== Erlang.mk projects as a Rebar dependencies
+
+Erlang.mk projects can be made compatible with the Rebar family
+of build tools pretty easily, as Erlang.mk will generate
+all the files they require for building.
+
+The Rebar family requires two files: a 'rebar.config' file
+containing compilation options and the list of dependencies,
+and the application resource file, found either at
+'ebin/$(PROJECT).app' or at 'src/$(PROJECT).app.src'.
+
+==== Rebar configuration
+
+Erlang.mk comes with a target that generates a 'rebar.config'
+file when invoked:
+
+[source,bash]
+$ make rebar.config
+
+Careful! This will build the file even if it already existed
+before.
+
+To build this file, Erlang.mk uses information it finds in
+the `DEPS` and `ERLC_OPTS` variables, among others. This
+means that the Rebar family builds your project much the
+same way as Erlang.mk.
+
+Careful though! Different build tools have different fetching
+strategies. If some applications provide differing dependencies,
+they might be fetched differently by other build tools. Check
+the link:sanity_check.asciidoc[Sanity check] chapter to find
+out how to detect such issues.
+
+You can automatically generate this file when you build
+your application, by making it a dependency of the `app`
+target:
+
+[source,make]
+----
+app:: rebar.config
+----
+
+Don't forget to commit the file when it changes!
+
+If you run into other issues, it's probably because you use a
+feature specific to Erlang.mk, like the `cp` fetch method.
+It could also be that we forgot to handle something! Sorry.
+We are of course interested to hear about any compatibility
+problems you may have, just open a ticket!
+
+==== Application resource file
+
+Erlang.mk has two ways to generate an application resource
+file: from the information found in the Makefile, or from
+the information found in the 'src/$(PROJECT).app.src' file.
+Needless to say, if you have this file in your repository,
+then you don't need to worry about compatibility with other
+build tools.
+
+If you don't, however, it's not much harder. Every time
+Erlang.mk will compile your application, it will produce
+a new 'ebin/$(PROJECT).app' file. Simply commit this file
+when it changes. It will only change when you modify the
+configuration, add or remove modules.
