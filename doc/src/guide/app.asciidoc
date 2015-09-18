@@ -165,6 +165,14 @@ key from dependencies automatically, which means you need to
 add them to Erlang.mk and to the '.app.src' at the same time,
 duplicating the work.
 
+If you really can't live without the legacy method, for one
+reason or another, worry not; Erlang.mk will support it. And
+if you need to create a new project that uses this method, you
+just have to say so when bootstrapping:
+
+[source,bash]
+$ make -f erlang.mk bootstrap-lib LEGACY=1
+
 === Automatic application resource file values
 
 When building the application resource file, Erlang.mk may
