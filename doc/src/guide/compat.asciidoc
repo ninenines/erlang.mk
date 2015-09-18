@@ -22,7 +22,7 @@ use for building:
 _Autoload_ is documented in more details in the
 link:deps.asciidoc[Packages and dependencies] chapter.
 
-=== Erlang.mk projects as a Rebar dependencies
+=== Erlang.mk projects as Rebar dependencies
 
 Erlang.mk projects can be made compatible with the Rebar family
 of build tools pretty easily, as Erlang.mk will generate
