@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js pkg search
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js doc pkg search
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -124,6 +124,46 @@ dep_jquery = git https://github.com/jquery/jquery master\
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(jquery, Deps), \
 		halt()"
+
+core-deps-doc: build clean-core-deps-doc
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Add Edown as a documentation building dependency"
+	$t sed -i.bak '2i\
+DOC_DEPS = edown\
+EDOC_OPTS = {doclet, edown_doclet}\
+' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that documentation dependencies were not fetched"
+	$t test ! -e $(APP)/deps/edown
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP)]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member(edown, Deps), \
+		halt()"
+
+	$i "Build the application documentation"
+	$t $(MAKE) -C $(APP) docs $v
+
+	$i "Check that documentation dependencies were fetched"
+	$t test -d $(APP)/deps/edown
+
+	$i "Check the Edown generated Markdown documentation"
+	$t test -f $(APP)/doc/boy.md
+	$t test -f $(APP)/doc/girl.md
 
 core-deps-pkg: build clean-core-deps-pkg
 
