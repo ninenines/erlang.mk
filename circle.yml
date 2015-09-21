@@ -9,7 +9,7 @@ dependencies:
 
   pre:
     - sudo apt-get update
-    - sudo apt-get install autoconf2.59
+    - sudo apt-get install autoconf2.59 gcc
     - cd $HOME/bin && ln -s /usr/bin/autoconf2.59 autoconf
     - cd $HOME/bin && ln -s /usr/bin/autoheader2.59 autoheader
     - CI_OTP=OTP-18.0.2 make -f core/core.mk -f plugins/ci.mk ci-prepare:
