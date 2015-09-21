@@ -138,24 +138,24 @@ endef
 
 define dep_autopatch_rebar.erl
 	application:set_env(rebar, log_level, debug),
-	Conf1 = case file:consult("$(DEPS_DIR)/$(1)/rebar.config") of
+	Conf1 = case file:consult("$(call core_native_path,$(DEPS_DIR)/$1/rebar.config)") of
 		{ok, Conf0} -> Conf0;
 		_ -> []
 	end,
 	{Conf, OsEnv} = fun() ->
-		case filelib:is_file("$(DEPS_DIR)/$(1)/rebar.config.script") of
+		case filelib:is_file("$(call core_native_path,$(DEPS_DIR)/$1/rebar.config.script)") of
 			false -> {Conf1, []};
 			true ->
 				Bindings0 = erl_eval:new_bindings(),
 				Bindings1 = erl_eval:add_binding('CONFIG', Conf1, Bindings0),
-				Bindings = erl_eval:add_binding('SCRIPT', "$(DEPS_DIR)/$(1)/rebar.config.script", Bindings1),
+				Bindings = erl_eval:add_binding('SCRIPT', "$(call core_native_path,$(DEPS_DIR)/$1/rebar.config.script)", Bindings1),
 				Before = os:getenv(),
-				{ok, Conf2} = file:script("$(DEPS_DIR)/$(1)/rebar.config.script", Bindings),
+				{ok, Conf2} = file:script("$(call core_native_path,$(DEPS_DIR)/$1/rebar.config.script)", Bindings),
 				{Conf2, lists:foldl(fun(E, Acc) -> lists:delete(E, Acc) end, os:getenv(), Before)}
 		end
 	end(),
 	Write = fun (Text) ->
-		file:write_file("$(DEPS_DIR)/$(1)/Makefile", Text, [append])
+		file:write_file("$(call core_native_path,$(DEPS_DIR)/$1/Makefile)", Text, [append])
 	end,
 	Escape = fun (Text) ->
 		re:replace(Text, "\\\\$$$$", "\$$$$$$$$", [global, {return, list}])
@@ -233,24 +233,24 @@ define dep_autopatch_rebar.erl
 					PT -> [PT, F(F, Fd)]
 				end;
 			{ok, {attribute, _, include, Hrl}, _} ->
-				case file:open("$(DEPS_DIR)/$(1)/include/" ++ Hrl, [read]) of
+				case file:open("$(call core_native_path,$(DEPS_DIR)/$1/include/)" ++ Hrl, [read]) of
 					{ok, HrlFd} -> [F(F, HrlFd), F(F, Fd)];
 					_ ->
-						case file:open("$(DEPS_DIR)/$(1)/src/" ++ Hrl, [read]) of
+						case file:open("$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ Hrl, [read]) of
 							{ok, HrlFd} -> [F(F, HrlFd), F(F, Fd)];
 							_ -> [F(F, Fd)]
 						end
 				end;
 			{ok, {attribute, _, include_lib, "$(1)/include/" ++ Hrl}, _} ->
-				{ok, HrlFd} = file:open("$(DEPS_DIR)/$(1)/include/" ++ Hrl, [read]),
+				{ok, HrlFd} = file:open("$(call core_native_path,$(DEPS_DIR)/$1/include/)" ++ Hrl, [read]),
 				[F(F, HrlFd), F(F, Fd)];
 			{ok, {attribute, _, include_lib, Hrl}, _} ->
-				case file:open("$(DEPS_DIR)/$(1)/include/" ++ Hrl, [read]) of
+				case file:open("$(call core_native_path,$(DEPS_DIR)/$1/include/)" ++ Hrl, [read]) of
 					{ok, HrlFd} -> [F(F, HrlFd), F(F, Fd)];
 					_ -> [F(F, Fd)]
 				end;
 			{ok, {attribute, _, import, {Imp, _}}, _} ->
-				case file:open("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(Imp) ++ ".erl", [read]) of
+				case file:open("$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ atom_to_list(Imp) ++ ".erl", [read]) of
 					{ok, ImpFd} -> [Imp, F(F, ImpFd), F(F, Fd)];
 					_ -> [F(F, Fd)]
 				end;
@@ -262,17 +262,17 @@ define dep_autopatch_rebar.erl
 		end
 	end,
 	fun() ->
-		ErlFiles = filelib:wildcard("$(DEPS_DIR)/$(1)/src/*.erl"),
+		ErlFiles = filelib:wildcard("$(call core_native_path,$(DEPS_DIR)/$1/src/)*.erl"),
 		First0 = lists:usort(lists:flatten([begin
 			{ok, Fd} = file:open(F, [read]),
 			FindFirst(FindFirst, Fd)
 		end || F <- ErlFiles])),
 		First = lists:flatten([begin
-			{ok, Fd} = file:open("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", [read]),
+			{ok, Fd} = file:open("$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ atom_to_list(M) ++ ".erl", [read]),
 			FindFirst(FindFirst, Fd)
-		end || M <- First0, lists:member("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", ErlFiles)]) ++ First0,
+		end || M <- First0, lists:member("$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ atom_to_list(M) ++ ".erl", ErlFiles)]) ++ First0,
 		Write(["COMPILE_FIRST +=", [[" ", atom_to_list(M)] || M <- First,
-			lists:member("$(DEPS_DIR)/$(1)/src/" ++ atom_to_list(M) ++ ".erl", ErlFiles)], "\n"])
+			lists:member("$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ atom_to_list(M) ++ ".erl", ErlFiles)], "\n"])
 	end(),
 	Write("\n\nrebar_dep: preprocess pre-deps deps pre-app app\n"),
 	Write("\npreprocess::\n"),
@@ -312,7 +312,7 @@ define dep_autopatch_rebar.erl
 	PortSpecs = fun() ->
 		case lists:keyfind(port_specs, 1, Conf) of
 			false ->
-				case filelib:is_dir("$(DEPS_DIR)/$(1)/c_src") of
+				case filelib:is_dir("$(call core_native_path,$(DEPS_DIR)/$1/c_src)") of
 					false -> [];
 					true ->
 						[{"priv/" ++ proplists:get_value(so_name, Conf, "$(1)_drv.so"),
@@ -335,7 +335,7 @@ define dep_autopatch_rebar.erl
 		end
 	end(),
 	PortSpecWrite = fun (Text) ->
-		file:write_file("$(DEPS_DIR)/$(1)/c_src/Makefile.erlang.mk", Text, [append])
+		file:write_file("$(call core_native_path,$(DEPS_DIR)/$1/c_src/Makefile.erlang.mk)", Text, [append])
 	end,
 	case PortSpecs of
 		[] -> ok;
@@ -369,7 +369,7 @@ define dep_autopatch_rebar.erl
 				{_, PortEnv0} -> FilterEnv(PortEnv0)
 			end,
 			PortSpec = fun ({Output, Input0, Env}) ->
-				filelib:ensure_dir("$(DEPS_DIR)/$(1)/" ++ Output),
+				filelib:ensure_dir("$(call core_native_path,$(DEPS_DIR)/$1/)" ++ Output),
 				Input = [[" ", I] || I <- Input0],
 				PortSpecWrite([
 					[["\n", K, " = ", ShellToMk(V)] || {K, V} <- lists:reverse(MergeEnv(PortEnv))],
@@ -398,7 +398,7 @@ define dep_autopatch_rebar.erl
 		case erlang:function_exported(Plugin, Step, 2) of
 			false -> ok;
 			true ->
-				c:cd("$(DEPS_DIR)/$(1)/"),
+				c:cd("$(call core_native_path,$(DEPS_DIR)/$1/)"),
 				Ret = Plugin:Step({config, "", Conf, dict:new(), dict:new(), dict:new(),
 					dict:store(base_dir, "", dict:new())}, undefined),
 				io:format("rebar plugin ~p step ~p ret ~p~n", [Plugin, Step, Ret])
@@ -415,8 +415,8 @@ define dep_autopatch_rebar.erl
 							case lists:keyfind(P, 1, Deps) of
 								false -> ok;
 								_ ->
-									Path = "$(DEPS_DIR)/" ++ atom_to_list(P),
-									io:format("~s", [os:cmd("$(MAKE) -C $(DEPS_DIR)/$(1) " ++ Path)]),
+									Path = "$(call core_native_path,$(DEPS_DIR)/)" ++ atom_to_list(P),
+									io:format("~s", [os:cmd("$(MAKE) -C $(call core_native_path,$(DEPS_DIR)/$1) " ++ Path)]),
 									io:format("~s", [os:cmd("$(MAKE) -C " ++ Path ++ " IS_DEP=1")]),
 									code:add_patha(Path ++ "/ebin")
 							end
@@ -428,7 +428,7 @@ define dep_autopatch_rebar.erl
 						case lists:keyfind(plugin_dir, 1, Conf) of
 							false -> ok;
 							{_, PluginsDir} ->
-								ErlFile = "$(DEPS_DIR)/$(1)/" ++ PluginsDir ++ "/" ++ atom_to_list(P) ++ ".erl",
+								ErlFile = "$(call core_native_path,$(DEPS_DIR)/$1/)" ++ PluginsDir ++ "/" ++ atom_to_list(P) ++ ".erl",
 								{ok, P, Bin} = compile:file(ErlFile, [binary]),
 								{module, P} = code:load_binary(P, ErlFile, Bin)
 						end
@@ -447,19 +447,19 @@ define dep_autopatch_app.erl
 			false -> ok;
 			true ->
 				{ok, [{application, '$(1)', L0}]} = file:consult(App),
-				Mods = filelib:fold_files("$(DEPS_DIR)/$(1)/src", "\\\\.erl$$$$", true,
+				Mods = filelib:fold_files("$(call core_native_path,$(DEPS_DIR)/$1/src)", "\\\\.erl$$$$", true,
 					fun (F, Acc) -> [list_to_atom(filename:rootname(filename:basename(F)))|Acc] end, []),
 				L = lists:keystore(modules, 1, L0, {modules, Mods}),
 				ok = file:write_file(App, io_lib:format("~p.~n", [{application, '$(1)', L}]))
 		end
 	end,
-	UpdateModules("$(DEPS_DIR)/$(1)/ebin/$(1).app"),
+	UpdateModules("$(call core_native_path,$(DEPS_DIR)/$1/ebin/$1.app)"),
 	halt()
 endef
 
 define dep_autopatch_appsrc.erl
-	AppSrcOut = "$(DEPS_DIR)/$(1)/src/$(1).app.src",
-	AppSrcIn = case filelib:is_regular(AppSrcOut) of false -> "$(DEPS_DIR)/$(1)/ebin/$(1).app"; true -> AppSrcOut end,
+	AppSrcOut = "$(call core_native_path,$(DEPS_DIR)/$1/src/$1.app.src)",
+	AppSrcIn = case filelib:is_regular(AppSrcOut) of false -> "$(call core_native_path,$(DEPS_DIR)/$1/ebin/$1.app)"; true -> AppSrcOut end,
 	case filelib:is_regular(AppSrcIn) of
 		false -> ok;
 		true ->
