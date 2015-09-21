@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = pkg search
+CORE_DEPS_CASES = build-c pkg search
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -12,6 +12,35 @@ $(CORE_DEPS_CLEAN_TARGETS):
 	$t rm -rf $(APP_TO_CLEAN)/
 
 core-deps: $(CORE_DEPS_TARGETS)
+
+core-deps-build-c: build clean-core-deps-build-c
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add 8cc to the list of build dependencies"
+	$t sed -i.bak '2i\
+BUILD_DEPS = 8cc\
+dep_8cc = git https://github.com/rui314/8cc master\
+' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/8cc
+
+	$i "Check that 8cc can be started"
+	$t $(APP)/deps/8cc/8cc -h $v
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP)]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member('8cc', Deps), \
+		halt()"
 
 core-deps-pkg: build clean-core-deps-pkg
 
