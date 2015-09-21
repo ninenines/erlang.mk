@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c pkg search
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs pkg search
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -13,7 +13,8 @@ $(CORE_DEPS_CLEAN_TARGETS):
 
 core-deps: $(CORE_DEPS_TARGETS)
 
-core-deps-build-c: build clean-core-deps-build-c
+ifneq ($(PLATFORM),msys2)
+core-deps-build-c-8cc: build clean-core-deps-build-c-8cc
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -40,6 +41,37 @@ dep_8cc = git https://github.com/rui314/8cc master\
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member('8cc', Deps), \
+		halt()"
+endif
+
+core-deps-build-c-imagejs: build clean-core-deps-build-c-imagejs
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add imagejs to the list of build dependencies"
+	$t sed -i.bak '2i\
+BUILD_DEPS = imagejs\
+dep_imagejs = git https://github.com/jklmnn/imagejs master\
+' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/imagejs
+
+	$i "Check that imagejs works"
+	$t $(APP)/deps/imagejs/imagejs bmp $(APP)/deps/imagejs/Makefile
+	$t test -f $(APP)/deps/imagejs/Makefile.bmp
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP)]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member(imagejs, Deps), \
 		halt()"
 
 core-deps-pkg: build clean-core-deps-pkg
