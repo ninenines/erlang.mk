@@ -13,7 +13,7 @@ export DEPS_DIR
 REBAR_DEPS_DIR = $(DEPS_DIR)
 export REBAR_DEPS_DIR
 
-ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(filter-out $(IGNORE_DEPS),$(DEPS)))
+ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(filter-out $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)))
 
 ifeq ($(filter $(DEPS_DIR),$(subst :, ,$(ERL_LIBS))),)
 ifeq ($(ERL_LIBS),)
@@ -569,7 +569,7 @@ ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 endif
 endef
 
-$(foreach dep,$(DEPS),$(eval $(call dep_target,$(dep))))
+$(foreach dep,$(BUILD_DEPS) $(DEPS),$(eval $(call dep_target,$(dep))))
 
 distclean-deps:
 	$(gen_verbose) rm -rf $(DEPS_DIR)
