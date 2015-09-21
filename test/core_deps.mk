@@ -25,6 +25,12 @@ core-deps-pkg: build clean-core-deps-pkg
 DEPS = cowboy\
 ' $(APP)/Makefile
 
+ifdef LEGACY
+	$i "Add Cowboy to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			cowboy,' $(APP)/src/$(APP).app.src
+endif
+
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
