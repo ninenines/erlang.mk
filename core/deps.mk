@@ -446,11 +446,11 @@ define dep_autopatch_app.erl
 		case filelib:is_regular(App) of
 			false -> ok;
 			true ->
-				{ok, [{application, $(1), L0}]} = file:consult(App),
+				{ok, [{application, '$(1)', L0}]} = file:consult(App),
 				Mods = filelib:fold_files("$(DEPS_DIR)/$(1)/src", "\\\\.erl$$$$", true,
 					fun (F, Acc) -> [list_to_atom(filename:rootname(filename:basename(F)))|Acc] end, []),
 				L = lists:keystore(modules, 1, L0, {modules, Mods}),
-				ok = file:write_file(App, io_lib:format("~p.~n", [{application, $(1), L}]))
+				ok = file:write_file(App, io_lib:format("~p.~n", [{application, '$(1)', L}]))
 		end
 	end,
 	UpdateModules("$(DEPS_DIR)/$(1)/ebin/$(1).app"),
