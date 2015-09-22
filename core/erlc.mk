@@ -56,8 +56,8 @@ ifeq ($(wildcard src/$(PROJECT)_app.erl),)
 define app_file
 {application, $(PROJECT), [
 	{description, "$(PROJECT_DESCRIPTION)"},
-	{vsn, "$(PROJECT_VERSION)"},
-	$(if $(IS_DEP),{id$(comma)$(space)"$(1)"}$(comma))
+	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
+	{id$(comma)$(space)"$(1)"}$(comma))
 	{modules, [$(call comma_list,$(2))]},
 	{registered, []},
 	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(DEPS))]}
@@ -67,8 +67,8 @@ else
 define app_file
 {application, $(PROJECT), [
 	{description, "$(PROJECT_DESCRIPTION)"},
-	{vsn, "$(PROJECT_VERSION)"},
-	$(if $(IS_DEP),{id$(comma)$(space)"$(1)"}$(comma))
+	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
+	{id$(comma)$(space)"$(1)"}$(comma))
 	{modules, [$(call comma_list,$(2))]},
 	{registered, [$(call comma_list,$(PROJECT)_sup $(PROJECT_REGISTERED))]},
 	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(DEPS))]},
