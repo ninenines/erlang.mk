@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js doc otp pkg rel search shell
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js doc otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -340,4 +340,46 @@ SHELL_DEPS = tddreloader\
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(tddreloader, Deps), \
+		halt()"
+
+core-deps-test: build clean-core-deps-test
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Add triq to the list of test dependencies"
+	$t sed -i.bak '2i\
+TEST_DEPS = triq\
+' $(APP)/Makefile
+
+	$i "Build the application and its dependencies"
+	$t $(MAKE) -C $(APP) deps app $v
+
+	$i "Check that no dependencies were fetched"
+	$t test ! -e $(APP)/deps
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP)]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member(triq, Deps), \
+		halt()"
+
+	$i "Run tests"
+	$t $(MAKE) -C $(APP) tests $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/triq
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP)]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member(triq, Deps), \
 		halt()"
