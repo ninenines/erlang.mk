@@ -271,21 +271,20 @@ REL_DEPS = recon\
 		false = lists:member(recon, Deps), \
 		halt()"
 
-	$i "Start the release and check that Recon is loaded"
+# @todo Add check for MSYS2 when releases under Windows become usable.
+#	$i "Start the release and check that Recon is loaded"
 ifeq ($(PLATFORM),msys2)
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd install $v
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd start $v
+#	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd install $v
+#	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd start $v
+#	$t test -n "`$(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd rpcterms \
+#		application loaded_applications | grep recon`"
+#	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd stop $v
+#	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd uninstall $v
 else
+	$i "Start the release and check that Recon is loaded"
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release start $v
-endif
-
 	$t test -n "`$(APP)/_rel/$(APP)_release/bin/$(APP)_release rpcterms \
 		application loaded_applications | grep recon`"
-
-ifeq ($(PLATFORM),msys2)
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd stop $v
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd uninstall $v
-else
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
 endif
 
