@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js doc otp pkg rel search
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js doc otp pkg rel search shell
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -227,12 +227,12 @@ endif
 
 core-deps-rel: build clean-core-deps-rel
 
-	$i "Bootstrap a new release-enabled OTP application named $(APP)"
+	$i "Bootstrap a new release-enabled OTP library named $(APP)"
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib bootstrap-rel $v
 
-	$i "Add Recon to the list of dependencies"
+	$i "Add Recon to the list of release dependencies"
 	$t sed -i.bak '2i\
 REL_DEPS = recon\
 ' $(APP)/Makefile
@@ -300,3 +300,44 @@ core-deps-search: build clean-core-deps-search
 
 	$i "Run 'make search q=cowboy' and check that it prints packages"
 	$t test -n "`$(MAKE) -C $(APP) search q=cowboy`"
+
+core-deps-shell: build clean-core-deps-shell
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add TDDReloader to the list of shell dependencies"
+	$t sed -i.bak '2i\
+SHELL_DEPS = tddreloader\
+' $(APP)/Makefile
+
+	$i "Build the application and its dependencies"
+	$t $(MAKE) -C $(APP) deps app $v
+
+	$i "Check that no dependencies were fetched"
+	$t test ! -e $(APP)/deps
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP)]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member(tddreloader, Deps), \
+		halt()"
+
+	$i "Run the shell"
+	$t $(MAKE) -C $(APP) shell SHELL_OPTS="-eval \" \
+		ok = application:load($(APP)), \
+		ok = application:load(tddreloader), \
+		halt()\"" $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/tddreloader
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP)]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member(tddreloader, Deps), \
+		halt()"
