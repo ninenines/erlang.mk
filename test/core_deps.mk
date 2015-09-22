@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js doc otp pkg search
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js doc otp pkg rel search
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -145,8 +145,8 @@ EDOC_OPTS = {doclet, edown_doclet}\
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
-	$i "Check that documentation dependencies were not fetched"
-	$t test ! -e $(APP)/deps/edown
+	$i "Check that no dependencies were fetched"
+	$t test ! -e $(APP)/deps
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
@@ -224,6 +224,70 @@ endif
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(cowboy, Deps), \
 		halt()"
+
+core-deps-rel: build clean-core-deps-rel
+
+	$i "Bootstrap a new release-enabled OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib bootstrap-rel $v
+
+	$i "Add Recon to the list of dependencies"
+	$t sed -i.bak '2i\
+REL_DEPS = recon\
+' $(APP)/Makefile
+
+	$i "Add Recon to the relx.config file"
+	$t $(ERL) -eval " \
+		{ok, Conf0} = file:consult(\"$(APP)/relx.config\"), \
+		Conf = lists:keyreplace(release, 1, Conf0, {release, {$(APP)_release, \"1\"}, [$(APP), recon]}), \
+		ok = file:write_file(\"$(APP)/relx.config\", \
+			lists:map(fun(Term) -> io_lib:format(\"~p.~n\", [Term]) end, Conf)), \
+		halt()"
+
+	$i "Build the application and its dependencies"
+	$t $(MAKE) -C $(APP) deps app $v
+
+	$i "Check that no dependencies were fetched"
+	$t test ! -e $(APP)/deps
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP)]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member(recon, Deps), \
+		halt()"
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/recon
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP)]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member(recon, Deps), \
+		halt()"
+
+	$i "Start the release and check that Recon is loaded"
+ifeq ($(PLATFORM),msys2)
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd install $v
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd start $v
+else
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release start $v
+endif
+
+	$t test -n "`$(APP)/_rel/$(APP)_release/bin/$(APP)_release rpcterms \
+		application loaded_applications | grep recon`"
+
+ifeq ($(PLATFORM),msys2)
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd stop $v
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd uninstall $v
+else
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
+endif
 
 core-deps-search: build clean-core-deps-search
 

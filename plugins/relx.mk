@@ -34,7 +34,7 @@ $(RELX):
 	$(gen_verbose) $(call core_http_get,$(RELX),$(RELX_URL))
 	$(verbose) chmod +x $(RELX)
 
-relx-rel: $(RELX)
+relx-rel: $(RELX) rel-deps
 	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
 distclean-relx-rel:
