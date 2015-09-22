@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js doc pkg search
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js doc otp pkg search
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -164,6 +164,33 @@ EDOC_OPTS = {doclet, edown_doclet}\
 	$i "Check the Edown generated Markdown documentation"
 	$t test -f $(APP)/doc/boy.md
 	$t test -f $(APP)/doc/girl.md
+
+ifndef LEGACY
+core-deps-otp: build clean-core-deps-otp
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Crypto to the list of OTP dependencies"
+	$t sed -i.bak '2i\
+OTP_DEPS = crypto\
+' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that no dependencies were fetched"
+	$t test ! -e $(APP)/deps
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), crypto]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(crypto, Deps), \
+		halt()"
+endif
 
 core-deps-pkg: build clean-core-deps-pkg
 
