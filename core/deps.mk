@@ -533,7 +533,8 @@ endef
 dep_name = $(if $(dep_$(1)),$(1),$(pkg_$(1)_name))
 dep_repo = $(patsubst git://github.com/%,https://github.com/%, \
 	$(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo)))
-dep_commit = $(if $(dep_$(1)),$(word 3,$(dep_$(1))),$(pkg_$(1)_commit))
+dep_commit = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),\
+	$(if $(dep_$(1)),$(word 3,$(dep_$(1))),$(pkg_$(1)_commit)))
 
 define dep_target
 $(DEPS_DIR)/$(1):
