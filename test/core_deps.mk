@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit dep-full doc otp pkg rel search shell test
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc fetch-git fetch-hg fetch-svn otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -160,41 +160,6 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
 		halt()"
 
-core-deps-dep-full: build clean-core-deps-dep-full
-
-	$i "Bootstrap a new OTP library named $(APP)"
-	$t mkdir $(APP)/
-	$t cp ../erlang.mk $(APP)/
-	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-
-	$i "Add Cowboy 1.0.0 to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = cowboy\
-dep_cowboy = git https://github.com/ninenines/cowboy 1.0.0\
-' $(APP)/Makefile
-
-ifdef LEGACY
-	$i "Add Cowboy to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			cowboy,' $(APP)/src/$(APP).app.src
-endif
-
-	$i "Build the application"
-	$t $(MAKE) -C $(APP) $v
-
-	$i "Check that all dependencies were fetched"
-	$t test -d $(APP)/deps/cowboy
-	$t test -d $(APP)/deps/cowlib
-	$t test -d $(APP)/deps/ranch
-
-	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
-		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch]], \
-		{ok, Deps} = application:get_key($(APP), applications), \
-		true = lists:member(cowboy, Deps), \
-		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
-		halt()"
-
 core-deps-doc: build clean-core-deps-doc
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -234,6 +199,107 @@ EDOC_OPTS = {doclet, edown_doclet}\
 	$i "Check the Edown generated Markdown documentation"
 	$t test -f $(APP)/doc/boy.md
 	$t test -f $(APP)/doc/girl.md
+
+core-deps-fetch-git: build clean-core-deps-fetch-git
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy 1.0.0 to the list of dependencies"
+	$t sed -i.bak '2i\
+DEPS = cowboy\
+dep_cowboy = git https://github.com/ninenines/cowboy 1.0.0\
+' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowboy to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			cowboy,' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/cowboy
+	$t test -d $(APP)/deps/cowlib
+	$t test -d $(APP)/deps/ranch
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(cowboy, Deps), \
+		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
+		halt()"
+
+core-deps-fetch-hg: build clean-core-deps-fetch-hg
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Ehsa 4.0.3 to the list of dependencies"
+	$t sed -i.bak '2i\
+DEPS = ehsa\
+dep_ehsa = hg https://bitbucket.org/a12n/ehsa 4.0.3\
+' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add ehsa to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			ehsa,' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/ehsa
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), ehsa]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(ehsa, Deps), \
+		{ok, \"4.0.3\"} = application:get_key(ehsa, vsn), \
+		halt()"
+
+core-deps-fetch-svn: build clean-core-deps-fetch-svn
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib 1.0.0 to the list of dependencies"
+	$t sed -i.bak '2i\
+DEPS = cowlib\
+dep_cowlib = svn https://github.com/ninenines/cowlib/tags/1.0.0\
+' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowlib to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			cowlib,' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), cowlib]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(cowlib, Deps), \
+		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
+		halt()"
 
 ifndef LEGACY
 core-deps-otp: build clean-core-deps-otp
