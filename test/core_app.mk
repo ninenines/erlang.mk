@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-app no-makedep xrl xrl-include yrl yrl-include
+CORE_APP_CASES = asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend git-dep-with-single-ref git-dep-with-fallback-refs git-dep-with-invalid-refs hrl hrl-recursive mib no-app no-makedep xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
@@ -549,6 +549,86 @@ endif
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+core-app-git-dep-with-single-ref: build clean-core-app-git-dep-with-single-ref
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a Git repository for this application"
+	$t (cd $(APP) && \
+		git init -q && \
+		git config user.name "Testsuite" && \
+		git config user.email "testsuite@erlang.mk" && \
+		git add . && \
+		git commit -q -m "Initial commit")
+
+	$i "Add a dependency to the Makefile"
+	$t sed -i.bak '2i\
+DEPS = itself\
+dep_itself = git file://$(abspath $(APP)) master\
+' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) deps $v
+
+	$i "Verify the checked out dependency"
+	$t test -d $(APP)/deps/itself
+	$t test "$$(cd $(APP)/deps/itself && git symbolic-ref -q --short HEAD)" = 'master'
+
+core-app-git-dep-with-fallback-refs: build clean-core-app-git-dep-with-fallback-refs
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a Git repository for this application"
+	$t (cd $(APP) && \
+		git init -q && \
+		git config user.name "Testsuite" && \
+		git config user.email "testsuite@erlang.mk" && \
+		git add . && \
+		git commit -q -m "Initial commit")
+
+	$i "Add a dependency to the Makefile"
+	$t sed -i.bak '2i\
+DEPS = itself\
+dep_itself = git file://$(abspath $(APP)) missing-ref master\
+' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) deps $v
+
+	$i "Verify the checked out dependency"
+	$t test -d $(APP)/deps/itself
+	$t test "$$(cd $(APP)/deps/itself && git symbolic-ref -q --short HEAD)" = 'master'
+
+core-app-git-dep-with-invalid-refs: build clean-core-app-git-dep-with-invalid-refs
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a Git repository for this application"
+	$t (cd $(APP) && \
+		git init -q && \
+		git config user.name "Testsuite" && \
+		git config user.email "testsuite@erlang.mk" && \
+		git add . && \
+		git commit -q -m "Initial commit")
+
+	$i "Add a dependency to the Makefile"
+	$t sed -i.bak '2i\
+DEPS = itself\
+dep_itself = git file://$(abspath $(APP)) missing-ref non-existing-ref\
+' $(APP)/Makefile
+
+	$i "Build the application (expecting failure)"
+	$t ($(MAKE) -C $(APP) deps $v && false) || true
 
 core-app-hrl: build clean-core-app-hrl
 

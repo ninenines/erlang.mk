@@ -475,12 +475,18 @@ endef
 
 define dep_fetch_git
 	git clone -q -n -- $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1)); \
-	cd $(DEPS_DIR)/$(call dep_name,$(1)) && git checkout -q $(call dep_commit,$(1));
+	cd $(DEPS_DIR)/$(call dep_name,$(1)) && ( \
+	$(foreach ref,$(call dep_commits,$(1)), \
+	  git checkout -q $(ref) >/dev/null 2>&1 || \
+	  ) (echo "error: no valid pathspec among: $(call dep_commits,$(1))" 1>&2 && false) )
 endef
 
 define dep_fetch_hg
 	hg clone -q -U $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1)); \
-	cd $(DEPS_DIR)/$(call dep_name,$(1)) && hg update -q $(call dep_commit,$(1));
+	cd $(DEPS_DIR)/$(call dep_name,$(1)) && ( \
+	$(foreach ref,$(call dep_commits,$(1)), \
+	  hg update -q $(ref) >/dev/null 2>&1 || \
+	  ) (echo "error: no valid pathspec among: $(call dep_commits,$(1))" 1>&2 && false) )
 endef
 
 define dep_fetch_svn
@@ -533,7 +539,7 @@ endef
 dep_name = $(if $(dep_$(1)),$(1),$(pkg_$(1)_name))
 dep_repo = $(patsubst git://github.com/%,https://github.com/%, \
 	$(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo)))
-dep_commit = $(if $(dep_$(1)),$(word 3,$(dep_$(1))),$(pkg_$(1)_commit))
+dep_commits = $(if $(dep_$(1)),$(wordlist 3,$(words $(dep_$(1))),$(dep_$(1))),$(pkg_$(1)_commit))
 
 define dep_target
 $(DEPS_DIR)/$(1):
