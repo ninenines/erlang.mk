@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc fetch-git fetch-hg fetch-svn otp pkg rel search shell test
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc fetch-cp fetch-git fetch-hg fetch-svn otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -199,6 +199,43 @@ EDOC_OPTS = {doclet, edown_doclet}\
 	$i "Check the Edown generated Markdown documentation"
 	$t test -f $(APP)/doc/boy.md
 	$t test -f $(APP)/doc/girl.md
+
+core-deps-fetch-cp: build clean-core-deps-fetch-cp
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap a new OTP library named my_dep inside $(APP)"
+	$t mkdir $(APP)/my_dep
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
+
+	$i "Add my_dep to the list of dependencies"
+	$t sed -i.bak '2i\
+DEPS = my_dep\
+dep_my_dep = cp $(CURDIR)/$(APP)/my_dep/\
+' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add my_dep to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			my_dep,' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/my_dep
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), my_dep]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(my_dep, Deps), \
+		halt()"
 
 core-deps-fetch-git: build clean-core-deps-fetch-git
 
