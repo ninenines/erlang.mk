@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc otp pkg rel search shell test
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit dep-full doc otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -136,6 +136,41 @@ core-deps-dep-commit: build clean-core-deps-dep-commit
 	$t sed -i.bak '2i\
 DEPS = cowboy\
 dep_cowboy_commit = 1.0.0\
+' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowboy to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			cowboy,' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/cowboy
+	$t test -d $(APP)/deps/cowlib
+	$t test -d $(APP)/deps/ranch
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(cowboy, Deps), \
+		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
+		halt()"
+
+core-deps-dep-full: build clean-core-deps-dep-full
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy 1.0.0 to the list of dependencies"
+	$t sed -i.bak '2i\
+DEPS = cowboy\
+dep_cowboy = git https://github.com/ninenines/cowboy 1.0.0\
 ' $(APP)/Makefile
 
 ifdef LEGACY
