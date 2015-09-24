@@ -524,7 +524,7 @@ define dep_fetch
 	$(if $(dep_$(1)), \
 		$(if $(dep_fetch_$(word 1,$(dep_$(1)))), \
 			$(word 1,$(dep_$(1))), \
-			legacy), \
+			$(if $(IS_DEP),legacy,fail)), \
 		$(if $(filter $(1),$(PACKAGES)), \
 			$(pkg_$(1)_fetch), \
 			fail))

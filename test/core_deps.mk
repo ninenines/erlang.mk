@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc fetch-cp fetch-git fetch-hex fetch-hg fetch-svn otp pkg rel search shell test
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -237,6 +237,70 @@ endif
 		true = lists:member(my_dep, Deps), \
 		halt()"
 
+core-deps-fetch-custom: build clean-core-deps-fetch-custom
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add dependency boop using custom fetch method beep to the list of dependencies"
+	$t sed -i.bak '2i\
+DEPS = boop\
+dep_boop = beep boop\
+dep_fetch_beep = mkdir -p \$$(DEPS_DIR)/\$$1\
+' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add boop to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			boop,' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/boop
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(boop, Deps), \
+		halt()"
+
+core-deps-fetch-fail-bad: build clean-core-deps-fetch-fail-bad
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib as a dependency using a non-existing fetch method named oops"
+	$t sed -i.bak '2i\
+DEPS = cowlib\
+dep_cowlib = oops https://github.com/ninenines/cowlib 1.0.0\
+' $(APP)/Makefile
+
+	$i "Check that building the application fails"
+	$t if $(MAKE) -C $(APP) $v; then false; fi
+
+core-deps-fetch-fail-unknown: build clean-core-deps-fetch-fail-unknown
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add an unknown application as a dependency"
+	$t sed -i.bak '2i\
+DEPS = unknown\
+' $(APP)/Makefile
+
+	$i "Check that building the application fails"
+	$t if $(MAKE) -C $(APP) $v; then false; fi
+
 core-deps-fetch-git: build clean-core-deps-fetch-git
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -339,6 +403,26 @@ endif
 		true = lists:member(ehsa, Deps), \
 		{ok, \"4.0.3\"} = application:get_key(ehsa, vsn), \
 		halt()"
+
+# Legacy must fail for the top-level application, but work for dependencies.
+core-deps-fetch-legacy: build clean-core-deps-fetch-legacy
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib as a dependency using a non-existing fetch method named oops"
+	$t sed -i.bak '2i\
+DEPS = cowlib\
+dep_cowlib = https://github.com/ninenines/cowlib 1.0.0\
+' $(APP)/Makefile
+
+	$i "Check that building the application fails"
+	$t if $(MAKE) -C $(APP) $v; then false; fi
+
+	$i "Check that building the application works with IS_DEP=1"
+	$t $(MAKE) -C $(APP) IS_DEP=1 $v
 
 core-deps-fetch-svn: build clean-core-deps-fetch-svn
 
