@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn otp pkg rel search shell test
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn order-first order-top otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -454,6 +454,92 @@ endif
 		[ok = application:load(App) || App <- [$(APP), cowlib]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(cowlib, Deps), \
+		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
+		halt()"
+
+# A lower-level dependency of the first dependency always
+# wins over a lower-level dependency of the second dependency.
+core-deps-order-first: build clean-core-deps-order-first
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap a new OTP library named my_dep inside $(APP)"
+	$t mkdir $(APP)/my_dep
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib 1.0.0 to the list of dependencies for my_dep"
+	$t sed -i.bak '2i\
+DEPS = cowlib\
+dep_cowlib = git https://github.com/ninenines/cowlib 1.0.0\
+' $(APP)/my_dep/Makefile
+
+	$i "Add Cowboy package and my_dep to the list of dependencies"
+	$t sed -i.bak '2i\
+DEPS = my_dep cowboy\
+dep_my_dep = cp $(CURDIR)/$(APP)/my_dep/\
+' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowboy and my_dep to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			cowboy,\
+			my_dep,' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/cowboy
+	$t test -d $(APP)/deps/cowlib
+	$t test -d $(APP)/deps/my_dep
+	$t test -d $(APP)/deps/ranch
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, my_dep, ranch]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(cowboy, Deps), \
+		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
+		halt()"
+
+# A higher-level dependency always wins.
+core-deps-order-top: build clean-core-deps-order-top
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy package and Cowlib 1.0.0 to the list of dependencies"
+	$t sed -i.bak '2i\
+DEPS = cowboy cowlib\
+dep_cowlib = git https://github.com/ninenines/cowlib 1.0.0\
+' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowboy to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			cowboy,' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/cowboy
+	$t test -d $(APP)/deps/cowlib
+	$t test -d $(APP)/deps/ranch
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(cowboy, Deps), \
 		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
 		halt()"
 
