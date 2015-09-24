@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn order-first order-top otp pkg rel search shell test
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore order-first order-top otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -456,6 +456,40 @@ endif
 		true = lists:member(cowlib, Deps), \
 		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
 		halt()"
+
+core-deps-ignore: build clean-core-deps-ignore
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy to dependencies, Ranch to the ignore list and to test dependencies"
+	$t sed -i.bak '2i\
+DEPS = cowboy\
+IGNORE_DEPS = ranch\
+TEST_DEPS = ranch\
+' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowboy to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			cowboy,' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the correct dependencies were fetched"
+	$t test -d $(APP)/deps/cowboy
+	$t test -d $(APP)/deps/cowlib
+	$t test ! -e $(APP)/deps/ranch
+
+	$i "Build the test dependencies"
+	$t $(MAKE) -C $(APP) test-deps $v
+
+	$i "Check that the correct dependencies were fetched"
+	$t test -d $(APP)/deps/ranch
 
 # A lower-level dependency of the first dependency always
 # wins over a lower-level dependency of the second dependency.
