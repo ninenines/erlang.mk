@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore order-first order-top otp pkg rel search shell test
+CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore order-first order-top otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -158,6 +158,40 @@ endif
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(cowboy, Deps), \
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
+		halt()"
+
+core-deps-dir: build clean-core-deps-dir
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy to the list of dependencies with a custom DEPS_DIR"
+	$t sed -i.bak '2i\
+DEPS = cowboy\
+DEPS_DIR ?= \$$(CURDIR)/libs\
+' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowboy to the applications key in the .app.src file"
+	$t sed -i.bak '8i\
+			cowboy,' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched in the custom DEPS_DIR"
+	$t test -d $(APP)/libs/cowboy
+	$t test -d $(APP)/libs/cowlib
+	$t test -d $(APP)/libs/ranch
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/libs/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(cowboy, Deps), \
 		halt()"
 
 core-deps-doc: build clean-core-deps-doc
