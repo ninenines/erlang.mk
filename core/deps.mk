@@ -499,7 +499,7 @@ define dep_fetch_hex.erl
 		[], [{body_format, binary}]),
 	{ok, Files} = erl_tar:extract({binary, Body}, [memory]),
 	{_, Source} = lists:keyfind("contents.tar.gz", 1, Files),
-	ok = erl_tar:extract({binary, Source}, [{cwd, "$(DEPS_DIR)/$(1)"}, compressed]),
+	ok = erl_tar:extract({binary, Source}, [{cwd, "$(call core_native_path,$(DEPS_DIR)/$1)"}, compressed]),
 	halt()
 endef
 
