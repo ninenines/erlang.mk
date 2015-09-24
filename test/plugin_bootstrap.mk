@@ -106,10 +106,12 @@ endif
 ifeq ($(PLATFORM),msys2)
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd install $v
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd start $v
+	$t sleep 1
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd stop $v
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd uninstall $v
 else
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release start $v
+	$t sleep 1
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
 endif
 
