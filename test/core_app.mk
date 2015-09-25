@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-app no-makedep xrl xrl-include yrl yrl-include
+CORE_APP_CASES = asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-app no-makedep pt pt-erlc-opts xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
@@ -951,6 +951,81 @@ endif
 		ok = application:start($(APP)), \
 		{ok, Mods = [use_blue, use_red]} \
 			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-pt: build clean-core-app-pt
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate a parse_transform module"
+	$t printf "%s\n" \
+		"-module(my_pt)." \
+		"-export([parse_transform/2])." \
+		"parse_transform(Forms, _) ->" \
+		"	io:format(\"*** Running my_pt parse_transform.~n\")," \
+		"	Forms." > $(APP)/src/my_pt.erl
+
+	$i "Generate a .erl file that uses the my_pt parse_transform"
+	$t printf "%s\n" \
+		"-module(my_user)." \
+		"-compile({parse_transform, my_pt})." > $(APP)/src/my_user.erl
+
+	$i "Compile my_pt first"
+	$t echo "COMPILE_FIRST += my_pt" >> $(APP)/Makefile
+
+	$i "Build the application; confirm the parse_transform is used"
+	$t $(MAKE) -C $(APP) | grep "*** Running my_pt parse_transform."
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [my_pt, my_user]} = application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-pt-erlc-opts: build clean-core-app-pt-erlc-opts
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap a new OTP library in $(APP)/deps/my_pt_dep"
+	$t mkdir -p $(APP)/deps/my_pt_dep/
+	$t cp ../erlang.mk $(APP)/deps/my_pt_dep/
+	$t $(MAKE) -C $(APP)/deps/my_pt_dep/ -f erlang.mk bootstrap-lib $v
+
+	$i "Generate a parse_transform module in my_pt_dep"
+	$t printf "%s\n" \
+		"-module(my_pt)." \
+		"-export([parse_transform/2])." \
+		"parse_transform(Forms, _) ->" \
+		"	io:format(\"*** Running my_pt parse_transform.~n\")," \
+		"	Forms." > $(APP)/deps/my_pt_dep/src/my_pt.erl
+
+	$i "Add my_pt_dep to the list of dependencies"
+	$t sed -i.bak '2i\
+BUILD_DEPS = my_pt_dep\
+' $(APP)/Makefile
+
+	$i "Generate .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Add the my_pt parse_transform to ERLC_OPTS"
+	$t echo "ERLC_OPTS += +'{parse_transform, my_pt}'" >> $(APP)/Makefile
+
+	$i "Build the application; confirm the parse_transform is used"
+	$t $(MAKE) -C $(APP) | grep "*** Running my_pt parse_transform."
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl]} = application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 

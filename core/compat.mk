@@ -6,7 +6,9 @@
 # We strip out -Werror because we don't want to fail due to
 # warnings when used as a dependency.
 
-define compat_convert_erlc_opt
+compat_prepare_erlc_opts = $(shell echo "$1" | sed 's/, */,/')
+
+define compat_convert_erlc_opts
 $(if $(filter-out -Werror,$1),\
 	$(if $(findstring +,$1),\
 		$(shell echo $1 | cut -b 2-)))
@@ -15,7 +17,8 @@ endef
 define compat_rebar_config
 {deps, [$(call comma_list,$(foreach d,$(DEPS),\
 	{$(call dep_name,$d),".*",{git,"$(call dep_repo,$d)","$(call dep_commit,$d)"}}))]}.
-{erl_opts, [$(call comma_list,$(foreach o,$(ERLC_OPTS),$(call compat_convert_erlc_opt,$o)))]}.
+{erl_opts, [$(call comma_list,$(foreach o,$(call compat_prepare_erlc_opts,$(ERLC_OPTS)),\
+	$(call compat_convert_erlc_opts,$o)))]}.
 endef
 
 $(eval _compat_rebar_config = $$(compat_rebar_config))

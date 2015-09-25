@@ -2,7 +2,7 @@
 #
 # Note: autopatch functionality is covered separately.
 
-CORE_COMPAT_CASES = auto-rebar rebar rebar-deps rebar-deps-pkg rebar-erlc-opts
+CORE_COMPAT_CASES = auto-rebar rebar rebar-deps rebar-deps-pkg rebar-erlc-opts rebar-pt
 CORE_COMPAT_TARGETS = $(addprefix core-compat-,$(CORE_COMPAT_CASES))
 CORE_COMPAT_CLEAN_TARGETS = $(addprefix clean-,$(CORE_COMPAT_TARGETS))
 
@@ -219,3 +219,67 @@ core-compat-rebar-erlc-opts: build clean-core-compat-rebar-erlc-opts
 
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar compile $v
+
+core-compat-rebar-pt: build clean-core-compat-rebar-pt
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/src/girl.erl
+
+	$i "Add lager to the list of dependencies"
+	$t sed -i.bak '2i\
+DEPS = lager\
+' $(APP)/Makefile
+
+	$i "Add the lager_transform parse_transform to ERLC_OPTS"
+	$t echo "ERLC_OPTS += +'{parse_transform, lager_transform}'" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Run 'make rebar.config'"
+	$t $(MAKE) -C $(APP) rebar.config $v
+
+	$i "Check that rebar.config was created"
+	$t test -f $(APP)/rebar.config
+
+	$i "Check that the parse_transform option is listed in rebar.config"
+	$t $(ERL) -eval " \
+		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
+		{_, Opts} = lists:keyfind(erl_opts, 1, C), \
+		true = lists:member({parse_transform, lager_transform}, Opts), \
+		halt()"
+
+# For the new build method, we have to simulate keeping the .app file
+# inside the repository, by leaving it in the ebin/ directory before
+# calling Rebar.
+ifndef LEGACY
+	$i "Move the .app file outside ebin/"
+	$t mv $(APP)/ebin/$(APP).app $(APP)/
+endif
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+ifndef LEGACY
+	$i "Put the .app file back into ebin/"
+	$t mkdir $(APP)/ebin/
+	$t mv $(APP)/$(APP).app $(APP)/ebin/
+endif
+
+	$i "Download rebar"
+	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t chmod +x $(APP)/rebar
+
+	$i "Use rebar to build the application"
+	$t cd $(APP) && ./rebar get-deps compile $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/girl.beam
