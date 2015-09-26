@@ -69,7 +69,9 @@ core-app-asn1: build clean-core-app-asn1
 		$(APP)/include/CAP.hrl \
 		$(APP)/src/CAP.erl \
 		$(APP)/src/use_cap.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/asn1/CAP.asn1
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/asn1/CAP.asn1 | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -322,7 +324,9 @@ core-app-generate-erl: build clean-core-app-generate-erl
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/generated.beam \
 		$(APP)/src/generated.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/script.sh
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/script.sh | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -430,7 +434,9 @@ core-app-generate-erl-include: build clean-core-app-generate-erl-include
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/generated.beam \
 		$(APP)/src/generated.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/include/included.hrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/include/included.hrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -489,7 +495,9 @@ core-app-generate-erl-prepend: build clean-core-app-generate-erl-prepend
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/generated.beam \
 		$(APP)/src/generated.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/script.sh
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/script.sh | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -589,7 +597,9 @@ core-app-hrl: build clean-core-app-hrl
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/include/red.hrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/include/red.hrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -677,7 +687,9 @@ core-app-hrl-recursive: build clean-core-app-hrl-recursive
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/include/pill.hrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/include/pill.hrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -776,7 +788,9 @@ core-app-mib: build clean-core-app-mib
 		$(APP)/include/EX1-MIB.hrl \
 		$(APP)/priv/mibs/EX1-MIB.bin \
 		$(APP)/src/use_v1.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/mibs/EX1-MIB.mib
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/mibs/EX1-MIB.mib | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -886,7 +900,9 @@ NO_MAKEDEP ?= 1\
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/include/red.hrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/include/red.hrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -906,7 +922,9 @@ NO_MAKEDEP ?= 1\
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/include/red.hrl
+	$t $(SLEEP)
 	$t NO_MAKEDEP= $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/include/red.hrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -1074,7 +1092,9 @@ core-app-xrl: build clean-core-app-xrl
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/erlang_scan.beam \
 		$(APP)/src/erlang_scan.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/src/erlang_scan.xrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/src/erlang_scan.xrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -1174,7 +1194,9 @@ core-app-xrl-include: build clean-core-app-xrl-include
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xfl_lexer.beam \
 		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/src/xfl_lexer.xrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/src/xfl_lexer.xrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -1193,7 +1215,9 @@ core-app-xrl-include: build clean-core-app-xrl-include
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xfl_lexer.beam \
 		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/src/typechecks.hrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/src/typechecks.hrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -1212,7 +1236,9 @@ core-app-xrl-include: build clean-core-app-xrl-include
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xfl_lexer.beam \
 		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/src/errvals.hrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/src/errvals.hrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -1308,7 +1334,9 @@ core-app-yrl: build clean-core-app-yrl
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xref_parser.beam \
 		$(APP)/src/xref_parser.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/src/xref_parser.yrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/src/xref_parser.yrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -1402,7 +1430,9 @@ core-app-yrl-include: build clean-core-app-yrl-include
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/core_parse.beam \
 		$(APP)/src/core_parse.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/src/core_parse.yrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/src/core_parse.yrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -1421,7 +1451,9 @@ core-app-yrl-include: build clean-core-app-yrl-include
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/core_parse.beam \
 		$(APP)/src/core_parse.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
 	$t touch $(APP)/src/core_parse.hrl
+	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/src/core_parse.hrl | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT

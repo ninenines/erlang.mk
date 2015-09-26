@@ -38,9 +38,7 @@ core-compat-auto-rebar: build clean-core-compat-auto-rebar
 
 	$i "Create a temporary file"
 	$t touch $(APP)/older_file
-
-	$i "Wait a second"
-	$t sleep 1
+	$t $(SLEEP)
 
 	$i "Build the application again"
 	$t $(MAKE) -C $(APP) $v
@@ -79,9 +77,7 @@ core-compat-rebar: build clean-core-compat-rebar
 
 	$i "Create a temporary file"
 	$t touch $(APP)/older_file
-
-	$i "Wait a second"
-	$t sleep 1
+	$t $(SLEEP)
 
 	$i "Run 'make rebar.config' again"
 	$t $(MAKE) -C $(APP) rebar.config $v

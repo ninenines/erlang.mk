@@ -37,7 +37,7 @@ dep_8cc = git https://github.com/rui314/8cc master\
 	$t $(APP)/deps/8cc/8cc -h $v
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member('8cc', Deps), \
@@ -68,7 +68,7 @@ dep_imagejs = git https://github.com/jklmnn/imagejs master\
 	$t test -f $(APP)/deps/imagejs/Makefile.bmp
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(imagejs, Deps), \
@@ -119,7 +119,7 @@ dep_jquery = git https://github.com/jquery/jquery master\
 	$t test -d $(APP)/deps/jquery
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(jquery, Deps), \
@@ -218,7 +218,7 @@ EDOC_OPTS = {doclet, edown_doclet}\
 	$t test ! -e $(APP)/deps
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(edown, Deps), \
@@ -282,7 +282,7 @@ core-deps-fetch-custom: build clean-core-deps-fetch-custom
 	$t sed -i.bak '2i\
 DEPS = boop\
 dep_boop = beep boop\
-dep_fetch_beep = mkdir -p \$$(DEPS_DIR)/\$$1\
+dep_fetch_beep = mkdir -p \$$(DEPS_DIR)/\$$1/ebin/\
 ' $(APP)/Makefile
 
 ifdef LEGACY
@@ -631,7 +631,7 @@ OTP_DEPS = crypto\
 	$t test ! -e $(APP)/deps
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP), crypto]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(crypto, Deps), \
@@ -698,7 +698,7 @@ REL_DEPS = recon\
 	$t test ! -e $(APP)/deps
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(recon, Deps), \
@@ -712,7 +712,7 @@ REL_DEPS = recon\
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
-		[ok = application:load(App) || App <- [$(APP)]], \
+		[ok = application:load(App) || App <- [$(APP), recon]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(recon, Deps), \
 		halt()"
@@ -766,7 +766,7 @@ SHELL_DEPS = tddreloader\
 	$t test ! -e $(APP)/deps
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(tddreloader, Deps), \
@@ -783,7 +783,7 @@ SHELL_DEPS = tddreloader\
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
-		[ok = application:load(App) || App <- [$(APP)]], \
+		[ok = application:load(App) || App <- [$(APP), tddreloader]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(tddreloader, Deps), \
 		halt()"
@@ -811,7 +811,7 @@ TEST_DEPS = triq\
 	$t test ! -e $(APP)/deps
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(triq, Deps), \
@@ -825,7 +825,7 @@ TEST_DEPS = triq\
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
-		[ok = application:load(App) || App <- [$(APP)]], \
+		[ok = application:load(App) || App <- [$(APP), triq]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(triq, Deps), \
 		halt()"

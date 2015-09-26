@@ -2,6 +2,14 @@
 # Copyright (c) 2014, Viktor Söderqvist <viktor@zuiderkwast.se>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+# ZSH users have a more modern shell which doesn't need to
+# have the same safeguards as other shells. To use ZSH instead
+# of the default shell, set ZSH=1.
+
+ifdef ZSH
+SHELL := $(shell which zsh)
+endif
+
 # Temporary application name, taken from rule name.
 
 APP = $(subst -,_,$@)
@@ -17,6 +25,24 @@ ifeq ($(shell uname -o),Msys)
 	PLATFORM = msys2
 else
 	PLATFORM = unix
+endif
+
+# Some systems do not have sub-second file times resolution.
+# This is the case for older systems like OSX that uses the HFS+
+# file system. HFS+ has a 1 second time resolution. This is a
+# problem because the Erlang.mk tests rely on file modification
+# times to ensure files were rebuilt. To fix this issue, we
+# detect here whether the system supports sub-second resolution,
+# and maybe sleep during test execution.
+#
+# Also see:
+# * http://arstechnica.com/apple/2011/07/mac-os-x-10-7/12/#hfs-problems
+# * https://apple.stackexchange.com/questions/51650/linus-torvalds-and-the-os-x-filesystem
+
+ifeq ($(shell touch a; sleep 0.01; touch b; sleep 0.01; touch c; test c -nt b -a b -nt a; echo $$?; rm a b c),1)
+SLEEP = sleep 1
+else
+SLEEP =
 endif
 
 # OTP master, for downloading files for testing.
@@ -47,11 +73,11 @@ else ifeq ($V,1)
 else ifeq ($V,2)
 	t = @echo " TEST  " $@;
 	v = V=0
-	i = @echo == $@:
+	i = @echo "== $@:"
 else
 	t =
 	v = V=1
-	i = @echo == $@:
+	i = @echo "== $@:"
 endif
 
 # Main targets.
