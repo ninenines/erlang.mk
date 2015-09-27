@@ -41,6 +41,7 @@ core-deps-build-c-8cc: build clean-core-deps-build-c-8cc
 		halt()"
 endif
 
+ifneq ($(PLATFORM),freebsd)
 core-deps-build-c-imagejs: build clean-core-deps-build-c-imagejs
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -67,6 +68,7 @@ core-deps-build-c-imagejs: build clean-core-deps-build-c-imagejs
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(imagejs, Deps), \
 		halt()"
+endif
 
 core-deps-build-erl: build clean-core-deps-build-erl
 

@@ -19,12 +19,18 @@ APP_TO_CLEAN = $(subst -,_,$(patsubst clean-%,%,$@))
 
 ERL = erl +A0 -noinput -boot start_clean
 
-# Platform, condensed version.
+# Platform detection, condensed version.
 
-ifeq ($(shell uname -o),Msys)
-	PLATFORM = msys2
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Darwin)
+PLATFORM = darwin
+else ifeq ($(UNAME_S),FreeBSD)
+PLATFORM = freebsd
+else ifeq ($(shell uname -o),Msys)
+PLATFORM = msys2
 else
-	PLATFORM = unix
+PLATFORM = unix
 endif
 
 # Some systems do not have sub-second file times resolution.
