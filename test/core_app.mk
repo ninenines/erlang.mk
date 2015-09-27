@@ -994,7 +994,7 @@ core-app-pt: build clean-core-app-pt
 	$t echo "COMPILE_FIRST += my_pt" >> $(APP)/Makefile
 
 	$i "Build the application; confirm the parse_transform is used"
-	$t $(MAKE) -C $(APP) | grep "*** Running my_pt parse_transform."
+	$t $(MAKE) -C $(APP) | grep "Running my_pt parse_transform."
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
@@ -1034,7 +1034,7 @@ core-app-pt-erlc-opts: build clean-core-app-pt-erlc-opts
 	$t echo "ERLC_OPTS += +'{parse_transform, my_pt}'" >> $(APP)/Makefile
 
 	$i "Build the application; confirm the parse_transform is used"
-	$t $(MAKE) -C $(APP) | grep "*** Running my_pt parse_transform."
+	$t $(MAKE) -C $(APP) | grep "Running my_pt parse_transform."
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
