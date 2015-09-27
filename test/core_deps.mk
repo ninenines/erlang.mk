@@ -22,10 +22,7 @@ core-deps-build-c-8cc: build clean-core-deps-build-c-8cc
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add 8cc to the list of build dependencies"
-	$t sed -i.bak '2i\
-BUILD_DEPS = 8cc\
-dep_8cc = git https://github.com/rui314/8cc master\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = 8cc\ndep_8cc = git https://github.com/rui314/8cc master\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -52,10 +49,7 @@ core-deps-build-c-imagejs: build clean-core-deps-build-c-imagejs
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add imagejs to the list of build dependencies"
-	$t sed -i.bak '2i\
-BUILD_DEPS = imagejs\
-dep_imagejs = git https://github.com/jklmnn/imagejs master\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = imagejs\ndep_imagejs = git https://github.com/jklmnn/imagejs master\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -82,9 +76,7 @@ core-deps-build-erl: build clean-core-deps-build-erl
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add cowlib to the list of build dependencies"
-	$t sed -i.bak '2i\
-BUILD_DEPS = cowlib\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = cowlib\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -107,10 +99,7 @@ core-deps-build-js: build clean-core-deps-build-js
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add jquery to the list of build dependencies"
-	$t sed -i.bak '2i\
-BUILD_DEPS = jquery\
-dep_jquery = git https://github.com/jquery/jquery master\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = jquery\ndep_jquery = git https://github.com/jquery/jquery master\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -133,15 +122,11 @@ core-deps-dep-commit: build clean-core-deps-dep-commit
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy 1.0.0 to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = cowboy\
-dep_cowboy_commit = 1.0.0\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy_commit = 1.0.0\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			cowboy,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -168,15 +153,11 @@ core-deps-dir: build clean-core-deps-dir
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy to the list of dependencies with a custom DEPS_DIR"
-	$t sed -i.bak '2i\
-DEPS = cowboy\
-DEPS_DIR ?= \$$(CURDIR)/libs\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\nDEPS_DIR ?= \$$(CURDIR)/libs\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			cowboy,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -206,10 +187,7 @@ core-deps-doc: build clean-core-deps-doc
 	$t echo "-module(girl)." > $(APP)/src/girl.erl
 
 	$i "Add Edown as a documentation building dependency"
-	$t sed -i.bak '2i\
-DOC_DEPS = edown\
-EDOC_OPTS = {doclet, edown_doclet}\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = edown\nEDOC_OPTS = {doclet, edown_doclet}\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -247,15 +225,11 @@ core-deps-fetch-cp: build clean-core-deps-fetch-cp
 	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
 
 	$i "Add my_dep to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = my_dep\
-dep_my_dep = cp $(CURDIR)/$(APP)/my_dep/\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = cp $(CURDIR)/$(APP)/my_dep/\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add my_dep to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			my_dep,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tmy_dep,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -279,16 +253,11 @@ core-deps-fetch-custom: build clean-core-deps-fetch-custom
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add dependency boop using custom fetch method beep to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = boop\
-dep_boop = beep boop\
-dep_fetch_beep = mkdir -p \$$(DEPS_DIR)/\$$1/ebin/\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = boop\ndep_boop = beep boop\ndep_fetch_beep = mkdir -p \$$(DEPS_DIR)/\$$1/ebin/\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add boop to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			boop,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tboop,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -312,10 +281,7 @@ core-deps-fetch-fail-bad: build clean-core-deps-fetch-fail-bad
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowlib as a dependency using a non-existing fetch method named oops"
-	$t sed -i.bak '2i\
-DEPS = cowlib\
-dep_cowlib = oops https://github.com/ninenines/cowlib 1.0.0\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = oops https://github.com/ninenines/cowlib 1.0.0\n"}' $(APP)/Makefile
 
 	$i "Check that building the application fails"
 	$t if $(MAKE) -C $(APP) $v; then false; fi
@@ -328,9 +294,7 @@ core-deps-fetch-fail-unknown: build clean-core-deps-fetch-fail-unknown
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add an unknown application as a dependency"
-	$t sed -i.bak '2i\
-DEPS = unknown\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = unknown\n"}' $(APP)/Makefile
 
 	$i "Check that building the application fails"
 	$t if $(MAKE) -C $(APP) $v; then false; fi
@@ -343,15 +307,11 @@ core-deps-fetch-git: build clean-core-deps-fetch-git
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy 1.0.0 to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = cowboy\
-dep_cowboy = git https://github.com/ninenines/cowboy 1.0.0\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = git https://github.com/ninenines/cowboy 1.0.0\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			cowboy,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -378,15 +338,11 @@ core-deps-fetch-hex: build clean-core-deps-fetch-hex
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy 1.0.0 to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = cowboy\
-dep_cowboy = hex 1.0.0\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = hex 1.0.0\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			cowboy,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -413,15 +369,11 @@ core-deps-fetch-hg: build clean-core-deps-fetch-hg
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Ehsa 4.0.3 to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = ehsa\
-dep_ehsa = hg https://bitbucket.org/a12n/ehsa 4.0.3\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = ehsa\ndep_ehsa = hg https://bitbucket.org/a12n/ehsa 4.0.3\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add ehsa to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			ehsa,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tehsa,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -447,10 +399,7 @@ core-deps-fetch-legacy: build clean-core-deps-fetch-legacy
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowlib as a dependency using a non-existing fetch method named oops"
-	$t sed -i.bak '2i\
-DEPS = cowlib\
-dep_cowlib = https://github.com/ninenines/cowlib 1.0.0\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = https://github.com/ninenines/cowlib 1.0.0\n"}' $(APP)/Makefile
 
 	$i "Check that building the application fails"
 	$t if $(MAKE) -C $(APP) $v; then false; fi
@@ -466,15 +415,11 @@ core-deps-fetch-svn: build clean-core-deps-fetch-svn
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowlib 1.0.0 to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = cowlib\
-dep_cowlib = svn https://github.com/ninenines/cowlib/tags/1.0.0\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = svn https://github.com/ninenines/cowlib/tags/1.0.0\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowlib to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			cowlib,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -499,16 +444,11 @@ core-deps-ignore: build clean-core-deps-ignore
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy to dependencies, Ranch to the ignore list and to test dependencies"
-	$t sed -i.bak '2i\
-DEPS = cowboy\
-IGNORE_DEPS = ranch\
-TEST_DEPS = ranch\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\nIGNORE_DEPS = ranch\nTEST_DEPS = ranch\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			cowboy,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -534,28 +474,20 @@ core-deps-order-first: build clean-core-deps-order-first
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
+	$i "Add Cowboy package and my_dep to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep cowboy\ndep_my_dep = cp $(CURDIR)/$(APP)/my_dep/\n"}' $(APP)/Makefile
+
 	$i "Bootstrap a new OTP library named my_dep inside $(APP)"
 	$t mkdir $(APP)/my_dep
 	$t cp ../erlang.mk $(APP)/my_dep/
 	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowlib 1.0.0 to the list of dependencies for my_dep"
-	$t sed -i.bak '2i\
-DEPS = cowlib\
-dep_cowlib = git https://github.com/ninenines/cowlib 1.0.0\
-' $(APP)/my_dep/Makefile
-
-	$i "Add Cowboy package and my_dep to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = my_dep cowboy\
-dep_my_dep = cp $(CURDIR)/$(APP)/my_dep/\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git https://github.com/ninenines/cowlib 1.0.0\n"}' $(APP)/my_dep/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy and my_dep to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			cowboy,\
-			my_dep,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n\t\tmy_dep,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -584,15 +516,11 @@ core-deps-order-top: build clean-core-deps-order-top
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy package and Cowlib 1.0.0 to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = cowboy cowlib\
-dep_cowlib = git https://github.com/ninenines/cowlib 1.0.0\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy cowlib\ndep_cowlib = git https://github.com/ninenines/cowlib 1.0.0\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			cowboy,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -620,9 +548,7 @@ core-deps-otp: build clean-core-deps-otp
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Crypto to the list of OTP dependencies"
-	$t sed -i.bak '2i\
-OTP_DEPS = crypto\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "OTP_DEPS = crypto\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -646,14 +572,11 @@ core-deps-pkg: build clean-core-deps-pkg
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = cowboy\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
-	$t sed -i.bak '8i\
-			cowboy,' $(APP)/src/$(APP).app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -679,9 +602,7 @@ core-deps-rel: build clean-core-deps-rel
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib bootstrap-rel $v
 
 	$i "Add Recon to the list of release dependencies"
-	$t sed -i.bak '2i\
-REL_DEPS = recon\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = recon\n"}' $(APP)/Makefile
 
 	$i "Add Recon to the relx.config file"
 	$t $(ERL) -eval " \
@@ -755,9 +676,7 @@ core-deps-shell: build clean-core-deps-shell
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add TDDReloader to the list of shell dependencies"
-	$t sed -i.bak '2i\
-SHELL_DEPS = tddreloader\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "SHELL_DEPS = tddreloader\n"}' $(APP)/Makefile
 
 	$i "Build the application and its dependencies"
 	$t $(MAKE) -C $(APP) deps app $v
@@ -800,9 +719,7 @@ core-deps-test: build clean-core-deps-test
 	$t echo "-module(girl)." > $(APP)/src/girl.erl
 
 	$i "Add triq to the list of test dependencies"
-	$t sed -i.bak '2i\
-TEST_DEPS = triq\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "TEST_DEPS = triq\n"}' $(APP)/Makefile
 
 	$i "Build the application and its dependencies"
 	$t $(MAKE) -C $(APP) deps app $v

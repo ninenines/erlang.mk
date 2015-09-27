@@ -64,9 +64,7 @@ core-upgrade-custom-repo: build clean-core-upgrade-custom-repo
 
 	$i "Fork erlang.mk locally and modify it"
 	$t git clone -q https://github.com/ninenines/erlang.mk $(APP)/alt-erlangmk-repo
-	$t sed -i.bak '1i\
-# Copyright (c) erlang.mk Testsuite!\
-' $(APP)/alt-erlangmk-repo/core/core.mk
+	$t perl -ni.bak -e 'if ($$.==1) {print "# Copyright (c) erlang.mk Testsuite!\n";print}' $(APP)/alt-erlangmk-repo/core/core.mk
 	$t (cd $(APP)/alt-erlangmk-repo && \
 		git checkout -q -b test-copyright && \
 		git config user.email "testsuite@erlang.mk" && \
@@ -74,10 +72,7 @@ core-upgrade-custom-repo: build clean-core-upgrade-custom-repo
 		git commit -q -a -m 'Add Testsuite copyright')
 
 	$i "Point application to an alternate erlang.mk repository"
-	$t sed -i.bak '2i\
-ERLANG_MK_REPO = file://$(abspath $(APP)/alt-erlangmk-repo)\
-ERLANG_MK_COMMIT = test-copyright\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ERLANG_MK_REPO = file://$(abspath $(APP)/alt-erlangmk-repo)\nERLANG_MK_COMMIT = test-copyright\n"}' $(APP)/Makefile
 
 	$i "Update erlang.mk"
 	$t $(MAKE) -C $(APP) erlang-mk $v

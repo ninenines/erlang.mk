@@ -106,10 +106,7 @@ core-compat-rebar-deps: build clean-core-compat-rebar-deps
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy as a dependency"
-	$t sed -i.bak '2i\
-DEPS = cowboy\
-dep_cowboy = git https://github.com/ninenines/cowboy 1.0.0\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = git https://github.com/ninenines/cowboy 1.0.0\n"}' $(APP)/Makefile
 
 	$i "Run 'make rebar.config'"
 	$t $(MAKE) -C $(APP) rebar.config $v
@@ -141,9 +138,7 @@ core-compat-rebar-deps-pkg: build clean-core-compat-rebar-deps-pkg
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy package as a dependency"
-	$t sed -i.bak '2i\
-DEPS = cowboy\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\n"}' $(APP)/Makefile
 
 	$i "Run 'make rebar.config'"
 	$t $(MAKE) -C $(APP) rebar.config $v
@@ -228,9 +223,7 @@ core-compat-rebar-pt: build clean-core-compat-rebar-pt
 	$t echo "-module(girl)." > $(APP)/src/girl.erl
 
 	$i "Add lager to the list of dependencies"
-	$t sed -i.bak '2i\
-DEPS = lager\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\n"}' $(APP)/Makefile
 
 	$i "Add the lager_transform parse_transform to ERLC_OPTS"
 	$t echo "ERLC_OPTS += +'{parse_transform, lager_transform}'" >> $(APP)/Makefile

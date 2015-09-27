@@ -37,11 +37,7 @@ core-plugins-all: build clean-core-plugins-all
 		git commit -q -m "Tests"
 
 	$i "Add dependency and plugins to the Makefile"
-	$t sed -i.bak '2i\
-DEPS = plugin_dep\
-dep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master\
-DEP_PLUGINS = plugin_dep\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = plugin_dep\ndep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master\nDEP_PLUGINS = plugin_dep\n"}' $(APP)/Makefile
 
 	$i "Run 'make plugin1' and check that it prints plugin1"
 	$t test -n "`$(MAKE) -C $(APP) plugin1 | grep plugin1`"
@@ -73,11 +69,7 @@ core-plugins-one: build clean-core-plugins-one
 		git commit -q -m "Tests"
 
 	$i "Add dependency and plugins to the Makefile"
-	$t sed -i.bak '2i\
-DEPS = plugin_dep\
-dep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master\
-DEP_PLUGINS = plugin_dep/mk/plugin1.mk\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = plugin_dep\ndep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master\nDEP_PLUGINS = plugin_dep/mk/plugin1.mk\n"}' $(APP)/Makefile
 
 	$i "Run 'make plugin1' and check that it prints plugin1"
 	$t test -n "`$(MAKE) -C $(APP) plugin1 | grep plugin1`"

@@ -865,9 +865,7 @@ core-app-no-makedep: build clean-core-app-no-makedep
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Set NO_MAKEDEP ?= 1 in the Makefile"
-	$t sed -i.bak '2i\
-NO_MAKEDEP ?= 1\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "NO_MAKEDEP ?= 1\n"}' $(APP)/Makefile
 
 	$i "Generate .hrl files"
 	$t mkdir $(APP)/include/
@@ -1026,9 +1024,7 @@ core-app-pt-erlc-opts: build clean-core-app-pt-erlc-opts
 		"	Forms." > $(APP)/deps/my_pt_dep/src/my_pt.erl
 
 	$i "Add my_pt_dep to the list of dependencies"
-	$t sed -i.bak '2i\
-BUILD_DEPS = my_pt_dep\
-' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = my_pt_dep\n"}' $(APP)/Makefile
 
 	$i "Generate .erl files"
 	$t echo "-module(boy)." > $(APP)/src/boy.erl
