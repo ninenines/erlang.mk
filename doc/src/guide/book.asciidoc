@@ -18,6 +18,8 @@ include::limitations.asciidoc[Limitations]
 
 include::app.asciidoc[Building]
 
+include::deps.asciidoc[Packages and dependencies]
+
 include::compat.asciidoc[Compatibility with other build tools]
 
 = Advanced
