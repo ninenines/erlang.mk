@@ -178,7 +178,6 @@ core_find = $(if $(wildcard $1),$(shell find $(1:%/=%) -type f -name $(subst *,\
 
 core_lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$(1)))))))))))))))))))))))))))
 
-# @todo On Windows: $(shell dir /B $(1)); make sure to handle when no file exists.
 core_ls = $(filter-out $(1),$(shell echo $(1)))
 
 # @todo Use a solution that does not require using perl.

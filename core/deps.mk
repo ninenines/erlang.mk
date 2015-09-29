@@ -61,8 +61,8 @@ endif
 			if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
 				$(MAKE) -C $$dep IS_DEP=1 || exit $$?; \
 			else \
-				echo "ERROR: No Makefile to build dependency $$dep."; \
-				exit 1; \
+				echo "Error: No Makefile to build dependency $$dep."; \
+				exit 2; \
 			fi \
 		fi \
 	done
@@ -521,7 +521,7 @@ define dep_fetch_hex
 endef
 
 define dep_fetch_fail
-	echo "Unknown or invalid dependency: $(1). Please consult the erlang.mk README for instructions." >&2; \
+	echo "Error: Unknown or invalid dependency: $(1)." >&2; \
 	exit 78;
 endef
 

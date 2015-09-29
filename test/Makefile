@@ -164,7 +164,7 @@ core-distclean-tmp: build clean-core-distclean-tmp
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
-	$i "Check if .erlang.mk directory got removed"
+	$i "Check that .erlang.mk directory got removed"
 	$t test ! -e $(APP)/.erlang.mk
 
 core-help: build clean-core-help
