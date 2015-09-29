@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore no-autopatch no-autopatch-rebar order-first order-top otp pkg rel search shell test
+CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -927,6 +927,25 @@ core-deps-no-autopatch: build clean-core-deps-no-autopatch
 	$t test -d $(APP)/deps/ranch
 
 	$i "Check that Cowlib was not autopatched"
+	$t grep -q Hoguin $(APP)/deps/cowlib/erlang.mk
+
+core-deps-no-autopatch-erlang-mk: build clean-core-deps-no-autopatch-erlang-mk
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib to the list of dependencies and set NO_AUTOPATCH_ERLANG_MK=1"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\nNO_AUTOPATCH_ERLANG_MK = 1\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Check that Erlang.mk was not autopatched"
 	$t grep -q Hoguin $(APP)/deps/cowlib/erlang.mk
 
 core-deps-no-autopatch-rebar: build clean-core-deps-no-autopatch-rebar
