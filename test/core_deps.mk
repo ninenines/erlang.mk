@@ -522,7 +522,7 @@ core-deps-dir: build clean-core-deps-dir
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy to the list of dependencies with a custom DEPS_DIR"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\nDEPS_DIR ?= \$$(CURDIR)/libs\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\nDEPS_DIR ?= \$$(CURDIR)/deep/libs\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
@@ -533,12 +533,12 @@ endif
 	$t $(MAKE) -C $(APP) $v
 
 	$i "Check that all dependencies were fetched in the custom DEPS_DIR"
-	$t test -d $(APP)/libs/cowboy
-	$t test -d $(APP)/libs/cowlib
-	$t test -d $(APP)/libs/ranch
+	$t test -d $(APP)/deep/libs/cowboy
+	$t test -d $(APP)/deep/libs/cowlib
+	$t test -d $(APP)/deep/libs/ranch
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ $(APP)/libs/*/ebin/ -eval " \
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deep/libs/*/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(cowboy, Deps), \
