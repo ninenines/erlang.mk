@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore order-first order-top otp pkg rel search shell test
+CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore no-autopatch no-autopatch-rebar order-first order-top otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -907,6 +907,48 @@ endif
 		true = lists:member(cowboy, Deps), \
 		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
 		halt()"
+
+core-deps-no-autopatch: build clean-core-deps-no-autopatch
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy to the list of dependencies and Cowlib to the NO_AUTOPATCH list"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\nNO_AUTOPATCH = cowlib\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/cowboy
+	$t test -d $(APP)/deps/cowlib
+	$t test -d $(APP)/deps/ranch
+
+	$i "Check that Cowlib was not autopatched"
+	$t grep -q Hoguin $(APP)/deps/cowlib/erlang.mk
+
+core-deps-no-autopatch-rebar: build clean-core-deps-no-autopatch-rebar
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Lager to the list of dependencies and to the NO_AUTOPATCH list"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\nNO_AUTOPATCH = lager\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/goldrush
+	$t test -d $(APP)/deps/lager
+
+	$i "Check that Lager was not autopatched"
+	$t if grep -q erlang\.mk $(APP)/deps/goldrush/Makefile; then false; fi
+	$t if grep -q erlang\.mk $(APP)/deps/lager/Makefile; then false; fi
 
 ifndef LEGACY
 core-deps-otp: build clean-core-deps-otp

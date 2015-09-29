@@ -33,6 +33,8 @@ endif
 endif
 export ERL_LIBS
 
+export NO_AUTOPATCH
+
 # Verbosity.
 
 dep_verbose_0 = @echo " DEP   " $(1);
