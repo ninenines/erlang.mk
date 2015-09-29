@@ -23,92 +23,10 @@ recompile everything), followed by `make dialyze` to see if there are
 any type errors and then `make tests` to run the test suites. The
 result of the test runs can be browsed from the `logs/index.html` file.
 
-Packages
---------
+Compiling and dependencies
+--------------------------
 
-A package index functionality is included with erlang.mk.
-
-To use a package, you simply have to add it to the `DEPS` variable
-in your Makefile. For example this depends on Cowboy:
-
-``` Makefile
-PROJECT = my_project
-DEPS = cowboy
-include erlang.mk
-```
-
-If you need to specify multiple dependencies, you can specify each
-of them separated by spaces:
-
-``` Makefile
-PROJECT = my_project
-DEPS = cowboy gun
-include erlang.mk
-```
-
-If the project you want is not included in the package index, or if
-you want a different version, a few options are available. You can
-edit the package file and contribute to it by opening a pull request.
-You can use a custom package file, in which case you will probably
-want to set the `PKG_FILE2` variable to its location. Or you can
-put the project information directly in the Makefile.
-
-In the latter case you need to create a variable `dep_*` with the
-asterisk replaced by the project name, for example `cowboy`. This
-variable must contain three things: the fetching method used, the
-URL and the version requested. These lines must be defined before
-the erlang.mk include line.
-
-The following snippet overrides the Cowboy version required:
-
-``` Makefile
-DEPS = cowboy
-dep_cowboy = git https://github.com/ninenines/cowboy 1.0.0
-```
-
-They will always be compiled using the command `make`. If the dependency
-does not feature a Makefile, then erlang.mk will be used for building.
-
-For subversion dependencies, the url specifies trunk, branch or
-tag. To specify a particular revision, use `@revision` at the end of
-the url. No separate specification of branch, tag, or revision is
-required or possible.
-
-``` erlang
-DEPS = ex1 ex2
-dep_ex1 = svn https://example.com/svn/trunk/project/ex1
-dep_ex2 = svn svn://example.com/svn/branches/erlang-proj/ex2@264
-```
-
-You can also specify test-only dependencies. These dependencies will only
-be downloaded when running `make tests`. The format is the same as above,
-except the variable `TEST_DEPS` holds the list of test-only dependencies.
-
-``` erlang
-TEST_DEPS = ct_helper
-dep_ct_helper = git https://github.com/extend/ct_helper.git master
-```
-
-Please note that the test dependencies will only be compiled once
-when they are fetched, unlike the normal dependencies.
-
-Autopatch
----------
-
-The autopatch features allows you to automatically fix packages
-that are not compatible with erlang.mk. It can also be used to
-convert compatible packages to use erlang.mk itself for building
-when used as dependency.
-
-The patching occurs only once, immediately after the package has
-been fetched.
-
-The autopatch feature is applied to all dependencies. To disable
-it for a dependency, use the `NO_AUTOPATCH` variable:
-
-``` Makefile
-NO_AUTOPATCH += gproc
-```
+Gone! [Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
 
 Releases
 --------
@@ -119,47 +37,8 @@ is the default command when the file exists.
 
 No special configuration is required for this to work.
 
-Customization
--------------
-
-A custom erlang.mk may be created by editing the `build.config`
-file and then running `make`. Only the core package handling
-and erlc support are required.
-
-If you need more functionality out of your Makefile, you can add extra
-targets after the include line, or create an erlang.mk plugin.
-
-Defining a target before the include line will override the default
-target `all`.
-
-The rest of this README starts by listing the core functionality
-and then details each plugin individually.
-
-Core functionality
-------------------
-
-The following targets are standard:
-
-`all` is equivalent to `deps app rel`.
-
-`deps` fetches and compiles the dependencies.
-
-`app` compiles the application.
-
-`rel` builds the release.
-
-`docs` generates the documentation.
-
-`tests` runs the test suites.
-
-`clean` deletes the output files.
-
-`distclean` deletes the output files but also any intermediate
-files that are usually worth keeping around to save time,
-and any other files needed by plugins (for example the Dialyzer
-PLT file).
-
-`help` gives some help about using erlang.mk.
+Extending Erlang.mk
+-------------------
 
 You may add additional operations to them by using the double
 colons. Make will run all targets sharing the same name when
@@ -174,7 +53,7 @@ You can enable verbose mode by calling Make with the variable
 `V` set to 1.
 
 ``` bash
-$ V=1 make
+$ make V=1
 ```
 
 Parallel execution
@@ -205,47 +84,6 @@ or equivalent file.
 ``` bash
 MAKEFLAGS="-j32 -O"
 ```
-
-Core package functionality
---------------------------
-
-The following targets are specific to packages:
-
-`search` lists all packages in the index.
-
-`search q=STRING` searches the index for STRING.
-
-Packages are downloaded into `DEPS_DIR` (`./deps/` by default).
-
-Core compiler functionality
----------------------------
-
-erlang.mk will automatically compile the OTP application
-resource file found in `src/$(PROJECT).app.src` (do note it
-requires an empty `modules` line); Erlang source files found
-in `src/*.erl` or any subdirectory; Core Erlang source files
-found in `src/*.core` or any subdirectory; Leex source files
-found in `src/*.xrl` or any subdirectory; and Yecc source
-files found in `src/*.yrl` or any subdirectory.
-
-You can change compilation options by setting the `ERLC_OPTS`
-variable. It takes the arguments that will then be passed to
-`erlc`. For more information, please see `erl -man erlc`.
-
-Test target compilation options can be specified in `TEST_ERLC_OPTS`.
-It will override `ERLC_OPTS`.
-
-You can specify a list of modules to be compiled first using
-the `COMPILE_FIRST` variable.
-
-You can also use the `ERLC_EXCLUDE` variable to prevent some
-modules from being compiled by the core compiler. Note that
-`ERLC_EXCLUDE` is a list of module names (i.e., no file extension
-is required).
-
-If `{id, "git"},` is found in your project's `.app.src`, the
-extended output of `git describe ...` will replace it. This
-can be retrieved at runtime via `application:get_key/2`.
 
 C/C++ compiler plugin
 ---------------------
