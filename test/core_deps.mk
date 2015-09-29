@@ -153,7 +153,7 @@ core-deps-apps-dir: build clean-core-deps-apps-dir
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Set a custom APPS_DIR"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "APPS_DIR = \$$(CURDIR)/deep/libs\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "APPS_DIR ?= \$$(CURDIR)/deep/libs\n"}' $(APP)/Makefile
 
 	$i "Create a new library my_app"
 	$t $(MAKE) -C $(APP) new-lib in=my_app $v
