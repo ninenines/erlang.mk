@@ -181,6 +181,9 @@ core_lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,
 # @todo On Windows: $(shell dir /B $(1)); make sure to handle when no file exists.
 core_ls = $(filter-out $(1),$(shell echo $(1)))
 
+# @todo Use a solution that does not require using perl.
+core_relpath = $(shell perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"' $1 $2)
+
 # Automated update.
 
 ERLANG_MK_REPO ?= https://github.com/ninenines/erlang.mk

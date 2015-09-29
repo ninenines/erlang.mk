@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore order-first order-top otp pkg rel search shell test
+CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore order-first order-top otp pkg rel search shell test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -12,6 +12,373 @@ $(CORE_DEPS_CLEAN_TARGETS):
 	$t rm -rf $(APP_TO_CLEAN)/
 
 core-deps: $(CORE_DEPS_TARGETS)
+
+core-deps-apps: build clean-core-deps-apps
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+# Bootstrap the application manually to make sure it works as intended.
+	$i "Bootstrap a repository-local application my_app"
+	$t mkdir -p $(APP)/apps/my_app/src/
+	$t touch $(APP)/apps/file.erl
+	$t echo "DEPS = cowlib" > $(APP)/apps/my_app/Makefile
+	$t echo "include ../../erlang.mk" >> $(APP)/apps/my_app/Makefile
+	$t echo "-module(boy)." > $(APP)/apps/my_app/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/apps/my_app/src/girl.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/boy.beam
+	$t test -f $(APP)/apps/my_app/ebin/girl.beam
+	$t test -d $(APP)/deps/cowlib
+
+# Applications in apps are compiled automatically but not added
+# to the application resource file unless they are listed in LOCAL_DEPS.
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/apps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), my_app]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member(my_app, Deps), \
+		{ok, MyAppDeps} = application:get_key(my_app, applications), \
+		true = lists:member(cowlib, MyAppDeps), \
+		{ok, []} = application:get_key($(APP), modules), \
+		{ok, Mods = [boy, girl]} = application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that Cowlib is still here"
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Check that all relevant files were removed"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/$(APP).app
+	$t test ! -e $(APP)/apps/my_app/my_app.d
+	$t test ! -e $(APP)/apps/my_app/ebin/my_app.app
+	$t test ! -e $(APP)/apps/my_app/ebin/boy.beam
+	$t test ! -e $(APP)/apps/my_app/ebin/girl.beam
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that all relevant files were removed"
+	$t test ! -e $(APP)/deps
+
+	$i "Add my_app to the local dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = my_app\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add my_app to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tmy_app,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/boy.beam
+	$t test -f $(APP)/apps/my_app/ebin/girl.beam
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/apps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), my_app]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(my_app, Deps), \
+		{ok, MyAppDeps} = application:get_key(my_app, applications), \
+		true = lists:member(cowlib, MyAppDeps), \
+		{ok, []} = application:get_key($(APP), modules), \
+		{ok, Mods = [boy, girl]} = application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-deps-apps-conflict: build clean-core-deps-apps-conflict
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/Makefile
+
+	$i "Create a new library Cowlib"
+	$t $(MAKE) -C $(APP) new-lib in=cowlib $v
+
+	$i "Check that building the application fails because of a conflict"
+	$t if $(MAKE) -C $(APP) $v; then false; fi
+
+	$i "Check that Cowlib wasn't fetched"
+	$t test ! -e $(APP)/deps/cowlib
+
+core-deps-apps-deep-conflict: build clean-core-deps-apps-deep-conflict
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\n"}' $(APP)/Makefile
+
+	$i "Create a new library Cowlib"
+	$t $(MAKE) -C $(APP) new-lib in=cowlib $v
+
+	$i "Check that building the application fails because of a conflict"
+	$t if $(MAKE) -C $(APP) $v; then false; fi
+
+	$i "Check that Cowlib wasn't fetched"
+	$t test ! -e $(APP)/deps/cowlib
+
+core-deps-apps-dir: build clean-core-deps-apps-dir
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Set a custom APPS_DIR"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "APPS_DIR = \$$(CURDIR)/deep/libs\n"}' $(APP)/Makefile
+
+	$i "Create a new library my_app"
+	$t $(MAKE) -C $(APP) new-lib in=my_app $v
+
+	$i "Add Cowlib as a dependency to my_app"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/deep/libs/my_app/Makefile
+
+ifdef LEGACY
+	$i "Add Cowlib to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/deep/libs/my_app/src/my_app.app.src
+endif
+
+	$i "Generate .erl files in my_app"
+	$t echo "-module(boy)." > $(APP)/deep/libs/my_app/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/deep/libs/my_app/src/girl.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/deep/libs/my_app/my_app.d
+	$t test -f $(APP)/deep/libs/my_app/ebin/my_app.app
+	$t test -f $(APP)/deep/libs/my_app/ebin/boy.beam
+	$t test -f $(APP)/deep/libs/my_app/ebin/girl.beam
+	$t test -d $(APP)/deps/cowlib
+
+# Applications in apps are compiled automatically but not added
+# to the application resource file unless they are listed in LOCAL_DEPS.
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deep/libs/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), my_app]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		false = lists:member(my_app, Deps), \
+		{ok, MyAppDeps} = application:get_key(my_app, applications), \
+		true = lists:member(cowlib, MyAppDeps), \
+		{ok, []} = application:get_key($(APP), modules), \
+		{ok, Mods = [boy, girl]} = application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that Cowlib is still here"
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Check that all relevant files were removed"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/$(APP).app
+	$t test ! -e $(APP)/libs/my_app/my_app.d
+	$t test ! -e $(APP)/libs/my_app/ebin/my_app.app
+	$t test ! -e $(APP)/libs/my_app/ebin/boy.beam
+	$t test ! -e $(APP)/libs/my_app/ebin/girl.beam
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that all relevant files were removed"
+	$t test ! -e $(APP)/deps
+
+core-deps-apps-new-app: build clean-core-deps-apps-new-app
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a new application my_app"
+	$t $(MAKE) -C $(APP) new-app in=my_app $v
+
+	$i "Check that all bootstrapped files exist"
+	$t test -f $(APP)/apps/my_app/Makefile
+ifdef LEGACY
+	$t test -f $(APP)/apps/my_app/src/my_app.app.src
+endif
+	$t test -f $(APP)/apps/my_app/src/my_app_app.erl
+	$t test -f $(APP)/apps/my_app/src/my_app_sup.erl
+
+	$i "Create a new module my_server in my_app"
+	$t $(MAKE) -C $(APP) new t=gen_server n=my_server in=my_app $v
+
+	$i "Check that the file exists"
+	$t test -f $(APP)/apps/my_app/src/my_server.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/my_app_app.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_app_sup.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_server.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/apps/*/ebin/ -eval " \
+		ok = application:start(my_app), \
+		{ok, [my_app_app, my_app_sup, my_server]} = application:get_key(my_app, modules), \
+		{module, my_app_app} = code:load_file(my_app_app), \
+		{module, my_app_sup} = code:load_file(my_app_sup), \
+		{module, my_server} = code:load_file(my_server), \
+		halt()"
+
+core-deps-apps-new-lib: build clean-core-deps-apps-new-lib
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a new application my_app"
+	$t $(MAKE) -C $(APP) new-lib in=my_app $v
+
+	$i "Check that all bootstrapped files exist"
+	$t test -f $(APP)/apps/my_app/Makefile
+ifdef LEGACY
+	$t test -f $(APP)/apps/my_app/src/my_app.app.src
+endif
+
+	$i "Create a new module my_server in my_app"
+	$t $(MAKE) -C $(APP) new t=gen_server n=my_server in=my_app $v
+
+	$i "Check that the file exists"
+	$t test -f $(APP)/apps/my_app/src/my_server.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/my_server.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/apps/*/ebin/ -eval " \
+		ok = application:start(my_app), \
+		{ok, [my_server]} = application:get_key(my_app, modules), \
+		{module, my_server} = code:load_file(my_server), \
+		halt()"
+
+core-deps-apps-new-tpl: build clean-core-deps-apps-new-tpl
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a new library my_app"
+	$t $(MAKE) -C $(APP) new-lib in=my_app $v
+
+	$i "Generate one of each template"
+	$t $(MAKE) -C $(APP) --no-print-directory new in=my_app t=gen_fsm n=my_fsm
+	$t $(MAKE) -C $(APP) --no-print-directory new in=my_app t=gen_server n=my_server
+	$t $(MAKE) -C $(APP) --no-print-directory new in=my_app t=supervisor n=my_sup
+
+# Here we disable warnings because templates contain missing behaviors.
+	$i "Build the application"
+	$t $(MAKE) -C $(APP)/apps/my_app ERLC_OPTS=+debug_info $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/my_fsm.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_server.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_sup.beam
+
+	$i "Check that all the modules can be loaded"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/apps/*/ebin/ -eval " \
+		ok = application:start(my_app), \
+		{ok, Mods = [my_fsm, my_server, my_sup]} = application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-deps-apps-only: build clean-core-deps-apps-only
+
+	$i "Create a multi application repository with no root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t echo "include erlang.mk" > $(APP)/Makefile
+
+	$i "Create a new application my_app"
+	$t $(MAKE) -C $(APP) new-app in=my_app $v
+
+	$i "Add Cowlib to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/apps/my_app/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/my_app_app.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_app_sup.beam
+	$t test -d $(APP)/deps/cowlib/
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/*/ebin/ -eval " \
+		ok = application:load(my_app), \
+		{ok, Mods = [my_app_app, my_app_sup]} = application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that Cowlib is still here"
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Check that all relevant files were removed"
+	$t test ! -e $(APP)/apps/my_app/my_app.d
+	$t test ! -e $(APP)/apps/my_app/ebin/my_app.app
+	$t test ! -e $(APP)/apps/my_app/ebin/my_app_app.beam
+	$t test ! -e $(APP)/apps/my_app/ebin/my_app_sup.beam
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that all relevant files were removed"
+	$t test ! -e $(APP)/deps
 
 ifneq ($(PLATFORM),msys2)
 core-deps-build-c-8cc: build clean-core-deps-build-c-8cc
@@ -550,7 +917,7 @@ core-deps-otp: build clean-core-deps-otp
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Crypto to the list of OTP dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "OTP_DEPS = crypto\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = crypto\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v

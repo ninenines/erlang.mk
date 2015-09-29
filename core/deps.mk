@@ -1,12 +1,19 @@
 # Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: distclean-deps distclean-pkg
+.PHONY: distclean-deps
 
 # Configuration.
 
+ifdef OTP_DEPS
+$(warning The variable OTP_DEPS is deprecated in favor of LOCAL_DEPS.)
+endif
+
 IGNORE_DEPS ?=
 export IGNORE_DEPS
+
+APPS_DIR ?= $(CURDIR)/apps
+export APPS_DIR
 
 DEPS_DIR ?= $(CURDIR)/deps
 export DEPS_DIR
@@ -14,13 +21,14 @@ export DEPS_DIR
 REBAR_DEPS_DIR = $(DEPS_DIR)
 export REBAR_DEPS_DIR
 
+ALL_APPS_DIRS = $(if $(wildcard $(APPS_DIR)/),$(filter-out $(APPS_DIR),$(shell find $(APPS_DIR) -maxdepth 1 -type d)))
 ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(filter-out $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)))
 
-ifeq ($(filter $(DEPS_DIR),$(subst :, ,$(ERL_LIBS))),)
+ifeq ($(filter $(APPS_DIR) $(DEPS_DIR),$(subst :, ,$(ERL_LIBS))),)
 ifeq ($(ERL_LIBS),)
-	ERL_LIBS = $(DEPS_DIR)
+	ERL_LIBS = $(APPS_DIR):$(DEPS_DIR)
 else
-	ERL_LIBS := $(ERL_LIBS):$(DEPS_DIR)
+	ERL_LIBS := $(ERL_LIBS):$(APPS_DIR):$(DEPS_DIR)
 endif
 endif
 export ERL_LIBS
@@ -36,6 +44,11 @@ ifneq ($(SKIP_DEPS),)
 deps::
 else
 deps:: $(ALL_DEPS_DIRS)
+ifndef IS_APP
+	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
+		$(MAKE) -C $$dep IS_APP=1 || exit $$?; \
+	done
+endif
 ifneq ($(IS_DEP),1)
 	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
 endif
@@ -54,8 +67,6 @@ endif
 		fi \
 	done
 endif
-
-distclean:: distclean-deps distclean-pkg
 
 # Deps related targets.
 
@@ -538,6 +549,10 @@ dep_commit = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 
 
 define dep_target
 $(DEPS_DIR)/$(1):
+	$(verbose) if test -d $(APPS_DIR)/$1; then \
+		echo "Error: Dependency $1 conflicts with application found in $(APPS_DIR)/$1."; \
+		exit 17; \
+	fi
 	$(verbose) mkdir -p $(DEPS_DIR)
 	$(dep_verbose) $(call dep_fetch_$(strip $(call dep_fetch,$(1))),$(1))
 	$(verbose) if [ -f $(DEPS_DIR)/$(1)/configure.ac -o -f $(DEPS_DIR)/$(1)/configure.in ]; then \
@@ -571,6 +586,24 @@ endif
 endef
 
 $(foreach dep,$(BUILD_DEPS) $(DEPS),$(eval $(call dep_target,$(dep))))
+
+ifndef IS_APP
+clean:: clean-apps
+
+clean-apps:
+	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
+		$(MAKE) -C $$dep clean IS_APP=1 || exit $$?; \
+	done
+
+distclean:: distclean-apps
+
+distclean-apps:
+	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
+		$(MAKE) -C $$dep distclean IS_APP=1 || exit $$?; \
+	done
+endif
+
+distclean:: distclean-deps
 
 distclean-deps:
 	$(gen_verbose) rm -rf $(DEPS_DIR)

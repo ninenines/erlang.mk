@@ -11,13 +11,16 @@ help::
 		"  bootstrap          Generate a skeleton of an OTP application" \
 		"  bootstrap-lib      Generate a skeleton of an OTP library" \
 		"  bootstrap-rel      Generate the files needed to build a release" \
+		"  new-app n=NAME     Create a new local OTP application NAME" \
+		"  new-lib n=NAME     Create a new local OTP library NAME" \
 		"  new t=TPL n=NAME   Generate a module NAME based on the template TPL" \
+		"  new t=T n=N in=APP Generate a module NAME based on the template TPL in APP" \
 		"  list-templates     List available templates"
 
 # Bootstrap templates.
 
 define bs_appsrc
-{application, $(PROJECT), [
+{application, $p, [
 	{description, ""},
 	{vsn, "0.1.0"},
 	{id, "git"},
@@ -27,13 +30,13 @@ define bs_appsrc
 		kernel,
 		stdlib
 	]},
-	{mod, {$(PROJECT)_app, []}},
+	{mod, {$p_app, []}},
 	{env, []}
 ]}.
 endef
 
 define bs_appsrc_lib
-{application, $(PROJECT), [
+{application, $p, [
 	{description, ""},
 	{vsn, "0.1.0"},
 	{id, "git"},
@@ -48,7 +51,7 @@ endef
 
 ifdef SP
 define bs_Makefile
-PROJECT = $(PROJECT)
+PROJECT = $p
 PROJECT_DESCRIPTION = New project
 PROJECT_VERSION = 0.0.1
 
@@ -59,27 +62,32 @@ include erlang.mk
 endef
 else
 define bs_Makefile
-PROJECT = $(PROJECT)
+PROJECT = $p
 include erlang.mk
 endef
 endif
 
+define bs_apps_Makefile
+PROJECT = $p
+include $(call core_relpath,$(dir $(ERLANG_MK_FILENAME)),$(APPS_DIR)/app)/erlang.mk
+endef
+
 define bs_app
--module($(PROJECT)_app).
+-module($p_app).
 -behaviour(application).
 
 -export([start/2]).
 -export([stop/1]).
 
 start(_Type, _Args) ->
-	$(PROJECT)_sup:start_link().
+	$p_sup:start_link().
 
 stop(_State) ->
 	ok.
 endef
 
 define bs_relx_config
-{release, {$(PROJECT)_release, "1"}, [$(PROJECT)]}.
+{release, {$p_release, "1"}, [$p]}.
 {extended_start_script, true}.
 {sys_config, "rel/sys.config"}.
 {vm_args, "rel/vm.args"}.
@@ -91,8 +99,8 @@ define bs_sys_config
 endef
 
 define bs_vm_args
--name $(PROJECT)@127.0.0.1
--setcookie $(PROJECT)
+-name $p@127.0.0.1
+-setcookie $p
 -heart
 endef
 
@@ -355,19 +363,21 @@ bootstrap:
 ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif
+	$(eval p := $(PROJECT))
+	$(eval n := $(PROJECT)_sup)
 	$(call render_template,bs_Makefile,Makefile)
 	$(verbose) mkdir src/
 ifdef LEGACY
 	$(call render_template,bs_appsrc,src/$(PROJECT).app.src)
 endif
 	$(call render_template,bs_app,src/$(PROJECT)_app.erl)
-	$(eval n := $(PROJECT)_sup)
 	$(call render_template,tpl_supervisor,src/$(PROJECT)_sup.erl)
 
 bootstrap-lib:
 ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif
+	$(eval p := $(PROJECT))
 	$(call render_template,bs_Makefile,Makefile)
 	$(verbose) mkdir src/
 ifdef LEGACY
@@ -381,25 +391,61 @@ endif
 ifneq ($(wildcard rel/),)
 	$(error Error: rel/ directory already exists)
 endif
+	$(eval p := $(PROJECT))
 	$(call render_template,bs_relx_config,relx.config)
 	$(verbose) mkdir rel/
 	$(call render_template,bs_sys_config,rel/sys.config)
 	$(call render_template,bs_vm_args,rel/vm.args)
+
+new-app:
+ifndef in
+	$(error Usage: $(MAKE) new-app in=APP)
+endif
+ifneq ($(wildcard $(APPS_DIR)/$in),)
+	$(error Error: Application $in already exists)
+endif
+	$(eval p := $(in))
+	$(eval n := $(in)_sup)
+	$(verbose) mkdir -p $(APPS_DIR)/$p/src/
+	$(call render_template,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
+ifdef LEGACY
+	$(call render_template,bs_appsrc,$(APPS_DIR)/$p/src/$p.app.src)
+endif
+	$(call render_template,bs_app,$(APPS_DIR)/$p/src/$p_app.erl)
+	$(call render_template,tpl_supervisor,$(APPS_DIR)/$p/src/$p_sup.erl)
+
+new-lib:
+ifndef in
+	$(error Usage: $(MAKE) new-lib in=APP)
+endif
+ifneq ($(wildcard $(APPS_DIR)/$in),)
+	$(error Error: Application $in already exists)
+endif
+	$(eval p := $(in))
+	$(verbose) mkdir -p $(APPS_DIR)/$p/src/
+	$(call render_template,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
+ifdef LEGACY
+	$(call render_template,bs_appsrc_lib,$(APPS_DIR)/$p/src/$p.app.src)
+endif
 
 new:
 ifeq ($(wildcard src/),)
 	$(error Error: src/ directory does not exist)
 endif
 ifndef t
-	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME)
+	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME [in=APP])
 endif
 ifndef tpl_$(t)
 	$(error Unknown template)
 endif
 ifndef n
-	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME)
+	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME [in=APP])
 endif
+ifdef in
+	$(verbose) $(MAKE) -C $(APPS_DIR)/$(in)/ new t=$t n=$n in=
+else
 	$(call render_template,tpl_$(t),src/$(n).erl)
+endif
 
 list-templates:
 	$(verbose) echo Available templates: $(sort $(patsubst tpl_%,%,$(filter tpl_%,$(.VARIABLES))))
