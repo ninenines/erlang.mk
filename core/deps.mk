@@ -605,10 +605,12 @@ distclean-apps:
 	done
 endif
 
+ifndef SKIP_DEPS
 distclean:: distclean-deps
 
 distclean-deps:
 	$(gen_verbose) rm -rf $(DEPS_DIR)
+endif
 
 # External plugins.
 

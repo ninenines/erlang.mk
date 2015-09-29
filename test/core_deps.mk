@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell test
+CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -1136,6 +1136,43 @@ core-deps-shell: build clean-core-deps-shell
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(tddreloader, Deps), \
 		halt()"
+
+core-deps-skip: build clean-core-deps-skip
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowboy to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application with SKIP_DEPS=1"
+	$t $(MAKE) -C $(APP) SKIP_DEPS=1 $v
+
+	$i "Check that no dependencies were fetched"
+	$t test ! -e $(APP)/deps
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/cowlib
+	$t test -d $(APP)/deps/cowboy
+	$t test -d $(APP)/deps/ranch
+
+	$i "Distclean with SKIP_DEPS=1"
+	$t $(MAKE) -C $(APP) distclean SKIP_DEPS=1 $v
+
+	$i "Check that no dependencies were removed"
+	$t test -d $(APP)/deps/cowlib
+	$t test -d $(APP)/deps/cowboy
+	$t test -d $(APP)/deps/ranch
 
 core-deps-test: build clean-core-deps-test
 
