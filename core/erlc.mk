@@ -56,8 +56,8 @@ ifeq ($(wildcard src/$(PROJECT)_app.erl),)
 define app_file
 {application, $(PROJECT), [
 	{description, "$(PROJECT_DESCRIPTION)"},
-	{vsn, "$(PROJECT_VERSION)"},
-	$(if $(IS_DEP),{id$(comma)$(space)"$(1)"}$(comma))
+	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
+	{id$(comma)$(space)"$(1)"}$(comma))
 	{modules, [$(call comma_list,$(2))]},
 	{registered, []},
 	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(LOCAL_DEPS) $(DEPS))]}
@@ -67,8 +67,8 @@ else
 define app_file
 {application, $(PROJECT), [
 	{description, "$(PROJECT_DESCRIPTION)"},
-	{vsn, "$(PROJECT_VERSION)"},
-	$(if $(IS_DEP),{id$(comma)$(space)"$(1)"}$(comma))
+	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
+	{id$(comma)$(space)"$(1)"}$(comma))
 	{modules, [$(call comma_list,$(2))]},
 	{registered, [$(call comma_list,$(PROJECT)_sup $(PROJECT_REGISTERED))]},
 	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(LOCAL_DEPS) $(DEPS))]},
@@ -201,7 +201,7 @@ ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES)
 	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename \
 		$(filter-out $(ERLC_EXCLUDE_PATHS),$(ERL_FILES) $(CORE_FILES)))))))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
-	$(app_verbose) echo "$(subst $(newline),,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES))))" \
+	$(app_verbose) printf "$(subst $(newline),\n,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES))))" \
 		> ebin/$(PROJECT).app
 else
 	$(verbose) if [ -z "$$(grep -E '^[^%]*{\s*modules\s*,' src/$(PROJECT).app.src)" ]; then \
