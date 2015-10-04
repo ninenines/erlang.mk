@@ -12,6 +12,7 @@ SHELL_KJELL ?=
 ifeq ($(SHELL_KJELL),1)
 SHELL_DEPS += kjell
 SHELL_ERL = $(DEPS_DIR)/kjell/bin/kjell
+SHELL_OPTS += -nouser
 else
 SHELL_ERL = erl
 endif
