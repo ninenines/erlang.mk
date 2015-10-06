@@ -151,6 +151,7 @@ define dep_autopatch_rebar
 endef
 
 define dep_autopatch_rebar.erl
+	application:load(rebar),
 	application:set_env(rebar, log_level, debug),
 	Conf1 = case file:consult("$(call core_native_path,$(DEPS_DIR)/$1/rebar.config)") of
 		{ok, Conf0} -> Conf0;
