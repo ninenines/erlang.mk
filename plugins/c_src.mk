@@ -1,6 +1,8 @@
 # Copyright (c) 2014-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring c_src,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: clean-c_src distclean-c_src-env
 
 # Configuration.
@@ -117,3 +119,5 @@ distclean-c_src-env:
 
 -include $(C_SRC_ENV)
 endif
+
+endif # ERLANG_MK_DISABLE_PLUGINS

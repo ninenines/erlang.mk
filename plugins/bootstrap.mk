@@ -1,6 +1,8 @@
 # Copyright (c) 2014-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring bootstrap,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: bootstrap bootstrap-lib bootstrap-rel new list-templates
 
 # Core targets.
@@ -449,3 +451,5 @@ endif
 
 list-templates:
 	$(verbose) echo Available templates: $(sort $(patsubst tpl_%,%,$(filter tpl_%,$(.VARIABLES))))
+
+endif # ERLANG_MK_DISABLE_PLUGINS

@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Erlang Solutions Ltd.
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring elvis,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: elvis distclean-elvis
 
 # Configuration.
@@ -37,3 +39,5 @@ elvis: $(ELVIS) $(ELVIS_CONFIG)
 
 distclean-elvis:
 	$(gen_verbose) rm -rf $(ELVIS)
+
+endif # ERLANG_MK_DISABLE_PLUGINS

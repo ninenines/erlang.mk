@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring protobuffs,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 # Verbosity.
 
 proto_verbose_0 = @echo " PROTO " $(filter %.proto,$(?F));
@@ -29,3 +31,5 @@ ifneq ($(wildcard src/),)
 ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.proto))
 	$(if $(strip $?),$(call compile_proto,$?))
 endif
+
+endif # ERLANG_MK_DISABLE_PLUGINS

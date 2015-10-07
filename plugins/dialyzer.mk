@@ -1,6 +1,8 @@
 # Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring dialyzer,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: plt distclean-plt dialyze
 
 # Configuration.
@@ -41,3 +43,5 @@ else
 dialyze: $(DIALYZER_PLT)
 endif
 	$(verbose) dialyzer --no_native $(DIALYZER_DIRS) $(DIALYZER_OPTS)
+
+endif # ERLANG_MK_DISABLE_PLUGINS

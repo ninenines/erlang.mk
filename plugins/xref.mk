@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Erlang Solutions Ltd.
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring xref,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: xref distclean-xref
 
 # Configuration.
@@ -36,3 +38,5 @@ xref: deps app $(XREFR)
 
 distclean-xref:
 	$(gen_verbose) rm -rf $(XREFR)
+
+endif # ERLANG_MK_DISABLE_PLUGINS

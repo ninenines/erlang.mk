@@ -1,6 +1,8 @@
 # Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring ct,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: ct distclean-ct
 
 # Configuration.
@@ -53,3 +55,5 @@ $(foreach test,$(CT_SUITES),$(eval $(call ct_suite_target,$(test))))
 
 distclean-ct:
 	$(gen_verbose) rm -rf $(CURDIR)/logs/
+
+endif # ERLANG_MK_DISABLE_PLUGINS

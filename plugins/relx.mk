@@ -1,6 +1,8 @@
 # Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+ifeq ($(findstring relx,$(ERLANG_MK_DISABLE_PLUGINS)),)
+
 .PHONY: relx-rel distclean-relx-rel distclean-relx run
 
 # Configuration.
@@ -67,3 +69,5 @@ help::
 		"  run         Compile the project, build the release and run it"
 
 endif
+
+endif # ERLANG_MK_DISABLE_PLUGINS
