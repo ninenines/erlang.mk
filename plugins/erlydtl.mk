@@ -33,7 +33,12 @@ define erlydtl_compile.erl
 endef
 
 ifneq ($(wildcard src/),)
-ebin/$(PROJECT).app:: $(sort $(call core_find,$(DTL_PATH),*.dtl))
+
+DTL_FILES = $(sort $(call core_find,$(DTL_PATH),*.dtl))
+DTL_ERL_FILES = $(addprefix src/,$(patsubst %.dtl,%_dtl.erl,$(notdir $(DTL_FILES))))
+ERL_FILES += $(DTL_ERL_FILES)
+
+ebin/$(PROJECT).app:: $(DTL_FILES)
 	$(if $(strip $?),\
 		$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$?,-pa ebin/ $(DEPS_DIR)/erlydtl/ebin/)))
 endif
