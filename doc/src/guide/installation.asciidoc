@@ -43,8 +43,9 @@ if you need additional references.
 You can install Erlang/OTP silently using the `/S` switch
 on the command line:
 
-[source,batch]
+----
 C:\Users\essen\Downloads> otp_win64_18.0.exe /S
+----
 
 ==== Installing MSYS2
 
@@ -66,16 +67,18 @@ and extract it under 'C:\'. Assuming you downloaded the
 archive as 'msys2.tar.xz' and put it in 'C:\', you can
 use the following commands to extract it:
 
-[source,batch]
+----
 C:\> 7z x msys2.tar.xz
 C:\> 7z x msys2.tar > NUL
+----
 
 Then you can run the two commands needed to perform the
 post-installation setup:
 
-[source,batch]
+----
 C:\> C:\msys64\usr\bin\bash -lc "pacman --needed --noconfirm -Sy bash pacman pacman-mirrors msys2-runtime"
 C:\> C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syu"
+----
 
 ==== Installing the required MSYS2 packages
 
@@ -96,8 +99,9 @@ You can also run commands under the MSYS2 environment from
 the Windows command line or batch files. This command will
 install GNU Make and Git:
 
-[source,batch]
+----
 C:\> C:\msys64\usr\bin\bash -lc "pacman --noconfirm -S git make"
+----
 
 You can use similar `bash` commands if you need to run programs
 inside the MSYS2 environment from a batch file.
