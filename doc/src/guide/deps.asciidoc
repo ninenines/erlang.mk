@@ -158,7 +158,7 @@ fetch methods that will only work in a given environment.
 
 The following table lists all existing methods:
 
-[cols="<,3*^",options="header"]
+[cols="<,2*^",options="header"]
 |===
 | Name           | Format          | Description
 | git            | git repo commit | Clone the Git repository and checkout the given version
