@@ -79,11 +79,11 @@ else ifeq ($V,1)
 else ifeq ($V,2)
 	t = @echo " TEST  " $@;
 	v = V=0
-	i = @echo "== $@:"
+	i = @echo == $@:
 else
 	t =
 	v = V=1
-	i = @echo "== $@:"
+	i = @echo == $@:
 endif
 
 # Main targets.
@@ -93,7 +93,7 @@ endif
 all:: core
 
 clean:: clean-core
-	$t rm -f erl_crash.dump
+	$t rm -rf erl_crash.dump packages/
 
 build:
 	$i "Generate a bleeding edge Erlang.mk"
@@ -177,6 +177,138 @@ core-help: build clean-core-help
 	$i "Run 'make help' and check that it prints help"
 	$t test -n "`$(MAKE) -C $(APP) help` | grep Usage"
 
+# Packages.
+
+PACKAGES = $(foreach pkg,$(sort $(wildcard ../index/*.mk)),$(notdir $(basename $(pkg))))
+
+packages: $(addprefix pkg-,$(PACKAGES))
+
+define pkg_target
+.PHONY: pkg-$1
+
+pkg-$1: clean build
+
+# Make sure $@ is defined inside the define.
+	$(eval @ = pkg-$1)
+
+# Get the real application's name.
+	$(eval APP_NAME = `sed '2!d;s/pkg_$1_name = //' ../index/$1.mk`)
+
+	$i "Bootstrap a new OTP library in packages/$1_pkg"
+	$t mkdir -p packages/$1_pkg/
+	$t cp ../erlang.mk packages/$1_pkg/
+	$t cd packages/$1_pkg/ && $(MAKE) -f erlang.mk bootstrap-lib $v
+
+	$i "Add package $1 to the Makefile"
+	$t perl -ni.bak -e 'print;if ($$$$.==1) {print "DEPS = $1\n"}' packages/$1_pkg/Makefile
+
+	$(if $(filter amqp_client,$1),
+		$i "Set RABBITMQ_CLIENT_PATCH"
+		$(eval PATCHES := RABBITMQ_CLIENT_PATCH=1))
+
+	$(if $(filter rabbit,$1),
+		$i "Set RABBITMQ_SERVER_PATCH"
+		$(eval PATCHES := RABBITMQ_SERVER_PATCH=1))
+
+	$i "Compile package $1"
+	$t if ! ( cd packages/$1_pkg/ && $(MAKE) $(PATCHES) $v ); then \
+		echo "$1: compile error" >> packages/errors.log; \
+		false; \
+	fi
+
+	$i "Check that $1 has a .app file"
+	$t if ! test -f packages/$1_pkg/deps/$(APP_NAME)/ebin/$(APP_NAME).app; then \
+		echo "$1: no .app file" >> packages/errors.log; \
+		false; \
+	fi
+
+	$i "Check that all applications and their modules can be loaded"
+	$t if ! ( cd packages/$1_pkg/ && $(ERL) -pa deps/*/ebin/ -eval " \
+		Apps = [list_to_atom(App) || \"deps/\" ++ App \
+			<- filelib:wildcard(\"deps/*\")], \
+		[begin \
+			io:format(\"Loading application ~p~n\", [App]), \
+			case application:load(App) of \
+				ok -> ok; \
+				{error, {already_loaded, App}} -> ok \
+			end, \
+			{ok, Mods} = application:get_key(App, modules), \
+			[try io:format(\"  Loading module ~p~n\", [Mod]), \
+				{module, Mod} = code:load_file(Mod) \
+			catch C:R -> timer:sleep(500), erlang:C(R) \
+			end || Mod <- Mods] \
+		end || App <- Apps], \
+		halt()." ); then \
+			echo "$1: load error" >> packages/errors.log; \
+			false; \
+	fi
+
+	$i "Recompile package $1"
+	$t if ! ( cd packages/$1_pkg/ && $(MAKE) $(PATCHES) $v ); then \
+		echo "$(1): recompile error" >> packages/errors.log; \
+		false; \
+	fi
+
+	$i "Check that $1 has a .app file"
+	$t if ! test -f packages/$1_pkg/deps/$(APP_NAME)/ebin/$(APP_NAME).app; then \
+		echo "$1: no .app file" >> packages/errors.log; \
+		false; \
+	fi
+
+	$i "Check that all applications and their modules can still be loaded"
+	$t if ! ( cd packages/$1_pkg/ && $(ERL) -pa deps/*/ebin/ -eval " \
+		Apps = [list_to_atom(App) || \"deps/\" ++ App \
+			<- filelib:wildcard(\"deps/*\")], \
+		[begin \
+			io:format(\"Loading application ~p~n\", [App]), \
+			case application:load(App) of \
+				ok -> ok; \
+				{error, {already_loaded, App}} -> ok \
+			end, \
+			{ok, Mods} = application:get_key(App, modules), \
+			[try io:format(\"  Loading module ~p~n\", [Mod]), \
+				{module, Mod} = code:load_file(Mod) \
+			catch C:R -> timer:sleep(500), erlang:C(R) \
+			end || Mod <- Mods] \
+		end || App <- Apps], \
+		halt()." ); then \
+			echo "$1: recompile+load error" >> packages/errors.log; \
+			false; \
+	fi
+
+	$i "Check that no erl_crash.dump file exists"
+	$t if ( ! find packages/$1_pkg/ -type f -name erl_crash.dump ); then \
+		echo "$(1): erl_crash.dump found" >> packages/errors.log; \
+	fi
+
+	$(if $(KEEP_BUILDS),,
+		$i "OK; delete the build directory"
+		$t rm -rf packages/$1_pkg/)
+endef
+
+$(foreach pkg,$(PACKAGES),$(eval $(call pkg_target,$(pkg))))
+
+##################
+
+# Test application used for testing.
+app1:
+	$(call app1_setup)
+
+# Extra module in app1 used for testing eunit
+define create-module-t
+printf '%s\n' \
+	'-module(t).' \
+	'-export([succ/1]).' \
+	'succ(N) -> N + 1.' \
+	'-ifdef(TEST).' \
+	'-include_lib("eunit/include/eunit.hrl").' \
+	'succ_test() ->' \
+	'	?assertEqual(2, succ(1)),' \
+	'	os:cmd("echo t >> test-eunit.log").' \
+	'-endif.' \
+	> app1/src/t.erl
+endef
+
 # Legacy tests.
 #
 # The following tests are slowly being converted.
@@ -187,7 +319,7 @@ core-help: build clean-core-help
 legacy: clean-legacy ct eunit tests-cover docs pkgs
 
 clean-legacy:
-	$t rm -rf app1 pkgs.log
+	$t rm -rf app1
 
 ct: app1
 	$i "ct: Testing ct and related targets."
@@ -337,93 +469,4 @@ define app1_setup
 		"-export([succ/1])." \
 		"succ(N) -> N + 1." \
 		> app1/src/m.erl
-endef
-
-define pkg_test_target
-pkg-$(1)-clean:
-	$t rm -rf app1 erl_crash.dump
-
-pkg-$(1)-app1:
-	$(call app1_setup)
-
-# Running 'make' twice to make sure it recompiles fine.
-pkg-$(1): pkg-$(1)-clean pkg-$(1)-app1
-	$i
-	$i "  pkgs: Checking that '$(1)' builds correctly"
-	$i
-	$t printf "%s\n" \
-		"PROJECT = app1" \
-		"DEPS = $(1)" \
-		"include erlang.mk" \
-		> app1/Makefile
-	$t \
-	if [ "$(1)" = "amqp_client" ]; then \
-		$(MAKE) -C app1 RABBITMQ_CLIENT_PATCH=1; \
-	elif [ "$(1)" = "rabbit" ]; then \
-		$(MAKE) -C app1 RABBITMQ_SERVER_PATCH=1; \
-	else \
-		$(MAKE) -C app1; \
-	fi; \
-	if [ $$$$? -ne 0 ]; then \
-		echo "$(1): make error" >> pkgs.log; \
-	else \
-		$(MAKE) -C app1; if [ $$$$? -ne 0 ]; then \
-			echo "$(1): re-make error" >> pkgs.log; \
-		else \
-			find . -type f -name erl_crash.dump; if [ $$$$? -ne 0 ]; then \
-				echo "$(1): erl_crash.dump found" >> pkgs.log; \
-			else \
-				erl +A0 -noinput -boot start_clean -pa app1/deps/*/ebin -eval " \
-						Apps = [list_to_atom(App) || \"app1/deps/\" ++ App \
-							<- filelib:wildcard(\"app1/deps/*\")], \
-						[begin \
-							io:format(\"Loading application ~p~n\", [App]), \
-							case application:load(App) of \
-								{error, _} -> ok; \
-								ok -> \
-									{ok, Mods} = application:get_key(App, modules), \
-									[try io:format(\"  Loading module ~p~n\", [Mod]), \
-										{module, Mod} = code:load_file(Mod) \
-									catch C:R -> timer:sleep(500), erlang:C(R) \
-									end || Mod <- Mods] \
-							end \
-						end || App <- Apps], \
-						halt()."; if [ $$$$? -ne 0 ]; then \
-					echo "$(1): load error" >> pkgs.log; \
-				fi \
-			fi \
-		fi \
-	fi
-endef
-
-PACKAGES = $(foreach pkg,$(sort $(wildcard ../index/*.mk)),$(notdir $(basename $(pkg))))
-
-$(foreach pkg,$(PACKAGES),$(eval $(call pkg_test_target,$(pkg))))
-
-pkgs: $(addprefix pkg-,$(PACKAGES))
-	@if [ -f pkgs.log ]; then \
-		echo "+-------------------------------+"; \
-		echo "| ERRORS WHILE TESTING PACKAGES |"; \
-		echo "+-------------------------------+"; \
-		cat pkgs.log; \
-		exit 33; \
-	fi
-
-# Test application used for testing.
-app1:
-	$(call app1_setup)
-
-# Extra module in app1 used for testing eunit
-define create-module-t
-printf '%s\n' \
-	'-module(t).' \
-	'-export([succ/1]).' \
-	'succ(N) -> N + 1.' \
-	'-ifdef(TEST).' \
-	'-include_lib("eunit/include/eunit.hrl").' \
-	'succ_test() ->' \
-	'	?assertEqual(2, succ(1)),' \
-	'	os:cmd("echo t >> test-eunit.log").' \
-	'-endif.' \
-	> app1/src/t.erl
 endef

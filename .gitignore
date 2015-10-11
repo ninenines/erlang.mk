@@ -1,6 +1,4 @@
 doc/guide.pdf
 doc/html
-test/app1/
-test/pkgs.log
-test/temp-python/
-test/tmp/
+test/logs/
+test/packages/

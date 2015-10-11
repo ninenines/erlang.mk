@@ -25,17 +25,35 @@ all:
 		| sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = $(ERLANG_MK_VERSION)/' > $(ERLANG_MK)
 
 ifdef p
+# Remove p from the list of variables since that conflicts with bootstrapping.
+MAKEOVERRIDES := $(filter-out p=$p,$(MAKEOVERRIDES))
+
 check:
-	$(MAKE) -C test pkg-$p
+	$(MAKE) -C test pkg-$p KEEP_BUILDS=1
 else
 ifdef c
 check:
-	$(MAKE) -C test $c LEGACY=$(LEGACY)
+	$(MAKE) -C test $c
 else
 check:
-	$(MAKE) -C test LEGACY=$(LEGACY)
+	$(MAKE) -C test
 endif
 endif
+
+packages:
+	$(MAKE) -C test packages
+
+summary:
+	@mkdir -p test/logs/
+	@touch test/logs/latest.log test/packages/errors.log
+	-@sort test/packages/errors.log | diff test/logs/latest.log -
+	@sort test/packages/errors.log > test/logs/latest.log
+	@cp test/logs/latest.log "test/logs/$(subst $(empty) $(empty),_,$(shell date --rfc-3339 seconds))"
+
+search:
+	@$(MAKE) --no-print-directory \
+		-f core/core.mk $(addprefix -f,$(wildcard index/*.mk)) -f core/index.mk \
+		search
 
 clean:
 	$(MAKE) -C test clean
