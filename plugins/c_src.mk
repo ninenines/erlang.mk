@@ -32,10 +32,6 @@ CXXFLAGS += -fPIC -I $(ERTS_INCLUDE_DIR) -I $(ERL_INTERFACE_INCLUDE_DIR)
 
 LDLIBS += -L $(ERL_INTERFACE_LIB_DIR) -lerl_interface -lei
 
-ifeq ($(C_SRC_TYPE),shared)
-LDFLAGS += -shared
-endif
-
 # Verbosity.
 
 c_verbose_0 = @echo " C     " $(?F);
@@ -77,7 +73,9 @@ test-build:: $(C_SRC_ENV) $(C_SRC_OUTPUT)
 
 $(C_SRC_OUTPUT): $(OBJECTS)
 	$(verbose) mkdir -p priv/
-	$(link_verbose) $(CC) $(OBJECTS) $(LDFLAGS) $(LDLIBS) -o $(C_SRC_OUTPUT)
+	$(link_verbose) $(CC) $(OBJECTS) \
+		$(LDFLAGS) $(if $(filter $(C_SRC_TYPE),shared),-shared) $(LDLIBS) \
+		-o $(C_SRC_OUTPUT)
 
 %.o: %.c
 	$(COMPILE_C) $(OUTPUT_OPTION) $<
