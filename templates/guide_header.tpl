@@ -21,7 +21,7 @@ div.navfooter{margin-bottom:1em}
 <header>
 	<nav class="left">
 		<a href="index.html">User guide</a>
-		<a href="https://github.com/ninenines/erlang.mk/blob/master/doc/src/guide/getting_started.asciidoc">Tutorials</a>
+		<a href="ch02.html">Tutorials</a>
 	</nav>
 	<a href="/" class="logo"><img src="../res/logo-small.png" alt="Erlang.mk" title="Erlang.mk: A build tool for Erlang that just works" height="200" width="206"/></a>
 	<nav class="right">
