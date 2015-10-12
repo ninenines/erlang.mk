@@ -5,16 +5,19 @@
 <title>Erlang.mk</title>
 </head>
 <style type="text/css"><!--
-body{background:white;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
+body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
 header {align-items:center;display:flex;justify-content:center}
 header section.left{text-align:right;width:150px}
 header section.right{text-align:left;width:150px}
 header section a{display:block;margin:1.5em 1em}
-main{margin-top:2em;text-align:center}
+main{margin-top:5em;text-align:center}
 main p{margin-top:2em}
 main pre{display:flex;justify-content:center;text-align:left}
 a{color:#d9230f;text-decoration:none}
 a:hover{text-decoration:underline}
+h1{font-weight:normal}
+h1 a{color:black}
+h1 a:hover{color:#d9230f;text-decoration:none}
 span.var{color:teal}
 span.op{color:maroon}
 span.dir{color:purple}
@@ -25,24 +28,23 @@ span.dir{color:purple}
 		<a href="https://github.com/ninenines/erlang.mk/blob/master/doc/src/guide/book.asciidoc">User guide</a>
 		<a href="https://github.com/ninenines/erlang.mk/blob/master/doc/src/guide/getting_started.asciidoc">Tutorials</a>
 	</section>
-	<a href="/" class="logo"><img src="res/logo-small.png" alt="Erlang.mk" height="200" width="206"/></a>
+	<a href="/" class="logo"><img src="res/logo-small.png" alt="Erlang.mk" title="Erlang.mk: A build tool for Erlang that just works" height="200" width="206"/></a>
 	<section class="right">
 		<a href="https://github.com/ninenines/erlang.mk/tree/master/index">470+ packages</a>
 		<a href="https://github.com/ninenines/erlang.mk/issues">Issues?</a>
 	</section>
 </header>
 <main>
-<h1>A build tool for Erlang that just works</h1>
-<p>Erlang.mk is a modern build tool that embraces the diversity of the
-Erlang ecosystem and provides support for everything you need.</p>
-<p>It runs everywhere: Linux, FreeBSD, OSX and even Windows.</p>
-<p>Getting started with Erlang.mk is easy as pie. Even kids can do it.</p>
-<p>You don't need to be a Makefile pro. It's that simple:</p>
+<h1>A build tool for <a href="http://erlang.org" title="Erlang: Build massively scalable soft real-time systems">Erlang</a> that just works</h1>
+<p>Embrace the power and simplicity of Makefiles.</p>
 <pre><code>
 <span class="var">PROJECT</span> <span class="op">=</span> webchat
 <span class="var">DEPS</span> <span class="op">=</span> cowboy
 <span class="dir">include</span> erlang.mk
 </code></pre>
+<p><a href="https://github.com/ninenines/erlang.mk/blob/master/doc/src/guide/getting_started.asciidoc">Get started</a></p>
+<p>Tested and supported on</p>
+<p><img src="res/platforms.png" title="Linux, FreeBSD, OSX, Windows" alt="Linux, FreeBSD, OSX, Windows" height="50" width="190"/></p>
 </main>
 </body>
 </html>
