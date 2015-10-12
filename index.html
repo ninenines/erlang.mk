@@ -5,7 +5,7 @@
 <title>Erlang.mk</title>
 </head>
 <style type="text/css"><!--
-body{font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
+body{background:white;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
 header {align-items:center;display:flex;justify-content:center}
 header section.left{text-align:right;width:150px}
 header section.right{text-align:left;width:150px}
@@ -15,6 +15,9 @@ main p{margin-top:2em}
 main pre{display:flex;justify-content:center;text-align:left}
 a{color:#d9230f;text-decoration:none}
 a:hover{text-decoration:underline}
+span.var{color:teal}
+span.op{color:maroon}
+span.dir{color:purple}
 --></style>
 <body>
 <header>
@@ -35,11 +38,11 @@ Erlang ecosystem and provides support for everything you need.</p>
 <p>It runs everywhere: Linux, FreeBSD, OSX and even Windows.</p>
 <p>Getting started with Erlang.mk is easy as pie. Even kids can do it.</p>
 <p>You don't need to be a Makefile pro. It's that simple:</p>
-<pre>
-PROJECT = webchat
-DEPS = cowboy
-include erlang.mk
-</pre>
+<pre><code>
+<span class="var">PROJECT</span> <span class="op">=</span> webchat
+<span class="var">DEPS</span> <span class="op">=</span> cowboy
+<span class="dir">include</span> erlang.mk
+</code></pre>
 </main>
 </body>
 </html>
