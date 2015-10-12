@@ -16,6 +16,7 @@ dtl_verbose = $(dtl_verbose_$(V))
 
 define erlydtl_compile.erl
 	[begin
+		code:add_patha("ebin"),
 		Module0 = case $(DTL_FULL_PATH) of
 			0 ->
 				filename:basename(F, ".dtl");
