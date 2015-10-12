@@ -35,8 +35,7 @@ endef
 ifneq ($(wildcard src/),)
 
 DTL_FILES = $(sort $(call core_find,$(DTL_PATH),*.dtl))
-DTL_ERL_FILES = $(addprefix src/,$(patsubst %.dtl,%_dtl.erl,$(notdir $(DTL_FILES))))
-ERL_FILES += $(DTL_ERL_FILES)
+BEAM_FILES += $(addprefix ebin/,$(patsubst %.dtl,%_dtl.beam,$(notdir $(DTL_FILES))))
 
 ebin/$(PROJECT).app:: $(DTL_FILES)
 	$(if $(strip $?),\
