@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Erlang.mk</title>
+<style type="text/css"><!--
+body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
+header {align-items:center;display:flex;justify-content:center}
+header nav.left{text-align:right;width:150px}
+header nav.right{text-align:left;width:150px}
+header nav a{display:block;margin:1.5em 1em}
+main{margin-top:2em;text-align:justify}
+main h2, main h3{margin-top:2em}
+a{color:#d9230f;text-decoration:none}
+a:hover{text-decoration:underline}
+h1, h2, h3{font-weight:normal}
+h1 a{color:black}
+h1 a:hover{color:#d9230f;text-decoration:none}
+span.var{color:teal}
+span.op{color:maroon}
+span.dir{color:purple}
+div.navfooter{margin-bottom:1em}
+--></style>
+</head>
+<body>
+<header>
+	<nav class="left">
+		<a href="https://github.com/ninenines/erlang.mk/blob/master/doc/src/guide/book.asciidoc">User guide</a>
+		<a href="https://github.com/ninenines/erlang.mk/blob/master/doc/src/guide/getting_started.asciidoc">Tutorials</a>
+	</nav>
+	<a href="/" class="logo"><img src="../res/logo-small.png" alt="Erlang.mk" title="Erlang.mk: A build tool for Erlang that just works" height="200" width="206"/></a>
+	<nav class="right">
+		<a href="https://github.com/ninenines/erlang.mk/tree/master/index">470+ packages</a>
+		<a href="https://github.com/ninenines/erlang.mk/issues">Issues?</a>
+	</nav>
+</header>
+<main>
+
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="index.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch02.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="_installation"></a>Chapter 1. Installation</h1></div></div></div><p>This chapter explains how to setup your system in
+order to use Erlang.mk.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_on_unix"></a>1.1. On Unix</h2></div></div></div><p>Erlang.mk requires GNU Make to be installed. GNU Make 3.81
+or later is required. GNU Make 4.1 or later is recommended,
+as this is the version Erlang.mk is developed on.</p><p>Some functionality requires that Autoconf 2.59 or later be
+installed, in order to compile Erlang/OTP. Erlang/OTP may
+have further requirements depending on your needs.</p><p>Erlang.mk currently requires Erlang/OTP to be installed in
+order to compile Erlang projects.</p><p>Some packages may require additional libraries.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_on_windows"></a>1.2. On Windows</h2></div></div></div><p>Erlang.mk can be used on Windows inside an MSYS2 environment.
+Cygwin, MSYS (the original) and native Windows (both Batch
+and PowerShell) are currently not supported.</p><p>The rest of this section details how to setup Erlang/OTP and
+MSYS2 in order to use Erlang.mk.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_installing_erlang_otp"></a>1.2.1. Installing Erlang/OTP</h3></div></div></div><p>Erlang.mk requires Erlang/OTP to be installed. The OTP team
+provides binaries of Erlang/OTP for all major and minor releases,
+available from the <a class="ulink" href="http://www.erlang.org/download.html" target="_top">official download page</a>.
+It is recommended that you use the 64-bit installer unless
+technically impossible. Please follow the instructions from
+the installer to complete the installation.</p><p>The OTP team also provides a short guide to
+<a class="ulink" href="http://www.erlang.org/download.html" target="_top">installing Erlang/OTP on Windows</a>
+if you need additional references.</p><p>You can install Erlang/OTP silently using the <code class="literal">/S</code> switch
+on the command line:</p><pre class="screen">C:\Users\essen\Downloads&gt; otp_win64_18.0.exe /S</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_installing_msys2"></a>1.2.2. Installing MSYS2</h3></div></div></div><p>The only supported environment on Windows is MSYS2. MSYS2 is
+a lightweight Unix-like environment for Windows that comes
+with the Arch Linux package manager, <code class="literal">pacman</code>.</p><p>The MSYS2 project provides a <a class="ulink" href="http://msys2.github.io" target="_top">one click installer</a>
+and instructions to set things up post-installation.</p><p>It is currently not possible to use the installer silently.
+Thankfully, the MSYS2 project provides an archive that can
+be used in lieu of the installer. The archive however requires
+<span class="emphasis"><em>7zip</em></span> to decompress it.</p><p>First, download the
+<a class="ulink" href="http://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20150512.tar.xz/download" target="_top">MSYS2 base archive</a>
+and extract it under <span class="emphasis"><em>C:\</em></span>. Assuming you downloaded the
+archive as <span class="emphasis"><em>msys2.tar.xz</em></span> and put it in <span class="emphasis"><em>C:\</em></span>, you can
+use the following commands to extract it:</p><pre class="screen">C:\&gt; 7z x msys2.tar.xz
+C:\&gt; 7z x msys2.tar &gt; NUL</pre><p>Then you can run the two commands needed to perform the
+post-installation setup:</p><pre class="screen">C:\&gt; C:\msys64\usr\bin\bash -lc "pacman --needed --noconfirm -Sy bash pacman pacman-mirrors msys2-runtime"
+C:\&gt; C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syu"</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_installing_the_required_msys2_packages"></a>1.2.3. Installing the required MSYS2 packages</h3></div></div></div><p>After following these instructions, you can install GNU Make,
+Git and any other required softwares. From an MSYS2 shell,
+you can call <code class="literal">pacman</code> directly:</p><pre class="programlisting">$ pacman -S git make</pre><p>You can use <code class="literal">pacman -Ss</code> to search packages. For example,
+to find all packages related to GCC:</p><pre class="programlisting">$ pacman -Ss gcc</pre><p>You can also run commands under the MSYS2 environment from
+the Windows command line or batch files. This command will
+install GNU Make and Git:</p><pre class="screen">C:\&gt; C:\msys64\usr\bin\bash -lc "pacman --noconfirm -S git make"</pre><p>You can use similar <code class="literal">bash</code> commands if you need to run programs
+inside the MSYS2 environment from a batch file.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_gotchas"></a>1.2.4. Gotchas</h3></div></div></div><p>While most of the basic functionality will just work, there are
+still some issues. Erlang.mk needs to be fixed to pass the
+right paths when running Erlang scripts. We are working on it.
+Erlang.mk is fully tested on both Linux and Windows, but is
+lacking tests in the areas not yet covered by this guide,
+so expect bugs to be fixed as more tests are added.</p></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="index.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+</main>
+</body>
+</html>
