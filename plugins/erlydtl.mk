@@ -3,7 +3,7 @@
 
 # Configuration.
 
-DTL_FULL_PATH ?= 0
+DTL_FULL_PATH ?=
 DTL_PATH ?= templates/
 DTL_SUFFIX ?= _dtl
 
@@ -16,10 +16,10 @@ dtl_verbose = $(dtl_verbose_$(V))
 
 define erlydtl_compile.erl
 	[begin
-		Module0 = case $(DTL_FULL_PATH) of
-			0 ->
+		Module0 = case "$(strip $(DTL_FULL_PATH))" of
+			"" ->
 				filename:basename(F, ".dtl");
-			1 ->
+			_ ->
 				"$(DTL_PATH)" ++ F2 = filename:rootname(F, ".dtl"),
 				re:replace(F2, "/",  "_",  [{return, list}, global])
 		end,
@@ -35,7 +35,12 @@ endef
 ifneq ($(wildcard src/),)
 
 DTL_FILES = $(sort $(call core_find,$(DTL_PATH),*.dtl))
+
+ifdef DTL_FULL_PATH
+BEAM_FILES += $(addprefix ebin/,$(patsubst %.dtl,%_dtl.beam,$(subst /,_,$(DTL_FILES:$(DTL_PATH)%=%))))
+else
 BEAM_FILES += $(addprefix ebin/,$(patsubst %.dtl,%_dtl.beam,$(notdir $(DTL_FILES))))
+endif
 
 ebin/$(PROJECT).app:: $(DTL_FILES)
 	$(if $(strip $?),\
