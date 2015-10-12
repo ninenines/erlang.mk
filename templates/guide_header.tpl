@@ -14,11 +14,6 @@ main h2, main h3{margin-top:2em}
 a{color:#d9230f;text-decoration:none}
 a:hover{text-decoration:underline}
 h1, h2, h3{font-weight:normal}
-h1 a{color:black}
-h1 a:hover{color:#d9230f;text-decoration:none}
-span.var{color:teal}
-span.op{color:maroon}
-span.dir{color:purple}
 div.navfooter{margin-bottom:1em}
 --></style>
 </head>
