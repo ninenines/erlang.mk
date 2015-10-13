@@ -62,7 +62,6 @@ core-app-asn1: build clean-core-app-asn1
 # The use_cap.erl gets touched because of its dependency to CAP.hrl.
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/CAP.beam \
 		$(APP)/ebin/use_cap.beam \
 		$(APP)/include/CAP.asn1db \
@@ -321,7 +320,6 @@ core-app-generate-erl: build clean-core-app-generate-erl
 	$i "Touch the script file; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/generated.beam \
 		$(APP)/src/generated.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -431,7 +429,6 @@ core-app-generate-erl-include: build clean-core-app-generate-erl-include
 	$i "Touch the .hrl file; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/generated.beam \
 		$(APP)/src/generated.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -492,7 +489,6 @@ core-app-generate-erl-prepend: build clean-core-app-generate-erl-prepend
 	$i "Touch the script file; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/generated.beam \
 		$(APP)/src/generated.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -594,7 +590,6 @@ core-app-hrl: build clean-core-app-hrl
 # The use_red.erl gets touched because of its dependency to red.hrl.
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -684,7 +679,6 @@ core-app-hrl-recursive: build clean-core-app-hrl-recursive
 # The use_red.erl gets touched because of its dependency to red.hrl and pill.hrl.
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -783,7 +777,6 @@ core-app-mib: build clean-core-app-mib
 # The use_v1.erl gets touched because of its dependency to EX1-MIB.hrl.
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_v1.beam \
 		$(APP)/include/EX1-MIB.hrl \
 		$(APP)/priv/mibs/EX1-MIB.bin \
@@ -895,7 +888,6 @@ core-app-no-makedep: build clean-core-app-no-makedep
 	$i "Touch one .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl.
 	$t printf "%s\n" \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -917,7 +909,6 @@ core-app-no-makedep: build clean-core-app-no-makedep
 # The use_red.erl gets touched because of its dependency to red.hrl.
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -1085,7 +1076,6 @@ core-app-xrl: build clean-core-app-xrl
 	$i "Touch one .xrl file; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/erlang_scan.beam \
 		$(APP)/src/erlang_scan.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -1187,7 +1177,6 @@ core-app-xrl-include: build clean-core-app-xrl-include
 	$i "Touch the .xrl file; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xfl_lexer.beam \
 		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -1208,7 +1197,6 @@ core-app-xrl-include: build clean-core-app-xrl-include
 	$i "Touch a .hrl file included directly; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xfl_lexer.beam \
 		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -1229,7 +1217,6 @@ core-app-xrl-include: build clean-core-app-xrl-include
 	$i "Touch a .hrl file included indirectly; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xfl_lexer.beam \
 		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -1327,7 +1314,6 @@ core-app-yrl: build clean-core-app-yrl
 	$i "Touch one .yrl file; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xref_parser.beam \
 		$(APP)/src/xref_parser.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -1423,7 +1409,6 @@ core-app-yrl-include: build clean-core-app-yrl-include
 	$i "Touch the .yrl file; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/core_parse.beam \
 		$(APP)/src/core_parse.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
@@ -1444,7 +1429,6 @@ core-app-yrl-include: build clean-core-app-yrl-include
 	$i "Touch the .hrl file included; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
-		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/core_parse.beam \
 		$(APP)/src/core_parse.erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
