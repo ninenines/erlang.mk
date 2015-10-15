@@ -60,7 +60,7 @@ clean::
 else
 
 ifeq ($(SOURCES),)
-SOURCES := $(sort $(call core_find,$(C_SRC_DIR)/,*.c *.C *.cc *.cpp))
+SOURCES := $(sort $(foreach pat,*.c *.C *.cc *.cpp,$(call core_find,$(C_SRC_DIR)/,$(pat))))
 endif
 OBJECTS = $(addsuffix .o, $(basename $(SOURCES)))
 
