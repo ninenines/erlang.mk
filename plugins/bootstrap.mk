@@ -171,11 +171,17 @@ define tpl_cowboy_http
 -behaviour(cowboy_http_handler).
 
 -export([init/3]).
+-export([init/2]).
 -export([handle/2]).
 -export([terminate/3]).
 
 -record(state, {
 }).
+
+
+init(Req, _Opts) ->
+	{ok, Req, #state{}}.
+
 
 init(_, Req, _Opts) ->
 	{ok, Req, #state{}}.
