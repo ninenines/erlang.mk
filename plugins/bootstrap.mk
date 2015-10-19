@@ -429,7 +429,7 @@ ifdef LEGACY
 endif
 
 new:
-ifeq ($(wildcard src/),)
+ifeq ($(wildcard src/)$(in),)
 	$(error Error: src/ directory does not exist)
 endif
 ifndef t

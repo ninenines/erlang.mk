@@ -342,6 +342,9 @@ core-deps-apps-only: build clean-core-deps-apps-only
 	$i "Create a new application my_app"
 	$t $(MAKE) -C $(APP) new-app in=my_app $v
 
+	$i "Create a module my_server from gen_server template in my_app"
+	$t $(MAKE) -C $(APP) new t=gen_server n=my_server in=my_app $v
+
 	$i "Add Cowlib to the list of dependencies"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/apps/my_app/Makefile
 
@@ -353,12 +356,13 @@ core-deps-apps-only: build clean-core-deps-apps-only
 	$t test -f $(APP)/apps/my_app/ebin/my_app.app
 	$t test -f $(APP)/apps/my_app/ebin/my_app_app.beam
 	$t test -f $(APP)/apps/my_app/ebin/my_app_sup.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_server.beam
 	$t test -d $(APP)/deps/cowlib/
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/apps/*/ebin/ -eval " \
 		ok = application:load(my_app), \
-		{ok, Mods = [my_app_app, my_app_sup]} = application:get_key(my_app, modules), \
+		{ok, Mods = [my_app_app, my_app_sup, my_server]} = application:get_key(my_app, modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
@@ -373,6 +377,7 @@ core-deps-apps-only: build clean-core-deps-apps-only
 	$t test ! -e $(APP)/apps/my_app/ebin/my_app.app
 	$t test ! -e $(APP)/apps/my_app/ebin/my_app_app.beam
 	$t test ! -e $(APP)/apps/my_app/ebin/my_app_sup.beam
+	$t test ! -e $(APP)/apps/my_app/ebin/my_server.beam
 
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
