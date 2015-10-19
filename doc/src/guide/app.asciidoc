@@ -123,9 +123,10 @@ your situation.
 	Current version of the project.
 `PROJECT_REGISTERED`::
 	List of the names of all registered processes.
-`OTP_DEPS`::
+`LOCAL_DEPS`::
 	List of Erlang/OTP applications this project depends on,
-	excluding `erts`, `kernel` and `stdlib`.
+	excluding `erts`, `kernel` and `stdlib`, or list of
+	dependencies local to this repository (in `APPS_DIR`).
 `DEPS`::
 	List of applications this project depends on that need
 	to be fetched by Erlang.mk.
@@ -140,7 +141,7 @@ PROJECT_DESCRIPTION = Small, fast, modular HTTP server.
 PROJECT_VERSION = 2.0.0-pre.2
 PROJECT_REGISTERED = cowboy_clock
 
-OTP_DEPS = crypto
+LOCAL_DEPS = crypto
 DEPS = cowlib ranch
 ----
 
