@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive mib no-app no-makedep pt pt-erlc-opts xrl xrl-include yrl yrl-include
+CORE_APP_CASES = appsrc-change asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib no-app no-makedep pt pt-erlc-opts xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
@@ -12,6 +12,27 @@ $(CORE_APP_CLEAN_TARGETS):
 	$t rm -rf $(APP_TO_CLEAN)/
 
 core-app: $(CORE_APP_TARGETS)
+
+ifdef LEGACY
+core-app-appsrc-change: build clean-core-app-appsrc-change
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Touch the .app.src file; check that only the .app file gets rebuilt"
+	$t printf "%s\n" $(APP)/ebin/$(APP).app > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/src/$(APP).app.src
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/src/$(APP).app.src | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+endif
 
 core-app-asn1: build clean-core-app-asn1
 
@@ -737,6 +758,31 @@ endif
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+core-app-makefile-change: build clean-core-app-makefile-change
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Touch the Makefile; check that all files get rebuilt"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/$(APP)_app.beam \
+		$(APP)/ebin/$(APP)_sup.beam \
+		$(APP)/src/$(APP)_app.erl \
+		$(APP)/src/$(APP)_sup.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/Makefile
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/Makefile | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
 
 core-app-mib: build clean-core-app-mib
 
