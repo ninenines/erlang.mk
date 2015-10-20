@@ -21,8 +21,13 @@ export DEPS_DIR
 REBAR_DEPS_DIR = $(DEPS_DIR)
 export REBAR_DEPS_DIR
 
+dep_name = $(if $(dep_$(1)),$(1),$(pkg_$(1)_name))
+dep_repo = $(patsubst git://github.com/%,https://github.com/%, \
+	$(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo)))
+dep_commit = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 3,$(dep_$(1))),$(pkg_$(1)_commit)))
+
 ALL_APPS_DIRS = $(if $(wildcard $(APPS_DIR)/),$(filter-out $(APPS_DIR),$(shell find $(APPS_DIR) -maxdepth 1 -type d)))
-ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(filter-out $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)))
+ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(foreach dep,$(filter-out $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)),$(call dep_name,$(dep))))
 
 ifeq ($(filter $(APPS_DIR) $(DEPS_DIR),$(subst :, ,$(ERL_LIBS))),)
 ifeq ($(ERL_LIBS),)
@@ -546,26 +551,23 @@ define dep_fetch
 			fail))
 endef
 
-dep_name = $(if $(dep_$(1)),$(1),$(pkg_$(1)_name))
-dep_repo = $(patsubst git://github.com/%,https://github.com/%, \
-	$(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo)))
-dep_commit = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 3,$(dep_$(1))),$(pkg_$(1)_commit)))
-
 define dep_target
-$(DEPS_DIR)/$(1):
-	$(verbose) if test -d $(APPS_DIR)/$1; then \
-		echo "Error: Dependency $1 conflicts with application found in $(APPS_DIR)/$1."; \
+$(DEPS_DIR)/$(call dep_name,$1):
+	$(eval DEP_NAME := $(call dep_name,$1))
+	$(eval DEP_STR := $(if $(filter-out $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
+	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
+		echo "Error: Dependency" $(DEP_STR) "conflicts with application found in $(APPS_DIR)/$(DEP_NAME)."; \
 		exit 17; \
 	fi
 	$(verbose) mkdir -p $(DEPS_DIR)
-	$(dep_verbose) $(call dep_fetch_$(strip $(call dep_fetch,$(1))),$(1))
-	$(verbose) if [ -f $(DEPS_DIR)/$(1)/configure.ac -o -f $(DEPS_DIR)/$(1)/configure.in ]; then \
-		echo " AUTO  " $(1); \
-		cd $(DEPS_DIR)/$(1) && autoreconf -Wall -vif -I m4; \
+	$(dep_verbose) $(call dep_fetch_$(strip $(call dep_fetch,$1)),$1)
+	$(verbose) if [ -f $(DEPS_DIR)/$(DEP_NAME)/configure.ac -o -f $(DEPS_DIR)/$(DEP_NAME)/configure.in ]; then \
+		echo " AUTO  " $(DEP_STR); \
+		cd $(DEPS_DIR)/$(DEP_NAME) && autoreconf -Wall -vif -I m4; \
 	fi
-	- $(verbose) if [ -f $(DEPS_DIR)/$(1)/configure ]; then \
-		echo " CONF  " $(1); \
-		cd $(DEPS_DIR)/$(1) && ./configure; \
+	- $(verbose) if [ -f $(DEPS_DIR)/$(DEP_NAME)/configure ]; then \
+		echo " CONF  " $(DEP_STR); \
+		cd $(DEPS_DIR)/$(DEP_NAME) && ./configure; \
 	fi
 ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 	$(verbose) if [ "$(1)" = "amqp_client" -a "$(RABBITMQ_CLIENT_PATCH)" ]; then \
@@ -584,7 +586,7 @@ ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 			git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \
 		fi \
 	else \
-		$(call dep_autopatch,$(1)) \
+		$(call dep_autopatch,$(DEP_NAME)) \
 	fi
 endif
 endef

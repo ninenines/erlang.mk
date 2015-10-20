@@ -192,7 +192,7 @@ pkg-$1: clean build
 	$(eval @ = pkg-$1)
 
 # Get the real application's name.
-	$(eval APP_NAME = `sed '2!d;s/pkg_$1_name = //' ../index/$1.mk`)
+	$(eval APP_NAME := $(shell sed '2!d;s/pkg_$1_name = //' ../index/$1.mk))
 
 	$i "Bootstrap a new OTP library in packages/$1_pkg"
 	$t mkdir -p packages/$1_pkg/
