@@ -48,7 +48,7 @@ summary:
 	@touch test/logs/latest.log test/packages/errors.log
 	-@sort test/packages/errors.log | diff test/logs/latest.log -
 	@sort test/packages/errors.log > test/logs/latest.log
-	@cp test/logs/latest.log "test/logs/$(subst $(empty) $(empty),_,$(shell date --rfc-3339 seconds))"
+	@cp test/logs/latest.log "test/logs/$(shell date '+%F_%T%z')"
 
 search:
 	@$(MAKE) --no-print-directory \
