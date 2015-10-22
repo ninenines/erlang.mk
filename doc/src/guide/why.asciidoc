@@ -55,7 +55,7 @@ build tool can't easily: choose what version of Erlang is
 to be used for compiling the project.
 
 This really is a one-liner in Erlang.mk (a few more lines
-if you also let it download about build Erlang directly)
+if you also let it download and build Erlang directly)
 and allows for even greater things, like testing your
 project across all supported Erlang versions in one small
 command: `make -k ci`.
