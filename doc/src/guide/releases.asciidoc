@@ -1,5 +1,69 @@
 == Releases
 
-// @todo Write it.
+Erlang.mk relies on _Relx_ for generating releases. This
+chapter covers the Erlang.mk-specific bits. Consult the
+https://erlware.github.io/relx/[Relx website] for more information.
 
-Placeholder chapter.
+=== Setup
+
+Erlang.mk will create a release if it detects a Relx configuration
+file in the '$(RELX_CONFIG)' location. This defaults to
+'$(CURDIR)/relx.config'. You can override it by defining
+the variable before including Erlang.mk:
+
+[source,make]
+RELX_CONFIG = $(CURDIR)/webchat.config
+
+Relx does not need to be installed. Erlang.mk will download
+and build it automatically.
+// @todo We are going to fetch relx from repository in the future.
+
+The Relx executable will be saved in the '$(RELX)' file. This
+location defaults to '$(CURDIR)/relx' and can be overriden.
+
+// @todo You can use a custom repository by ???
+
+=== Configuration
+
+You can specify additional Relx options using the `RELX_OPTS`
+variable. For example, to enable `dev_mode`:
+
+[source,make]
+RELX_OPTS = -d true
+
+While you can specify the output directory for the release
+in the Relx options directly, Erlang.mk provides a specific
+variable for it: `RELX_OUTPUT_DIR`. It defaults to the '_rel'
+directory. You can also override it:
+
+[source,make]
+RELX_OUTPUT_DIR = /path/to/staging/directory
+
+=== Generating the release
+
+Now that you're all set, all you need to do is generate the
+release. As mentioned before, Erlang.mk will automatically
+generate it when it detects the '$(RELX_CONFIG)' file. This
+means the following command will also build the release:
+
+[source,bash]
+$ make
+
+If you need to generate the release, and only the release,
+the `rel` target can be used:
+
+[source,bash]
+$ make rel
+
+=== Running the release
+
+Erlang.mk provides a convenience function for running the
+release with one simple command:
+
+[source,bash]
+$ make run
+
+This command will also build the project and generate the
+release if they weren't already. It starts the release in
+_console mode_, meaning you will also have a shell ready to
+use to check things as needed.
