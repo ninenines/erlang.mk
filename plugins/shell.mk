@@ -7,6 +7,15 @@
 
 SHELL_PATH ?= -pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin
 SHELL_OPTS ?=
+SHELL_KJELL ?=
+
+ifeq ($(SHELL_KJELL),1)
+SHELL_DEPS += kjell
+SHELL_ERL = $(DEPS_DIR)/kjell/bin/kjell
+SHELL_OPTS += -nouser
+else
+SHELL_ERL = erl
+endif
 
 ALL_SHELL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(SHELL_DEPS))
 
@@ -25,4 +34,4 @@ build-shell-deps: $(ALL_SHELL_DEPS_DIRS)
 	$(verbose) for dep in $(ALL_SHELL_DEPS_DIRS) ; do $(MAKE) -C $$dep ; done
 
 shell: build-shell-deps
-	$(gen_verbose) erl $(SHELL_PATH) $(SHELL_OPTS)
+	$(gen_verbose) $(SHELL_ERL) $(SHELL_PATH) $(SHELL_OPTS)
