@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Erlang.mk</title>
+<title>Erlang.mk User Guide</title>
 <style type="text/css"><!--
 body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
 header {align-items:center;display:flex;justify-content:center}
@@ -91,10 +91,11 @@ your situation.</p><div class="variablelist"><dl class="variablelist"><dt><span 
 </span></dt><dd>
     List of the names of all registered processes.
 </dd><dt><span class="term">
-<code class="literal">OTP_DEPS</code>
+<code class="literal">LOCAL_DEPS</code>
 </span></dt><dd>
     List of Erlang/OTP applications this project depends on,
-    excluding <code class="literal">erts</code>, <code class="literal">kernel</code> and <code class="literal">stdlib</code>.
+    excluding <code class="literal">erts</code>, <code class="literal">kernel</code> and <code class="literal">stdlib</code>, or list of
+    dependencies local to this repository (in <code class="literal">APPS_DIR</code>).
 </dd><dt><span class="term">
 <code class="literal">DEPS</code>
 </span></dt><dd>
@@ -106,7 +107,7 @@ PROJECT_DESCRIPTION = Small, fast, modular HTTP server.
 PROJECT_VERSION = 2.0.0-pre.2
 PROJECT_REGISTERED = cowboy_clock
 
-OTP_DEPS = crypto
+LOCAL_DEPS = crypto
 DEPS = cowlib ranch</pre><p>Any space before and after the value is dropped.</p><p><a class="ulink" href="deps.asciidoc" target="_top">Dependencies</a> are covered in details in
 the next chapter.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_legacy_method"></a>6.3.2. Legacy method</h3></div></div></div><p>The <span class="emphasis"><em>src/$(PROJECT).app.src</em></span> file is a legacy method of
 building Erlang applications. It was introduced by the original

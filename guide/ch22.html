@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Erlang.mk User Guide</title>
+<style type="text/css"><!--
+body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
+header {align-items:center;display:flex;justify-content:center}
+header nav.left{text-align:right;width:150px}
+header nav.right{text-align:left;width:150px}
+header nav a{display:block;margin:1.5em 1em}
+main{margin-top:2em;text-align:justify}
+main h2, main h3{margin-top:2em}
+a{color:#d9230f;text-decoration:none}
+a:hover{text-decoration:underline}
+h1, h2, h3{font-weight:normal}
+div.navfooter{margin-bottom:1em}
+--></style>
+</head>
+<body>
+<header>
+	<nav class="left">
+		<a href="index.html">User guide</a>
+		<a href="ch02.html">Tutorials</a>
+	</nav>
+	<a href="/" class="logo"><img src="../res/logo-small.png" alt="Erlang.mk" title="Erlang.mk: A build tool for Erlang that just works" height="200" width="206"/></a>
+	<nav class="right">
+		<a href="https://github.com/ninenines/erlang.mk/tree/master/index">470+ packages</a>
+		<a href="https://github.com/ninenines/erlang.mk/issues">Issues?</a>
+	</nav>
+</header>
+<main>
+
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="pt04.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="pt05.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="_external_plugins"></a>Chapter 22. External plugins</h2></div></div></div><p>It is often convenient to be able to keep the build files
+used by all your projects in one place. Those files could
+be Makefiles, configuration files, templates and more.</p><p>Erlang.mk allows you to automatically load plugins from
+dependencies. Plugins can do anything, including defining
+new variables, defining file templates, hooking themselves
+inside the normal Erlang.mk processing or even adding new
+rules.</p><p>You can load plugins using one of two methods. You can
+either load all plugins from a dependency, or just one.
+We will also cover conventions about writing external
+plugins.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_loading_all_plugins_from_a_dependency"></a>22.1. Loading all plugins from a dependency</h2></div></div></div><p>To load plugins from a dependency, all you need to do is add
+the dependency name to <code class="literal">DEP_PLUGINS</code> in addition to the list
+of dependencies.</p><p>For example, if you have <code class="literal">cowboy</code> in <code class="literal">DEPS</code>, add <code class="literal">cowboy</code> in
+<code class="literal">DEP_PLUGINS</code> also:</p><pre class="programlisting">DEPS = cowboy
+DEP_PLUGINS = cowboy</pre><p>This will load the file <span class="emphasis"><em>plugins.mk</em></span> in the root folder of
+the Cowboy repository.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_loading_one_plugin_from_a_dependency"></a>22.2. Loading one plugin from a dependency</h2></div></div></div><p>Now that we know how to load all plugins, let’s take a look
+at how to load one specific plugin from a dependency.</p><p>To do this, instead of writing only the name of the dependency,
+we will write its name and the path to the plugin file. This
+means that writing <code class="literal">DEP_PLUGINS = cowboy</code> is equivalent to
+writing <code class="literal">DEP_PLUGINS = cowboy/plugins.mk</code>.</p><p>Knowing this, if we were to load the plugin <span class="emphasis"><em>mk/dist.mk</em></span>
+from Cowboy and no other, we would write the following in
+our Makefile:</p><pre class="programlisting">DEPS = cowboy
+DEP_PLUGINS = cowboy/mk/dist.mk</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_external_plugins"></a>22.3. Writing external plugins</h2></div></div></div><p>The <span class="emphasis"><em>plugins.mk</em></span> file is a convention. It is meant to load
+all the plugins from the dependency. The code for the plugin
+can be written directly in <span class="emphasis"><em>plugins.mk</em></span> or be separate.</p><p>If you are providing more than one plugin with your repository,
+the recommended way is to create one file per plugin in the
+<span class="emphasis"><em>mk/</em></span> folder in your repository, and then include those
+individual plugins in <span class="emphasis"><em>plugins.mk</em></span>.</p><p>For eaxmple, if you have two plugins <span class="emphasis"><em>mk/dist.mk</em></span> and
+<span class="emphasis"><em>mk/templates.mk</em></span>, you could write the following <span class="emphasis"><em>plugins.mk</em></span>
+file:</p><pre class="programlisting">THIS := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+include $(THIS)/mk/dist.mk
+include $(THIS)/mk/templates.mk</pre><p>The <code class="literal">THIS</code> variable is required to relatively include files.</p><p>This allows users to not only be able to select individual
+plugins, but also select all plugins from the dependency
+in one go if they wish to do so.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pt04.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pt04.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pt05.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+</main>
+</body>
+</html>

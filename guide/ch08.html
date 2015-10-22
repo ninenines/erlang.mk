@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Erlang.mk</title>
+<title>Erlang.mk User Guide</title>
 <style type="text/css"><!--
 body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
 header {align-items:center;display:flex;justify-content:center}
@@ -31,48 +31,7 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ch07.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="pt02.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="_compatibility_with_other_build_tools"></a>Chapter 8. Compatibility with other build tools</h2></div></div></div><p>Erlang.mk tries its best to be compatible with the other Erlang
-build tools. It can use dependencies written with other build
-tools in mind, and can also make your projects usable by those
-build tools as well. Erlang.mk is like the cool kid that gets
-along with everybody.</p><p>In this chapter I will use the term <span class="emphasis"><em>Rebar project</em></span> to refer
-to a project built using Rebar 2, Rebar 3 or Mad. These three
-build tools are very similar and share the same configuration
-file.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_rebar_projects_as_erlang_mk_dependencies"></a>8.1. Rebar projects as Erlang.mk dependencies</h2></div></div></div><p>Erlang.mk comes with a feature called <span class="emphasis"><em>Autoload</em></span> which will
-use Rebar 2 to patch any Rebar project and make it compatible
-with Erlang.mk. This feature essentially patches Rebar out
-and adds a Makefile to the project that Erlang.mk can then
-use for building:</p><p><span class="emphasis"><em>Autoload</em></span> is documented in more details in the
-<a class="ulink" href="deps.asciidoc" target="_top">Packages and dependencies</a> chapter.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_projects_as_rebar_dependencies"></a>8.2. Erlang.mk projects as Rebar dependencies</h2></div></div></div><p>Erlang.mk projects can be made compatible with the Rebar family
-of build tools pretty easily, as Erlang.mk will generate
-all the files they require for building.</p><p>The Rebar family requires two files: a <span class="emphasis"><em>rebar.config</em></span> file
-containing compilation options and the list of dependencies,
-and the application resource file, found either at
-<span class="emphasis"><em>ebin/$(PROJECT).app</em></span> or at <span class="emphasis"><em>src/$(PROJECT).app.src</em></span>.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_rebar_configuration"></a>8.2.1. Rebar configuration</h3></div></div></div><p>Erlang.mk comes with a target that generates a <span class="emphasis"><em>rebar.config</em></span>
-file when invoked:</p><pre class="programlisting">$ make rebar.config</pre><p>Careful! This will build the file even if it already existed
-before.</p><p>To build this file, Erlang.mk uses information it finds in
-the <code class="literal">DEPS</code> and <code class="literal">ERLC_OPTS</code> variables, among others. This
-means that the Rebar family builds your project much the
-same way as Erlang.mk.</p><p>Careful though! Different build tools have different fetching
-strategies. If some applications provide differing dependencies,
-they might be fetched differently by other build tools. Check
-the <a class="ulink" href="sanity_check.asciidoc" target="_top">Sanity check</a> chapter to find
-out how to detect such issues.</p><p>You can automatically generate this file when you build
-your application, by making it a dependency of the <code class="literal">app</code>
-target:</p><pre class="programlisting">app:: rebar.config</pre><p>Don’t forget to commit the file when it changes!</p><p>If you run into other issues, it’s probably because you use a
-feature specific to Erlang.mk, like the <code class="literal">cp</code> fetch method.
-It could also be that we forgot to handle something! Sorry.
-We are of course interested to hear about any compatibility
-problems you may have, just open a ticket!</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_application_resource_file_2"></a>8.2.2. Application resource file</h3></div></div></div><p>Erlang.mk has two ways to generate an application resource
-file: from the information found in the Makefile, or from
-the information found in the <span class="emphasis"><em>src/$(PROJECT).app.src</em></span> file.
-Needless to say, if you have this file in your repository,
-then you don’t need to worry about compatibility with other
-build tools.</p><p>If you don’t, however, it’s not much harder. Every time
-Erlang.mk will compile your application, it will produce
-a new <span class="emphasis"><em>ebin/$(PROJECT).app</em></span> file. Simply commit this file
-when it changes. It will only change when you modify the
-configuration, add or remove modules.</p></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch07.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pt01.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pt02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ch07.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch09.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="_nifs_and_port_drivers"></a>Chapter 8. NIFs and port drivers</h2></div></div></div><p>Placeholder chapter.</p></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch07.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pt01.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch09.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>
