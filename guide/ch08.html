@@ -31,7 +31,63 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ch07.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch09.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="_nifs_and_port_drivers"></a>Chapter 8. NIFs and port drivers</h2></div></div></div><p>Placeholder chapter.</p></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch07.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pt01.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch09.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ch07.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch09.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="_nifs_and_port_drivers"></a>Chapter 8. NIFs and port drivers</h2></div></div></div><p>Erlang.mk can not only build Erlang projects, but also the C code
+that some projects come with, like NIFs and port drivers.</p><p>There are two ways to build the C code: using a custom Makefile,
+or making Erlang.mk do it directly. The C code will be built
+as needed when you run <code class="literal">make</code>.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_c_source_code_location_and_erlang_environment"></a>8.1. C source code location and Erlang environment</h2></div></div></div><p>The C source code should be located in the <span class="emphasis"><em>$(C_SRC_DIR)</em></span> directory.
+It defaults to <span class="emphasis"><em>c_src/</em></span>. Should you need to modify it, all you
+need to do is to set the variable in your Makefile before including
+Erlang.mk:</p><pre class="programlisting">C_SRC_DIR = $(CURDIR)/my_nif_source</pre><p>When this directory exists, Erlang.mk will automatically create a
+file named <span class="emphasis"><em>$(C_SRC_ENV)</em></span>. This file defaults to <span class="emphasis"><em>$(C_SRC_DIR)/env.mk</em></span>.
+This can also be changed:</p><pre class="programlisting">C_SRC_ENV = $(C_SRC_DIR)/erlang_env.mk</pre><p>It contains a few variable definitions for the environment used for the build:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+<code class="literal">ERTS_INCLUDE_DIR</code>
+</span></dt><dd>
+    Path to the ERTS include files (<span class="emphasis"><em>erl_driver.h</em></span>, <span class="emphasis"><em>erl_nif.h</em></span> and more).
+</dd><dt><span class="term">
+<code class="literal">ERL_INTERFACE_INCLUDE_DIR</code>
+</span></dt><dd>
+    Path to the Erl_Interface include files (<span class="emphasis"><em>ei.h</em></span> and related).
+</dd><dt><span class="term">
+<code class="literal">ERL_INTERFACE_LIB_DIR</code>
+</span></dt><dd>
+    Path to the Erl_Interface static libraries.
+</dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_using_a_custom_makefile"></a>8.2. Using a custom Makefile</h2></div></div></div><p>Erlang.mk will automatically run <code class="literal">make</code> if it detects a Makefile
+in <span class="emphasis"><em>$(C_SRC_DIR)/Makefile</em></span>.</p><p>The Makefile should have at least two targets: a default target
+(which can be anything, for example <code class="literal">all</code>) which is invoked when
+building the C code, and a <code class="literal">clean</code> target invoked when cleaning
+it.</p><p>You can include the <span class="emphasis"><em>env.mk</em></span> file to benefit from the Erlang
+environment detection:</p><pre class="programlisting">include env.mk</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_using_erlang_mk_directly"></a>8.3. Using Erlang.mk directly</h2></div></div></div><p>You don’t need to write a Makefile to build C source code, however.
+Erlang.mk comes with rules to build both shared libraries and
+executables, using the source files it finds in <span class="emphasis"><em>$(C_SRC_DIR)</em></span>.</p><p>By default, Erlang.mk will create a shared library. To change
+this and create an executable instead, put this in your Makefile
+before including Erlang.mk:</p><pre class="programlisting">C_SRC_TYPE = executable</pre><p>The generated file will be saved to <span class="emphasis"><em>$(C_SRC_OUTPUT)</em></span>. It
+defaults to <span class="emphasis"><em>$(CURDIR)/priv/$(PROJECT).so</em></span>, the filename
+adequately fitting a Unix shared library.</p><p>Erlang.mk sets appropriate compile and linker flags by default.
+These flags vary depending on the platform, and can of course
+be overriden.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+<code class="literal">CC</code>
+</span></dt><dd>
+    The compiler to be used.
+</dd><dt><span class="term">
+<code class="literal">CFLAGS</code>
+</span></dt><dd>
+    C compiler flags.
+</dd><dt><span class="term">
+<code class="literal">CXXFLAGS</code>
+</span></dt><dd>
+    C++ compiler flags.
+</dd><dt><span class="term">
+<code class="literal">LDFLAGS</code>
+</span></dt><dd>
+    Linker flags.
+</dd><dt><span class="term">
+<code class="literal">LDLIBS</code>
+</span></dt><dd>
+    Libraries to link against.
+</dd></dl></div><p>The source files are automatically gathered from the contents
+of <span class="emphasis"><em>$(C_SRC_DIR)</em></span>. Erlang.mk looks for <span class="emphasis"><em>.c</em></span>, <span class="emphasis"><em>.C</em></span>, <span class="emphasis"><em>.cc</em></span> and <span class="emphasis"><em>.cpp</em></span>
+source files. You can define the variable <code class="literal">SOURCES</code> to manually
+list the files to compile.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch07.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pt01.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch09.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>
