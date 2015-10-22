@@ -1,5 +1,91 @@
 == NIFs and port drivers
 
-// @todo Write it.
+Erlang.mk can not only build Erlang projects, but also the C code
+that some projects come with, like NIFs and port drivers.
 
-Placeholder chapter.
+There are two ways to build the C code: using a custom Makefile,
+or making Erlang.mk do it directly. The C code will be built
+as needed when you run `make`.
+
+// @todo something for easier bootstrapping
+
+=== C source code location and Erlang environment
+
+The C source code should be located in the '$(C_SRC_DIR)' directory.
+It defaults to 'c_src/'. Should you need to modify it, all you
+need to do is to set the variable in your Makefile before including
+Erlang.mk:
+
+[source,make]
+C_SRC_DIR = $(CURDIR)/my_nif_source
+
+When this directory exists, Erlang.mk will automatically create a
+file named '$(C_SRC_ENV)'. This file defaults to '$(C_SRC_DIR)/env.mk'.
+This can also be changed:
+
+[source,make]
+C_SRC_ENV = $(C_SRC_DIR)/erlang_env.mk
+
+It contains a few variable definitions for the environment used for the build:
+
+`ERTS_INCLUDE_DIR`::
+	Path to the ERTS include files ('erl_driver.h', 'erl_nif.h' and more).
+`ERL_INTERFACE_INCLUDE_DIR`::
+	Path to the Erl_Interface include files ('ei.h' and related).
+`ERL_INTERFACE_LIB_DIR`::
+	Path to the Erl_Interface static libraries.
+
+// @todo We should remove this file on clean, not distclean.
+
+=== Using a custom Makefile
+
+Erlang.mk will automatically run `make` if it detects a Makefile
+in '$(C_SRC_DIR)/Makefile'.
+
+The Makefile should have at least two targets: a default target
+(which can be anything, for example `all`) which is invoked when
+building the C code, and a `clean` target invoked when cleaning
+it.
+
+You can include the 'env.mk' file to benefit from the Erlang
+environment detection:
+
+[source,make]
+include env.mk
+
+=== Using Erlang.mk directly
+
+You don't need to write a Makefile to build C source code, however.
+Erlang.mk comes with rules to build both shared libraries and
+executables, using the source files it finds in '$(C_SRC_DIR)'.
+
+By default, Erlang.mk will create a shared library. To change
+this and create an executable instead, put this in your Makefile
+before including Erlang.mk:
+
+[source,make]
+C_SRC_TYPE = executable
+
+The generated file will be saved to '$(C_SRC_OUTPUT)'. It
+defaults to '$(CURDIR)/priv/$(PROJECT).so', the filename
+adequately fitting a Unix shared library.
+
+Erlang.mk sets appropriate compile and linker flags by default.
+These flags vary depending on the platform, and can of course
+be overriden.
+
+`CC`::
+	The compiler to be used.
+`CFLAGS`::
+	C compiler flags.
+`CXXFLAGS`::
+	C++ compiler flags.
+`LDFLAGS`::
+	Linker flags.
+`LDLIBS`::
+	Libraries to link against.
+
+The source files are automatically gathered from the contents
+of '$(C_SRC_DIR)'. Erlang.mk looks for '.c', '.C', '.cc' and '.cpp'
+source files. You can define the variable `SOURCES` to manually
+list the files to compile.
