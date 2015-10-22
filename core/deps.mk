@@ -500,6 +500,10 @@ define dep_fetch_git
 	cd $(DEPS_DIR)/$(call dep_name,$(1)) && git checkout -q $(call dep_commit,$(1));
 endef
 
+define dep_fetch_git-submodule
+	git submodule update --init -- $(DEPS_DIR)/$1;
+endef
+
 define dep_fetch_hg
 	hg clone -q -U $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1)); \
 	cd $(DEPS_DIR)/$(call dep_name,$(1)) && hg update -q $(call dep_commit,$(1));

@@ -162,6 +162,7 @@ The following table lists all existing methods:
 |===
 | Name           | Format          | Description
 | git            | git repo commit | Clone the Git repository and checkout the given version
+| git-submodule  | git-submodule   | Initialize and update the Git submodule
 | hg             | hg repo commit  | Clone the Mercurial repository and update to the given version
 | svn            | svn repo        | Checkout the given SVN repository
 | cp             | cp path/to/repo | Recursively copy a local directory
@@ -183,6 +184,13 @@ Or to fetch Ehsa tag 4.0.3 from Mercurial:
 
 [source,make]
 dep_ehsa = hg https://bitbucket.org/a12n/ehsa 4.0.3
+
+Git also comes with a concept of submodules. Erlang.mk can
+automatically initializes and updates submodules for dependencies,
+as long as they were added beforehand using `git submodule add`:
+
+[source,make]
+dep_cowboy = git-submodule
 
 The `svn` method only has a repository value, but that's
 simply because the SVN repository URL can also contain
