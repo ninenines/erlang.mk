@@ -1,15 +1,21 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
+CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
 .PHONY: core-deps $(CORE_DEPS_TARGETS) clean-core-deps $(CORE_DEPS_CLEAN_TARGETS)
 
-clean-core-deps: $(CORE_DEPS_CLEAN_TARGETS)
+clean-core-deps: $(CORE_DEPS_CLEAN_TARGETS) clean-core-deps-mv-moved clean-core-deps-mv-rebar-moved
 
 $(CORE_DEPS_CLEAN_TARGETS):
 	$t rm -rf $(APP_TO_CLEAN)/
+
+clean-core-deps-mv-moved:
+	$t rm -rf core_deps_mv-moved/
+
+clean-core-deps-mv-rebar-moved:
+	$t rm -rf core_deps_mv_rebar-moved/
 
 core-deps: $(CORE_DEPS_TARGETS)
 
@@ -838,6 +844,51 @@ endif
 
 	$i "Check that the correct dependencies were fetched"
 	$t test -d $(APP)/deps/ranch
+
+core-deps-mv: build clean-core-deps-mv clean-core-deps-mv-moved
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Move the application elsewhere"
+	$t mv $(APP) $(APP)-moved
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP)-moved $v
+
+core-deps-mv-rebar: build clean-core-deps-mv-rebar clean-core-deps-mv-rebar-moved
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Lager to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/goldrush
+	$t test -d $(APP)/deps/lager
+
+	$i "Move the application elsewhere"
+	$t mv $(APP) $(APP)-moved
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP)-moved $v
 
 # A lower-level dependency of the first dependency always
 # wins over a lower-level dependency of the second dependency.
