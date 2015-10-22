@@ -28,8 +28,6 @@ include::escripts.asciidoc[Escripts]
 
 include::compat.asciidoc[Compatibility with other build tools]
 
-include::external_plugins.asciidoc[External plugins]
-
 = Documentation
 
 include::asciidoc.asciidoc[Asciidoc documentation]
@@ -53,6 +51,10 @@ include::ci.asciidoc[Continuous integration]
 include::dialyzer.asciidoc[Dialyzer]
 
 include::xref.asciidoc[Xref]
+
+= Third-party plugins
+
+include::external_plugins.asciidoc[External plugins]
 
 = About Erlang.mk
 
