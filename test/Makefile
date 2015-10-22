@@ -348,7 +348,7 @@ ct: app1
 		"all() -> [testcase1]." \
 		"testcase1(_) -> 42 = m:succ(1)." \
 	 > app1/test/failing_SUITE.erl
-	$t if $(MAKE) -C app1 ct-failing $v ; then false ; fi
+	$t ! $(MAKE) -C app1 ct-failing $v
 	$i "Checking that '$(MAKE) distclean-ct' deletes logs."
 	$t $(MAKE) -C app1 distclean-ct $v
 	$t [ ! -e app1/logs ]
@@ -396,7 +396,7 @@ eunit: app1
 		"	?assertEqual(42, t:succ(1))." \
 		> app1/eunit/t_tests.erl
 	$t $(MAKE) -C app1 distclean TEST_DIR=eunit $v
-	$t if $(MAKE) -C app1 eunit TEST_DIR=eunit $v ; then false ; fi
+	$t ! $(MAKE) -C app1 eunit TEST_DIR=eunit $v
 	$t rm -rf app1/eunit app1/src/t.erl app1/test-eunit.log
 	$i "Test 'eunit' passed."
 

@@ -300,7 +300,7 @@ core-app-error: build clean-core-app-error
 	$t echo "-module(girl)." > $(APP)/src/girl.erl
 
 	$i "Check that trying to build returns non-zero"
-	$t if $(MAKE) -C $(APP) $v; then false; fi
+	$t ! $(MAKE) -C $(APP) $v
 
 core-app-generate-erl: build clean-core-app-generate-erl
 

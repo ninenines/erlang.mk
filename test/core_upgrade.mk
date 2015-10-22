@@ -34,7 +34,7 @@ core-upgrade-custom-build-dir: build clean-core-upgrade-custom-build-dir
 	$t ERLANG_MK_BUILD_DIR=custom $(MAKE) -C $(APP) erlang-mk $v
 
 	$i "Check that the rule is gone"
-	$t if $(MAKE) -C $(APP) erlang_mk_upgrade_test_rule $v; then false; fi
+	$t ! $(MAKE) -C $(APP) erlang_mk_upgrade_test_rule $v
 
 	$i "Check that the custom build directory is gone"
 	$t test ! -d $(APP)/custom/
@@ -53,7 +53,7 @@ core-upgrade-custom-config: build clean-core-upgrade-custom-config
 	$t $(MAKE) -C $(APP) erlang-mk $v
 
 	$i "Check that the bootstrap plugin is gone"
-	$t if $(MAKE) -C $(APP) list-templates $v; then false; fi
+	$t ! $(MAKE) -C $(APP) list-templates $v
 
 core-upgrade-custom-repo: build clean-core-upgrade-custom-repo
 
@@ -97,7 +97,7 @@ core-upgrade-no-config: build clean-core-upgrade-no-config
 	$t $(MAKE) -C $(APP) erlang-mk $v
 
 	$i "Check that the rule is gone"
-	$t if $(MAKE) -C $(APP) erlang_mk_upgrade_test_rule $v; then false; fi
+	$t ! $(MAKE) -C $(APP) erlang_mk_upgrade_test_rule $v
 
 core-upgrade-renamed-config: build clean-core-upgrade-renamed-config
 
@@ -116,4 +116,4 @@ core-upgrade-renamed-config: build clean-core-upgrade-renamed-config
 	$t $(MAKE) -C $(APP) erlang-mk $v
 
 	$i "Check that the bootstrap plugin is gone"
-	$t if $(MAKE) -C $(APP) list-templates $v; then false; fi
+	$t ! $(MAKE) -C $(APP) list-templates $v
