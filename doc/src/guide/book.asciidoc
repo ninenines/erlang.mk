@@ -20,12 +20,46 @@ include::app.asciidoc[Building]
 
 include::deps.asciidoc[Packages and dependencies]
 
+include::ports.asciidoc[NIFs and port drivers]
+
+include::releases.asciidoc[Releases]
+
+include::escripts.asciidoc[Escripts]
+
 include::compat.asciidoc[Compatibility with other build tools]
 
-= Advanced
-
 include::external_plugins.asciidoc[External plugins]
+
+= Documentation
+
+include::asciidoc.asciidoc[Asciidoc documentation]
+
+include::edoc.asciidoc[EDoc comments]
+
+= Tests
+
+include::shell.asciidoc[Erlang shell]
+
+include::eunit.asciidoc[EUnit]
+
+include::common_test.asciidoc[Common Test]
+
+include::property_based_testing.asciidoc[Property based testing]
+
+include::coverage.asciidoc[Code coverage]
+
+include::ci.asciidoc[Continuous integration]
+
+include::dialyzer.asciidoc[Dialyzer]
+
+include::xref.asciidoc[Xref]
 
 = About Erlang.mk
 
 include::why.asciidoc[Why erlang.mk?]
+
+include::history.asciidoc[Short history]
+
+include::architecture.asciidoc[Architecture]
+
+include::contributing.asciidoc[Contributing]

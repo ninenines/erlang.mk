@@ -1,0 +1,5 @@
+== Contributing
+
+// @todo Write it.
+
+Placeholder chapter.
