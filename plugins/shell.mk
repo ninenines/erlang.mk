@@ -1,11 +1,13 @@
 # Copyright (c) 2014, M Robert Martin <rob@version2beta.com>
+# Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is contributed to erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: shell
 
 # Configuration.
 
-SHELL_PATH ?= -pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin
+SHELL_ERL ?= erl
+SHELL_PATHS ?= $(CURDIR)/ebin $(APPS_DIR)/*/ebin $(DEPS_DIR)/*/ebin
 SHELL_OPTS ?=
 
 ALL_SHELL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(SHELL_DEPS))
@@ -25,4 +27,4 @@ build-shell-deps: $(ALL_SHELL_DEPS_DIRS)
 	$(verbose) for dep in $(ALL_SHELL_DEPS_DIRS) ; do $(MAKE) -C $$dep ; done
 
 shell: build-shell-deps
-	$(gen_verbose) erl $(SHELL_PATH) $(SHELL_OPTS)
+	$(gen_verbose) $(SHELL_ERL) -pa $(SHELL_PATHS) $(SHELL_OPTS)

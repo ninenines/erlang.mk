@@ -1,5 +1,45 @@
 == Erlang shell
 
-// @todo Write it.
+Erlang.mk provides a convenient target for starting a shell
+with all the paths set properly to experiment with your code.
 
-Placeholder chapter.
+=== Configuration
+
+The `SHELL_DEPS` variable can be used to define dependencies
+that are only to be used when the `make shell` command is called.
+For example, if you want to use _kjell_ as your shell:
+
+[source,make]
+SHELL_DEPS = kjell
+
+Dependencies are downloaded and compiled the first time you
+run the `make shell` command.
+
+You can customize the executable used to start the Erlang shell.
+To continue with our example, if you want to use _kjell_ as your
+shell, you also need to change `SHELL_ERL` and point it to the
+`kjell` executable:
+
+[source,make]
+SHELL_ERL = $(DEPS_DIR)/kjell/bin/kjell
+
+You can specify additional options to be used when starting the
+shell using the `SHELL_OPTS` variable:
+
+[source,make]
+SHELL_OPTS = -setcookie chocolate
+
+Any of the usual `erl` options can be used, including `-eval`:
+
+[source,make]
+SHELL_OPTS = -eval 'my_app:run()'
+
+=== Usage
+
+To start the shell, all you need is the following command:
+
+[source,bash]
+$ make shell
+
+The shell can be stopped as usual with a double Ctrl+C or the
+command `q().`.
