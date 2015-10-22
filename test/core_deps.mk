@@ -127,7 +127,7 @@ core-deps-apps-conflict: build clean-core-deps-apps-conflict
 	$t $(MAKE) -C $(APP) new-lib in=cowlib $v
 
 	$i "Check that building the application fails because of a conflict"
-	$t if $(MAKE) -C $(APP) $v; then false; fi
+	$t ! $(MAKE) -C $(APP) $v
 
 	$i "Check that Cowlib wasn't fetched"
 	$t test ! -e $(APP)/deps/cowlib
@@ -146,7 +146,7 @@ core-deps-apps-deep-conflict: build clean-core-deps-apps-deep-conflict
 	$t $(MAKE) -C $(APP) new-lib in=cowlib $v
 
 	$i "Check that building the application fails because of a conflict"
-	$t if $(MAKE) -C $(APP) $v; then false; fi
+	$t ! $(MAKE) -C $(APP) $v
 
 	$i "Check that Cowlib wasn't fetched"
 	$t test ! -e $(APP)/deps/cowlib
@@ -664,7 +664,7 @@ core-deps-fetch-fail-bad: build clean-core-deps-fetch-fail-bad
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = oops https://github.com/ninenines/cowlib 1.0.0\n"}' $(APP)/Makefile
 
 	$i "Check that building the application fails"
-	$t if $(MAKE) -C $(APP) $v; then false; fi
+	$t ! $(MAKE) -C $(APP) $v
 
 core-deps-fetch-fail-unknown: build clean-core-deps-fetch-fail-unknown
 
@@ -677,7 +677,7 @@ core-deps-fetch-fail-unknown: build clean-core-deps-fetch-fail-unknown
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = unknown\n"}' $(APP)/Makefile
 
 	$i "Check that building the application fails"
-	$t if $(MAKE) -C $(APP) $v; then false; fi
+	$t ! $(MAKE) -C $(APP) $v
 
 core-deps-fetch-git: build clean-core-deps-fetch-git
 
@@ -782,7 +782,7 @@ core-deps-fetch-legacy: build clean-core-deps-fetch-legacy
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = https://github.com/ninenines/cowlib 1.0.0\n"}' $(APP)/Makefile
 
 	$i "Check that building the application fails"
-	$t if $(MAKE) -C $(APP) $v; then false; fi
+	$t ! $(MAKE) -C $(APP) $v
 
 	$i "Check that building the application works with IS_DEP=1"
 	$t $(MAKE) -C $(APP) IS_DEP=1 $v

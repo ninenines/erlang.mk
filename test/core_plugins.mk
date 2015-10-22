@@ -72,7 +72,7 @@ core-plugins-one: build clean-core-plugins-one
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = plugin_dep\ndep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master\nDEP_PLUGINS = plugin_dep/mk/plugin1.mk\n"}' $(APP)/Makefile
 
 	$i "Run 'make plugin1' and check that it prints plugin1"
-	$t test -n "`$(MAKE) -C $(APP) plugin1 | grep plugin1`"
+	$t $(MAKE) --no-print-directory -C $(APP) plugin1 | grep -qw plugin1
 
 	$i "Run 'make plugin2' and confirm the target doesn't exist"
-	$t if `$(MAKE) -C $(APP) plugin2`; then false; fi
+	$t ! $(MAKE) --no-print-directory -C $(APP) plugin2
