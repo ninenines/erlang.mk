@@ -82,7 +82,7 @@ else ifeq ($V,2)
 	i = @echo == $@:
 else
 	t =
-	v = V=1
+	v = V=$(shell echo $$(($(V)-2)))
 	i = @echo == $@:
 endif
 

@@ -19,25 +19,32 @@ COMPILE_MIB_FIRST_PATHS = $(addprefix mibs/,$(addsuffix .mib,$(COMPILE_MIB_FIRST
 # Verbosity.
 
 app_verbose_0 = @echo " APP   " $(PROJECT);
+app_verbose_2 = set -x;
 app_verbose = $(app_verbose_$(V))
 
 appsrc_verbose_0 = @echo " APP   " $(PROJECT).app.src;
+appsrc_verbose_2 = set -x;
 appsrc_verbose = $(appsrc_verbose_$(V))
 
 makedep_verbose_0 = @echo " DEPEND" $(PROJECT).d;
+makedep_verbose_2 = set -x;
 makedep_verbose = $(makedep_verbose_$(V))
 
 erlc_verbose_0 = @echo " ERLC  " $(filter-out $(patsubst %,%.erl,$(ERLC_EXCLUDE)),\
 	$(filter %.erl %.core,$(?F)));
+erlc_verbose_2 = set -x;
 erlc_verbose = $(erlc_verbose_$(V))
 
 xyrl_verbose_0 = @echo " XYRL  " $(filter %.xrl %.yrl,$(?F));
+xyrl_verbose_2 = set -x;
 xyrl_verbose = $(xyrl_verbose_$(V))
 
 asn1_verbose_0 = @echo " ASN1  " $(filter %.asn1,$(?F));
+asn1_verbose_2 = set -x;
 asn1_verbose = $(asn1_verbose_$(V))
 
 mib_verbose_0 = @echo " MIB   " $(filter %.bin %.mib,$(?F));
+mib_verbose_2 = set -x;
 mib_verbose = $(mib_verbose_$(V))
 
 ifneq ($(wildcard src/),)
