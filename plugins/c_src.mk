@@ -115,3 +115,98 @@ distclean-c_src-env:
 
 -include $(C_SRC_ENV)
 endif
+
+# Templates.
+
+define bs_c_nif
+#include "erl_nif.h"
+
+static int loads = 0;
+
+static int load(ErlNifEnv* env, void** priv_data, ERL_NIF_TERM load_info)
+{
+	/* Initialize private data. */
+	*priv_data = NULL;
+
+	loads++;
+
+	return 0;
+}
+
+static int upgrade(ErlNifEnv* env, void** priv_data, void** old_priv_data, ERL_NIF_TERM load_info)
+{
+	/* Convert the private data to the new version. */
+	*priv_data = *old_priv_data;
+
+	loads++;
+
+	return 0;
+}
+
+static void unload(ErlNifEnv* env, void* priv_data)
+{
+	if (loads == 1) {
+		/* Destroy the private data. */
+	}
+
+	loads--;
+}
+
+static ERL_NIF_TERM hello(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
+{
+	if (enif_is_atom(env, argv[0])) {
+		return enif_make_tuple2(env,
+			enif_make_atom(env, "hello"),
+			argv[0]);
+	}
+
+	return enif_make_tuple2(env,
+		enif_make_atom(env, "error"),
+		enif_make_atom(env, "badarg"));
+}
+
+static ErlNifFunc nif_funcs[] = {
+	{"hello", 1, hello}
+};
+
+ERL_NIF_INIT($n, nif_funcs, load, NULL, upgrade, unload)
+endef
+
+define bs_erl_nif
+-module($n).
+
+-export([hello/1]).
+
+-on_load(on_load/0).
+on_load() ->
+	PrivDir = case code:priv_dir(?MODULE) of
+		{error, _} ->
+			AppPath = filename:dirname(filename:dirname(code:which(?MODULE))),
+			filename:join(AppPath, "priv");
+		Path ->
+			Path
+	end,
+	erlang:load_nif(filename:join(PrivDir, atom_to_list(?MODULE)), 0).
+
+hello(_) ->
+	erlang:nif_error({not_loaded, ?MODULE}).
+endef
+
+$(foreach template,bs_c_nif bs_erl_nif, \
+	$(eval _$(template) = $$(subst $$(tab),$$(WS),$$($(template)))) \
+	$(eval export _$(template)))
+
+new-nif:
+ifneq ($(wildcard $(C_SRC_DIR)/$n.c),)
+	$(error Error: $(C_SRC_DIR)/$n.c already exists)
+endif
+ifneq ($(wildcard src/$n.erl),)
+	$(error Error: src/$n.erl already exists)
+endif
+ifdef in
+	$(verbose) $(MAKE) -C $(APPS_DIR)/$(in)/ new-nif n=$n in=
+else
+	$(verbose) mkdir -p $(C_SRC_DIR) src/
+	$(call render_template,bs_c_nif,$(C_SRC_DIR)/$n.c)
+	$(call render_template,bs_erl_nif,src/$n.erl)
+endif
