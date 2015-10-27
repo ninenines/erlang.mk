@@ -216,13 +216,23 @@ define makedep.erl
 endef
 
 ifeq ($(if $(NO_MAKEDEP),$(wildcard $(PROJECT).d),),)
-$(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl)
+$(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl) $(MAKEFILE_LIST)
 	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))
 endif
 
+ifneq ($(words $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES)),0)
 # Rebuild everything when the Makefile changes.
-$(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES):: $(MAKEFILE_LIST)
+$(ERLANG_MK_TMP)/last-makefile-change: $(MAKEFILE_LIST)
+	@mkdir -p $(ERLANG_MK_TMP)
+	@if test -f $@; then \
+		touch $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES); \
+		touch -c $(PROJECT).d; \
+	fi
 	@touch $@
+
+$(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES):: $(ERLANG_MK_TMP)/last-makefile-change
+ebin/$(PROJECT).app:: $(ERLANG_MK_TMP)/last-makefile-change
+endif
 
 -include $(PROJECT).d
 

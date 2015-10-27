@@ -850,7 +850,7 @@ core-app-makefile-change: build clean
 	$t touch $(APP)/Makefile
 	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
-	$t find $(APP) -type f -newer $(APP)/Makefile | sort | diff $(APP)/EXPECT -
+	$t find $(APP) -type f -newer $(APP)/Makefile -not -path "$(APP)/.erlang.mk/*" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
 
 core-app-mib: build clean
