@@ -35,8 +35,6 @@ It contains a few variable definitions for the environment used for the build:
 `ERL_INTERFACE_LIB_DIR`::
 	Path to the Erl_Interface static libraries.
 
-// @todo We should remove this file on clean, not distclean.
-
 === Using a custom Makefile
 
 Erlang.mk will automatically run `make` if it detects a Makefile
