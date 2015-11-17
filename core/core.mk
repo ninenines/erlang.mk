@@ -192,8 +192,11 @@ ERLANG_MK_BUILD_DIR ?= .erlang.mk.build
 
 erlang-mk:
 	git clone $(ERLANG_MK_REPO) $(ERLANG_MK_BUILD_DIR)
+ifdef ERLANG_MK_COMMIT
+	cd $(ERLANG_MK_BUILD_DIR) && git checkout $(ERLANG_MK_COMMIT)
+endif
 	if [ -f $(ERLANG_MK_BUILD_CONFIG) ]; then cp $(ERLANG_MK_BUILD_CONFIG) $(ERLANG_MK_BUILD_DIR)/build.config; fi
-	cd $(ERLANG_MK_BUILD_DIR) && $(if $(ERLANG_MK_COMMIT),git checkout $(ERLANG_MK_COMMIT) &&) $(MAKE)
+	$(MAKE) -C $(ERLANG_MK_BUILD_DIR)
 	cp $(ERLANG_MK_BUILD_DIR)/erlang.mk ./erlang.mk
 	rm -rf $(ERLANG_MK_BUILD_DIR)
 
