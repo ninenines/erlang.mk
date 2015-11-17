@@ -1,6 +1,6 @@
 # Core: Erlang.mk upgrade.
 
-CORE_UPGRADE_CASES = custom-build-dir custom-config custom-repo no-config renamed-config
+CORE_UPGRADE_CASES = conflicting-configs custom-build-dir custom-config custom-repo no-config renamed-config
 CORE_UPGRADE_TARGETS = $(addprefix core-upgrade-,$(CORE_UPGRADE_CASES))
 CORE_UPGRADE_CLEAN_TARGETS = $(addprefix clean-,$(CORE_UPGRADE_TARGETS))
 
@@ -12,6 +12,35 @@ $(CORE_UPGRADE_CLEAN_TARGETS):
 	$t rm -rf $(APP_TO_CLEAN)/
 
 core-upgrade: $(CORE_UPGRADE_TARGETS)
+
+core-upgrade-conflicting-configs: build clean-core-upgrade-conflicting-configs
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Fork erlang.mk locally and modify it"
+	$t git clone -q https://github.com/ninenines/erlang.mk $(APP)/alt-erlangmk-repo
+	$t echo core/core > $(APP)/alt-erlangmk-repo/build.config
+	$t (cd $(APP)/alt-erlangmk-repo && \
+		git checkout -q -b test-modified-build.config && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git commit -q -a -m 'Modify build.config' && \
+		git checkout master)
+
+	$i "Point application to an alternate erlang.mk repository"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ERLANG_MK_REPO = file://$(abspath $(APP)/alt-erlangmk-repo)\nERLANG_MK_COMMIT = test-modified-build.config\n"}' $(APP)/Makefile
+
+	$i "Create a custom build.config file without plugins"
+	$t echo "core/*" > $(APP)/build.config
+
+	$i "Upgrade Erlang.mk"
+	$t $(MAKE) -C $(APP) erlang-mk $v
+
+	$i "Check that the bootstrap plugin is gone"
+	$t ! $(MAKE) -C $(APP) list-templates $v
 
 core-upgrade-custom-build-dir: build clean-core-upgrade-custom-build-dir
 
@@ -69,7 +98,8 @@ core-upgrade-custom-repo: build clean-core-upgrade-custom-repo
 		git checkout -q -b test-copyright && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
-		git commit -q -a -m 'Add Testsuite copyright')
+		git commit -q -a -m 'Add Testsuite copyright' && \
+		git checkout master)
 
 	$i "Point application to an alternate erlang.mk repository"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "ERLANG_MK_REPO = file://$(abspath $(APP)/alt-erlangmk-repo)\nERLANG_MK_COMMIT = test-copyright\n"}' $(APP)/Makefile
