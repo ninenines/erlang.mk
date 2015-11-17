@@ -78,7 +78,7 @@ endef
 endif
 
 app-build: ebin/$(PROJECT).app
-	$(verbose) echo -n
+	$(verbose) :
 
 # Source files.
 

@@ -82,7 +82,7 @@ all:: deps app rel
 
 # Noop to avoid a Make warning when there's nothing to do.
 rel::
-	$(verbose) echo -n
+	$(verbose) :
 
 check:: clean app tests
 

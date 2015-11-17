@@ -62,7 +62,7 @@ endif
 	$(verbose) mkdir -p $(ERLANG_MK_TMP)
 	$(verbose) for dep in $(ALL_DEPS_DIRS) ; do \
 		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/deps.log; then \
-			echo -n; \
+			:; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/deps.log; \
 			if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
@@ -127,7 +127,7 @@ define dep_autopatch_erlang_mk
 endef
 else
 define dep_autopatch_erlang_mk
-	echo -n
+	:
 endef
 endif
 
