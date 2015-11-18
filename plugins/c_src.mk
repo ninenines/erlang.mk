@@ -192,10 +192,6 @@ hello(_) ->
 	erlang:nif_error({not_loaded, ?MODULE}).
 endef
 
-$(foreach template,bs_c_nif bs_erl_nif, \
-	$(eval _$(template) = $$(subst $$(tab),$$(WS),$$($(template)))) \
-	$(eval export _$(template)))
-
 new-nif:
 ifneq ($(wildcard $(C_SRC_DIR)/$n.c),)
 	$(error Error: $(C_SRC_DIR)/$n.c already exists)
