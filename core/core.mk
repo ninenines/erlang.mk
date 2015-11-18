@@ -76,8 +76,6 @@ endif
 
 # Core targets.
 
-.NOTPARALLEL:
-
 all:: deps app rel
 
 # Noop to avoid a Make warning when there's nothing to do.

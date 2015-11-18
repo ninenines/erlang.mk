@@ -46,12 +46,17 @@ up generating releases.
 
 ==== Application
 
-You can build your application specifically, without
-looking at handling dependencies or generating a release,
-by running the following command:
+You can build your application and dependencies without
+generating a release by running the following command:
 
 [source,bash]
 $ make app
+
+To build your application without touching dependencies
+at all, you can use the `SKIP_DEPS` variable:
+
+[source,bash]
+$ make app SKIP_DEPS=1
 
 This command is very useful if you have a lot of dependencies
 and develop on a machine with slow file access, like the
@@ -76,21 +81,20 @@ in the next chapter.
 
 ==== Release
 
-You can generate the release, skipping the steps for building
-the application and dependencies, by running the following
-command:
+It is not possible to build the release without at least
+building the application itself, unless of course if there's
+no application to begin with.
+
+To generate the release, `make` will generally suffice with
+a normal Erlang.mk. A separate target is however available,
+and will take care of building the release, after building
+the application and all dependencies:
 
 [source,bash]
 $ make rel
 
-This command can be useful if nothing changed except the
-release configuration files.
-
 Consult the link:relx.asciidoc[Releases] chapter for more
 information about what releases are and how they are generated.
-
-Note that this command may fail if a required dependency
-is missing.
 
 === Application resource file
 
