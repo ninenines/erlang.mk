@@ -50,20 +50,21 @@ two of them.</p><p>The commands detailed in this section are most useful after
 you have a successful build as they allow you to quickly
 redo a step instead of going through everything. This is
 especially useful for large projects or projects that end
-up generating releases.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_application"></a>6.2.1. Application</h3></div></div></div><p>You can build your application specifically, without
-looking at handling dependencies or generating a release,
-by running the following command:</p><pre class="programlisting">$ make app</pre><p>This command is very useful if you have a lot of dependencies
+up generating releases.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_application"></a>6.2.1. Application</h3></div></div></div><p>You can build your application and dependencies without
+generating a release by running the following command:</p><pre class="programlisting">$ make app</pre><p>To build your application without touching dependencies
+at all, you can use the <code class="literal">SKIP_DEPS</code> variable:</p><pre class="programlisting">$ make app SKIP_DEPS=1</pre><p>This command is very useful if you have a lot of dependencies
 and develop on a machine with slow file access, like the
 Raspberry Pi and many other embedded devices.</p><p>Note that this command may fail if a required dependency
 is missing.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_dependencies"></a>6.2.2. Dependencies</h3></div></div></div><p>You can build all dependencies, and nothing else, by
 running the following command:</p><pre class="programlisting">$ make deps</pre><p>This will fetch and compile all dependencies and their
 dependencies, recursively.</p><p><a class="ulink" href="deps.asciidoc" target="_top">Packages and dependencies</a> are covered
-in the next chapter.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_release"></a>6.2.3. Release</h3></div></div></div><p>You can generate the release, skipping the steps for building
-the application and dependencies, by running the following
-command:</p><pre class="programlisting">$ make rel</pre><p>This command can be useful if nothing changed except the
-release configuration files.</p><p>Consult the <a class="ulink" href="relx.asciidoc" target="_top">Releases</a> chapter for more
-information about what releases are and how they are generated.</p><p>Note that this command may fail if a required dependency
-is missing.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_application_resource_file"></a>6.3. Application resource file</h2></div></div></div><p>When building your application, Erlang.mk will generate the
+in the next chapter.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_release"></a>6.2.3. Release</h3></div></div></div><p>It is not possible to build the release without at least
+building the application itself, unless of course if there’s
+no application to begin with.</p><p>To generate the release, <code class="literal">make</code> will generally suffice with
+a normal Erlang.mk. A separate target is however available,
+and will take care of building the release, after building
+the application and all dependencies:</p><pre class="programlisting">$ make rel</pre><p>Consult the <a class="ulink" href="relx.asciidoc" target="_top">Releases</a> chapter for more
+information about what releases are and how they are generated.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_application_resource_file"></a>6.3. Application resource file</h2></div></div></div><p>When building your application, Erlang.mk will generate the
 <a class="ulink" href="http://www.erlang.org/doc/man/app.html" target="_top">application resource file</a>.
 This file is mandatory for all Erlang applications and is
 found in <span class="emphasis"><em>ebin/$(PROJECT).app</em></span>.</p><p><code class="literal">PROJECT</code> is a variable defined in your Makefile and taken
