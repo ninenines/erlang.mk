@@ -43,4 +43,4 @@ endif
 distclean:: distclean-asciidoc
 
 distclean-asciidoc:
-	$(gen_verbose) rm -rf doc/html/ doc/guide.pdf doc/man3/ doc/man7/
+	$(gen_verbose) rm -fr doc/html/ doc/guide.pdf doc/man3/ doc/man7/

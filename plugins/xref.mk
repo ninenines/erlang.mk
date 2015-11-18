@@ -35,4 +35,4 @@ xref: deps app $(XREFR)
 	$(gen_verbose) $(XREFR) $(XREFR_ARGS)
 
 distclean-xref:
-	$(gen_verbose) rm -rf $(XREFR)
+	$(gen_verbose) rm -fr $(XREFR)

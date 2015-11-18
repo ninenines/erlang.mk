@@ -9,7 +9,7 @@ CORE_UPGRADE_CLEAN_TARGETS = $(addprefix clean-,$(CORE_UPGRADE_TARGETS))
 clean-core-upgrade: $(CORE_UPGRADE_CLEAN_TARGETS)
 
 $(CORE_UPGRADE_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -fr $(APP_TO_CLEAN)/
 
 core-upgrade: $(CORE_UPGRADE_TARGETS)
 

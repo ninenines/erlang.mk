@@ -93,7 +93,7 @@ endif
 all:: core
 
 clean:: clean-core
-	$t rm -rf erl_crash.dump packages/
+	$t rm -fr erl_crash.dump packages/
 
 build:
 	$i "Generate a bleeding edge Erlang.mk"
@@ -133,7 +133,7 @@ clean-core:: clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-hel
 .PHONY: core-clean-crash-dump core-distclean-tmp core-help clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-help
 
 clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-help:
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -fr $(APP_TO_CLEAN)/
 
 core-clean-crash-dump: build clean-core-clean-crash-dump
 
@@ -283,7 +283,7 @@ pkg-$1: clean build
 
 	$(if $(KEEP_BUILDS),,
 		$i "OK; delete the build directory"
-		$t rm -rf packages/$1_pkg/)
+		$t rm -fr packages/$1_pkg/)
 endef
 
 $(foreach pkg,$(PACKAGES),$(eval $(call pkg_target,$(pkg))))
@@ -319,7 +319,7 @@ endef
 legacy: clean-legacy ct eunit tests-cover docs pkgs
 
 clean-legacy:
-	$t rm -rf app1
+	$t rm -fr app1
 
 ct: app1
 	$i "ct: Testing ct and related targets."
@@ -354,7 +354,7 @@ ct: app1
 	$t [ ! -e app1/logs ]
 	$t [ -e app1/ebin/m.beam ]
 	$i "Cleaning up test data."
-	$t rm -rf app1/test
+	$t rm -fr app1/test
 	$i "Test 'ct' passed."
 
 eunit: app1
@@ -397,7 +397,7 @@ eunit: app1
 		> app1/eunit/t_tests.erl
 	$t $(MAKE) -C app1 distclean TEST_DIR=eunit $v
 	$t ! $(MAKE) -C app1 eunit TEST_DIR=eunit $v
-	$t rm -rf app1/eunit app1/src/t.erl app1/test-eunit.log
+	$t rm -fr app1/eunit app1/src/t.erl app1/test-eunit.log
 	$i "Test 'eunit' passed."
 
 # TODO: do coverage for 'tests' instead of 'eunit ct' when triq is fixed
@@ -431,7 +431,7 @@ tests-cover: app1
 	$t $(MAKE) -C app1 coverdata-clean $v
 	$t [ ! -e app1/eunit.coverdata ]
 	@# clean up
-	$t rm -rf app1/src/t.erl app1/test app1/test-eunit.log
+	$t rm -fr app1/src/t.erl app1/test app1/test-eunit.log
 	$t $(MAKE) -C app1 clean $v
 	$i "Test 'tests-cover' passed."
 
@@ -445,7 +445,7 @@ docs: app1
 		"include erlang.mk" \
 		"distclean:: distclean-doc-md" \
 		"distclean-doc-md:" \
-		"	rm -rf doc/*.md" \
+		"	rm -fr doc/*.md" \
 		> app1/Makefile-doc
 	$i "Downloading doc deps (edown) and building docs."
 	$t $(MAKE) -C app1 -f Makefile-doc docs $v

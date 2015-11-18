@@ -52,4 +52,4 @@ endef
 $(foreach test,$(CT_SUITES),$(eval $(call ct_suite_target,$(test))))
 
 distclean-ct:
-	$(gen_verbose) rm -rf $(CURDIR)/logs/
+	$(gen_verbose) rm -fr $(CURDIR)/logs/

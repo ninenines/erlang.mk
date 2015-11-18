@@ -70,7 +70,7 @@ ifneq ($(COVER_REPORT_DIR),)
 .PHONY: cover-report-clean cover-report
 
 cover-report-clean:
-	$(gen_verbose) rm -rf $(COVER_REPORT_DIR)
+	$(gen_verbose) rm -fr $(COVER_REPORT_DIR)
 
 ifeq ($(COVERDATA),)
 cover-report:

@@ -10,7 +10,7 @@ clean-c-src: $(C_SRC_CLEAN_TARGETS)
 clean-c_src: clean-c-src
 
 $(C_SRC_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -fr $(APP_TO_CLEAN)/
 
 c-src: $(C_SRC_TARGETS)
 c_src: c-src

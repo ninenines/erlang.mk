@@ -68,7 +68,7 @@ awk 'FNR==1 && NR!=1{print ""}1' core/core.mk index/*.mk core/index.mk core/deps
 	| sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = 1.2.0-642-gccd2b9f/' > erlang.mk
 make[1]: Leaving directory '/home/essen/tmp/hello_joe/.erlang.mk.build'
 cp .erlang.mk.build/erlang.mk ./erlang.mk
-rm -rf .erlang.mk.build
+rm -fr .erlang.mk.build
 ----
 
 This is Erlang.mk bootstrapping itself. Indeed, the file you
