@@ -344,7 +344,7 @@ endef
 # Plugin-specific targets.
 
 define render_template
-	$(verbose) echo "$${_$(1)}" > $(2)
+	$(verbose) printf -- '$(subst $(newline),\n,$(subst %,%%,$(subst ','\'',$(subst $(tab),$(WS),$(call $(1))))))\n' > $(2)
 endef
 
 ifndef WS
@@ -354,10 +354,6 @@ else
 WS = $(tab)
 endif
 endif
-
-$(foreach template,$(filter bs_% tpl_%,$(.VARIABLES)), \
-	$(eval _$(template) = $$(subst $$(tab),$$(WS),$$($(template)))) \
-	$(eval export _$(template)))
 
 bootstrap:
 ifneq ($(wildcard src/),)
