@@ -183,6 +183,25 @@ Eshell V7.0  (abort with ^G)
 
 Simple as that!
 
+=== Using spaces instead of tabs
+
+Erlang.mk defaults to tabs when creating files from templates.
+This is in part because of a personal preference, and in part
+because it is much easier to convert tabs to spaces than the
+opposite.
+
+Use the `SP` variable if you prefer spaces. Set it to the number
+of spaces per indentation level you want.
+
+For example, if you prefer two spaces per indentation level:
+
+[source,bash]
+$ make -f erlang.mk bootstrap SP=2
+
+When you bootstrap the project initially, the variable automatically
+gets added to the Makefile, so you only need to provide it when
+you get started.
+
 === Using templates
 
 It is no secret that Erlang's OTP behaviors tend to have some

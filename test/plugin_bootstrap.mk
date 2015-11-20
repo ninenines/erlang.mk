@@ -1,6 +1,6 @@
 # Bootstrap plugin.
 
-BOOTSTRAP_CASES = app lib rel templates
+BOOTSTRAP_CASES = app lib rel sp tab templates
 BOOTSTRAP_TARGETS = $(addprefix bootstrap-,$(BOOTSTRAP_CASES))
 BOOTSTRAP_CLEAN_TARGETS = $(addprefix clean-,$(BOOTSTRAP_TARGETS))
 
@@ -115,6 +115,67 @@ endif
 
 	$i "Check that there's no erl_crash.dump file"
 	$t test ! -f $(APP)/_rel/$(APP)_release/erl_crash.dump
+
+bootstrap-sp: build clean-bootstrap-sp
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap SP=2 $v
+
+	$i "Check that all bootstrapped files exist"
+	$t test -f $(APP)/Makefile
+ifdef LEGACY
+	$t test -f $(APP)/src/$(APP).app.src
+endif
+	$t test -f $(APP)/src/$(APP)_app.erl
+	$t test -f $(APP)/src/$(APP)_sup.erl
+
+	$i "Check that bootstrapped files have no tabs"
+ifdef LEGACY
+	$t test -z "`awk -F "\t" 'NF > 1' $(APP)/src/$(APP).app.src`"
+endif
+	$t test -z "`awk -F "\t" 'NF > 1' $(APP)/src/$(APP)_app.erl`"
+	$t test -z "`awk -F "\t" 'NF > 1' $(APP)/src/$(APP)_sup.erl`"
+
+# Everything looks OK, but let's compile the application to make sure.
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/$(APP)_app.beam
+	$t test -f $(APP)/ebin/$(APP)_sup.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, [$(APP)_app, $(APP)_sup]} = application:get_key($(APP), modules), \
+		{module, $(APP)_app} = code:load_file($(APP)_app), \
+		{module, $(APP)_sup} = code:load_file($(APP)_sup), \
+		halt()"
+
+bootstrap-tab: build clean-bootstrap-tab
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Check that all bootstrapped files exist"
+	$t test -f $(APP)/Makefile
+ifdef LEGACY
+	$t test -f $(APP)/src/$(APP).app.src
+endif
+	$t test -f $(APP)/src/$(APP)_app.erl
+	$t test -f $(APP)/src/$(APP)_sup.erl
+
+	$i "Check that bootstrapped files have tabs"
+ifdef LEGACY
+	$t test "`awk -F "\t" 'NF > 1' $(APP)/src/$(APP).app.src`"
+endif
+	$t test "`awk -F "\t" 'NF > 1' $(APP)/src/$(APP)_app.erl`"
+	$t test "`awk -F "\t" 'NF > 1' $(APP)/src/$(APP)_sup.erl`"
 
 bootstrap-templates: build clean-bootstrap-templates
 
