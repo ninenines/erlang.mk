@@ -61,6 +61,7 @@ OTP_MASTER = https://raw.githubusercontent.com/erlang/otp/master
 # V=1: Show test commands.
 # V=2: Also show normal Erlang.mk output.
 # V=3: Also show verbose Erlang.mk output.
+# V=4: Also show a trace of each command after expansion.
 
 V ?= 0
 
@@ -82,7 +83,7 @@ else ifeq ($V,2)
 	i = @echo == $@:
 else
 	t =
-	v = V=1
+	v = V=$(shell echo $$(($(V)-2)))
 	i = @echo == $@:
 endif
 

@@ -30,9 +30,11 @@ PROJECT_VERSION ?= rolling
 V ?= 0
 
 verbose_0 = @
+verbose_2 = set -x;
 verbose = $(verbose_$(V))
 
 gen_verbose_0 = @echo " GEN   " $@;
+gen_verbose_2 = set -x;
 gen_verbose = $(gen_verbose_$(V))
 
 # Temporary files directory.
