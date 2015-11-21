@@ -203,14 +203,6 @@ pkg-$1: clean build
 	$i "Add package $1 to the Makefile"
 	$t perl -ni.bak -e 'print;if ($$$$.==1) {print "DEPS = $1\n"}' packages/$1_pkg/Makefile
 
-	$(if $(filter amqp_client,$1),
-		$i "Set RABBITMQ_CLIENT_PATCH"
-		$(eval PATCHES := RABBITMQ_CLIENT_PATCH=1))
-
-	$(if $(filter rabbit,$1),
-		$i "Set RABBITMQ_SERVER_PATCH"
-		$(eval PATCHES := RABBITMQ_SERVER_PATCH=1))
-
 	$i "Compile package $1"
 	$t if ! ( cd packages/$1_pkg/ && $(MAKE) $(PATCHES) $v ); then \
 		echo "$1: compile error" >> packages/errors.log; \
