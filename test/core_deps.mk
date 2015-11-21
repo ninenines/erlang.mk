@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
+CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
@@ -390,6 +390,26 @@ core-deps-apps-only: build clean-core-deps-apps-only
 
 	$i "Check that all relevant files were removed"
 	$t test ! -e $(APP)/deps
+
+core-deps-autopatch-rebar: build clean-core-deps-autopatch-rebar
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add erlsha2 to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = erlsha2\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that erlsha2 was fetched and built"
+	$t test -d $(APP)/deps/erlsha2
+	$t test -f $(APP)/deps/erlsha2/ebin/erlsha2.beam
+ifneq ($(PLATFORM),msys2)
+	$t test -f $(APP)/deps/erlsha2/priv/erlsha2_nif.so
+endif
 
 ifneq ($(PLATFORM),msys2)
 core-deps-build-c-8cc: build clean-core-deps-build-c-8cc

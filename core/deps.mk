@@ -180,7 +180,7 @@ define dep_autopatch_rebar.erl
 		file:write_file("$(call core_native_path,$(DEPS_DIR)/$1/Makefile)", Text, [append])
 	end,
 	Escape = fun (Text) ->
-		re:replace(Text, "\\\\$$$$", "\$$$$$$$$", [global, {return, list}])
+		re:replace(Text, "\\\\$$", "\$$$$", [global, {return, list}])
 	end,
 	Write("IGNORE_DEPS += edown eper eunit_formatters meck node_package "
 		"rebar_lock_deps_plugin rebar_vsn_plugin reltool_util\n"),
@@ -303,10 +303,10 @@ define dep_autopatch_rebar.erl
 	Write("\npre-app::\n"),
 	PatchHook = fun(Cmd) ->
 		case Cmd of
-			"make -C" ++ Cmd1 -> "$$$$\(MAKE) -C" ++ Escape(Cmd1);
-			"gmake -C" ++ Cmd1 -> "$$$$\(MAKE) -C" ++ Escape(Cmd1);
-			"make " ++ Cmd1 -> "$$$$\(MAKE) -f Makefile.orig.mk " ++ Escape(Cmd1);
-			"gmake " ++ Cmd1 -> "$$$$\(MAKE) -f Makefile.orig.mk " ++ Escape(Cmd1);
+			"make -C" ++ Cmd1 -> "$$\(MAKE) -C" ++ Escape(Cmd1);
+			"gmake -C" ++ Cmd1 -> "$$\(MAKE) -C" ++ Escape(Cmd1);
+			"make " ++ Cmd1 -> "$$\(MAKE) -f Makefile.orig.mk " ++ Escape(Cmd1);
+			"gmake " ++ Cmd1 -> "$$\(MAKE) -f Makefile.orig.mk " ++ Escape(Cmd1);
 			_ -> Escape(Cmd)
 		end
 	end,
@@ -318,10 +318,10 @@ define dep_autopatch_rebar.erl
 					{'get-deps', Cmd} ->
 						Write("\npre-deps::\n\t" ++ PatchHook(Cmd) ++ "\n");
 					{compile, Cmd} ->
-						Write("\npre-app::\n\tCC=$$$$\(CC) " ++ PatchHook(Cmd) ++ "\n");
+						Write("\npre-app::\n\tCC=$$\(CC) " ++ PatchHook(Cmd) ++ "\n");
 					{Regex, compile, Cmd} ->
 						case rebar_utils:is_arch(Regex) of
-							true -> Write("\npre-app::\n\tCC=$$$$\(CC) " ++ PatchHook(Cmd) ++ "\n");
+							true -> Write("\npre-app::\n\tCC=$$\(CC) " ++ PatchHook(Cmd) ++ "\n");
 							false -> ok
 						end;
 					_ -> ok
@@ -329,7 +329,7 @@ define dep_autopatch_rebar.erl
 		end
 	end(),
 	ShellToMk = fun(V) ->
-		re:replace(re:replace(V, "(\\\\$$$$)(\\\\w*)", "\\\\1(\\\\2)", [global]),
+		re:replace(re:replace(V, "(\\\\$$)(\\\\w*)", "\\\\1(\\\\2)", [global]),
 			"-Werror\\\\b", "", [{return, list}, global])
 	end,
 	PortSpecs = fun() ->
@@ -363,7 +363,7 @@ define dep_autopatch_rebar.erl
 	case PortSpecs of
 		[] -> ok;
 		_ ->
-			Write("\npre-app::\n\t$$$$\(MAKE) -f c_src/Makefile.erlang.mk\n"),
+			Write("\npre-app::\n\t$$\(MAKE) -f c_src/Makefile.erlang.mk\n"),
 			PortSpecWrite(io_lib:format("ERL_CFLAGS = -finline-functions -Wall -fPIC -I ~s/erts-~s/include -I ~s\n",
 				[code:root_dir(), erlang:system_info(version), code:lib_dir(erl_interface, include)])),
 			PortSpecWrite(io_lib:format("ERL_LDFLAGS = -L ~s -lerl_interface -lei\n",
@@ -401,14 +401,14 @@ define dep_autopatch_rebar.erl
 						_ -> ""
 					end,
 					"\n\nall:: ", Output, "\n\n",
-					"%.o: %.c\n\t$$$$\(CC) -c -o $$$$\@ $$$$\< $$$$\(CFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
-					"%.o: %.C\n\t$$$$\(CXX) -c -o $$$$\@ $$$$\< $$$$\(CXXFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
-					"%.o: %.cc\n\t$$$$\(CXX) -c -o $$$$\@ $$$$\< $$$$\(CXXFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
-					"%.o: %.cpp\n\t$$$$\(CXX) -c -o $$$$\@ $$$$\< $$$$\(CXXFLAGS) $$$$\(ERL_CFLAGS) $$$$\(DRV_CFLAGS) $$$$\(EXE_CFLAGS)\n\n",
+					"%.o: %.c\n\t$$\(CC) -c -o $$\@ $$\< $$\(CFLAGS) $$\(ERL_CFLAGS) $$\(DRV_CFLAGS) $$\(EXE_CFLAGS)\n\n",
+					"%.o: %.C\n\t$$\(CXX) -c -o $$\@ $$\< $$\(CXXFLAGS) $$\(ERL_CFLAGS) $$\(DRV_CFLAGS) $$\(EXE_CFLAGS)\n\n",
+					"%.o: %.cc\n\t$$\(CXX) -c -o $$\@ $$\< $$\(CXXFLAGS) $$\(ERL_CFLAGS) $$\(DRV_CFLAGS) $$\(EXE_CFLAGS)\n\n",
+					"%.o: %.cpp\n\t$$\(CXX) -c -o $$\@ $$\< $$\(CXXFLAGS) $$\(ERL_CFLAGS) $$\(DRV_CFLAGS) $$\(EXE_CFLAGS)\n\n",
 					[[Output, ": ", K, " = ", ShellToMk(V), "\n"] || {K, V} <- lists:reverse(MergeEnv(FilterEnv(Env)))],
-					Output, ": $$$$\(foreach ext,.c .C .cc .cpp,",
-						"$$$$\(patsubst %$$$$\(ext),%.o,$$$$\(filter %$$$$\(ext),$$$$\(wildcard", Input, "))))\n",
-					"\t$$$$\(CC) -o $$$$\@ $$$$\? $$$$\(LDFLAGS) $$$$\(ERL_LDFLAGS) $$$$\(DRV_LDFLAGS) $$$$\(EXE_LDFLAGS)",
+					Output, ": $$\(foreach ext,.c .C .cc .cpp,",
+						"$$\(patsubst %$$\(ext),%.o,$$\(filter %$$\(ext),$$\(wildcard", Input, "))))\n",
+					"\t$$\(CC) -o $$\@ $$\? $$\(LDFLAGS) $$\(ERL_LDFLAGS) $$\(DRV_LDFLAGS) $$\(EXE_LDFLAGS)",
 					case filename:extension(Output) of
 						[] -> "\n";
 						_ -> " -shared\n"
@@ -470,7 +470,7 @@ define dep_autopatch_app.erl
 			false -> ok;
 			true ->
 				{ok, [{application, '$(1)', L0}]} = file:consult(App),
-				Mods = filelib:fold_files("$(call core_native_path,$(DEPS_DIR)/$1/src)", "\\\\.erl$$$$", true,
+				Mods = filelib:fold_files("$(call core_native_path,$(DEPS_DIR)/$1/src)", "\\\\.erl$$", true,
 					fun (F, Acc) -> [list_to_atom(filename:rootname(filename:basename(F)))|Acc] end, []),
 				L = lists:keystore(modules, 1, L0, {modules, Mods}),
 				ok = file:write_file(App, io_lib:format("~p.~n", [{application, '$(1)', L}]))
@@ -592,7 +592,7 @@ ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 			git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \
 		fi \
 	else \
-		$(call dep_autopatch,$(DEP_NAME)) \
+		$$(call dep_autopatch,$(DEP_NAME)) \
 	fi
 endif
 endef
