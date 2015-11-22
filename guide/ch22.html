@@ -57,7 +57,7 @@ all the plugins from the dependency. The code for the plugin
 can be written directly in <span class="emphasis"><em>plugins.mk</em></span> or be separate.</p><p>If you are providing more than one plugin with your repository,
 the recommended way is to create one file per plugin in the
 <span class="emphasis"><em>mk/</em></span> folder in your repository, and then include those
-individual plugins in <span class="emphasis"><em>plugins.mk</em></span>.</p><p>For eaxmple, if you have two plugins <span class="emphasis"><em>mk/dist.mk</em></span> and
+individual plugins in <span class="emphasis"><em>plugins.mk</em></span>.</p><p>For example, if you have two plugins <span class="emphasis"><em>mk/dist.mk</em></span> and
 <span class="emphasis"><em>mk/templates.mk</em></span>, you could write the following <span class="emphasis"><em>plugins.mk</em></span>
 file:</p><pre class="programlisting">THIS := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 include $(THIS)/mk/dist.mk
