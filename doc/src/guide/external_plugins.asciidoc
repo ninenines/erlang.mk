@@ -60,7 +60,7 @@ the recommended way is to create one file per plugin in the
 'mk/' folder in your repository, and then include those
 individual plugins in 'plugins.mk'.
 
-For eaxmple, if you have two plugins 'mk/dist.mk' and
+For example, if you have two plugins 'mk/dist.mk' and
 'mk/templates.mk', you could write the following 'plugins.mk'
 file:
 
