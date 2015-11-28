@@ -412,9 +412,10 @@ define dep_autopatch_rebar.erl
 					Output, ": $$\(foreach ext,.c .C .cc .cpp,",
 						"$$\(patsubst %$$\(ext),%.o,$$\(filter %$$\(ext),$$\(wildcard", Input, "))))\n",
 					"\t$$\(CC) -o $$\@ $$\? $$\(LDFLAGS) $$\(ERL_LDFLAGS) $$\(DRV_LDFLAGS) $$\(EXE_LDFLAGS)",
-					case filename:extension(Output) of
-						[] -> "\n";
-						_ -> " -shared\n"
+					case {filename:extension(Output), $(PLATFORM)} of
+					    {[], _} -> "\n";
+					    {_, darwin} -> "\n";
+					    _ -> " -shared\n"
 					end])
 			end,
 			[PortSpec(S) || S <- PortSpecs]
