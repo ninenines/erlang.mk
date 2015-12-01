@@ -9,9 +9,8 @@ DIALYZER_PLT ?= $(CURDIR)/.$(PROJECT).plt
 export DIALYZER_PLT
 
 PLT_APPS ?=
-DIALYZER_DIRS ?= --src -r src
-DIALYZER_OPTS ?= -Werror_handling -Wrace_conditions \
-	-Wunmatched_returns # -Wunderspecs
+DIALYZER_DIRS ?= --src -r $(wildcard src) $(ALL_APPS_DIRS)
+DIALYZER_OPTS ?= -Werror_handling -Wrace_conditions -Wunmatched_returns # -Wunderspecs
 
 # Core targets.
 
@@ -27,6 +26,18 @@ help::
 
 # Plugin-specific targets.
 
+define filter_opts.erl
+	Opts = binary:split(<<"$1">>, <<"-">>, [global]),
+	Filtered = lists:reverse(lists:foldl(fun
+		(O = <<"pa ", _/bits>>, Acc) -> [O|Acc];
+		(O = <<"D ", _/bits>>, Acc) -> [O|Acc];
+		(O = <<"I ", _/bits>>, Acc) -> [O|Acc];
+		(_, Acc) -> Acc
+	end, [], Opts)),
+	io:format("~s~n", [[["-", O] || O <- Filtered]]),
+	halt().
+endef
+
 $(DIALYZER_PLT): deps app
 	$(verbose) dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(OTP_DEPS) $(LOCAL_DEPS) $(DEPS)
 
@@ -40,4 +51,4 @@ dialyze:
 else
 dialyze: $(DIALYZER_PLT)
 endif
-	$(verbose) dialyzer --no_native $(DIALYZER_DIRS) $(DIALYZER_OPTS)
+	$(verbose) dialyzer --no_native `$(call erlang,$(call filter_opts.erl,$(ERLC_OPTS)))` $(DIALYZER_DIRS) $(DIALYZER_OPTS)
