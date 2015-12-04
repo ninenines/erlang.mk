@@ -11,7 +11,7 @@ for a couple years. Over time however I started getting annoyed
 and frustrated by a number of things, including bad defaults,
 changing defaults and overall slowness.
 
-In particular, at the time I gave up on Erlang.mk, the Cowboy
+In particular, at the time I gave up on Rebar, the Cowboy
 test suite was taking about five minutes to run. A quick experiment
 showed I could get much lower times by simply invoking `ct_run`
 directly. On January 4th, 2013, the Cowboy test suite took less
