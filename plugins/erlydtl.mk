@@ -47,6 +47,7 @@ $(DTL_FILES): $(MAKEFILE_LIST)
 	@touch $@
 
 ebin/$(PROJECT).app:: $(DTL_FILES)
+	$(gen_verbose) mkdir -p ebin/
 	$(if $(strip $?),\
 		$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$?,-pa ebin/ $(DEPS_DIR)/erlydtl/ebin/)))
 endif
