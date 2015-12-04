@@ -107,6 +107,9 @@ define dep_autopatch
 endef
 
 define dep_autopatch2
+	if [ -f $(DEPS_DIR)/$1/src/$1.app.src.script ]; then \
+		$(call erlang,$(call dep_autopatch_appsrc_script.erl,$(1))); \
+	fi; \
 	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1))); \
 	if [ -f $(DEPS_DIR)/$(1)/rebar.config -o -f $(DEPS_DIR)/$(1)/rebar.config.script ]; then \
 		$(call dep_autopatch_fetch_rebar); \
@@ -477,6 +480,15 @@ define dep_autopatch_app.erl
 		end
 	end,
 	UpdateModules("$(call core_native_path,$(DEPS_DIR)/$1/ebin/$1.app)"),
+	halt()
+endef
+
+define dep_autopatch_appsrc_script.erl
+	AppSrc = "$(call core_native_path,$(DEPS_DIR)/$1/src/$1.app.src)",
+	AppSrcScript = AppSrc ++ ".script",
+	Bindings = erl_eval:new_bindings(),
+	{ok, Conf} = file:script(AppSrcScript, Bindings),
+	ok = file:write_file(AppSrc, io_lib:format("~p.~n", [Conf])),
 	halt()
 endef
 
