@@ -35,9 +35,8 @@ contribute the fix back or become a paying customer.
 
 === Code
 
-The code is located in the 'core/*.mk'
-and 'plugins/*.mk' files. The tests are located in the
-'test/Makefile' and 'test/*.mk' files.
+The code is located in the 'core/\*.mk' and 'plugins/\*.mk' files.
+The tests are located in the 'test/Makefile' and 'test/\*.mk' files.
 
 If you have a fix or a hack for a bug, you should open a
 pull request. Any fix should include a test case that fails
