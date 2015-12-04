@@ -1,5 +1,0 @@
-== Architecture
-
-// @todo Write it.
-
-Placeholder chapter.
