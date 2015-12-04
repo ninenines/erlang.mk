@@ -1,5 +1,114 @@
 == Contributing
 
-// @todo Write it.
+You are welcome and encouraged to contribute.
 
-Placeholder chapter.
+This is how.
+
+=== Priorities
+
+From the most important to the least important:
+
+* Bugs
+* Package issues/additions
+* Refactoring
+* Features
+
+=== Bugs
+
+If you have found a bug, you should open a ticket. Include
+everything relevant including the command you used, output,
+a link to the code that triggers the issue, why you think
+this is a bug, etc.
+
+If you think you have found a bug but you are not sure, you
+should open a ticket as previously explained.
+
+If you have found a bug and you need it to be solved RIGHT
+NOW, open a ticket as previously explained.
+
+Once you have opened a ticket, be patient, try to answer
+questions in a timely manner and confirm that the bug was
+indeed fixed when it is.
+
+If you can't be patient, either try to solve the bug and
+contribute the fix back or become a paying customer.
+
+=== Code
+
+The code is located in the 'core/*.mk' and 'plugins/*.mk' files.
+The tests are located in the 'test/Makefile' and 'test/*.mk' files.
+
+If you have a fix or a hack for a bug, you should open a
+pull request. Any fix should include a test case that fails
+before the fix and is working after.
+
+If you have a test case that reproduces a bug, but no fix for
+it, you should open a pull request.
+
+Changes need to be tested with at least the `make check`
+command. A specific test case can be tested using `make check c=CASE`
+with `CASE` the name of the target to run. Output can be
+modulated using the `V` variable, which is an integer
+from 0 to 4. A typical use would be `make check c=dialyzer V=3`.
+The value 4 is particular and shows expanded commands right
+before they are executed.
+
+To run tests in parallel, use the `-j` option. It is generally
+a good idea to also use the `-k` option to run all tests even
+if one fails. For example: `make check -j 32 -k`.
+
+Some changes should be tested against all packages. Continue
+reading for more details on testing them.
+
+=== Packages
+
+You can search existing packages using the `make search q=STRING`
+command. This can be done both from an Erlang.mk project or
+directly from the Erlang.mk repository.
+
+Packages can be added to the index using the `pkg_add.sh` script.
+
+[source,bash]
+----
+$ git clone https://github.com/$YOURUSERNAME/erlang.mk
+$ cd erlang.mk
+$ ./pkg_add.sh cowboy git https://github.com/ninenines/cowboy 1.0.0
+  http://ninenines.eu "Small, fast and modular HTTP server."
+$ git push origin master
+----
+
+Before sending a pull request, you should test your package.
+You can use the following command: `make check p=PACKAGE`,
+where `PACKAGE` is the name of the package, for example
+`cowboy`.
+
+To test all packages, the `make packages` command can be used.
+This can take a long time. Some packages will fail with certain
+versions of Erlang, or if a prerequisite is missing from your system.
+You can of course speed things up using the `-j` and `-k` flags.
+
+After all packages have been tested, you can run the command
+`make summary` to know what changed since the previous run.
+
+=== Documentation
+
+The documentation is always right.
+
+If you think you have found a mistake in the documentation,
+this is a bug. You can either open a ticket or send a pull
+request.
+
+To make sure that the documentation changes work, install
+Asciidoc on your system and run `make docs`.
+
+=== Feature requests
+
+If you have an awesome idea or need something that Erlang.mk
+doesn't provide yet, open a ticket. Provide as much detail as
+possible.
+
+If you have code, great! Open a pull request as previously
+explained.
+
+If not, you can still improve your feature request by writing
+the related documentation.

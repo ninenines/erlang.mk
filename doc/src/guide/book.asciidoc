@@ -62,6 +62,4 @@ include::why.asciidoc[Why erlang.mk?]
 
 include::history.asciidoc[Short history]
 
-include::architecture.asciidoc[Architecture]
-
 include::contributing.asciidoc[Contributing]

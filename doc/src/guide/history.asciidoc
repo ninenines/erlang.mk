@@ -1,5 +1,65 @@
 == Short history
 
-// @todo Write it.
+This chapter aims to be a brief record of the life of the
+Erlang.mk project.
 
-Placeholder chapter.
+=== Before Erlang.mk
+
+Erlang.mk originates from the Cowboy project. Cowboy started
+as a Rebar project and I, Loïc Hoguin, was very happy with it
+for a couple years. Over time however I started getting annoyed
+and frustrated by a number of things, including bad defaults,
+changing defaults and overall slowness.
+
+In particular, at the time I gave up on Erlang.mk, the Cowboy
+test suite was taking about five minutes to run. A quick experiment
+showed I could get much lower times by simply invoking `ct_run`
+directly. On January 4th, 2013, the Cowboy test suite took less
+than a minute to complete.
+
+Following this success I started removing a little more and,
+on the fateful day of January 5th, 2013, removed the dependency
+on Rebar entirely. Rebar, and in particular the concept of
+dependencies, was, and still is, a pretty strong influence.
+
+Erlang.mk was conceived.
+
+A few months passed and, on May 1st, 2013, the Erlang.mk
+repository was created. Erlang.mk was born.
+
+Little did I know how much it would grow.
+
+=== Lifetime of the project
+
+Erlang.mk would eventually become a much larger file able to
+deal with many more projects than just Cowboy. From the birth
+of the project, the biggest force for growth was user contributions,
+because Erlang.mk appealed to a variety of people with different
+needs, needs that Erlang.mk was not fulfilling yet.
+
+The project was split into smaller files focused on a different
+feature each, and a build script was written to build the single
+Erlang.mk file.
+
+A test suite was contributed by a user, and later taken as a basis
+for the current, much more complete test suite. Turns out testing
+a Makefile is pretty straightforward.
+
+A package index was added to solve the problem of discovering
+Erlang projects.
+
+After trying to see if Erlang build tools could cooperate, the
+decision was made to improve compatibility with existing Rebar
+projects by patching Rebar out, using Rebar. This feature, called
+autopatch, proved very successful and made Erlang.mk compatible
+with more than 90% of all Erlang projects.
+
+Erlang.mk documentation was much improved and the Erlang.mk website
+was created in the summer of 2015.
+
+Over the year of 2015, Erlang.mk went from curiosity to a serious
+alternative to other Erlang build tools. The user base increased
+immensely and large projects started using it, including RabbitMQ
+from the 3.6.0 release onward.
+
+A bright future lies ahead.
