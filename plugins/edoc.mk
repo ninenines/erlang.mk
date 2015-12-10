@@ -11,7 +11,9 @@ EDOC_SRC_DIRS ?= $(ALL_APPS_DIRS) $(ALL_DEPS_DIRS)
 # TODO: use double-quote instead of single + atom_to_list
 #       The problem is in correctly escaping double-quotes
 define edoc.erl
-	SrcPaths = [ atom_to_list(P) || P <- [$(call comma_list,$(patsubst %,'%',$(EDOC_SRC_DIRS)))] ],
+	SrcPaths = lists:foldl(fun (P, Acc) ->
+	                         filelib:wildcard(atom_to_list(P) ++ "/{src,c_src}") ++ Acc
+	                       end, [], [$(call comma_list,$(patsubst %,'%',$(EDOC_SRC_DIRS)))]),
 	DefaultOpts = [ {source_path, SrcPaths}
 	               ,{subpackages, false} ],
 	edoc:application($(1), ".", [$(2)] ++ DefaultOpts),
