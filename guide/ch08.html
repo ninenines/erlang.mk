@@ -60,9 +60,15 @@ environment detection:</p><pre class="programlisting">include env.mk</pre></div>
 Erlang.mk comes with rules to build both shared libraries and
 executables, using the source files it finds in <span class="emphasis"><em>$(C_SRC_DIR)</em></span>.</p><p>By default, Erlang.mk will create a shared library. To change
 this and create an executable instead, put this in your Makefile
-before including Erlang.mk:</p><pre class="programlisting">C_SRC_TYPE = executable</pre><p>The generated file will be saved to <span class="emphasis"><em>$(C_SRC_OUTPUT)</em></span>. It
-defaults to <span class="emphasis"><em>$(CURDIR)/priv/$(PROJECT).so</em></span>, the filename
-adequately fitting a Unix shared library.</p><p>Erlang.mk sets appropriate compile and linker flags by default.
+before including Erlang.mk:</p><pre class="programlisting">C_SRC_TYPE = executable</pre><p>The generated file name varies depending on the type of project
+you have (shared library or executable) and on the platform you
+build the project on.</p><p>For shared libraries, the generated file name will be
+<span class="emphasis"><em>$(C_SRC_OUTPUT)$(C_SRC_SHARED_EXTENSION)</em></span>, with the default
+being <span class="emphasis"><em>$(CURDIR)/priv/$(PROJECT)</em></span> followed by the extension:
+<code class="literal">.dll</code> on Windows, <code class="literal">.so</code> everywhere else.</p><p>For executables, the generated file name is
+<span class="emphasis"><em>$(C_SRC_OUTPUT)$(C_SRC_EXECUTABLE_EXTENSION)</em></span>, with the same
+default except for the extension: <code class="literal">.exe</code> on Windows, and otherwise
+nothing.</p><p>Erlang.mk sets appropriate compile and linker flags by default.
 These flags vary depending on the platform, and can of course
 be overriden.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
 <code class="literal">CC</code>

@@ -64,7 +64,9 @@ post-installation setup:</p><pre class="screen">C:\&gt; C:\msys64\usr\bin\bash -
 C:\&gt; C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syu"</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_installing_the_required_msys2_packages"></a>1.2.3. Installing the required MSYS2 packages</h3></div></div></div><p>After following these instructions, you can install GNU Make,
 Git and any other required softwares. From an MSYS2 shell,
 you can call <code class="literal">pacman</code> directly:</p><pre class="programlisting">$ pacman -S git make</pre><p>You can use <code class="literal">pacman -Ss</code> to search packages. For example,
-to find all packages related to GCC:</p><pre class="programlisting">$ pacman -Ss gcc</pre><p>You can also run commands under the MSYS2 environment from
+to find all packages related to GCC:</p><pre class="programlisting">$ pacman -Ss gcc</pre><p>If you are going to compile C/C++ code, you will need to
+install this package, as Erlang.mk cannot use the normal
+"gcc" package:</p><pre class="programlisting">$ pacman -S mingw-w64-x86_64-gcc</pre><p>You can also run commands under the MSYS2 environment from
 the Windows command line or batch files. This command will
 install GNU Make and Git:</p><pre class="screen">C:\&gt; C:\msys64\usr\bin\bash -lc "pacman --noconfirm -S git make"</pre><p>You can use similar <code class="literal">bash</code> commands if you need to run programs
 inside the MSYS2 environment from a batch file.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_gotchas"></a>1.2.4. Gotchas</h3></div></div></div><p>While most of the basic functionality will just work, there are
