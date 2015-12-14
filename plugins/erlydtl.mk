@@ -4,6 +4,7 @@
 # Configuration.
 
 DTL_FULL_PATH ?=
+DTL_OPTS ?= []
 DTL_PATH ?= templates/
 DTL_SUFFIX ?= _dtl
 
@@ -24,7 +25,7 @@ define erlydtl_compile.erl
 				re:replace(F2, "/",  "_",  [{return, list}, global])
 		end,
 		Module = list_to_atom(string:to_lower(Module0) ++ "$(DTL_SUFFIX)"),
-		case erlydtl:compile(F, Module, [{out_dir, "ebin/"}, return_errors, {doc_root, "templates"}]) of
+		case erlydtl:compile(F, Module, $(DTL_OPTS) ++ [{out_dir, "ebin/"}, return_errors, {doc_root, "templates"}]) of
 			ok -> ok;
 			{ok, _} -> ok
 		end
@@ -49,5 +50,5 @@ $(DTL_FILES): $(MAKEFILE_LIST)
 ebin/$(PROJECT).app:: $(DTL_FILES)
 	$(gen_verbose) mkdir -p ebin/
 	$(if $(strip $?),\
-		$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$?,-pa ebin/ $(DEPS_DIR)/erlydtl/ebin/)))
+		$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$?),-pa ebin/ $(DEPS_DIR)/erlydtl/ebin/))
 endif
