@@ -9,7 +9,7 @@ CORE_PLUGINS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_PLUGINS_TARGETS))
 clean-core-plugins: $(CORE_PLUGINS_CLEAN_TARGETS)
 
 $(CORE_PLUGINS_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -fr $(APP_TO_CLEAN)/
 
 core-plugins: $(CORE_PLUGINS_TARGETS)
 

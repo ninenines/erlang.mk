@@ -61,5 +61,5 @@ help::
 distclean:: distclean-kerl
 
 distclean-kerl:
-	$(gen_verbose) rm -rf $(KERL)
+	$(gen_verbose) rm -fr $(KERL)
 endif

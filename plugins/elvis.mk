@@ -36,4 +36,4 @@ elvis: $(ELVIS) $(ELVIS_CONFIG)
 	$(verbose) $(ELVIS) rock -c $(ELVIS_CONFIG) $(ELVIS_OPTS)
 
 distclean-elvis:
-	$(gen_verbose) rm -rf $(ELVIS)
+	$(gen_verbose) rm -fr $(ELVIS)

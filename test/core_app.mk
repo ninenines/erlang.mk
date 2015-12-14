@@ -9,7 +9,7 @@ CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 clean-core-app: $(CORE_APP_CLEAN_TARGETS)
 
 $(CORE_APP_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -fr $(APP_TO_CLEAN)/
 
 core-app: $(CORE_APP_TARGETS)
 
@@ -898,7 +898,7 @@ core-app-no-app: build clean-core-app-no-app
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-	$t rm -rf $(APP)/src
+	$t rm -fr $(APP)/src
 
 	$i "Build the project"
 	$t $(MAKE) -C $(APP) $v

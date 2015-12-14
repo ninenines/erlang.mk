@@ -633,7 +633,7 @@ ifndef SKIP_DEPS
 distclean:: distclean-deps
 
 distclean-deps:
-	$(gen_verbose) rm -rf $(DEPS_DIR)
+	$(gen_verbose) rm -fr $(DEPS_DIR)
 endif
 
 # External plugins.

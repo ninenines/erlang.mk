@@ -38,10 +38,10 @@ relx-rel: $(RELX) rel-deps app
 	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
 distclean-relx-rel:
-	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)
+	$(gen_verbose) rm -fr $(RELX_OUTPUT_DIR)
 
 distclean-relx:
-	$(gen_verbose) rm -rf $(RELX)
+	$(gen_verbose) rm -fr $(RELX)
 
 # Run target.
 

@@ -96,7 +96,7 @@ endif
 distclean:: clean distclean-tmp
 
 distclean-tmp:
-	$(gen_verbose) rm -rf $(ERLANG_MK_TMP)
+	$(gen_verbose) rm -fr $(ERLANG_MK_TMP)
 
 help::
 	$(verbose) printf "%s\n" \
@@ -198,7 +198,7 @@ endif
 	if [ -f $(ERLANG_MK_BUILD_CONFIG) ]; then cp $(ERLANG_MK_BUILD_CONFIG) $(ERLANG_MK_BUILD_DIR)/build.config; fi
 	$(MAKE) -C $(ERLANG_MK_BUILD_DIR)
 	cp $(ERLANG_MK_BUILD_DIR)/erlang.mk ./erlang.mk
-	rm -rf $(ERLANG_MK_BUILD_DIR)
+	rm -fr $(ERLANG_MK_BUILD_DIR)
 
 # The erlang.mk package index is bundled in the default erlang.mk build.
 # Search for the string "copyright" to skip to the rest of the code.
