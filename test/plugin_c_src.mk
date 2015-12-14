@@ -34,7 +34,11 @@ c-src-nif: build clean-c-src-nif
 	$t test -f $(APP)/c_src/env.mk
 	$t test -f $(APP)/ebin/$(APP).app
 	$t test -f $(APP)/ebin/$(APP).beam
+ifeq ($(PLATFORM),msys2)
+	$t test -f $(APP)/priv/$(APP).dll
+else
 	$t test -f $(APP)/priv/$(APP).so
+endif
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
@@ -55,7 +59,11 @@ c-src-nif: build clean-c-src-nif
 	$t test -f $(APP)/c_src/env.mk
 	$t test -f $(APP)/ebin/$(APP).app
 	$t test -f $(APP)/ebin/$(APP).beam
+ifeq ($(PLATFORM),msys2)
+	$t test -f $(APP)/priv/$(APP).dll
+else
 	$t test -f $(APP)/priv/$(APP).so
+endif
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
@@ -75,7 +83,11 @@ c-src-nif: build clean-c-src-nif
 	$t test ! -e $(APP)/c_src/$(APP).o
 	$t test ! -e $(APP)/ebin/$(APP).app
 	$t test ! -e $(APP)/ebin/$(APP).beam
+ifeq ($(PLATFORM),msys2)
+	$t test ! -e $(APP)/priv/$(APP).dll
+else
 	$t test ! -e $(APP)/priv/$(APP).so
+endif
 
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v

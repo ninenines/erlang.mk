@@ -64,9 +64,19 @@ before including Erlang.mk:
 [source,make]
 C_SRC_TYPE = executable
 
-The generated file will be saved to '$(C_SRC_OUTPUT)'. It
-defaults to '$(CURDIR)/priv/$(PROJECT).so', the filename
-adequately fitting a Unix shared library.
+The generated file name varies depending on the type of project
+you have (shared library or executable) and on the platform you
+build the project on.
+
+For shared libraries, the generated file name will be
+'$(C_SRC_OUTPUT)$(C_SRC_SHARED_EXTENSION)', with the default
+being '$(CURDIR)/priv/$(PROJECT)' followed by the extension:
+`.dll` on Windows, `.so` everywhere else.
+
+For executables, the generated file name is
+'$(C_SRC_OUTPUT)$(C_SRC_EXECUTABLE_EXTENSION)', with the same
+default except for the extension: `.exe` on Windows, and otherwise
+nothing.
 
 Erlang.mk sets appropriate compile and linker flags by default.
 These flags vary depending on the platform, and can of course

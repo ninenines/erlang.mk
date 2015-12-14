@@ -95,6 +95,13 @@ to find all packages related to GCC:
 [source,bash]
 $ pacman -Ss gcc
 
+If you are going to compile C/C++ code, you will need to
+install this package, as Erlang.mk cannot use the normal
+"gcc" package:
+
+[source,bash]
+$ pacman -S mingw-w64-x86_64-gcc
+
 You can also run commands under the MSYS2 environment from
 the Windows command line or batch files. This command will
 install GNU Make and Git:
