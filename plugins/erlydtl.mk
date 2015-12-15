@@ -14,6 +14,20 @@ dtl_verbose = $(dtl_verbose_$(V))
 
 # Core targets.
 
+DTL_FILES = $(sort $(call core_find,$(DTL_PATH),*.dtl))
+
+ifneq ($(DTL_FILES),)
+
+ifdef DTL_FULL_PATH
+BEAM_FILES += $(addprefix ebin/,$(patsubst %.dtl,%_dtl.beam,$(subst /,_,$(DTL_FILES:$(DTL_PATH)%=%))))
+else
+BEAM_FILES += $(addprefix ebin/,$(patsubst %.dtl,%_dtl.beam,$(notdir $(DTL_FILES))))
+endif
+
+# Rebuild templates when the Makefile changes.
+$(DTL_FILES): $(MAKEFILE_LIST)
+	@touch $@
+
 define erlydtl_compile.erl
 	[begin
 		Module0 = case "$(strip $(DTL_FULL_PATH))" of
@@ -32,22 +46,8 @@ define erlydtl_compile.erl
 	halt().
 endef
 
-ifneq ($(wildcard src/),)
-
-DTL_FILES = $(sort $(call core_find,$(DTL_PATH),*.dtl))
-
-ifdef DTL_FULL_PATH
-BEAM_FILES += $(addprefix ebin/,$(patsubst %.dtl,%_dtl.beam,$(subst /,_,$(DTL_FILES:$(DTL_PATH)%=%))))
-else
-BEAM_FILES += $(addprefix ebin/,$(patsubst %.dtl,%_dtl.beam,$(notdir $(DTL_FILES))))
-endif
-
-# Rebuild templates when the Makefile changes.
-$(DTL_FILES): $(MAKEFILE_LIST)
-	@touch $@
-
-ebin/$(PROJECT).app:: $(DTL_FILES)
-	$(gen_verbose) mkdir -p ebin/
+ebin/$(PROJECT).app:: $(DTL_FILES) | ebin/
 	$(if $(strip $?),\
-		$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$?,-pa ebin/ $(DEPS_DIR)/erlydtl/ebin/)))
+		$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$?),-pa ebin/ $(DEPS_DIR)/erlydtl/ebin/))
+
 endif
