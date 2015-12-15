@@ -9,7 +9,7 @@ CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 clean-core-app: $(CORE_APP_CLEAN_TARGETS)
 
 $(CORE_APP_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -rf $(APP_TO_CLEAN)
 
 core-app: $(CORE_APP_TARGETS)
 

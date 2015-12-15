@@ -134,7 +134,7 @@ clean-core:: clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-hel
 .PHONY: core-clean-crash-dump core-distclean-tmp core-help clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-help
 
 clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-help:
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -rf $(APP_TO_CLEAN)
 
 core-clean-crash-dump: build clean-core-clean-crash-dump
 

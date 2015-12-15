@@ -9,7 +9,7 @@ ERLYDTL_CLEAN_TARGETS = $(addprefix clean-,$(ERLYDTL_TARGETS))
 clean-erlydtl: $(ERLYDTL_CLEAN_TARGETS)
 
 $(ERLYDTL_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -rf $(APP_TO_CLEAN)
 
 erlydtl: $(ERLYDTL_TARGETS)
 

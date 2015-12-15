@@ -9,7 +9,7 @@ SHELL_CLEAN_TARGETS = $(addprefix clean-,$(SHELL_TARGETS))
 clean-shell: $(SHELL_CLEAN_TARGETS)
 
 $(SHELL_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -rf $(APP_TO_CLEAN)
 
 shell: $(SHELL_TARGETS)
 

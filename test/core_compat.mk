@@ -13,7 +13,7 @@ REBAR_BINARY = https://github.com/rebar/rebar/releases/download/2.6.0/rebar
 clean-core-compat: $(CORE_COMPAT_CLEAN_TARGETS)
 
 $(CORE_COMPAT_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -rf $(APP_TO_CLEAN)
 
 core-compat: $(CORE_COMPAT_TARGETS)
 

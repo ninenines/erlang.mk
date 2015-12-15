@@ -9,7 +9,7 @@ CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 clean-core-deps: $(CORE_DEPS_CLEAN_TARGETS) clean-core-deps-mv-moved clean-core-deps-mv-rebar-moved
 
 $(CORE_DEPS_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -rf $(APP_TO_CLEAN)
 
 clean-core-deps-mv-moved:
 	$t rm -rf core_deps_mv-moved/

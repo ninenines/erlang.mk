@@ -9,7 +9,7 @@ BOOTSTRAP_CLEAN_TARGETS = $(addprefix clean-,$(BOOTSTRAP_TARGETS))
 clean-bootstrap: $(BOOTSTRAP_CLEAN_TARGETS)
 
 $(BOOTSTRAP_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -rf $(APP_TO_CLEAN)
 
 bootstrap: $(BOOTSTRAP_TARGETS)
 

@@ -9,7 +9,7 @@ DIALYZER_CLEAN_TARGETS = $(addprefix clean-,$(DIALYZER_TARGETS))
 clean-dialyzer: $(DIALYZER_CLEAN_TARGETS)
 
 $(DIALYZER_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)/
+	$t rm -rf $(APP_TO_CLEAN)
 
 dialyzer: $(DIALYZER_TARGETS)
 
