@@ -4,6 +4,10 @@ DIALYZER_CASES = app apps-only apps-with-local-deps check custom-plt deps erlc-o
 DIALYZER_TARGETS = $(addprefix dialyzer-,$(DIALYZER_CASES))
 DIALYZER_CLEAN_TARGETS = $(addprefix clean-,$(DIALYZER_TARGETS))
 
+ifneq ($(shell which sem 2>/dev/null),)
+	DIALYZER_MUTEX = sem --fg --id dialyzer
+endif
+
 .PHONY: dialyzer $(C_SRC_TARGETS) clean-dialyzer $(DIALYZER_CLEAN_TARGETS)
 
 clean-dialyzer: $(DIALYZER_CLEAN_TARGETS)
@@ -21,7 +25,7 @@ dialyzer-app: build clean-dialyzer-app
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
 	$i "Run Dialyzer"
-	$t $(MAKE) -C $(APP) dialyze $v
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created"
 	$t test -f $(APP)/.$(APP).plt
@@ -32,7 +36,7 @@ dialyzer-app: build clean-dialyzer-app
 		"doit() -> 1 = 2, ok." > $(APP)/src/warn_me.erl
 
 	$i "Confirm that Dialyzer errors out"
-	$t ! $(MAKE) -C $(APP) dialyze $v
+	$t ! $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
@@ -57,7 +61,7 @@ dialyzer-apps-only: build clean-dialyzer-apps-only
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/apps/my_app/Makefile
 
 	$i "Run Dialyzer"
-	$t $(MAKE) -C $(APP) dialyze $v
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created automatically"
 	$t test -f $(APP)/.$(APP).plt
@@ -71,7 +75,7 @@ dialyzer-apps-only: build clean-dialyzer-apps-only
 		"doit() -> 1 = 2, ok." > $(APP)/apps/my_app/src/warn_me.erl
 
 	$i "Confirm that Dialyzer errors out"
-	$t ! $(MAKE) -C $(APP) dialyze $v
+	$t ! $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 dialyzer-apps-with-local-deps: build clean-dialyzer-apps-with-local-deps
 
@@ -90,7 +94,7 @@ dialyzer-apps-with-local-deps: build clean-dialyzer-apps-with-local-deps
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = my_core_app\n"}' $(APP)/apps/my_app/Makefile
 
 	$i "Run Dialyzer"
-	$t $(MAKE) -C $(APP) dialyze $v
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created automatically"
 	$t test -f $(APP)/.$(APP).plt
@@ -106,7 +110,7 @@ dialyzer-check: build clean-dialyzer-check
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
 	$i "Run 'make check'"
-	$t $(MAKE) -C $(APP) check $v
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) check $v
 
 	$i "Check that the PLT file was created"
 	$t test -f $(APP)/.$(APP).plt
@@ -117,7 +121,7 @@ dialyzer-check: build clean-dialyzer-check
 		"doit() -> 1 = 2, ok." > $(APP)/src/warn_me.erl
 
 	$i "Confirm that Dialyzer errors out on 'make check'"
-	$t ! $(MAKE) -C $(APP) check $v
+	$t ! $(DIALYZER_MUTEX) $(MAKE) -C $(APP) check $v
 
 dialyzer-custom-plt: build clean-dialyzer-custom-plt
 
@@ -130,7 +134,7 @@ dialyzer-custom-plt: build clean-dialyzer-custom-plt
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DIALYZER_PLT = custom.plt\n"}' $(APP)/Makefile
 
 	$i "Run Dialyzer"
-	$t $(MAKE) -C $(APP) dialyze $v
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created"
 	$t test -f $(APP)/custom.plt
@@ -152,7 +156,7 @@ dialyzer-deps: build clean-dialyzer-deps
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/Makefile
 
 	$i "Run Dialyzer"
-	$t $(MAKE) -C $(APP) dialyze $v
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created"
 	$t test -f $(APP)/.$(APP).plt
@@ -182,7 +186,7 @@ dialyzer-erlc-opts: build clean-dialyzer-erlc-opts
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "ERLC_OPTS += -I exotic\n"}' $(APP)/Makefile
 
 	$i "Run Dialyzer"
-	$t $(MAKE) -C $(APP) dialyze $v
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 dialyzer-local-deps: build clean-dialyzer-local-deps
 
@@ -195,7 +199,7 @@ dialyzer-local-deps: build clean-dialyzer-local-deps
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = runtime_tools\n"}' $(APP)/Makefile
 
 	$i "Build the PLT"
-	$t $(MAKE) -C $(APP) plt $v
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) plt $v
 
 	$i "Confirm that runtime_tools was included in the PLT"
 	$t dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q runtime_tools
@@ -217,7 +221,7 @@ dialyzer-opts: build clean-dialyzer-opts
 		"doit() -> gen_tcp:connect(a, b, c), ok." > $(APP)/src/warn_me.erl
 
 	$i "Run Dialyzer"
-	$t ! $(MAKE) -C $(APP) dialyze $v
+	$t ! $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created"
 	$t test -f $(APP)/.$(APP).plt
@@ -236,7 +240,7 @@ dialyzer-plt-apps: build clean-dialyzer-plt-apps
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "PLT_APPS = runtime_tools\n"}' $(APP)/Makefile
 
 	$i "Build the PLT"
-	$t $(MAKE) -C $(APP) plt $v
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) plt $v
 
 	$i "Confirm that runtime_tools was included in the PLT"
 	$t dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q runtime_tools

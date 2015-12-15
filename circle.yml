@@ -9,7 +9,7 @@ dependencies:
 
   pre:
     - sudo apt-get update
-    - sudo apt-get install autoconf2.59 gcc
+    - sudo apt-get install autoconf2.59 gcc parallel
     - cd $HOME/bin && ln -s /usr/bin/autoconf2.59 autoconf
     - cd $HOME/bin && ln -s /usr/bin/autoheader2.59 autoheader
     - CI_OTP=OTP-18.0.2 make -f core/core.mk -f plugins/ci.mk ci-prepare:
@@ -17,5 +17,5 @@ dependencies:
 
 test:
   override:
-    - source $HOME/erlang/OTP-18.0.2/activate && make -k check
-    - source $HOME/erlang/OTP-18.0.2/activate && make -k check LEGACY=1
+    - source $HOME/erlang/OTP-18.0.2/activate && make -j 32 -k check
+    - source $HOME/erlang/OTP-18.0.2/activate && make -j 32 -k check LEGACY=1
