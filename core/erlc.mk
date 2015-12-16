@@ -137,12 +137,17 @@ $(PROJECT).d:: $(XRL_FILES) $(YRL_FILES)
 # Erlang and Core Erlang files.
 
 define makedep.erl
+	G = digraph:new([acyclic]),
 	ErlFiles = lists:usort(string:tokens("$(ERL_FILES)", " ")),
 	Modules = [{filename:basename(F, ".erl"), F} || F <- ErlFiles],
-	Add = fun (Dep, Acc) ->
+	Add = fun (Mod, Dep, Acc) ->
 		case lists:keyfind(atom_to_list(Dep), 1, Modules) of
-			{_, DepFile} -> [DepFile|Acc];
-			false -> Acc
+			false -> Acc;
+			{_, DepFile} ->
+				digraph:add_vertex(G, Mod),
+				digraph:add_vertex(G, Dep),
+				digraph:add_edge(G, Mod, Dep),
+				[DepFile|Acc]
 		end
 	end,
 	AddHd = fun (Dep, Acc) ->
@@ -152,36 +157,33 @@ define makedep.erl
 			_ -> Acc
 		end
 	end,
-	CompileFirst = fun (Deps) ->
-		First0 = [case filename:extension(D) of
-			".erl" -> filename:basename(D, ".erl");
-			_ -> []
-		end || D <- Deps],
-		case lists:usort(First0) of
-			[] -> [];
-			[[]] -> [];
-			First -> ["COMPILE_FIRST +=", [[" ", F] || F <- First], "\n"]
-		end
-	end,
 	Depend = [begin
+		Mod = list_to_atom(filename:basename(F, ".erl")),
 		case epp:parse_file(F, ["include/"], []) of
 			{ok, Forms} ->
 				Deps = lists:usort(lists:foldl(fun
-					({attribute, _, behavior, Dep}, Acc) -> Add(Dep, Acc);
-					({attribute, _, behaviour, Dep}, Acc) -> Add(Dep, Acc);
-					({attribute, _, compile, {parse_transform, Dep}}, Acc) -> Add(Dep, Acc);
+					({attribute, _, behavior, Dep}, Acc) -> Add(Mod, Dep, Acc);
+					({attribute, _, behaviour, Dep}, Acc) -> Add(Mod, Dep, Acc);
+					({attribute, _, compile, {parse_transform, Dep}}, Acc) -> Add(Mod, Dep, Acc);
+					({attribute, _, compile, CompileOpts}, Acc) when is_list(CompileOpts) ->
+						case proplists:get_value(parse_transform, CompileOpts) of
+							undefined -> Acc;
+							Dep -> Add(Mod, Dep, Acc)
+						end;
 					({attribute, _, file, {Dep, _}}, Acc) -> AddHd(Dep, Acc);
 					(_, Acc) -> Acc
 				end, [], Forms)),
 				case Deps of
 					[] -> "";
-					_ -> [F, "::", [[" ", D] || D <- Deps], "; @touch \$$@\n", CompileFirst(Deps)]
+					_ -> [F, "::", [[" ", D] || D <- Deps], "; @touch \$$@\n"]
 				end;
 			{error, enoent} ->
 				[]
 		end
 	end || F <- ErlFiles],
-	ok = file:write_file("$(1)", Depend),
+	CompileFirst = [X || X <- lists:reverse(digraph_utils:topsort(G)), [] =/= digraph:in_neighbours(G, X)],
+	ok = file:write_file("$(1)", [Depend, "\nCOMPILE_FIRST +=",
+		[[" ", atom_to_list(CF)] || CF <- CompileFirst], "\n"]),
 	halt()
 endef
 

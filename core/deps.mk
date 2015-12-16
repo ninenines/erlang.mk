@@ -247,57 +247,6 @@ define dep_autopatch_rebar.erl
 				Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
 		end
 	end(),
-	FindFirst = fun(F, Fd) ->
-		case io:parse_erl_form(Fd, undefined) of
-			{ok, {attribute, _, compile, {parse_transform, PT}}, _} ->
-				[PT, F(F, Fd)];
-			{ok, {attribute, _, compile, CompileOpts}, _} when is_list(CompileOpts) ->
-				case proplists:get_value(parse_transform, CompileOpts) of
-					undefined -> [F(F, Fd)];
-					PT -> [PT, F(F, Fd)]
-				end;
-			{ok, {attribute, _, include, Hrl}, _} ->
-				case file:open("$(call core_native_path,$(DEPS_DIR)/$1/include/)" ++ Hrl, [read]) of
-					{ok, HrlFd} -> [F(F, HrlFd), F(F, Fd)];
-					_ ->
-						case file:open("$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ Hrl, [read]) of
-							{ok, HrlFd} -> [F(F, HrlFd), F(F, Fd)];
-							_ -> [F(F, Fd)]
-						end
-				end;
-			{ok, {attribute, _, include_lib, "$(1)/include/" ++ Hrl}, _} ->
-				{ok, HrlFd} = file:open("$(call core_native_path,$(DEPS_DIR)/$1/include/)" ++ Hrl, [read]),
-				[F(F, HrlFd), F(F, Fd)];
-			{ok, {attribute, _, include_lib, Hrl}, _} ->
-				case file:open("$(call core_native_path,$(DEPS_DIR)/$1/include/)" ++ Hrl, [read]) of
-					{ok, HrlFd} -> [F(F, HrlFd), F(F, Fd)];
-					_ -> [F(F, Fd)]
-				end;
-			{ok, {attribute, _, import, {Imp, _}}, _} ->
-				case file:open("$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ atom_to_list(Imp) ++ ".erl", [read]) of
-					{ok, ImpFd} -> [Imp, F(F, ImpFd), F(F, Fd)];
-					_ -> [F(F, Fd)]
-				end;
-			{eof, _} ->
-				file:close(Fd),
-				[];
-			_ ->
-				F(F, Fd)
-		end
-	end,
-	fun() ->
-		ErlFiles = filelib:wildcard("$(call core_native_path,$(DEPS_DIR)/$1/src/)*.erl"),
-		First0 = lists:usort(lists:flatten([begin
-			{ok, Fd} = file:open(F, [read]),
-			FindFirst(FindFirst, Fd)
-		end || F <- ErlFiles])),
-		First = lists:flatten([begin
-			{ok, Fd} = file:open("$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ atom_to_list(M) ++ ".erl", [read]),
-			FindFirst(FindFirst, Fd)
-		end || M <- First0, lists:member("$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ atom_to_list(M) ++ ".erl", ErlFiles)]) ++ First0,
-		Write(["COMPILE_FIRST +=", [[" ", atom_to_list(M)] || M <- First,
-			lists:member("$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ atom_to_list(M) ++ ".erl", ErlFiles)], "\n"])
-	end(),
 	Write("\n\nrebar_dep: preprocess pre-deps deps pre-app app\n"),
 	Write("\npreprocess::\n"),
 	Write("\npre-deps::\n"),
