@@ -137,53 +137,79 @@ $(PROJECT).d:: $(XRL_FILES) $(YRL_FILES)
 # Erlang and Core Erlang files.
 
 define makedep.erl
+	E = ets:new(makedep, [bag]),
 	G = digraph:new([acyclic]),
 	ErlFiles = lists:usort(string:tokens("$(ERL_FILES)", " ")),
-	Modules = [{filename:basename(F, ".erl"), F} || F <- ErlFiles],
-	Add = fun (Mod, Dep, Acc) ->
-		case lists:keyfind(atom_to_list(Dep), 1, Modules) of
-			false -> Acc;
+	Modules = [{list_to_atom(filename:basename(F, ".erl")), F} || F <- ErlFiles],
+	Add = fun (Mod, Dep) ->
+		case lists:keyfind(Dep, 1, Modules) of
+			false -> ok;
 			{_, DepFile} ->
+				{_, ModFile} = lists:keyfind(Mod, 1, Modules),
+				ets:insert(E, {ModFile, DepFile}),
 				digraph:add_vertex(G, Mod),
 				digraph:add_vertex(G, Dep),
-				digraph:add_edge(G, Mod, Dep),
-				[DepFile|Acc]
+				digraph:add_edge(G, Mod, Dep)
 		end
 	end,
-	AddHd = fun (Dep, Acc) ->
-		case {Dep, lists:keymember(Dep, 2, Modules)} of
-			{"src/" ++ _, false} -> [Dep|Acc];
-			{"include/" ++ _, false} -> [Dep|Acc];
-			_ -> Acc
+	AddHd = fun (F, Mod, DepFile) ->
+		case file:open(DepFile, [read]) of
+			{error, enoent} -> ok;
+			{ok, Fd} ->
+				F(F, Fd, Mod),
+				{_, ModFile} = lists:keyfind(Mod, 1, Modules),
+				ets:insert(E, {ModFile, DepFile})
 		end
 	end,
-	Depend = [begin
+	Attr = fun
+		(F, Mod, behavior, Dep) -> Add(Mod, Dep);
+		(F, Mod, behaviour, Dep) -> Add(Mod, Dep);
+		(F, Mod, compile, {parse_transform, Dep}) -> Add(Mod, Dep);
+		(F, Mod, compile, Opts) when is_list(Opts) ->
+			case proplists:get_value(parse_transform, Opts) of
+				undefined -> ok;
+				Dep -> Add(Mod, Dep)
+			end;
+		(F, Mod, include, Hrl) ->
+			case filelib:is_file("include/" ++ Hrl) of
+				true -> AddHd(F, Mod, "include/" ++ Hrl);
+				false ->
+					case filelib:is_file("src/" ++ Hrl) of
+						true -> AddHd(F, Mod, "src/" ++ Hrl);
+						false -> false
+					end
+			end;
+		(F, Mod, include_lib, "$1/include/" ++ Hrl) -> AddHd(F, Mod, "include/" ++ Hrl);
+		(F, Mod, include_lib, Hrl) -> AddHd(F, Mod, "include/" ++ Hrl);
+		(F, Mod, import, {Imp, _}) ->
+			case filelib:is_file("src/" ++ atom_to_list(Imp) ++ ".erl") of
+				false -> ok;
+				true -> Add(Mod, Imp)
+			end;
+		(_, _, _, _) -> ok
+	end,
+	MakeDepend = fun(F, Fd, Mod) ->
+		case io:parse_erl_form(Fd, undefined) of
+			{ok, {attribute, _, Key, Value}, _} ->
+				Attr(F, Mod, Key, Value),
+				F(F, Fd, Mod);
+			{eof, _} ->
+				file:close(Fd);
+			_ ->
+				F(F, Fd, Mod)
+		end
+	end,
+	[begin
 		Mod = list_to_atom(filename:basename(F, ".erl")),
-		case epp:parse_file(F, ["include/"], []) of
-			{ok, Forms} ->
-				Deps = lists:usort(lists:foldl(fun
-					({attribute, _, behavior, Dep}, Acc) -> Add(Mod, Dep, Acc);
-					({attribute, _, behaviour, Dep}, Acc) -> Add(Mod, Dep, Acc);
-					({attribute, _, compile, {parse_transform, Dep}}, Acc) -> Add(Mod, Dep, Acc);
-					({attribute, _, compile, CompileOpts}, Acc) when is_list(CompileOpts) ->
-						case proplists:get_value(parse_transform, CompileOpts) of
-							undefined -> Acc;
-							Dep -> Add(Mod, Dep, Acc)
-						end;
-					({attribute, _, file, {Dep, _}}, Acc) -> AddHd(Dep, Acc);
-					(_, Acc) -> Acc
-				end, [], Forms)),
-				case Deps of
-					[] -> "";
-					_ -> [F, "::", [[" ", D] || D <- Deps], "; @touch \$$@\n"]
-				end;
-			{error, enoent} ->
-				[]
-		end
+		{ok, Fd} = file:open(F, [read]),
+		MakeDepend(MakeDepend, Fd, Mod)
 	end || F <- ErlFiles],
+	Depend = sofs:to_external(sofs:relation_to_family(sofs:relation(ets:tab2list(E)))),
 	CompileFirst = [X || X <- lists:reverse(digraph_utils:topsort(G)), [] =/= digraph:in_neighbours(G, X)],
-	ok = file:write_file("$(1)", [Depend, "\nCOMPILE_FIRST +=",
-		[[" ", atom_to_list(CF)] || CF <- CompileFirst], "\n"]),
+	ok = file:write_file("$(1)", [
+		[[F, "::", [[" ", D] || D <- Deps], "; @touch \$$@\n"] || {F, Deps} <- Depend],
+		"\nCOMPILE_FIRST +=", [[" ", atom_to_list(CF)] || CF <- CompileFirst], "\n"
+	]),
 	halt()
 endef
 
