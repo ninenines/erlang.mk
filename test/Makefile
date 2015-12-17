@@ -203,14 +203,6 @@ pkg-$1: clean build
 	$i "Add package $1 to the Makefile"
 	$t perl -ni.bak -e 'print;if ($$$$.==1) {print "DEPS = $1\n"}' packages/$1_pkg/Makefile
 
-	$(if $(filter i18n,$1),
-		$i "Set ICU flags"
-		$(eval PATCHES := \
-			CXX="$(shell icu-config --cxx)" \
-			ICU_CFLAGS="$(shell icu-config --cflags)" \
-			ICU_CXXFLAGS="$(shell icu-config --cxxflags)" \
-			ICU_LDFLAGS="$(shell icu-config --ldflags)"))
-
 	$i "Compile package $1"
 	$t if ! ( cd packages/$1_pkg/ && $(MAKE) $(PATCHES) $v ); then \
 		echo "$1: compile error" >> packages/errors.log; \
