@@ -2,6 +2,10 @@ general:
   artifacts:
     - "test/pkgs.log"
 
+  branches:
+    ignore:
+      - gh-pages
+
 dependencies:
   cache_directories:
     - "~/.kerl"
