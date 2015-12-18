@@ -181,6 +181,7 @@ core-help: build clean-core-help
 # Packages.
 
 PACKAGES = $(foreach pkg,$(sort $(wildcard ../index/*.mk)),$(notdir $(basename $(pkg))))
+EXCLUDE_FROM_CHECK = [rabbitmq_codegen]
 
 packages: $(addprefix pkg-,$(PACKAGES))
 
@@ -217,8 +218,9 @@ pkg-$1: clean build
 
 	$i "Check that all applications and their modules can be loaded"
 	$t if ! ( cd packages/$1_pkg/ && $(ERL) -pa deps/*/ebin/ -eval " \
-		Apps = [list_to_atom(App) || \"deps/\" ++ App \
+		Apps0 = [list_to_atom(App) || \"deps/\" ++ App \
 			<- filelib:wildcard(\"deps/*\")], \
+		Apps = [App || App <- Apps0, not lists:member(App, $(EXCLUDE_FROM_CHECK))], \
 		[begin \
 			io:format(\"Loading application ~p~n\", [App]), \
 			case application:load(App) of \
@@ -250,8 +252,9 @@ pkg-$1: clean build
 
 	$i "Check that all applications and their modules can still be loaded"
 	$t if ! ( cd packages/$1_pkg/ && $(ERL) -pa deps/*/ebin/ -eval " \
-		Apps = [list_to_atom(App) || \"deps/\" ++ App \
+		Apps0 = [list_to_atom(App) || \"deps/\" ++ App \
 			<- filelib:wildcard(\"deps/*\")], \
+		Apps = [App || App <- Apps0, not lists:member(App, $(EXCLUDE_FROM_CHECK))], \
 		[begin \
 			io:format(\"Loading application ~p~n\", [App]), \
 			case application:load(App) of \
