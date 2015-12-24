@@ -2,18 +2,12 @@
 
 ERLYDTL_CASES = compile full-path
 ERLYDTL_TARGETS = $(addprefix erlydtl-,$(ERLYDTL_CASES))
-ERLYDTL_CLEAN_TARGETS = $(addprefix clean-,$(ERLYDTL_TARGETS))
 
-.PHONY: erlydtl $(ERLYDTL_TARGETS) clean-erlydtl $(ERLYDTL_CLEAN_TARGETS)
-
-clean-erlydtl: $(ERLYDTL_CLEAN_TARGETS)
-
-$(ERLYDTL_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)
+.PHONY: erlydtl $(ERLYDTL_TARGETS)
 
 erlydtl: $(ERLYDTL_TARGETS)
 
-erlydtl-compile: build clean-erlydtl-compile
+erlydtl-compile: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -41,7 +35,7 @@ erlydtl-compile: build clean-erlydtl-compile
 		{ok, [$(APP_)_one_dtl, $(APP)_two_dtl]} = application:get_key($(APP), modules), \
 		halt()"
 
-erlydtl-full-path: build clean-erlydtl-full-path
+erlydtl-full-path: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

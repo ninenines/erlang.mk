@@ -2,20 +2,13 @@
 
 C_SRC_CASES = cpp custom dir env nif port
 C_SRC_TARGETS = $(addprefix c-src-,$(C_SRC_CASES))
-C_SRC_CLEAN_TARGETS = $(addprefix clean-,$(C_SRC_TARGETS))
 
-.PHONY: c-src $(C_SRC_TARGETS) clean-c-src $(C_SRC_CLEAN_TARGETS)
-
-clean-c-src: $(C_SRC_CLEAN_TARGETS)
-clean-c_src: clean-c-src
-
-$(C_SRC_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)
+.PHONY: c-src $(C_SRC_TARGETS)
 
 c-src: $(C_SRC_TARGETS)
 c_src: c-src
 
-c-src-nif: build clean-c-src-nif
+c-src-nif: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

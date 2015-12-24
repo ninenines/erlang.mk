@@ -2,18 +2,12 @@
 
 CORE_UPGRADE_CASES = conflicting-configs custom-build-dir custom-config custom-repo no-config renamed-config
 CORE_UPGRADE_TARGETS = $(addprefix core-upgrade-,$(CORE_UPGRADE_CASES))
-CORE_UPGRADE_CLEAN_TARGETS = $(addprefix clean-,$(CORE_UPGRADE_TARGETS))
 
-.PHONY: core-upgrade $(CORE_UPGRADE_TARGETS) clean-core-upgrade $(CORE_UPGRADE_CLEAN_TARGETS)
-
-clean-core-upgrade: $(CORE_UPGRADE_CLEAN_TARGETS)
-
-$(CORE_UPGRADE_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)
+.PHONY: core-upgrade $(CORE_UPGRADE_TARGETS)
 
 core-upgrade: $(CORE_UPGRADE_TARGETS)
 
-core-upgrade-conflicting-configs: build clean-core-upgrade-conflicting-configs
+core-upgrade-conflicting-configs: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -42,7 +36,7 @@ core-upgrade-conflicting-configs: build clean-core-upgrade-conflicting-configs
 	$i "Check that the bootstrap plugin is gone"
 	$t ! $(MAKE) -C $(APP) list-templates $v
 
-core-upgrade-custom-build-dir: build clean-core-upgrade-custom-build-dir
+core-upgrade-custom-build-dir: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -68,7 +62,7 @@ core-upgrade-custom-build-dir: build clean-core-upgrade-custom-build-dir
 	$i "Check that the custom build directory is gone"
 	$t test ! -d $(APP)/custom/
 
-core-upgrade-custom-config: build clean-core-upgrade-custom-config
+core-upgrade-custom-config: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -84,7 +78,7 @@ core-upgrade-custom-config: build clean-core-upgrade-custom-config
 	$i "Check that the bootstrap plugin is gone"
 	$t ! $(MAKE) -C $(APP) list-templates $v
 
-core-upgrade-custom-repo: build clean-core-upgrade-custom-repo
+core-upgrade-custom-repo: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -110,7 +104,7 @@ core-upgrade-custom-repo: build clean-core-upgrade-custom-repo
 	$i "Check our modification is there"
 	$t grep -q "# Copyright (c) erlang.mk Testsuite!" $(APP)/erlang.mk
 
-core-upgrade-no-config: build clean-core-upgrade-no-config
+core-upgrade-no-config: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -129,7 +123,7 @@ core-upgrade-no-config: build clean-core-upgrade-no-config
 	$i "Check that the rule is gone"
 	$t ! $(MAKE) -C $(APP) erlang_mk_upgrade_test_rule $v
 
-core-upgrade-renamed-config: build clean-core-upgrade-renamed-config
+core-upgrade-renamed-config: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

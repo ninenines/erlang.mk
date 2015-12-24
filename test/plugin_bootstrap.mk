@@ -2,18 +2,12 @@
 
 BOOTSTRAP_CASES = app lib rel sp tab templates
 BOOTSTRAP_TARGETS = $(addprefix bootstrap-,$(BOOTSTRAP_CASES))
-BOOTSTRAP_CLEAN_TARGETS = $(addprefix clean-,$(BOOTSTRAP_TARGETS))
 
-.PHONY: bootstrap $(BOOTSTRAP_TARGETS) clean-bootstrap $(BOOTSTRAP_CLEAN_TARGETS)
-
-clean-bootstrap: $(BOOTSTRAP_CLEAN_TARGETS)
-
-$(BOOTSTRAP_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)
+.PHONY: bootstrap $(BOOTSTRAP_TARGETS)
 
 bootstrap: $(BOOTSTRAP_TARGETS)
 
-bootstrap-app: build clean-bootstrap-app
+bootstrap-app: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -44,7 +38,7 @@ endif
 		{module, $(APP)_sup} = code:load_file($(APP)_sup), \
 		halt()"
 
-bootstrap-lib: build clean-bootstrap-lib
+bootstrap-lib: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -69,7 +63,7 @@ endif
 		{ok, []} = application:get_key($(APP), modules), \
 		halt()"
 
-bootstrap-rel: build clean-bootstrap-rel
+bootstrap-rel: build clean
 
 	$i "Bootstrap a new release-enabled OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -116,7 +110,7 @@ endif
 	$i "Check that there's no erl_crash.dump file"
 	$t test ! -f $(APP)/_rel/$(APP)_release/erl_crash.dump
 
-bootstrap-sp: build clean-bootstrap-sp
+bootstrap-sp: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -155,7 +149,7 @@ endif
 		{module, $(APP)_sup} = code:load_file($(APP)_sup), \
 		halt()"
 
-bootstrap-tab: build clean-bootstrap-tab
+bootstrap-tab: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -177,7 +171,7 @@ endif
 	$t test "`awk -F "\t" 'NF > 1' $(APP)/src/$(APP)_app.erl`"
 	$t test "`awk -F "\t" 'NF > 1' $(APP)/src/$(APP)_sup.erl`"
 
-bootstrap-templates: build clean-bootstrap-templates
+bootstrap-templates: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

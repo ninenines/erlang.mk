@@ -2,18 +2,12 @@
 
 EUNIT_CASES = all apps-only check erl-opts fun mod test-dir tests
 EUNIT_TARGETS = $(addprefix eunit-,$(EUNIT_CASES))
-EUNIT_CLEAN_TARGETS = $(addprefix clean-,$(EUNIT_TARGETS))
 
-.PHONY: eunit $(EUNIT_TARGETS) clean-eunit $(EUNIT_CLEAN_TARGETS)
-
-clean-eunit: $(EUNIT_CLEAN_TARGETS)
-
-$(EUNIT_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)
+.PHONY: eunit $(EUNIT_TARGETS)
 
 eunit: $(EUNIT_TARGETS)
 
-eunit-all: build clean-eunit-all
+eunit-all: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -50,7 +44,7 @@ eunit-all: build clean-eunit-all
 	$i "Check that EUnit errors out"
 	$t ! $(MAKE) -C $(APP) eunit $v
 
-eunit-apps-only: build clean-eunit-apps-only
+eunit-apps-only: build clean
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -85,7 +79,7 @@ eunit-apps-only: build clean-eunit-apps-only
 	$i "Check that EUnit runs tests"
 	$t $(MAKE) -C $(APP) eunit | grep -q "Test passed."
 
-eunit-check: build clean-eunit-check
+eunit-check: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -103,7 +97,7 @@ eunit-check: build clean-eunit-check
 	$i "Check that EUnit runs on 'make check'"
 	$t $(MAKE) -C $(APP) check | grep -q "Test passed."
 
-eunit-erl-opts: build clean-eunit-erl-opts
+eunit-erl-opts: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -124,7 +118,7 @@ eunit-erl-opts: build clean-eunit-erl-opts
 	$i "Check that EUnit uses EUNIT_ERL_OPTS"
 	$t $(MAKE) -C $(APP) eunit | grep -q "hello"
 
-eunit-fun: build clean-eunit-fun
+eunit-fun: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -143,7 +137,7 @@ eunit-fun: build clean-eunit-fun
 	$i "Check that we can run EUnit on a specific test"
 	$t $(MAKE) -C $(APP) eunit t=$(APP):ok_test $v
 
-eunit-mod: build clean-eunit-mod
+eunit-mod: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -169,7 +163,7 @@ eunit-mod: build clean-eunit-mod
 	$i "Check that we can run EUnit on a specific module"
 	$t $(MAKE) -C $(APP) eunit t=$(APP) $v
 
-eunit-test-dir: build clean-eunit-test-dir
+eunit-test-dir: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -197,7 +191,7 @@ eunit-test-dir: build clean-eunit-test-dir
 	$i "Check that tests were both run only once"
 	$t printf "%s\n" $(APP) $(APP)_tests | cmp $(APP)/eunit.log -
 
-eunit-tests: build clean-eunit-tests
+eunit-tests: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/

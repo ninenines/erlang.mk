@@ -2,24 +2,12 @@
 
 CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
-CORE_DEPS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_DEPS_TARGETS))
 
-.PHONY: core-deps $(CORE_DEPS_TARGETS) clean-core-deps $(CORE_DEPS_CLEAN_TARGETS)
-
-clean-core-deps: $(CORE_DEPS_CLEAN_TARGETS) clean-core-deps-mv-moved clean-core-deps-mv-rebar-moved
-
-$(CORE_DEPS_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)
-
-clean-core-deps-mv-moved:
-	$t rm -rf core_deps_mv-moved/
-
-clean-core-deps-mv-rebar-moved:
-	$t rm -rf core_deps_mv_rebar-moved/
+.PHONY: core-deps $(CORE_DEPS_TARGETS)
 
 core-deps: $(CORE_DEPS_TARGETS)
 
-core-deps-apps: build clean-core-deps-apps
+core-deps-apps: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -113,7 +101,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-deps-apps-conflict: build clean-core-deps-apps-conflict
+core-deps-apps-conflict: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -132,7 +120,7 @@ core-deps-apps-conflict: build clean-core-deps-apps-conflict
 	$i "Check that Cowlib wasn't fetched"
 	$t test ! -e $(APP)/deps/cowlib
 
-core-deps-apps-deep-conflict: build clean-core-deps-apps-deep-conflict
+core-deps-apps-deep-conflict: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -151,7 +139,7 @@ core-deps-apps-deep-conflict: build clean-core-deps-apps-deep-conflict
 	$i "Check that Cowlib wasn't fetched"
 	$t test ! -e $(APP)/deps/cowlib
 
-core-deps-apps-dir: build clean-core-deps-apps-dir
+core-deps-apps-dir: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -222,7 +210,7 @@ endif
 	$i "Check that all relevant files were removed"
 	$t test ! -e $(APP)/deps
 
-core-deps-apps-new-app: build clean-core-deps-apps-new-app
+core-deps-apps-new-app: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -267,7 +255,7 @@ endif
 		{module, my_server} = code:load_file(my_server), \
 		halt()"
 
-core-deps-apps-new-lib: build clean-core-deps-apps-new-lib
+core-deps-apps-new-lib: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -306,7 +294,7 @@ endif
 		{module, my_server} = code:load_file(my_server), \
 		halt()"
 
-core-deps-apps-new-tpl: build clean-core-deps-apps-new-tpl
+core-deps-apps-new-tpl: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -338,7 +326,7 @@ core-deps-apps-new-tpl: build clean-core-deps-apps-new-tpl
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-deps-apps-only: build clean-core-deps-apps-only
+core-deps-apps-only: build clean
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -391,7 +379,7 @@ core-deps-apps-only: build clean-core-deps-apps-only
 	$i "Check that all relevant files were removed"
 	$t test ! -e $(APP)/deps
 
-core-deps-autopatch-rebar: build clean-core-deps-autopatch-rebar
+core-deps-autopatch-rebar: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -412,7 +400,7 @@ ifneq ($(PLATFORM),msys2)
 endif
 
 ifneq ($(PLATFORM),msys2)
-core-deps-build-c-8cc: build clean-core-deps-build-c-8cc
+core-deps-build-c-8cc: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -440,7 +428,7 @@ core-deps-build-c-8cc: build clean-core-deps-build-c-8cc
 endif
 
 ifneq ($(PLATFORM),freebsd)
-core-deps-build-c-imagejs: build clean-core-deps-build-c-imagejs
+core-deps-build-c-imagejs: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -468,7 +456,7 @@ core-deps-build-c-imagejs: build clean-core-deps-build-c-imagejs
 		halt()"
 endif
 
-core-deps-build-erl: build clean-core-deps-build-erl
+core-deps-build-erl: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -491,7 +479,7 @@ core-deps-build-erl: build clean-core-deps-build-erl
 		false = lists:member(cowlib, Deps), \
 		halt()"
 
-core-deps-build-js: build clean-core-deps-build-js
+core-deps-build-js: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -514,7 +502,7 @@ core-deps-build-js: build clean-core-deps-build-js
 		false = lists:member(jquery, Deps), \
 		halt()"
 
-core-deps-dep-commit: build clean-core-deps-dep-commit
+core-deps-dep-commit: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -545,7 +533,7 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
 		halt()"
 
-core-deps-dir: build clean-core-deps-dir
+core-deps-dir: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -575,7 +563,7 @@ endif
 		true = lists:member(cowboy, Deps), \
 		halt()"
 
-core-deps-doc: build clean-core-deps-doc
+core-deps-doc: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -612,7 +600,7 @@ core-deps-doc: build clean-core-deps-doc
 	$t test -f $(APP)/doc/boy.md
 	$t test -f $(APP)/doc/girl.md
 
-core-deps-fetch-cp: build clean-core-deps-fetch-cp
+core-deps-fetch-cp: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -645,7 +633,7 @@ endif
 		true = lists:member(my_dep, Deps), \
 		halt()"
 
-core-deps-fetch-custom: build clean-core-deps-fetch-custom
+core-deps-fetch-custom: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -673,7 +661,7 @@ endif
 		true = lists:member(boop, Deps), \
 		halt()"
 
-core-deps-fetch-fail-bad: build clean-core-deps-fetch-fail-bad
+core-deps-fetch-fail-bad: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -686,7 +674,7 @@ core-deps-fetch-fail-bad: build clean-core-deps-fetch-fail-bad
 	$i "Check that building the application fails"
 	$t ! $(MAKE) -C $(APP) $v
 
-core-deps-fetch-fail-unknown: build clean-core-deps-fetch-fail-unknown
+core-deps-fetch-fail-unknown: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -699,7 +687,7 @@ core-deps-fetch-fail-unknown: build clean-core-deps-fetch-fail-unknown
 	$i "Check that building the application fails"
 	$t ! $(MAKE) -C $(APP) $v
 
-core-deps-fetch-git: build clean-core-deps-fetch-git
+core-deps-fetch-git: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -730,7 +718,7 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
 		halt()"
 
-core-deps-fetch-git-submodule: build clean-core-deps-fetch-git-submodule
+core-deps-fetch-git-submodule: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -784,7 +772,7 @@ endif
 		true = lists:member(my_dep, Deps), \
 		halt()"
 
-core-deps-fetch-hex: build clean-core-deps-fetch-hex
+core-deps-fetch-hex: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -815,7 +803,7 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
 		halt()"
 
-core-deps-fetch-hg: build clean-core-deps-fetch-hg
+core-deps-fetch-hg: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -845,7 +833,7 @@ endif
 		halt()"
 
 # Legacy must fail for the top-level application, but work for dependencies.
-core-deps-fetch-legacy: build clean-core-deps-fetch-legacy
+core-deps-fetch-legacy: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -861,7 +849,7 @@ core-deps-fetch-legacy: build clean-core-deps-fetch-legacy
 	$i "Check that building the application works with IS_DEP=1"
 	$t $(MAKE) -C $(APP) IS_DEP=1 $v
 
-core-deps-fetch-svn: build clean-core-deps-fetch-svn
+core-deps-fetch-svn: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -890,7 +878,7 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
 		halt()"
 
-core-deps-ignore: build clean-core-deps-ignore
+core-deps-ignore: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -919,7 +907,7 @@ endif
 	$i "Check that the correct dependencies were fetched"
 	$t test -d $(APP)/deps/ranch
 
-core-deps-mv: build clean-core-deps-mv clean-core-deps-mv-moved
+core-deps-mv: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -941,7 +929,7 @@ core-deps-mv: build clean-core-deps-mv clean-core-deps-mv-moved
 	$i "Build the application"
 	$t $(MAKE) -C $(APP)-moved $v
 
-core-deps-mv-rebar: build clean-core-deps-mv-rebar clean-core-deps-mv-rebar-moved
+core-deps-mv-rebar: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -966,7 +954,7 @@ core-deps-mv-rebar: build clean-core-deps-mv-rebar clean-core-deps-mv-rebar-move
 
 # A lower-level dependency of the first dependency always
 # wins over a lower-level dependency of the second dependency.
-core-deps-order-first: build clean-core-deps-order-first
+core-deps-order-first: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1007,7 +995,7 @@ endif
 		halt()"
 
 # A higher-level dependency always wins.
-core-deps-order-top: build clean-core-deps-order-top
+core-deps-order-top: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1038,7 +1026,7 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
 		halt()"
 
-core-deps-no-autopatch: build clean-core-deps-no-autopatch
+core-deps-no-autopatch: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1059,7 +1047,7 @@ core-deps-no-autopatch: build clean-core-deps-no-autopatch
 	$i "Check that Cowlib was not autopatched"
 	$t grep -q Hoguin $(APP)/deps/cowlib/erlang.mk
 
-core-deps-no-autopatch-erlang-mk: build clean-core-deps-no-autopatch-erlang-mk
+core-deps-no-autopatch-erlang-mk: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1078,7 +1066,7 @@ core-deps-no-autopatch-erlang-mk: build clean-core-deps-no-autopatch-erlang-mk
 	$i "Check that Erlang.mk was not autopatched"
 	$t grep -q Hoguin $(APP)/deps/cowlib/erlang.mk
 
-core-deps-no-autopatch-rebar: build clean-core-deps-no-autopatch-rebar
+core-deps-no-autopatch-rebar: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1100,7 +1088,7 @@ core-deps-no-autopatch-rebar: build clean-core-deps-no-autopatch-rebar
 	$t if grep -q erlang\.mk $(APP)/deps/lager/Makefile; then false; fi
 
 ifndef LEGACY
-core-deps-otp: build clean-core-deps-otp
+core-deps-otp: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1124,7 +1112,7 @@ core-deps-otp: build clean-core-deps-otp
 		halt()"
 endif
 
-core-deps-pkg: build clean-core-deps-pkg
+core-deps-pkg: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1154,7 +1142,7 @@ endif
 		true = lists:member(cowboy, Deps), \
 		halt()"
 
-core-deps-rel: build clean-core-deps-rel
+core-deps-rel: build clean
 
 	$i "Bootstrap a new release-enabled OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1215,7 +1203,7 @@ else
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
 endif
 
-core-deps-search: build clean-core-deps-search
+core-deps-search: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1228,7 +1216,7 @@ core-deps-search: build clean-core-deps-search
 	$i "Run 'make search q=cowboy' and check that it prints packages"
 	$t test -n "`$(MAKE) -C $(APP) search q=cowboy`"
 
-core-deps-shell: build clean-core-deps-shell
+core-deps-shell: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1267,7 +1255,7 @@ core-deps-shell: build clean-core-deps-shell
 		false = lists:member(tddreloader, Deps), \
 		halt()"
 
-core-deps-skip: build clean-core-deps-skip
+core-deps-skip: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1304,7 +1292,7 @@ endif
 	$t test -d $(APP)/deps/cowboy
 	$t test -d $(APP)/deps/ranch
 
-core-deps-test: build clean-core-deps-test
+core-deps-test: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

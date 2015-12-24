@@ -2,19 +2,13 @@
 
 CORE_APP_CASES = appsrc-change asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib no-app no-makedep pt pt-erlc-opts xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
-CORE_APP_CLEAN_TARGETS = $(addprefix clean-,$(CORE_APP_TARGETS))
 
-.PHONY: core-app $(CORE_APP_TARGETS) clean-core-app $(CORE_APP_CLEAN_TARGETS)
-
-clean-core-app: $(CORE_APP_CLEAN_TARGETS)
-
-$(CORE_APP_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)
+.PHONY: core-app $(CORE_APP_TARGETS)
 
 core-app: $(CORE_APP_TARGETS)
 
 ifdef LEGACY
-core-app-appsrc-change: build clean-core-app-appsrc-change
+core-app-appsrc-change: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -34,7 +28,7 @@ core-app-appsrc-change: build clean-core-app-appsrc-change
 	$t rm $(APP)/EXPECT
 endif
 
-core-app-asn1: build clean-core-app-asn1
+core-app-asn1: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -155,7 +149,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-auto-git-id: build clean-core-app-auto-git-id
+core-app-auto-git-id: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -203,7 +197,7 @@ endif
 		true = ID =/= [], \
 		halt()"
 
-core-app-erlc-exclude: build clean-core-app-erlc-exclude
+core-app-erlc-exclude: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -231,7 +225,7 @@ core-app-erlc-exclude: build clean-core-app-erlc-exclude
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-erlc-opts: build clean-core-app-erlc-opts
+core-app-erlc-opts: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -258,7 +252,7 @@ core-app-erlc-opts: build clean-core-app-erlc-opts
 		false = proplists:is_defined(debug_info, proplists:get_value(options, girl:module_info(compile))), \
 		halt()"
 
-core-app-erlc-opts-filter: build clean-core-app-erlc-opts-filter
+core-app-erlc-opts-filter: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -285,7 +279,7 @@ core-app-erlc-opts-filter: build clean-core-app-erlc-opts-filter
 		false = proplists:is_defined(debug_info, proplists:get_value(options, girl:module_info(compile))), \
 		halt()"
 
-core-app-error: build clean-core-app-error
+core-app-error: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -302,7 +296,7 @@ core-app-error: build clean-core-app-error
 	$i "Check that trying to build returns non-zero"
 	$t ! $(MAKE) -C $(APP) $v
 
-core-app-generate-erl: build clean-core-app-generate-erl
+core-app-generate-erl: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -408,7 +402,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-generate-erl-include: build clean-core-app-generate-erl-include
+core-app-generate-erl-include: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -470,7 +464,7 @@ core-app-generate-erl-include: build clean-core-app-generate-erl-include
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-generate-erl-prepend: build clean-core-app-generate-erl-prepend
+core-app-generate-erl-prepend: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -579,7 +573,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hrl: build clean-core-app-hrl
+core-app-hrl: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -668,7 +662,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hrl-recursive: build clean-core-app-hrl-recursive
+core-app-hrl-recursive: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -759,7 +753,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-makefile-change: build clean-core-app-makefile-change
+core-app-makefile-change: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -784,7 +778,7 @@ core-app-makefile-change: build clean-core-app-makefile-change
 	$t find $(APP) -type f -newer $(APP)/Makefile | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
 
-core-app-mib: build clean-core-app-mib
+core-app-mib: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -892,7 +886,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-no-app: build clean-core-app-no-app
+core-app-no-app: build clean
 
 	$i "Bootstrap a project without an OTP library"
 	$t mkdir $(APP)/
@@ -903,7 +897,7 @@ core-app-no-app: build clean-core-app-no-app
 	$i "Build the project"
 	$t $(MAKE) -C $(APP) $v
 
-core-app-no-makedep: build clean-core-app-no-makedep
+core-app-no-makedep: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1016,7 +1010,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-pt: build clean-core-app-pt
+core-app-pt: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1049,7 +1043,7 @@ core-app-pt: build clean-core-app-pt
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-pt-erlc-opts: build clean-core-app-pt-erlc-opts
+core-app-pt-erlc-opts: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1089,7 +1083,7 @@ core-app-pt-erlc-opts: build clean-core-app-pt-erlc-opts
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-xrl: build clean-core-app-xrl
+core-app-xrl: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1190,7 +1184,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-xrl-include: build clean-core-app-xrl-include
+core-app-xrl-include: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1334,7 +1328,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-yrl: build clean-core-app-yrl
+core-app-yrl: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1432,7 +1426,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-yrl-include: build clean-core-app-yrl-include
+core-app-yrl-include: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

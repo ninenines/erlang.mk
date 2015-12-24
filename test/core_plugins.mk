@@ -2,18 +2,12 @@
 
 CORE_PLUGINS_CASES = all one
 CORE_PLUGINS_TARGETS = $(addprefix core-plugins-,$(CORE_PLUGINS_CASES))
-CORE_PLUGINS_CLEAN_TARGETS = $(addprefix clean-,$(CORE_PLUGINS_TARGETS))
 
-.PHONY: core-plugins $(CORE_PLUGINS_TARGETS) clean-core-plugins $(CORE_PLUGINS_CLEAN_TARGETS)
-
-clean-core-plugins: $(CORE_PLUGINS_CLEAN_TARGETS)
-
-$(CORE_PLUGINS_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)
+.PHONY: core-plugins $(CORE_PLUGINS_TARGETS)
 
 core-plugins: $(CORE_PLUGINS_TARGETS)
 
-core-plugins-all: build clean-core-plugins-all
+core-plugins-all: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -45,7 +39,7 @@ core-plugins-all: build clean-core-plugins-all
 	$i "Run 'make plugin2' and check that it prints plugin2"
 	$t test -n "`$(MAKE) -C $(APP) plugin2 | grep plugin2`"
 
-core-plugins-one: build clean-core-plugins-one
+core-plugins-one: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

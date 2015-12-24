@@ -12,8 +12,7 @@ endif
 
 # Temporary application name, taken from rule name.
 
-APP = $(subst -,_,$@)
-APP_TO_CLEAN = $(subst -,_,$(patsubst clean-%,%,$@))
+APP = test_$(subst -,_,$@)
 
 # Erlang, quickly!
 
@@ -93,8 +92,8 @@ endif
 
 all:: core
 
-clean:: clean-core
-	$t rm -rf erl_crash.dump packages/
+clean::
+	$t rm -rf erl_crash.dump packages/ test_*/
 
 build:
 	$i "Generate a bleeding edge Erlang.mk"
@@ -102,11 +101,10 @@ build:
 
 # Core.
 
-.PHONY: core clean-core
+.PHONY: core
 
 define include_core
 core:: core-$1
-clean-core:: clean-core-$1
 
 include core_$1.mk
 
@@ -118,7 +116,6 @@ $(eval $(foreach t,$(patsubst %.mk,%,$(patsubst core_%,%,$(wildcard core_*.mk)))
 
 define include_plugin
 all:: $1
-clean:: clean-$1
 
 include plugin_$1.mk
 
@@ -129,14 +126,10 @@ $(eval $(foreach t,$(patsubst %.mk,%,$(patsubst plugin_%,%,$(wildcard plugin_*.m
 # Tests that don't easily fit into other categories.
 
 core:: core-clean-crash-dump core-distclean-tmp core-help
-clean-core:: clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-help
 
-.PHONY: core-clean-crash-dump core-distclean-tmp core-help clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-help
+.PHONY: core-clean-crash-dump core-distclean-tmp core-help
 
-clean-core-clean-crash-dump clean-core-distclean-tmp clean-core-help:
-	$t rm -rf $(APP_TO_CLEAN)
-
-core-clean-crash-dump: build clean-core-clean-crash-dump
+core-clean-crash-dump: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -152,7 +145,7 @@ core-clean-crash-dump: build clean-core-clean-crash-dump
 	$i "Check that the crash dump is removed"
 	$t test ! -e $(APP)/erl_crash.dump
 
-core-distclean-tmp: build clean-core-distclean-tmp
+core-distclean-tmp: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -168,7 +161,7 @@ core-distclean-tmp: build clean-core-distclean-tmp
 	$i "Check that .erlang.mk directory got removed"
 	$t test ! -e $(APP)/.erlang.mk
 
-core-help: build clean-core-help
+core-help: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -188,7 +181,7 @@ packages: $(addprefix pkg-,$(PACKAGES))
 define pkg_target
 .PHONY: pkg-$1
 
-pkg-$1: clean build
+pkg-$1: build clean
 
 # Make sure $@ is defined inside the define.
 	$(eval @ = pkg-$1)

@@ -2,18 +2,12 @@
 
 SHELL_CASES = default kjell
 SHELL_TARGETS = $(addprefix shell-,$(SHELL_CASES))
-SHELL_CLEAN_TARGETS = $(addprefix clean-,$(SHELL_TARGETS))
 
-.PHONY: shell $(C_SRC_TARGETS) clean-shell $(SHELL_CLEAN_TARGETS)
-
-clean-shell: $(SHELL_CLEAN_TARGETS)
-
-$(SHELL_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)
+.PHONY: shell $(C_SRC_TARGETS)
 
 shell: $(SHELL_TARGETS)
 
-shell-default: build clean-shell-default
+shell-default: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -23,7 +17,7 @@ shell-default: build clean-shell-default
 	$i "Run the shell"
 	$t $(MAKE) -C $(APP) shell SHELL_OPTS="-eval 'halt()'" $v
 
-shell-kjell: build clean-shell-kjell
+shell-kjell: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

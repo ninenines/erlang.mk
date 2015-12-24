@@ -4,20 +4,14 @@
 
 CORE_COMPAT_CASES = auto-rebar rebar rebar-deps rebar-deps-pkg rebar-erlc-opts rebar-pt
 CORE_COMPAT_TARGETS = $(addprefix core-compat-,$(CORE_COMPAT_CASES))
-CORE_COMPAT_CLEAN_TARGETS = $(addprefix clean-,$(CORE_COMPAT_TARGETS))
 
 REBAR_BINARY = https://github.com/rebar/rebar/releases/download/2.6.0/rebar
 
-.PHONY: core-compat $(CORE_COMPAT_TARGETS) clean-core-compat $(CORE_COMPAT_CLEAN_TARGETS)
-
-clean-core-compat: $(CORE_COMPAT_CLEAN_TARGETS)
-
-$(CORE_COMPAT_CLEAN_TARGETS):
-	$t rm -rf $(APP_TO_CLEAN)
+.PHONY: core-compat $(CORE_COMPAT_TARGETS)
 
 core-compat: $(CORE_COMPAT_TARGETS)
 
-core-compat-auto-rebar: build clean-core-compat-auto-rebar
+core-compat-auto-rebar: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -59,7 +53,7 @@ core-compat-auto-rebar: build clean-core-compat-auto-rebar
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar compile $v
 
-core-compat-rebar: build clean-core-compat-rebar
+core-compat-rebar: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -98,7 +92,7 @@ core-compat-rebar: build clean-core-compat-rebar
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar compile $v
 
-core-compat-rebar-deps: build clean-core-compat-rebar-deps
+core-compat-rebar-deps: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -130,7 +124,7 @@ core-compat-rebar-deps: build clean-core-compat-rebar-deps
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar get-deps compile $v
 
-core-compat-rebar-deps-pkg: build clean-core-compat-rebar-deps-pkg
+core-compat-rebar-deps-pkg: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -162,7 +156,7 @@ core-compat-rebar-deps-pkg: build clean-core-compat-rebar-deps-pkg
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar get-deps compile $v
 
-core-compat-rebar-erlc-opts: build clean-core-compat-rebar-erlc-opts
+core-compat-rebar-erlc-opts: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -211,7 +205,7 @@ core-compat-rebar-erlc-opts: build clean-core-compat-rebar-erlc-opts
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar compile $v
 
-core-compat-rebar-pt: build clean-core-compat-rebar-pt
+core-compat-rebar-pt: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
