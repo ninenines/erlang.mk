@@ -49,6 +49,8 @@ define bs_appsrc_lib
 ]}.
 endef
 
+# To prevent autocompletion issues with ZSH, we add "include erlang.mk"
+# separately during the actual bootstrap.
 ifdef SP
 define bs_Makefile
 PROJECT = $p
@@ -58,17 +60,21 @@ PROJECT_VERSION = 0.0.1
 # Whitespace to be used when creating files from templates.
 SP = $(SP)
 
-include erlang.mk
 endef
 else
 define bs_Makefile
 PROJECT = $p
-include erlang.mk
+PROJECT_DESCRIPTION = New project
+PROJECT_VERSION = 0.0.1
+
 endef
 endif
 
 define bs_apps_Makefile
 PROJECT = $p
+PROJECT_DESCRIPTION = New project
+PROJECT_VERSION = 0.0.1
+
 include $(call core_relpath,$(dir $(ERLANG_MK_FILENAME)),$(APPS_DIR)/app)/erlang.mk
 endef
 
@@ -362,6 +368,7 @@ endif
 	$(eval p := $(PROJECT))
 	$(eval n := $(PROJECT)_sup)
 	$(call render_template,bs_Makefile,Makefile)
+	$(verbose) echo "include erlang.mk" >> Makefile
 	$(verbose) mkdir src/
 ifdef LEGACY
 	$(call render_template,bs_appsrc,src/$(PROJECT).app.src)
@@ -375,6 +382,7 @@ ifneq ($(wildcard src/),)
 endif
 	$(eval p := $(PROJECT))
 	$(call render_template,bs_Makefile,Makefile)
+	$(verbose) echo "include erlang.mk" >> Makefile
 	$(verbose) mkdir src/
 ifdef LEGACY
 	$(call render_template,bs_appsrc_lib,src/$(PROJECT).app.src)
