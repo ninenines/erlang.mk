@@ -84,7 +84,7 @@ all:: deps app rel
 rel::
 	$(verbose) :
 
-check:: clean app tests
+check:: tests
 
 clean:: clean-crashdump
 
