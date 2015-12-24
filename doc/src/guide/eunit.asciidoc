@@ -1,5 +1,114 @@
 == EUnit
 
-// @todo Write it.
+EUnit is the tool of choice for unit testing. Erlang.mk
+automates a few things on top of EUnit, including the
+discovery and running of unit tests.
 
-Placeholder chapter.
+=== Writing tests
+
+The http://www.erlang.org/doc/apps/eunit/chapter.html[EUnit user guide]
+is the best place to learn how to write tests. Of note is
+that all functions ending with `_test` or `_test_` will be
+picked up as EUnit test cases.
+
+Erlang.mk will automatically pick up tests found in any of
+the Erlang modules of your application. It will also pick up
+tests located in the '$(TEST_DIR)' directory, which defaults
+to 'test/'.
+
+It is generally a good practice to hide test code from
+the code you ship to production. With Erlang.mk, you can
+do this thanks to the `TEST` macro. It is only defined
+when running tests:
+
+[source,erlang]
+----
+-ifdef(TEST).
+
+%% Insert tests here.
+
+-endif.
+----
+
+Be careful, however, if you include the EUnit header file,
+as it also defines the `TEST` macro. Make sure to only include
+it inside an `ifdef` block, otherwise tests will always be
+compiled.
+
+[source,erlang]
+----
+-ifdef(TEST).
+
+-include_lib(\"eunit/include/eunit.hrl\").
+
+%% Insert tests here.
+
+-endif.
+----
+
+Erlang.mk will automatically recompile your code when you
+perform a normal build after running tests, and vice versa.
+
+=== Configuration
+
+The `EUNIT_OPTS` variable allows you to specify additional
+EUnit options. Options are documented in the
+http://www.erlang.org/doc/man/eunit.html#test-2[EUnit manual].
+At the time of writing, the only available option is `verbose`:
+
+[source,make]
+EUNIT_OPTS = verbose
+
+=== Usage
+
+To run all tests (including EUnit):
+
+[source,bash]
+$ make tests
+
+To run all tests and static checks (including EUnit):
+
+[source,bash]
+$ make check
+
+You can also run EUnit separately:
+
+[source,bash]
+$ make eunit
+
+EUnit will be quiet by default, only outputting errors.
+You can easily make it verbose for a single invocation:
+
+[source,bash]
+$ make eunit EUNIT_OPTS=verbose
+
+Erlang.mk allows you to run all tests from a specific
+module, or a specific test case from that module, using
+the variable `t`.
+
+For example, to run all tests from the `cow_http_hd`
+module (instead of all tests from the entire project),
+one could write:
+
+[source,bash]
+$ make eunit t=cow_http_hd
+
+Similarly, to run a specific test case:
+
+[source,bash]
+$ make eunit t=cow_http_hd:parse_accept_test_
+
+To do the same against a multi-application repository,
+you can use the `-C` option:
+
+[source,bash]
+$ make -C apps/my_app eunit t=my_module:hello_test
+
+Note that this also applies to dependencies. From Cowboy,
+you can run the following directly:
+
+[source,bash]
+$ make -C deps/cowlib eunit t=cow_http_hd
+
+Finally, link:coverage.asciidoc[code coverage] is available,
+but covered in its own chapter.

@@ -29,6 +29,11 @@ test-dir:
 		$(call core_find,$(TEST_DIR)/,*.erl) -pa ebin/
 endif
 
+ifeq ($(wildcard src),)
+test-build:: ERLC_OPTS=$(TEST_ERLC_OPTS)
+test-build:: clean deps test-deps
+	$(verbose) $(MAKE) --no-print-directory test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
+else
 ifeq ($(wildcard ebin/test),)
 test-build:: ERLC_OPTS=$(TEST_ERLC_OPTS)
 test-build:: clean deps test-deps $(PROJECT).d
@@ -45,4 +50,5 @@ clean:: clean-test-dir
 clean-test-dir:
 ifneq ($(wildcard $(TEST_DIR)/*.beam),)
 	$(gen_verbose) rm -f $(TEST_DIR)/*.beam
+endif
 endif

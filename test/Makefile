@@ -310,9 +310,9 @@ endef
 # The following tests are slowly being converted.
 # Do NOT use -j with legacy tests.
 
-.PHONY: legacy clean-legacy ct eunit tests-cover docs
+.PHONY: legacy clean-legacy ct tests-cover docs
 
-legacy: clean-legacy ct eunit tests-cover docs pkgs
+legacy: clean-legacy ct tests-cover docs pkgs
 
 clean-legacy:
 	$t rm -rf app1
@@ -352,49 +352,6 @@ ct: app1
 	$i "Cleaning up test data."
 	$t rm -rf app1/test
 	$i "Test 'ct' passed."
-
-eunit: app1
-	$i "eunit: Testing the 'eunit' target."
-	$i "Running eunit test case inside module src/t.erl"
-	$t $(call create-module-t)
-	$t $(MAKE) -C app1 distclean $v
-	$t $(MAKE) -C app1 eunit $v
-	$i "Checking that the eunit test in module t."
-	$t echo t | cmp app1/test-eunit.log -
-	$t rm app1/test-eunit.log
-	$i "Running eunit tests in a separate directory."
-	$t mkdir -p app1/eunit
-	$t printf '%s\n' \
-		'-module(t_tests).' \
-		'-include_lib("eunit/include/eunit.hrl").' \
-		'succ_test() ->' \
-		'	?assertEqual(2, t:succ(1)),' \
-		'	os:cmd("echo t_tests >> test-eunit.log").' \
-		> app1/eunit/t_tests.erl
-	$t printf '%s\n' \
-		'-module(x_tests).' \
-		'-include_lib("eunit/include/eunit.hrl").' \
-		'succ_test() ->' \
-		'	?assertEqual(2, t:succ(1)),' \
-		'	os:cmd("echo x_tests >> test-eunit.log").' \
-		> app1/eunit/x_tests.erl
-	$t $(MAKE) -C app1 distclean TEST_DIR=eunit $v
-	$t $(MAKE) -C app1 eunit TEST_DIR=eunit $v
-	$i "Checking that '$(MAKE) eunit' didn't run the tests in t_tests twice, etc."
-	$t printf "%s\n" t t_tests x_tests | cmp app1/test-eunit.log -
-	$t rm app1/test-eunit.log
-	$i "Checking that '$(MAKE) eunit' returns non-zero for a failing test."
-	$t rm -f app1/eunit/*
-	$t printf "%s\n" \
-		"-module(t_tests)." \
-		'-include_lib("eunit/include/eunit.hrl").' \
-		"succ_test() ->" \
-		"	?assertEqual(42, t:succ(1))." \
-		> app1/eunit/t_tests.erl
-	$t $(MAKE) -C app1 distclean TEST_DIR=eunit $v
-	$t ! $(MAKE) -C app1 eunit TEST_DIR=eunit $v
-	$t rm -rf app1/eunit app1/src/t.erl app1/test-eunit.log
-	$i "Test 'eunit' passed."
 
 # TODO: do coverage for 'tests' instead of 'eunit ct' when triq is fixed
 tests-cover: app1
