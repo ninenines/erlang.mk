@@ -1,6 +1,6 @@
 # EUnit plugin.
 
-EUNIT_CASES = all apps-only check fun mod test-dir tests
+EUNIT_CASES = all apps-only check erl-opts fun mod test-dir tests
 EUNIT_TARGETS = $(addprefix eunit-,$(EUNIT_CASES))
 EUNIT_CLEAN_TARGETS = $(addprefix clean-,$(EUNIT_TARGETS))
 
@@ -102,6 +102,27 @@ eunit-check: build clean-eunit-check
 
 	$i "Check that EUnit runs on 'make check'"
 	$t $(MAKE) -C $(APP) check | grep -q "Test passed."
+
+eunit-erl-opts: build clean-eunit-erl-opts
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Set EUNIT_ERL_OPTS in the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "EUNIT_ERL_OPTS = -eval \"erlang:display(hello).\" \n"}' $(APP)/Makefile
+
+	$i "Generate a module containing EUnit tests"
+	$t printf "%s\n" \
+		"-module($(APP))." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"ok_test() -> ok." \
+		"-endif." > $(APP)/src/$(APP).erl
+
+	$i "Check that EUnit uses EUNIT_ERL_OPTS"
+	$t $(MAKE) -C $(APP) eunit | grep -q "hello"
 
 eunit-fun: build clean-eunit-fun
 

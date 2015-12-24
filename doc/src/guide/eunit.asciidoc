@@ -59,6 +59,13 @@ At the time of writing, the only available option is `verbose`:
 [source,make]
 EUNIT_OPTS = verbose
 
+The `EUNIT_ERL_OPTS` variable allows you to specify options
+to be passed to `erl` when running EUnit tests. For example,
+you can load the 'vm.args' and 'sys.config' files:
+
+[source,make]
+EUNIT_ERL_OPTS = -args_file rel/vm.args -config rel/sys.config
+
 === Usage
 
 To run all tests (including EUnit):

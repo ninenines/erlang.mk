@@ -7,6 +7,7 @@
 # Configuration
 
 EUNIT_OPTS ?=
+EUNIT_ERL_OPTS ?=
 
 # Core targets.
 
@@ -40,15 +41,15 @@ define eunit.erl
 	halt()
 endef
 
-EUNIT_PATHS = -pa $(TEST_DIR) $(DEPS_DIR)/*/ebin $(APPS_DIR)/*/ebin ebin
+EUNIT_ERL_OPTS += -pa $(TEST_DIR) $(DEPS_DIR)/*/ebin $(APPS_DIR)/*/ebin ebin
 
 ifdef t
 ifeq (,$(findstring :,$(t)))
 eunit: test-build
-	$(gen_verbose) $(call erlang,$(call eunit.erl,['$(t)']),$(EUNIT_PATHS))
+	$(gen_verbose) $(call erlang,$(call eunit.erl,['$(t)']),$(EUNIT_ERL_OPTS))
 else
 eunit: test-build
-	$(gen_verbose) $(call erlang,$(call eunit.erl,fun $(t)/0),$(EUNIT_PATHS))
+	$(gen_verbose) $(call erlang,$(call eunit.erl,fun $(t)/0),$(EUNIT_ERL_OPTS))
 endif
 else
 EUNIT_EBIN_MODS = $(notdir $(basename $(call core_find,ebin/,*.beam)))
@@ -57,7 +58,7 @@ EUNIT_MODS = $(foreach mod,$(EUNIT_EBIN_MODS) $(filter-out \
 	$(patsubst %,%_tests,$(EUNIT_EBIN_MODS)),$(EUNIT_TEST_MODS)),'$(mod)')
 
 eunit: test-build $(if $(IS_APP),,apps-eunit)
-	$(gen_verbose) $(call erlang,$(call eunit.erl,[$(call comma_list,$(EUNIT_MODS))]),$(EUNIT_PATHS))
+	$(gen_verbose) $(call erlang,$(call eunit.erl,[$(call comma_list,$(EUNIT_MODS))]),$(EUNIT_ERL_OPTS))
 
 ifneq ($(ALL_APPS_DIRS),)
 apps-eunit:
