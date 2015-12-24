@@ -181,17 +181,7 @@ more information on `escript` functionality in general.
 EUnit plugin
 ------------
 
-This plugin is available by default. It adds the following
-target:
-
-`eunit` which runs all the EUnit tests found in `ebin` or
-the test directory specified in `TEST_DIR`.
-
-`EUNIT_OPTS` can be used to specify EUnit-specific options
-(e.g. `verbose`) that will be used when calling
-`eunit:test/2`. This configuration parameter is empty
-by default.. Note that EUnit options are specified as
-a comma-separated list of options.
+[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
 
 Relx plugin
 -----------
