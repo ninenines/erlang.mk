@@ -52,6 +52,8 @@ include::dialyzer.asciidoc[Dialyzer]
 
 include::xref.asciidoc[Xref]
 
+include::geas.asciidoc[Geas]
+
 = Third-party plugins
 
 include::external_plugins.asciidoc[External plugins]

@@ -1,0 +1,107 @@
+== Geas
+
+Geas is a tool that will detect the runnable official Erlang release window for your project.
+
+Geas will tell you what are the offending functions in the beam files that reduce the available window.
+
+Geas will tell you if some beam files are compiled native.
+
+=== How it works ?
+
+Geas extract all function calls in project's beam files where
+abstract code is available and compare to its database.
+Geas keep only the modules existing in its database,
+assuming other are modules created by the project.
+Geas search the starting and optionnaly ending Erlang release
+exporting thoses modules and functions/arity.
+Geas gives you then the compatibility with the highest minimal
+Erlang release and the lowest maximal Erlang release,
+called the release window.
+Geas detect native compilation that can reduce your project
+scattering.
+
+Geas does not use source code for at least three reasons :
+
+- Source code is not always available
+- Source code may compile in different targets depending defines
+- Native compilation cannot be detected from source
+
+=== How use it ?
+
+Geas project is needed, but only as build tool and usually not in your relx release.
+
+In your Makefile including erlang.mk, simply add :
+
+[source,bash]
+BUILD_DEPS = geas
+DEP_PLUGINS = geas
+
+=== When using it ?
+
+- Each time you prepare a project release or update a dependancy.
+- When you plan to add a dependancy to your project
+- When writing your README, to inform your project's users on possible release window
+- To limit test of CI tools on only possible release window
+
+=== Usage
+
+To perform all geas plugins, run the following command:
+
+[source,bash]
+$ make geas
+
+Example on a test project using cowboy :
+
+[source,bash]
+----
+
+   R15                   18.1       Geas database
+---Min--------Arch-------Max----------------------------------------------------
+   R15B01                           cowboy
+                                    cowlib
+                                    ranch
+                                    test
+--------------------------------------------------------------------------------
+   R15B01                18.1       Global project
+
+/home/eric/git/test/deps/cowboy/ebin/cowboy_websocket.beam
+R15B01    crypto:hash/2
+----
+
+The global project can run starting R15B01 up to higher reference in geas database, 18.1 in such case.
+
+First part table is the compatibility analyze of all elements of the project against geas database.
+This can be done alone by :
+
+[source,bash]
+$ make geas_compat
+
+Second part is a detailed information on which beam files are the cause of the release window reduction.
+It gives the offending function and it's associated start (or stop) erlang release version.
+
+This can be done alone by :
+
+[source,bash]
+$ make geas_guilty
+
+[NOTE]
+===============================
+As far Geas is using beam files, compilation of source files will be done if necessary.
+===============================
+
+=== Limitations
+
+WARNING: Geas ignore beam files where abstract code is not available.
+This may imply to not detect a break in the computed release window.
+
+CAUTION: Geas does not guarantee that your project will run correctly on the whole release window
+
+Some reasons :
+
+- Bugs may exists in older release, but fixed in newer
+- Returned values of some functions may have been changed, reduced or augmented in the release window
+
+
+
+
+
