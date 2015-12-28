@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Erlang.mk</title>
+<title>Erlang.mk User Guide</title>
 <style type="text/css"><!--
 body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
 header {align-items:center;display:flex;justify-content:center}
@@ -21,7 +21,7 @@ div.navfooter{margin-bottom:1em}
 <header>
 	<nav class="left">
 		<a href="index.html">User guide</a>
-		<a href="ch02.html">Tutorials</a>
+		<a href="getting_started.html">Tutorials</a>
 	</nav>
 	<a href="/" class="logo"><img src="../res/logo-small.png" alt="Erlang.mk" title="Erlang.mk: A build tool for Erlang that just works" height="200" width="206"/></a>
 	<nav class="right">
