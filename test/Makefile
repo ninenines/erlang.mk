@@ -303,48 +303,12 @@ endef
 # The following tests are slowly being converted.
 # Do NOT use -j with legacy tests.
 
-.PHONY: legacy clean-legacy ct tests-cover docs
+.PHONY: legacy clean-legacy tests-cover docs
 
-legacy: clean-legacy ct tests-cover docs pkgs
+legacy: clean-legacy tests-cover docs pkgs
 
 clean-legacy:
 	$t rm -rf app1
-
-ct: app1
-	$i "ct: Testing ct and related targets."
-	$i "Setting up test suite."
-	$t mkdir -p app1/test
-	$t printf "%s\n" \
-		"-module(m_SUITE)." \
-		"-export([all/0, testcase1/1])." \
-		"all() -> [testcase1]." \
-		"testcase1(_) -> 2 = m:succ(1)." \
-	 > app1/test/m_SUITE.erl
-	$t $(MAKE) -C app1 ct $v
-	$i "Checking files created by '$(MAKE) ct'."
-	$t [ -e app1/test/m_SUITE.beam ]
-	$t [ -e app1/ebin/m.beam ]
-	$t [ -e app1/logs ]
-	$i "Checking that '$(MAKE) clean' does not delete logs."
-	$t $(MAKE) -C app1 clean $v
-	$t [ -e app1/logs ]
-	$i "Testing target 'ct-mysuite' where mysuite_SUITE is a test suite."
-	$t $(MAKE) -C app1 ct-m $v
-	$i "Checking that '$(MAKE) ct' returns non-zero for a failing suite."
-	$t printf "%s\n" \
-		"-module(failing_SUITE)." \
-		"-export([all/0, testcase1/1])." \
-		"all() -> [testcase1]." \
-		"testcase1(_) -> 42 = m:succ(1)." \
-	 > app1/test/failing_SUITE.erl
-	$t ! $(MAKE) -C app1 ct-failing $v
-	$i "Checking that '$(MAKE) distclean-ct' deletes logs."
-	$t $(MAKE) -C app1 distclean-ct $v
-	$t [ ! -e app1/logs ]
-	$t [ -e app1/ebin/m.beam ]
-	$i "Cleaning up test data."
-	$t rm -rf app1/test
-	$i "Test 'ct' passed."
 
 # TODO: do coverage for 'tests' instead of 'eunit ct' when triq is fixed
 tests-cover: app1

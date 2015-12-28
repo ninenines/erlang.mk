@@ -1,7 +1,7 @@
 # Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: ct distclean-ct
+.PHONY: ct apps-ct distclean-ct
 
 # Configuration.
 
@@ -36,17 +36,33 @@ CT_RUN = ct_run \
 	-logdir $(CURDIR)/logs
 
 ifeq ($(CT_SUITES),)
-ct:
+ct: $(if $(IS_APP),,apps-ct)
 else
-ct: test-build
+ct: test-build $(if $(IS_APP),,apps-ct)
 	$(verbose) mkdir -p $(CURDIR)/logs/
 	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS)
+endif
+
+ifneq ($(ALL_APPS_DIRS),)
+apps-ct:
+	$(verbose) for app in $(ALL_APPS_DIRS); do $(MAKE) -C $$app ct IS_APP=1; done
+endif
+
+ifndef t
+CT_EXTRA =
+else
+ifeq (,$(findstring :,$t))
+CT_EXTRA = -group $t
+else
+t_words = $(subst :, ,$t)
+CT_EXTRA = -group $(firstword $(t_words)) -case $(lastword $(t_words))
+endif
 endif
 
 define ct_suite_target
 ct-$(1): test-build
 	$(verbose) mkdir -p $(CURDIR)/logs/
-	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_OPTS)
+	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_EXTRA) $(CT_OPTS)
 endef
 
 $(foreach test,$(CT_SUITES),$(eval $(call ct_suite_target,$(test))))
