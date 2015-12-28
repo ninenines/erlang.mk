@@ -1,3 +1,4 @@
+[[shell]]
 == Erlang shell
 
 Erlang.mk provides a convenient target for starting a shell

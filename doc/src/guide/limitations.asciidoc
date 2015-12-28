@@ -1,3 +1,4 @@
+[[limitations]]
 == Limitations
 
 No software is perfect.

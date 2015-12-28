@@ -1,3 +1,4 @@
+[[why]]
 == Why Erlang.mk
 
 Why would you choose Erlang.mk, if not for its

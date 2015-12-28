@@ -1,3 +1,4 @@
+[[ct]]
 == Common Test
 
 Common Test is Erlang's functional testing framework.

@@ -1,3 +1,4 @@
+[[history]]
 == Short history
 
 This chapter aims to be a brief record of the life of the

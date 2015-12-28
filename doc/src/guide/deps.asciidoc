@@ -1,3 +1,4 @@
+[[deps]]
 == Packages and dependencies
 
 Erlang.mk can fetch and compile the dependencies that your

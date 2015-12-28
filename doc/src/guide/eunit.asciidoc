@@ -1,3 +1,4 @@
+[[eunit]]
 == EUnit
 
 EUnit is the tool of choice for unit testing. Erlang.mk

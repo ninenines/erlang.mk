@@ -1,3 +1,4 @@
+[[ci]]
 == Continuous integration
 
 // @todo Write it.

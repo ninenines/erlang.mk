@@ -1,4 +1,5 @@
 // a2x: --dblatex-opts "-P latex.output.revhistory=0 -P doc.publisher.show=0 -P index.numbered=0"
+// a2x: --xsltproc-opts "--stringparam use.id.as.filename 1"
 // a2x: -d book --attribute tabsize=4
 
 = Erlang.mk User Guide
@@ -14,6 +15,7 @@ include::updating.asciidoc[Updating Erlang.mk]
 
 include::limitations.asciidoc[Limitations]
 
+[[code]]
 = Code
 
 include::app.asciidoc[Building]
@@ -28,12 +30,14 @@ include::escripts.asciidoc[Escripts]
 
 include::compat.asciidoc[Compatibility with other build tools]
 
+[[docs]]
 = Documentation
 
 include::asciidoc.asciidoc[Asciidoc documentation]
 
 include::edoc.asciidoc[EDoc comments]
 
+[[tests]]
 = Tests
 
 include::shell.asciidoc[Erlang shell]
@@ -52,10 +56,12 @@ include::dialyzer.asciidoc[Dialyzer]
 
 include::xref.asciidoc[Xref]
 
+[[plugins]]
 = Third-party plugins
 
 include::external_plugins.asciidoc[External plugins]
 
+[[about]]
 = About Erlang.mk
 
 include::why.asciidoc[Why erlang.mk?]

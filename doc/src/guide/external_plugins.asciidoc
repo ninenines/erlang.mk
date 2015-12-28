@@ -1,3 +1,4 @@
+[[plugins_usage]]
 == External plugins
 
 It is often convenient to be able to keep the build files

@@ -1,3 +1,4 @@
+[[escript]]
 == Escripts
 
 // @todo Write it.

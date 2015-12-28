@@ -1,3 +1,4 @@
+[[relx]]
 == Releases
 
 Erlang.mk relies on _Relx_ for generating releases. This

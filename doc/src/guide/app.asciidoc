@@ -1,3 +1,4 @@
+[[building]]
 == Building
 
 Erlang.mk can do a lot of things, but it is, first and

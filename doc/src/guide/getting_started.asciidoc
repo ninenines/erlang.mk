@@ -1,3 +1,4 @@
+[[getting_started]]
 == Getting started
 
 This chapter explains how to get started using Erlang.mk.

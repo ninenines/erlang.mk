@@ -1,3 +1,4 @@
+[[dialyzer]]
 == Dialyzer
 
 Dialyzer is a tool that will detect discrepancies in your

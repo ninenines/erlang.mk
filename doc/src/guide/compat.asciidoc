@@ -1,3 +1,4 @@
+[[compat]]
 == Compatibility with other build tools
 
 Erlang.mk tries its best to be compatible with the other Erlang

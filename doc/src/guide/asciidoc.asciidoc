@@ -1,3 +1,4 @@
+[[asciidoc]]
 == Asciidoc documentation
 
 // @todo Write it.

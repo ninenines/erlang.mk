@@ -1,3 +1,4 @@
+[[ports]]
 == NIFs and port drivers
 
 Erlang.mk can not only build Erlang projects, but also the C code

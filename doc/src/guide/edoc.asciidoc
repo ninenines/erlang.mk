@@ -1,3 +1,4 @@
+[[edoc]]
 == EDoc comments
 
 // @todo Write it.

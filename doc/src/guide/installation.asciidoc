@@ -1,3 +1,4 @@
+[[installation]]
 == Installation
 
 This chapter explains how to setup your system in
