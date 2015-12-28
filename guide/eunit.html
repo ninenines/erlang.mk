@@ -31,7 +31,7 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ch14.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch16.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="_eunit"></a>Chapter 15. EUnit</h2></div></div></div><p>EUnit is the tool of choice for unit testing. Erlang.mk
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="shell.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ct.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="eunit"></a>Chapter 15. EUnit</h2></div></div></div><p>EUnit is the tool of choice for unit testing. Erlang.mk
 automates a few things on top of EUnit, including the
 discovery and running of unit tests.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_tests"></a>15.1. Writing tests</h2></div></div></div><p>The <a class="ulink" href="http://www.erlang.org/doc/apps/eunit/chapter.html" target="_top">EUnit user guide</a>
 is the best place to learn how to write tests. Of note is
@@ -69,7 +69,7 @@ module (instead of all tests from the entire project),
 one could write:</p><pre class="programlisting">$ make eunit t=cow_http_hd</pre><p>Similarly, to run a specific test case:</p><pre class="programlisting">$ make eunit t=cow_http_hd:parse_accept_test_</pre><p>To do the same against a multi-application repository,
 you can use the <code class="literal">-C</code> option:</p><pre class="programlisting">$ make -C apps/my_app eunit t=my_module:hello_test</pre><p>Note that this also applies to dependencies. From Cowboy,
 you can run the following directly:</p><pre class="programlisting">$ make -C deps/cowlib eunit t=cow_http_hd</pre><p>Finally, <a class="ulink" href="coverage.asciidoc" target="_top">code coverage</a> is available,
-but covered in its own chapter.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch14.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pt03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch16.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+but covered in its own chapter.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="shell.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tests.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ct.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>
