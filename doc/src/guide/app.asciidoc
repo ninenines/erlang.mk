@@ -94,7 +94,7 @@ the application and all dependencies:
 [source,bash]
 $ make rel
 
-Consult the link:relx.asciidoc[Releases] chapter for more
+Consult the link:releases.asciidoc[Releases] chapter for more
 information about what releases are and how they are generated.
 
 === Application resource file
