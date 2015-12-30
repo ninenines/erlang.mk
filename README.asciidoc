@@ -1,0 +1,18 @@
+= Erlang.mk
+
+A build tool for Erlang that just works.
+
+http://erlang.mk/ - http://erlang.mk/guide/[User guide]
+
+Embrace the power and simplicity of Makefiles.
+
+[source,make]
+PROJECT = webchat
+DEPS = cowboy
+include erlang.mk
+
+http://erlang.mk/guide/getting_started.html[Get started]
+
+Tested and supported on
+http://erlang.mk/guide/installation.html#_on_unix[Linux, FreeBSD, OSX]
+and http://erlang.mk/guide/installation.html#_on_windows[Windows].
