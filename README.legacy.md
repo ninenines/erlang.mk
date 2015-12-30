@@ -1,37 +1,8 @@
-erlang.mk
-=========
+Old Erlang.mk documentation
+===========================
 
-A build tool for Erlang that just works.
-
-[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
-
-The README only contains legacy documentation that was not moved to
-the guide yet. Check there if you don't find what you're looking for.
-
-Requirements
-------------
-
-`erlang.mk` requires GNU Make and expects to be ran in a standard
-unix environment with Erlang installed and in the `$PATH`.
-
-Common workflow
----------------
-
-A common workflow when editing a file would be to run `make` regularly
-to see if it compiles (or less often `make clean app` if you want to
-recompile everything), followed by `make dialyze` to see if there are
-any type errors and then `make tests` to run the test suites. The
-result of the test runs can be browsed from the `logs/index.html` file.
-
-Compiling and dependencies
---------------------------
-
-[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
-
-Releases
---------
-
-[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
+This documentation reminds here until it gets moved to the
+official documentation on http://erlang.mk/guide/.
 
 Extending Erlang.mk
 -------------------
@@ -81,39 +52,6 @@ or equivalent file.
 MAKEFLAGS="-j32 -O"
 ```
 
-C/C++ compiler plugin
----------------------
-
-[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
-
-Common_test plugin
-------------------
-
-This plugin is available by default. It adds the following
-target:
-
-`ct` runs all test suites for this application.
-
-There is nothing to configure to use it, simply create your
-test suites in the `./test/` directory and erlang.mk will
-figure everything out automatically.
-
-You can override the list of suites that will run when using
-`make tests` by setting the `CT_SUITES` variable.
-
-You can add extra `ct_run` options by defining the `CT_OPTS`
-variable. For more information please see `erl -man ct_run`.
-
-You can run an individual test suite by using the special `ct-*`
-targets. For example if you have a common_test suite named `spdy`
-and you want to run only this suite and not the others, you can
-use the `make ct-spdy` command.
-
-Dialyzer plugin
----------------
-
-[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
-
 EDoc plugin
 -----------
 
@@ -122,21 +60,6 @@ This plugin is available by default.
 EDoc options can be specified in Erlang format by defining
 the `EDOC_OPTS` variable. For more information please see
 `erl -man edoc`.
-
-Elvis plugin
-------------
-
-This plugin is available by default. It adds the following
-target:
-
-`elvis` runs Elvis style checker for this application.
-
-The `ELVIS_CONFIG` variable specifies the location of the
-configuration file which holds the rules to be applied.
-If there's no `elvis.config` file the default one will be
-downloaded. When the `ELVIS` variable points to a non-existing
-file then the `elvis` executable will be downloaded as well.
-Any other option should go in the `ELVIS_OPTS` variable.
 
 ErlyDTL plugin
 --------------
@@ -178,21 +101,6 @@ There are a number of optional configuration parameters:
 Refer to http://www.erlang.org/doc/man/escript.html for
 more information on `escript` functionality in general.
 
-EUnit plugin
-------------
-
-[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
-
-Relx plugin
------------
-
-[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
-
-Shell plugin
-------------
-
-[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
-
 Triq plugin
 -----------
 
@@ -227,14 +135,3 @@ The `XREF_CONFIG` variable specifies the location of the
 configuration file which holds the checks to be applied.
 If there is no `xref.config` all `xref` checks will be
 applied to the binaries located in the `/ebin` directory.
-
-Contributing
-------------
-
-[Check out our upcoming user guide!](doc/src/guide/book.asciidoc)
-
-Support
--------
-
- *  Official IRC Channel: #ninenines on irc.freenode.net
- *  [Mailing Lists](http://lists.ninenines.eu)
