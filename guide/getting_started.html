@@ -13,6 +13,7 @@ main{margin-top:2em;text-align:justify}
 main h2, main h3{margin-top:2em}
 a{color:#d9230f;text-decoration:none}
 a:hover{text-decoration:underline}
+a.xref{display:none}
 h1, h2, h3{font-weight:normal}
 div.navfooter{margin-bottom:1em}
 --></style>
