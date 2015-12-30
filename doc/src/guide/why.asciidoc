@@ -2,7 +2,7 @@
 == Why Erlang.mk
 
 Why would you choose Erlang.mk, if not for its
-link:overview.asciidoc[many features]? This chapter will
+xref:overview[many features]? This chapter will
 attempt to answer that.
 
 === Erlang.mk is fast

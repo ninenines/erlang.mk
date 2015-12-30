@@ -73,7 +73,7 @@ dep_leveldb = git https://github.com/basho/leveldb 2.1.3
 This dependency will be built before your application, so
 you could easily copy the resulting shared file into your
 'priv/' directory as part of the build process. More information
-about that in the link:ports.asciidoc[NIFs and port drivers]
+about that in the xref:ports[NIFs and port drivers]
 chapter.
 
 Another variable, `LOCAL_DEPS`, allows specifying runtime

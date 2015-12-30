@@ -75,7 +75,7 @@ rm -rf .erlang.mk.build
 This is Erlang.mk bootstrapping itself. Indeed, the file you
 initially downloaded contains nothing more than the code needed
 to bootstrap. This operation is done only once. Consult the
-link:updating.asciidoc[Updating Erlang.mk] chapter for more
+xref:updating[Updating Erlang.mk] chapter for more
 information.
 
 Of course, the generated project can now be compiled:
@@ -126,7 +126,7 @@ $ make -f erlang.mk bootstrap-lib bootstrap-rel
 It is often very useful to keep the top-level project for
 commands useful during operations, and put the components
 of the system in separate applications that you will then
-depend on. Consult the link:deps.asciidoc[Packages and dependencies]
+depend on. Consult the xref:deps[Packages and dependencies]
 chapter for more information.
 
 When you run `make` from now on, Erlang.mk will compile your
@@ -151,7 +151,7 @@ _relx_, the release building tool. So don't worry if you see
 more output than above.
 
 If building the release is slow, no need to upgrade your
-hardware just yet. Just consult the link:relx.asciidoc[Releases]
+hardware just yet. Just consult the xref:relx[Releases]
 chapter for various tips to speed up build time during
 development.
 
