@@ -44,7 +44,8 @@ use Rebar 2 to patch any Rebar project and make it compatible
 with Erlang.mk. This feature essentially patches Rebar out
 and adds a Makefile to the project that Erlang.mk can then
 use for building:</p><p><span class="emphasis"><em>Autoload</em></span> is documented in more details in the
-<a class="ulink" href="deps.asciidoc" target="_top">Packages and dependencies</a> chapter.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_projects_as_rebar_dependencies"></a>11.2. Erlang.mk projects as Rebar dependencies</h2></div></div></div><p>Erlang.mk projects can be made compatible with the Rebar family
+<a class="link" href="deps.html" title="Chapter 7. Packages and dependencies">Packages and dependencies</a>
+<a class="xref" href="deps.html" title="Chapter 7. Packages and dependencies">Chapter 7, <em>Packages and dependencies</em></a> chapter.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_projects_as_rebar_dependencies"></a>11.2. Erlang.mk projects as Rebar dependencies</h2></div></div></div><p>Erlang.mk projects can be made compatible with the Rebar family
 of build tools pretty easily, as Erlang.mk will generate
 all the files they require for building.</p><p>The Rebar family requires two files: a <span class="emphasis"><em>rebar.config</em></span> file
 containing compilation options and the list of dependencies,
@@ -57,8 +58,8 @@ means that the Rebar family builds your project much the
 same way as Erlang.mk.</p><p>Careful though! Different build tools have different fetching
 strategies. If some applications provide differing dependencies,
 they might be fetched differently by other build tools. Check
-the <a class="ulink" href="sanity_check.asciidoc" target="_top">Sanity check</a> chapter to find
-out how to detect such issues.</p><p>You can automatically generate this file when you build
+the upcoming Sanity check chapter to find out how to detect such
+issues.</p><p>You can automatically generate this file when you build
 your application, by making it a dependency of the <code class="literal">app</code>
 target:</p><pre class="programlisting">app:: rebar.config</pre><p>Don’t forget to commit the file when it changes!</p><p>If you run into other issues, it’s probably because you use a
 feature specific to Erlang.mk, like the <code class="literal">cp</code> fetch method.

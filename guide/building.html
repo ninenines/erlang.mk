@@ -59,13 +59,15 @@ and develop on a machine with slow file access, like the
 Raspberry Pi and many other embedded devices.</p><p>Note that this command may fail if a required dependency
 is missing.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_dependencies"></a>6.2.2. Dependencies</h3></div></div></div><p>You can build all dependencies, and nothing else, by
 running the following command:</p><pre class="programlisting">$ make deps</pre><p>This will fetch and compile all dependencies and their
-dependencies, recursively.</p><p><a class="ulink" href="deps.asciidoc" target="_top">Packages and dependencies</a> are covered
+dependencies, recursively.</p><p><a class="link" href="deps.html" title="Chapter 7. Packages and dependencies">Packages and dependencies</a>
+<a class="xref" href="deps.html" title="Chapter 7. Packages and dependencies">Chapter 7, <em>Packages and dependencies</em></a> are covered
 in the next chapter.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_release"></a>6.2.3. Release</h3></div></div></div><p>It is not possible to build the release without at least
 building the application itself, unless of course if there’s
 no application to begin with.</p><p>To generate the release, <code class="literal">make</code> will generally suffice with
 a normal Erlang.mk. A separate target is however available,
 and will take care of building the release, after building
-the application and all dependencies:</p><pre class="programlisting">$ make rel</pre><p>Consult the <a class="ulink" href="releases.asciidoc" target="_top">Releases</a> chapter for more
+the application and all dependencies:</p><pre class="programlisting">$ make rel</pre><p>Consult the <a class="link" href="relx.html" title="Chapter 9. Releases">Releases</a>
+<a class="xref" href="relx.html" title="Chapter 9. Releases">Chapter 9, <em>Releases</em></a> chapter for more
 information about what releases are and how they are generated.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_application_resource_file"></a>6.3. Application resource file</h2></div></div></div><p>When building your application, Erlang.mk will generate the
 <a class="ulink" href="http://www.erlang.org/doc/man/app.html" target="_top">application resource file</a>.
 This file is mandatory for all Erlang applications and is
@@ -111,7 +113,8 @@ PROJECT_VERSION = 2.0.0-pre.2
 PROJECT_REGISTERED = cowboy_clock
 
 LOCAL_DEPS = crypto
-DEPS = cowlib ranch</pre><p>Any space before and after the value is dropped.</p><p><a class="ulink" href="deps.asciidoc" target="_top">Dependencies</a> are covered in details in
+DEPS = cowlib ranch</pre><p>Any space before and after the value is dropped.</p><p><a class="link" href="deps.html" title="Chapter 7. Packages and dependencies">Dependencies</a>
+<a class="xref" href="deps.html" title="Chapter 7. Packages and dependencies">Chapter 7, <em>Packages and dependencies</em></a> are covered in details in
 the next chapter.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_legacy_method"></a>6.3.2. Legacy method</h3></div></div></div><p>The <span class="emphasis"><em>src/$(PROJECT).app.src</em></span> file is a legacy method of
 building Erlang applications. It was introduced by the original
 <code class="literal">rebar</code> build tool, of which Erlang.mk owes a great deal as it
@@ -140,7 +143,8 @@ The following formats are supported natively:</p><div class="informaltable"><tab
 files are run before, and the resulting Erlang source files are
 then built normally.</p><p>In addition, Erlang.mk keeps track of header files (<code class="literal">.hrl</code>)
 as described at the end of this chapter. It can also compile
-C code, as described in the <a class="ulink" href="ports.asciidoc" target="_top">NIFs and port drivers</a>
+C code, as described in the <a class="link" href="ports.html" title="Chapter 8. NIFs and port drivers">NIFs and port drivers</a>
+<a class="xref" href="ports.html" title="Chapter 8. NIFs and port drivers">Chapter 8, <em>NIFs and port drivers</em></a>
 chapter.</p><p>Erlang.mk also comes with plugins for the following formats:</p><div class="informaltable"><table cellpadding="4px" style="border-collapse: collapse;border-top: 3px solid #527bbd; border-bottom: 3px solid #527bbd; border-left: 3px solid #527bbd; border-right: 3px solid #527bbd; "><colgroup><col class="col_1" /><col class="col_2" /><col class="col_3" /><col class="col_4" /></colgroup><thead><tr><th style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="left" valign="top"> Extension </th><th style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"> Location   </th><th style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"> Description      </th><th style="border-bottom: 1px solid #527bbd; " align="center" valign="top"> Output</th></tr></thead><tbody><tr><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="left" valign="top"><p>.dtl</p></td><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>templates/</p></td><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>Django templates</p></td><td style="border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>ebin/*.beam</p></td></tr><tr><td style="border-right: 1px solid #527bbd; " align="left" valign="top"><p>.proto</p></td><td style="border-right: 1px solid #527bbd; " align="center" valign="top"><p>src/</p></td><td style="border-right: 1px solid #527bbd; " align="center" valign="top"><p>Protocol buffers</p></td><td style="" align="center" valign="top"><p>ebin/*.beam</p></td></tr></tbody></table></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_compilation_options"></a>6.6. Compilation options</h2></div></div></div><p>Erlang.mk provides a few variables that you can use to customize
 the build process and the resulting files.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_erlc_opts"></a>6.6.1. ERLC_OPTS</h3></div></div></div><p><code class="literal">ERLC_OPTS</code> can be used to pass some options to <code class="literal">erlc</code>, the Erlang
 compiler. Erlang.mk does not restrict any option. Please refer to
