@@ -11,6 +11,7 @@ header nav.right{text-align:left;width:150px}
 header nav a{display:block;margin:1.5em 1em}
 main{margin-top:2em;text-align:justify}
 main h2, main h3{margin-top:2em}
+main h1, main div.chapter>div.titlepage h2{font-size:2em;margin-top:.67em}
 a{color:#d9230f;text-decoration:none}
 a:hover{text-decoration:underline}
 a.xref{display:none}
