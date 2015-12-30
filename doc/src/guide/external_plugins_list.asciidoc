@@ -1,0 +1,25 @@
+[[plugins_list]]
+== List of plugins
+
+This is a non-exhaustive list of Erlang.mk plugins, sorted
+alphabetically.
+
+=== elvis.mk
+
+An https://github.com/inaka/elvis.mk[Elvis plugin] for Erlang.mk.
+Elvis is an https://github.com/inaka/elvis[Erlang style reviewer].
+
+=== geas
+
+https://github.com/crownedgrouse/geas[Geas] gives aggregated
+information on a project and its dependencies, and is available
+as an Erlang.mk plugin.
+
+=== hexer.mk
+
+An https://github.com/inaka/hexer.mk[Hex plugin] for Erlang.mk.
+Hex is a https://hex.pm/[package manager for the Elixir ecosystem].
+
+=== reload.mk
+
+A https://github.com/bullno1/reload.mk[live reload plugin] for Erlang.mk.
