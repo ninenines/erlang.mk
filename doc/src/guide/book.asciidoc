@@ -61,6 +61,8 @@ include::xref.asciidoc[Xref]
 
 include::external_plugins.asciidoc[External plugins]
 
+include::external_plugins_list.asciidoc[List of plugins]
+
 [[about]]
 = About Erlang.mk
 
