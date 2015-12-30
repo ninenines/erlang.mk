@@ -21,7 +21,7 @@ and adds a Makefile to the project that Erlang.mk can then
 use for building:
 
 _Autoload_ is documented in more details in the
-link:deps.asciidoc[Packages and dependencies] chapter.
+xref:deps[Packages and dependencies] chapter.
 
 === Erlang.mk projects as Rebar dependencies
 
@@ -50,11 +50,12 @@ the `DEPS` and `ERLC_OPTS` variables, among others. This
 means that the Rebar family builds your project much the
 same way as Erlang.mk.
 
+// @todo Sanity check chapter.
 Careful though! Different build tools have different fetching
 strategies. If some applications provide differing dependencies,
 they might be fetched differently by other build tools. Check
-the link:sanity_check.asciidoc[Sanity check] chapter to find
-out how to detect such issues.
+the upcoming Sanity check chapter to find out how to detect such
+issues.
 
 You can automatically generate this file when you build
 your application, by making it a dependency of the `app`

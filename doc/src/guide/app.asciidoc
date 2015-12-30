@@ -77,7 +77,7 @@ $ make deps
 This will fetch and compile all dependencies and their
 dependencies, recursively.
 
-link:deps.asciidoc[Packages and dependencies] are covered
+xref:deps[Packages and dependencies] are covered
 in the next chapter.
 
 ==== Release
@@ -94,7 +94,7 @@ the application and all dependencies:
 [source,bash]
 $ make rel
 
-Consult the link:releases.asciidoc[Releases] chapter for more
+Consult the xref:relx[Releases] chapter for more
 information about what releases are and how they are generated.
 
 === Application resource file
@@ -152,7 +152,7 @@ DEPS = cowlib ranch
 
 Any space before and after the value is dropped.
 
-link:deps.asciidoc[Dependencies] are covered in details in
+xref:deps[Dependencies] are covered in details in
 the next chapter.
 
 ==== Legacy method
@@ -225,7 +225,7 @@ then built normally.
 
 In addition, Erlang.mk keeps track of header files (`.hrl`)
 as described at the end of this chapter. It can also compile
-C code, as described in the link:ports.asciidoc[NIFs and port drivers]
+C code, as described in the xref:ports[NIFs and port drivers]
 chapter.
 
 Erlang.mk also comes with plugins for the following formats:

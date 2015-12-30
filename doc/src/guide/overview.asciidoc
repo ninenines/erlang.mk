@@ -10,20 +10,20 @@ Erlang.mk is first and foremost a build tool. It is especially
 tailored for Erlang developers and follows widely accepted
 practices in the Erlang community.
 
-Erlang.mk will happily build all link:app.asciidoc[Erlang-specific files]
+Erlang.mk will happily build all xref:building[Erlang-specific files]
 you throw at it. Other kinds of files too, like C or C++ code
-when you are working on link:ports.asciidoc[a NIF or a port driver].
+when you are working on xref:ports[a NIF or a port driver].
 
-Erlang.mk embraces the concept of link:deps.asciidoc[source dependencies].
+Erlang.mk embraces the concept of xref:deps[source dependencies].
 It can fetch dependency source code using a variety of mechanisms,
 including fetching from Git, Mercurial or SVN.
 
-Erlang.mk will automatically link:relx.asciidoc[generate releases]
-when applicable. It can also link:escripts.asciidoc[generate escripts].
+Erlang.mk will automatically xref:relx[generate releases]
+when applicable. It can also xref:escript[generate escripts].
 
 === Exploring the package index
 
-Erlang.mk comes with a link:deps.asciidoc[built-in package index].
+Erlang.mk comes with a xref:deps[built-in package index].
 It is built as an extension of the dependency system and is
 meant to be used for discovery purposes.
 
@@ -47,14 +47,14 @@ $ make search q=cowboy
 
 Erlang.mk supports _EDoc_ and _Asciidoc_.
 
-link:edoc.asciidoc[EDoc] generates HTML documentation directly from
+xref:edoc[EDoc] generates HTML documentation directly from
 your source code.
 
 While it is convenient, ask yourself: if all the documentation is
 inside the source code, why not just open the source code directly?
 That's where _Asciidoc_ comes in.
 
-The link:asciidoc.asciidoc[Asciidoc] plugin expects all documentation
+The xref:asciidoc[Asciidoc] plugin expects all documentation
 to be separate from source. It will generate HTML, PDF, man pages and
 more from the documentation you write in the 'doc/src/' folder in
 your repository.
@@ -64,26 +64,26 @@ your repository.
 Erlang.mk supports a lot of different testing and static
 analysis tools.
 
-The link:shell.asciidoc[make shell] command allows you
+The xref:shell[make shell] command allows you
 to test your project manually. You can automate these
-unit tests with link:eunit.asciidoc[EUnit] and test
-your entire system with link:common_test.asciidoc[Common Test].
-link:property_based_testing.asciidoc[Property based testing]
+unit tests with xref:eunit[EUnit] and test
+your entire system with xref:ct[Common Test].
+xref:property_based_testing[Property based testing]
 with Triq is a strong alternative to writing unit tests
-manually. link:coverage.asciidoc[Code coverage] can of course
+manually. xref:coverage[Code coverage] can of course
 be enabled during tests.
 
 Erlang.mk comes with features to make your life easier when
-setting up and using link:ci.asciidoc[Continuous integration].
+setting up and using xref:ci[Continuous integration].
 
 On the static analysis side of things, Erlang.mk comes with
-support for link:dialyzer.asciidoc[Dialyzer], link:xref.asciidoc[Xref]
-and link:elvis.asciidoc[Elvis], performing success typing
-analysis, cross reference and style reviewing.
+support for xref:dialyzer[Dialyzer] and xref:xref[Xref],
+to perform success typing analysis and cross referencing
+of the code.
 
 === Need more?
 
-Not convinced yet? You can read about link:why.asciidoc[why you should use Erlang.mk]
-and its link:history.asciidoc[history]. And if you're still not
+Not convinced yet? You can read about xref:why[why you should use Erlang.mk]
+and its xref:history[history]. And if you're still not
 convinced after that, it's OK! The world would be boring if
 everyone agreed on everything all the time.

@@ -87,5 +87,5 @@ as a dependency, you can run the following directly:
 [source,bash]
 $ make -C deps/cowboy ct-http t=http_compress
 
-Finally, link:coverage.asciidoc[code coverage] is available,
+Finally, xref:coverage[code coverage] is available,
 but covered in its own chapter.
