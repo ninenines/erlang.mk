@@ -4,6 +4,12 @@
 This is a non-exhaustive list of Erlang.mk plugins, sorted
 alphabetically.
 
+=== elixir.mk
+
+An https://github.com/botsunit/elixir.mk[Elixir plugin] for
+Erlang.mk. http://elixir-lang.org/[Elixir] is an alternative
+language for the BEAM.
+
 === elvis.mk
 
 An https://github.com/inaka/elvis.mk[Elvis plugin] for Erlang.mk.
@@ -19,6 +25,12 @@ as an Erlang.mk plugin.
 
 An https://github.com/inaka/hexer.mk[Hex plugin] for Erlang.mk.
 Hex is a https://hex.pm/[package manager for the Elixir ecosystem].
+
+=== lfe.mk
+
+An https://github.com/ninenines/lfe.mk[LFE plugin] for Erlang.mk.
+LFE, or http://lfe.io/[Lisp Flavoured Erlang], is an alternative
+language for the BEAM.
 
 === reload.mk
 
