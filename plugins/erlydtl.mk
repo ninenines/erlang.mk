@@ -38,6 +38,11 @@ define erlydtl_compile.erl
 				re:replace(F2, "/",  "_",  [{return, list}, global])
 		end,
 		Module = list_to_atom(string:to_lower(Module0) ++ "$(DTL_SUFFIX)"),
+		case file:make_dir("ebin/") of
+			ok -> ok;
+			{error, eexist} -> ok;
+			{error, Other}  -> throw({error, {unable_to_create_ebin_dir, Other}})
+		end,
 		case erlydtl:compile(F, Module, [{out_dir, "ebin/"}, return_errors, {doc_root, "templates"}]) of
 			ok -> ok;
 			{ok, _} -> ok
