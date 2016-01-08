@@ -4,6 +4,11 @@
 This is a non-exhaustive list of Erlang.mk plugins, sorted
 alphabetically.
 
+=== efene.mk
+
+An https://github.com/ninenines/efene.mk[Efene plugin] for Erlang.mk.
+http://efene.org/[Efene] is an alternative language for the BEAM.
+
 === elixir.mk
 
 An https://github.com/botsunit/elixir.mk[Elixir plugin] for
