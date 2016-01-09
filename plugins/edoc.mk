@@ -9,13 +9,15 @@ EDOC_OPTS ?=
 
 # Core targets.
 
-docs:: distclean-edoc edoc
+ifneq ($(wildcard doc/overview.edoc),)
+docs:: edoc
+endif
 
 distclean:: distclean-edoc
 
 # Plugin-specific targets.
 
-edoc: doc-deps
+edoc: distclean-edoc doc-deps
 	$(gen_verbose) $(ERL) -eval 'edoc:application($(PROJECT), ".", [$(EDOC_OPTS)]), halt().'
 
 distclean-edoc:
