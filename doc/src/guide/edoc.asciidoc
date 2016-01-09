@@ -1,6 +1,48 @@
 [[edoc]]
 == EDoc comments
 
-// @todo Write it.
+Erlang.mk provides a thin wrapper on top of EDoc, an application
+that generates documentation based on comments found in modules.
 
-Placeholder chapter.
+=== Writing EDoc comments
+
+The http://www.erlang.org/doc/apps/edoc/chapter.html[EDoc user guide]
+explains everything you need to know about EDoc comments.
+
+=== Configuration
+
+The `EDOC_OPTS` variable allows you to specify additional
+EDoc options. Options are documented in the
+http://www.erlang.org/doc/man/edoc.html#run-2[EDoc manual].
+
+A common use for this variable is to enable Markdown in doc
+comments, using the `edown` application:
+
+[source,make]
+DOC_DEPS = edown
+EDOC_OPTS = {doclet, edown_doclet}
+
+=== Usage
+
+To build all documentation, you would typically use:
+
+[source,bash]
+$ make docs
+
+Do note, however, that EDoc comments will only be generated
+automatically if the 'doc/overview.edoc' file exists. If you
+do not want that file and still want to generate doc comments,
+two solutions are available.
+
+You can generate EDoc documentation directly:
+
+[source,bash]
+$ make edoc
+
+You can enable automatic generation on `make docs` by adding
+the following to your Makefile:
+
+[source,make]
+----
+docs:: edoc
+----
