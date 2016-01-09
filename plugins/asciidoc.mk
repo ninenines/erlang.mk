@@ -8,12 +8,12 @@ MAN_SECTIONS ?= 3 7
 
 docs:: asciidoc
 
-asciidoc: distclean-asciidoc doc-deps asciidoc-guide asciidoc-manual
+asciidoc: asciidoc-guide asciidoc-manual
 
 ifeq ($(wildcard doc/src/guide/book.asciidoc),)
 asciidoc-guide:
 else
-asciidoc-guide:
+asciidoc-guide: distclean-asciidoc doc-deps
 	a2x -v -f pdf doc/src/guide/book.asciidoc && mv doc/src/guide/book.pdf doc/guide.pdf
 	a2x -v -f chunked doc/src/guide/book.asciidoc && mv doc/src/guide/book.chunked/ doc/html/
 endif
@@ -21,7 +21,7 @@ endif
 ifeq ($(wildcard doc/src/manual/*.asciidoc),)
 asciidoc-manual:
 else
-asciidoc-manual:
+asciidoc-manual: distclean-asciidoc doc-deps
 	for f in doc/src/manual/*.asciidoc ; do \
 		a2x -v -f manpage $$f ; \
 	done
@@ -36,7 +36,7 @@ install-docs:: install-asciidoc
 install-asciidoc: asciidoc-manual
 	for s in $(MAN_SECTIONS); do \
 		mkdir -p $(MAN_INSTALL_PATH)/man$$s/ ; \
-		install -g 0 -o 0 -m 0644 doc/man$$s/*.gz $(MAN_INSTALL_PATH)/man$$s/ ; \
+		install -g `id -u` -o `id -g` -m 0644 doc/man$$s/*.gz $(MAN_INSTALL_PATH)/man$$s/ ; \
 	done
 endif
 
