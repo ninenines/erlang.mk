@@ -68,9 +68,7 @@ The xref:shell[make shell] command allows you
 to test your project manually. You can automate these
 unit tests with xref:eunit[EUnit] and test
 your entire system with xref:ct[Common Test].
-xref:property_based_testing[Property based testing]
-with Triq is a strong alternative to writing unit tests
-manually. xref:coverage[Code coverage] can of course
+xref:coverage[Code coverage] can of course
 be enabled during tests.
 
 Erlang.mk comes with features to make your life easier when
