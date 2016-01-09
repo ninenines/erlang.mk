@@ -303,9 +303,9 @@ endef
 # The following tests are slowly being converted.
 # Do NOT use -j with legacy tests.
 
-.PHONY: legacy clean-legacy tests-cover docs
+.PHONY: legacy clean-legacy tests-cover
 
-legacy: clean-legacy tests-cover docs pkgs
+legacy: clean-legacy tests-cover
 
 clean-legacy:
 	$t rm -rf app1
@@ -344,29 +344,6 @@ tests-cover: app1
 	$t rm -rf app1/src/t.erl app1/test app1/test-eunit.log
 	$t $(MAKE) -C app1 clean $v
 	$i "Test 'tests-cover' passed."
-
-docs: app1
-	$i "docs: Testing EDoc including DOC_DEPS."
-	$t printf "%s\n" \
-		"PROJECT = app1" \
-		"DOC_DEPS = edown" \
-		"dep_edown = git https://github.com/uwiger/edown.git 0.7" \
-		"EDOC_OPTS = {doclet, edown_doclet}" \
-		"include erlang.mk" \
-		"distclean:: distclean-doc-md" \
-		"distclean-doc-md:" \
-		"	rm -rf doc/*.md" \
-		> app1/Makefile-doc
-	$i "Downloading doc deps (edown) and building docs."
-	$t $(MAKE) -C app1 -f Makefile-doc docs $v
-	$i "Checking that '$(MAKE) docs' using edown generated a markdown file."
-	$t [ -e app1/doc/m.md ]
-	$i "Checking that '$(MAKE) distclean' deletes all generated doc files."
-	$t $(MAKE) -C app1 -f Makefile-doc distclean $v
-	$t [ "`ls app1/doc/`" = "" ]
-	$i "Cleaning up test data."
-	$t rm app1/Makefile-doc
-	$i "Test 'docs' passed."
 
 define app1_setup
 	$i "Setting up app."
