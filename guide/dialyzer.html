@@ -44,7 +44,7 @@ dependencies of the application or applications you are
 currently working on, including standard applications in
 Erlang/OTP itself.</p><p>Dialyzer can generate this PLT file. Erlang.mk includes rules
 to automatically generate the PLT file when it is missing.</p><p>Once the PLT file is generated, Dialyzer can perform the
-analysis in record time.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_5"></a>20.2. Configuration</h2></div></div></div><p>In a typical usage scenario, no variable needs to be set.
+analysis in record time.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_6"></a>20.2. Configuration</h2></div></div></div><p>In a typical usage scenario, no variable needs to be set.
 The defaults should be enough. Do note however that the
 dependencies need to be set properly using the <code class="literal">DEPS</code> and
 <code class="literal">LOCAL_DEPS</code> variables.</p><p>The <code class="literal">DIALYZER_PLT</code> file indicates where the PLT file will
@@ -59,7 +59,7 @@ The former one defines which directories should be part
 of the analysis. The latter defines what extra warnings
 Dialyzer should report.</p><p>Note that Erlang.mk enables the race condition warnings
 by default. As it can take considerably large resources
-to run, you may want to disable it on larger projects.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_usage_4"></a>20.3. Usage</h2></div></div></div><p>To perform an analysis, run the following command:</p><pre class="programlisting">$ make dialyze</pre><p>This will create the PLT file if it doesn’t exist.</p><p>The analysis will also be performed when you run the
+to run, you may want to disable it on larger projects.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_usage_5"></a>20.3. Usage</h2></div></div></div><p>To perform an analysis, run the following command:</p><pre class="programlisting">$ make dialyze</pre><p>This will create the PLT file if it doesn’t exist.</p><p>The analysis will also be performed when you run the
 following command, alongside tests:</p><pre class="programlisting">$ make check</pre><p>You can use the <code class="literal">plt</code> target to create the PLT file if
 it doesn’t exist. This is normally not necessary as
 Dialyzer creates it automatically.</p><p>The PLT file will be removed when you run <code class="literal">make distclean</code>.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ci.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tests.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="xref.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
