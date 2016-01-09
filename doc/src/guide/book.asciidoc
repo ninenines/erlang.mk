@@ -46,8 +46,6 @@ include::eunit.asciidoc[EUnit]
 
 include::common_test.asciidoc[Common Test]
 
-include::property_based_testing.asciidoc[Property based testing]
-
 include::coverage.asciidoc[Code coverage]
 
 include::ci.asciidoc[Continuous integration]

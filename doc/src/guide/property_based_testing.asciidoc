@@ -1,6 +1,0 @@
-[[property_based_testing]]
-== Property based testing
-
-// @todo Write it.
-
-Placeholder chapter.
