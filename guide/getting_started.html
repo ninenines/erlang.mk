@@ -132,7 +132,12 @@ using the <code class="literal">gen_server</code> template.</p><p>This module is
 <code class="literal">make</code>:</p><pre class="programlisting">$ make
  ERLC   my_server.erl
  APP    hello_joe.app.src</pre><p>All that’s left to do is to open it in your favorite editor
-and make it do something!</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_getting_help"></a>2.8. Getting help</h2></div></div></div><p>During development, if you don’t remember the name of a target,
+and make it do something!</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_hiding_erlang_mk_from_git"></a>2.8. Hiding Erlang.mk from git</h2></div></div></div><p>Erlang.mk is a large text file. It can easily take a large part of
+a <code class="literal">git diff</code> or a <code class="literal">git grep</code> command. You can avoid this by telling
+Git that <span class="emphasis"><em>erlang.mk</em></span> is a binary file.</p><p>Add this to your <span class="emphasis"><em>.gitattributes</em></span> file. This is a file that you
+can create at the root of your repository:</p><pre class="screen">erlang.mk -diff</pre><p>The <span class="emphasis"><em>erlang.mk</em></span> file will still appear in diffs and greps, but
+as a binary file, meaning its contents won’t be shown by default
+anymore.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_getting_help"></a>2.9. Getting help</h2></div></div></div><p>During development, if you don’t remember the name of a target,
 you can always run <code class="literal">make help</code>:</p><pre class="programlisting">$ make help
 erlang.mk (version 1.2.0-642-gccd2b9f) is distributed under the terms of the ISC License.
 Copyright (c) 2013-2015 Loïc Hoguin &lt;essen@ninenines.eu&gt;
