@@ -237,6 +237,23 @@ $ make
 All that's left to do is to open it in your favorite editor
 and make it do something!
 
+=== Hiding Erlang.mk from git
+
+Erlang.mk is a large text file. It can easily take a large part of
+a `git diff` or a `git grep` command. You can avoid this by telling
+Git that 'erlang.mk' is a binary file.
+
+Add this to your '.gitattributes' file. This is a file that you
+can create at the root of your repository:
+
+----
+erlang.mk -diff
+----
+
+The 'erlang.mk' file will still appear in diffs and greps, but
+as a binary file, meaning its contents won't be shown by default
+anymore.
+
 === Getting help
 
 During development, if you don't remember the name of a target,
