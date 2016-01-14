@@ -15,7 +15,7 @@ $(if $(filter-out -Werror,$1),\
 endef
 
 define compat_erlc_opts_to_list
-	[$(call comma_list,$(foreach o,$(call compat_prepare_erlc_opts,$1),$(call compat_convert_erlc_opts,$o)))]
+[$(call comma_list,$(foreach o,$(call compat_prepare_erlc_opts,$1),$(call compat_convert_erlc_opts,$o)))]
 endef
 
 define compat_rebar_config
