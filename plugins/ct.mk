@@ -40,12 +40,18 @@ ct: $(if $(IS_APP),,apps-ct)
 else
 ct: test-build $(if $(IS_APP),,apps-ct)
 	$(verbose) mkdir -p $(CURDIR)/logs/
-	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS)
+	$(gen_verbose) $(CT_RUN) -sname ct_$(PROJECT) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS)
 endif
 
 ifneq ($(ALL_APPS_DIRS),)
-apps-ct:
-	$(verbose) for app in $(ALL_APPS_DIRS); do $(MAKE) -C $$app ct IS_APP=1; done
+define ct_app_target
+apps-ct-$1:
+	$(MAKE) -C $1 ct IS_APP=1
+endef
+
+$(foreach app,$(ALL_APPS_DIRS),$(eval $(call ct_app_target,$(app))))
+
+apps-ct: $(addprefix apps-ct-,$(ALL_APPS_DIRS))
 endif
 
 ifndef t
@@ -62,7 +68,7 @@ endif
 define ct_suite_target
 ct-$(1): test-build
 	$(verbose) mkdir -p $(CURDIR)/logs/
-	$(gen_verbose) $(CT_RUN) -suite $(addsuffix _SUITE,$(1)) $(CT_EXTRA) $(CT_OPTS)
+	$(gen_verbose) $(CT_RUN) -sname ct_$(PROJECT) -suite $(addsuffix _SUITE,$(1)) $(CT_EXTRA) $(CT_OPTS)
 endef
 
 $(foreach test,$(CT_SUITES),$(eval $(call ct_suite_target,$(test))))
