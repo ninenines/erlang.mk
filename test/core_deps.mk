@@ -591,7 +591,7 @@ core-deps-doc: build clean
 		halt()"
 
 	$i "Build the application documentation"
-	$t $(MAKE) -C $(APP) docs $v
+	$t $(MAKE) -C $(APP) edoc $v
 
 	$i "Check that documentation dependencies were fetched"
 	$t test -d $(APP)/deps/edown
