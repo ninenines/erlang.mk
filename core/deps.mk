@@ -481,8 +481,13 @@ endef
 define dep_fetch_hex.erl
 	ssl:start(),
 	inets:start(),
+	Url =
+		case "$(3)" of
+			"" -> "https://s3.amazonaws.com/s3.hex.pm/tarballs/$(1)-$(2).tar";
+			_ -> "https://s3.amazonaws.com/s3.hex.pm/tarballs/$(3)-$(2).tar"
+		end,
 	{ok, {{_, 200, _}, _, Body}} = httpc:request(get,
-		{"https://s3.amazonaws.com/s3.hex.pm/tarballs/$(1)-$(2).tar", []},
+		{Url, []},
 		[], [{body_format, binary}]),
 	{ok, Files} = erl_tar:extract({binary, Body}, [memory]),
 	{_, Source} = lists:keyfind("contents.tar.gz", 1, Files),
@@ -490,9 +495,9 @@ define dep_fetch_hex.erl
 	halt()
 endef
 
-# Hex only has a package version. No need to look in the Erlang.mk packages.
+# Hex has a package version and optionally a package name. No need to look in the Erlang.mk packages.
 define dep_fetch_hex
-	$(call erlang,$(call dep_fetch_hex.erl,$(1),$(strip $(word 2,$(dep_$(1))))));
+	$(call erlang,$(call dep_fetch_hex.erl,$(1),$(strip $(word 2,$(dep_$(1)))),$(strip $(word 3,$(dep_$(1))))));
 endef
 
 define dep_fetch_fail
