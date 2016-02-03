@@ -5,6 +5,13 @@ Erlang.mk provides rules for generating documentation from
 AsciiDoc files. It can automatically build a user guide PDF,
 chunked HTML documentation and Unix manual pages.
 
+=== Requirements
+
+It is necessary to have http://asciidoc.org/[AsciiDoc], 
+http://xmlsoft.org/XSLT/xsltproc2.html[xsltproc] and
+http://dblatex.sourceforge.net/[dblatex] installed on your
+system for erlang.mk to generate documentation from AsciiDoc sources.
+
 === Writing AsciiDoc documentation
 
 http://asciidoc.org/[AsciiDoc] is a text document format for
