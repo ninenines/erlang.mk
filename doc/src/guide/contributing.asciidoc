@@ -100,7 +100,8 @@ this is a bug. You can either open a ticket or send a pull
 request.
 
 To make sure that the documentation changes work, install
-Asciidoc on your system and run `make docs`.
+the listed xref:asciidoc[Requirements] on your system and
+run `make docs`.
 
 === Feature requests
 
