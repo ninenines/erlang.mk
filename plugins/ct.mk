@@ -31,7 +31,7 @@ help::
 CT_RUN = ct_run \
 	-no_auto_compile \
 	-noinput \
-	-pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin $(TEST_DIR) \
+	-pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin $(APPS_DIR)/*/ebin $(TEST_DIR) \
 	-dir $(TEST_DIR) \
 	-logdir $(CURDIR)/logs
 
@@ -51,7 +51,7 @@ endef
 
 $(foreach app,$(ALL_APPS_DIRS),$(eval $(call ct_app_target,$(app))))
 
-apps-ct: $(addprefix apps-ct-,$(ALL_APPS_DIRS))
+apps-ct: test-build $(addprefix apps-ct-,$(ALL_APPS_DIRS))
 endif
 
 ifndef t
