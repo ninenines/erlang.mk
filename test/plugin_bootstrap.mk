@@ -190,6 +190,7 @@ bootstrap-templates: build clean
 	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_rest n=my_rest
 	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_ws n=my_ws
 	$t $(MAKE) -C $(APP) --no-print-directory new t=ranch_protocol n=my_protocol
+	$t $(MAKE) -C $(APP) --no-print-directory new t=module n=my_module
 
 # Here we disable warnings because templates contain missing behaviors.
 	$i "Build the application"
@@ -200,11 +201,12 @@ bootstrap-templates: build clean
 	$t test -f $(APP)/ebin/my_fsm.beam
 	$t test -f $(APP)/ebin/my_server.beam
 	$t test -f $(APP)/ebin/my_sup.beam
+	$t test -f $(APP)/ebin/my_module.beam
 
 	$i "Check that all the modules can be loaded"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:start($(APP)), \
-		{ok, Mods = [my_fsm, my_http, my_loop, my_protocol, my_rest, my_server, my_sup, my_ws]} \
+		{ok, Mods = [my_fsm, my_http, my_loop, my_module, my_protocol, my_rest, my_server, my_sup, my_ws]} \
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
