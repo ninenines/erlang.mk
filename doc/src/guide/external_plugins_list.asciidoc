@@ -37,6 +37,12 @@ An https://github.com/ninenines/lfe.mk[LFE plugin] for Erlang.mk.
 LFE, or http://lfe.io/[Lisp Flavoured Erlang], is an alternative
 language for the BEAM.
 
+=== mix.mk
+
+A https://github.com/botsunit/mix.mk[Mix plugin] for Erlang.mk,
+to generate a compatible configuration file for 
+http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix.html[Mix].
+
 === reload.mk
 
 A https://github.com/bullno1/reload.mk[live reload plugin] for Erlang.mk.
