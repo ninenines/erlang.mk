@@ -2,10 +2,11 @@
 #
 # Note: autopatch functionality is covered separately.
 
-CORE_COMPAT_CASES = auto-rebar rebar rebar-deps rebar-deps-pkg rebar-erlc-opts rebar-pt
+CORE_COMPAT_CASES = auto-rebar rebar rebar-deps-git rebar-deps-hex rebar-deps-pkg rebar-erlc-opts rebar-pt
 CORE_COMPAT_TARGETS = $(addprefix core-compat-,$(CORE_COMPAT_CASES))
 
 REBAR_BINARY = https://github.com/rebar/rebar/releases/download/2.6.0/rebar
+REBAR3_BINARY = https://s3.amazonaws.com/rebar3/rebar3
 
 .PHONY: core-compat $(CORE_COMPAT_TARGETS)
 
@@ -92,7 +93,7 @@ core-compat-rebar: build clean
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar compile $v
 
-core-compat-rebar-deps: build clean
+core-compat-rebar-deps-git: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -123,6 +124,38 @@ core-compat-rebar-deps: build clean
 
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar get-deps compile $v
+
+core-compat-rebar-deps-hex: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy as a dependency"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = hex 1.0.0\n"}' $(APP)/Makefile
+
+	$i "Run 'make rebar.config'"
+	$t $(MAKE) -C $(APP) rebar.config $v
+
+	$i "Check that rebar.config was created"
+	$t test -f $(APP)/rebar.config
+
+	$i "Check that Cowboy is listed in rebar.config"
+	$t $(ERL) -eval " \
+		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
+		{_, [{cowboy, \"1.0.0\"}]} = lists:keyfind(deps, 1, C), \
+		halt()"
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Download rebar3"
+	$t curl -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
+	$t chmod +x $(APP)/rebar3
+
+	$i "Use rebar to build the application"
+	$t cd $(APP) && ./rebar3 compile $v
 
 core-compat-rebar-deps-pkg: build clean
 
