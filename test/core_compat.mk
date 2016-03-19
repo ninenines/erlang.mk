@@ -253,7 +253,7 @@ core-compat-rebar-pt: build clean
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\n"}' $(APP)/Makefile
 
 	$i "Add the lager_transform parse_transform to ERLC_OPTS"
-	$t echo "ERLC_OPTS += +'{parse_transform, lager_transform}'" >> $(APP)/Makefile
+	$t echo "ERLC_OPTS += +'{parse_transform, lager_transform}' +'{lager_truncation_size, 1234}'" >> $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -269,6 +269,7 @@ core-compat-rebar-pt: build clean
 		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
 		{_, Opts} = lists:keyfind(erl_opts, 1, C), \
 		true = lists:member({parse_transform, lager_transform}, Opts), \
+		true = lists:member({lager_truncation_size, 1234}, Opts), \
 		halt()"
 
 # For the new build method, we have to simulate keeping the .app file

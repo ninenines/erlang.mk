@@ -6,7 +6,7 @@
 # We strip out -Werror because we don't want to fail due to
 # warnings when used as a dependency.
 
-compat_prepare_erlc_opts = $(shell echo "$1" | sed 's/, */,/')
+compat_prepare_erlc_opts = $(shell echo "$1" | sed 's/, */,/g')
 
 define compat_convert_erlc_opts
 $(if $(filter-out -Werror,$1),\
