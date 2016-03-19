@@ -63,6 +63,12 @@ ct-apps-only: build clean
 	$i "Create a new library named my_lib"
 	$t $(MAKE) -C $(APP) new-lib in=my_lib $v
 
+	$i "Populate my_lib"
+	$t printf "%s\n" \
+		"-module(my_lib)." \
+		"-export([random_int/0])." \
+		"random_int() -> 4." > $(APP)/apps/my_lib/src/my_lib.erl
+
 	$i "Check that Common Test detects no tests"
 	$t $(MAKE) -C $(APP) ct | grep -q "Nothing to be done for 'ct'."
 
@@ -70,9 +76,10 @@ ct-apps-only: build clean
 	$t mkdir $(APP)/apps/my_app/test
 	$t printf "%s\n" \
 		"-module(my_app_SUITE)." \
-		"-export([all/0, ok/1])." \
-		"all() -> [ok]." \
-		"ok(_) -> ok." > $(APP)/apps/my_app/test/my_app_SUITE.erl
+		"-export([all/0, ok/1, call_my_lib/1])." \
+		"all() -> [ok, call_my_lib]." \
+		"ok(_) -> ok." \
+		"call_my_lib(_) -> 4 = my_lib:random_int()." > $(APP)/apps/my_app/test/my_app_SUITE.erl
 
 	$i "Generate a Common Test suite in my_lib"
 	$t mkdir $(APP)/apps/my_lib/test
