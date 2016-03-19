@@ -334,7 +334,7 @@ Erlang.mk will also export the `REBAR_DEPS_DIR` variable for
 compatibility with Rebar build tools, as long as they are
 recent enough.
 
-=== Dependencies local to the repository
+=== Many applications in one repository
 
 In addition to the dependencies that are fetched, Erlang.mk
 also allows you to have dependencies local to your repository.
