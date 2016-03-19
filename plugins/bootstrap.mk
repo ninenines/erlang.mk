@@ -172,6 +172,11 @@ code_change(_OldVsn, State, _Extra) ->
 	{ok, State}.
 endef
 
+define tpl_module
+-module($(n)).
+-export([]).
+endef
+
 define tpl_cowboy_http
 -module($(n)).
 -behaviour(cowboy_http_handler).
