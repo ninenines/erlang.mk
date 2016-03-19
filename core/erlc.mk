@@ -244,7 +244,7 @@ ifeq ($(wildcard src/$(PROJECT).app.src),)
 	$(app_verbose) printf "$(subst $(newline),\n,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES))))" \
 		> ebin/$(PROJECT).app
 else
-	$(verbose) if [ -z "$$(grep -E '^[^%]*{\s*modules\s*,' src/$(PROJECT).app.src)" ]; then \
+	$(verbose) if [ -z "$$(grep -e '^[^%]*{\s*modules\s*,' src/$(PROJECT).app.src)" ]; then \
 		echo "Empty modules entry not found in $(PROJECT).app.src. Please consult the erlang.mk README for instructions." >&2; \
 		exit 1; \
 	fi
