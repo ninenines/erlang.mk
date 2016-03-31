@@ -74,6 +74,10 @@ subdirectories names in the compiled module name add
 `DTL_FULL_PATH=1` into your Makefile - `a/b/templatename.dtl`
 will be compiled into `a_b_templatename_dtl.beam`.
 
+Additional ErlyDTL options can be specified as a comma-separated list
+by defining the `DTL_OPTS` variable. Those options will be prepended
+to the options specified by the plugin itself.
+
 Escript plugin
 --------------
 
