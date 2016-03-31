@@ -6,6 +6,7 @@
 DTL_FULL_PATH ?=
 DTL_PATH ?= templates/
 DTL_SUFFIX ?= _dtl
+DTL_OPTS ?=
 
 # Verbosity.
 
@@ -38,7 +39,7 @@ define erlydtl_compile.erl
 				re:replace(F2, "/",  "_",  [{return, list}, global])
 		end,
 		Module = list_to_atom(string:to_lower(Module0) ++ "$(DTL_SUFFIX)"),
-		case erlydtl:compile(F, Module, [{out_dir, "ebin/"}, return_errors, {doc_root, "templates"}]) of
+		case erlydtl:compile(F, Module, [$(DTL_OPTS)] ++ [{out_dir, "ebin/"}, return_errors, {doc_root, "templates"}]) of
 			ok -> ok;
 			{ok, _} -> ok
 		end
