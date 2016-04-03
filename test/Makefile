@@ -174,7 +174,7 @@ core-help: build clean
 # Packages.
 
 PACKAGES = $(foreach pkg,$(sort $(wildcard ../index/*.mk)),$(notdir $(basename $(pkg))))
-EXCLUDE_FROM_CHECK = [rabbitmq_codegen]
+EXCLUDE_FROM_CHECK = [hexer_mk, inaka_mk, rabbitmq_codegen]
 
 packages: $(addprefix pkg-,$(PACKAGES))
 

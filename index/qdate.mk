@@ -4,4 +4,4 @@ pkg_qdate_description = Date, time, and timezone parsing, formatting, and conver
 pkg_qdate_homepage = https://github.com/choptastic/qdate
 pkg_qdate_fetch = git
 pkg_qdate_repo = https://github.com/choptastic/qdate
-pkg_qdate_commit = 0.4.0
+pkg_qdate_commit = master
