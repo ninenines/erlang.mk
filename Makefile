@@ -12,8 +12,16 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+WITHOUT ?=
+
 BUILD_CONFIG_FILE ?= $(CURDIR)/build.config
+ifeq ($(WITHOUT),)
 BUILD_CONFIG = $(shell sed "s/\#.*//" $(BUILD_CONFIG_FILE))
+else
+empty := $(subst ,, )
+BUILD_EXCLUDE = "^$(subst $(empty),\|^,$(WITHOUT))"
+BUILD_CONFIG = $(shell sed "s/\#.*//" $(BUILD_CONFIG_FILE)|grep -v $(BUILD_EXCLUDE))
+endif
 
 ERLANG_MK = erlang.mk
 ERLANG_MK_VERSION = $(shell git describe --tags --dirty)
@@ -23,7 +31,8 @@ ERLANG_MK_VERSION = $(shell git describe --tags --dirty)
 all:
 	export LC_COLLATE=C; \
 	awk 'FNR==1 && NR!=1{print ""}1' $(patsubst %,%.mk,$(BUILD_CONFIG)) \
-		| sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = $(ERLANG_MK_VERSION)/' > $(ERLANG_MK)
+		| sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = $(ERLANG_MK_VERSION)/' \
+		| sed 's:^ERLANG_MK_WITHOUT = .*:ERLANG_MK_WITHOUT = $(WITHOUT):' > $(ERLANG_MK)
 
 ifdef p
 # Remove p from the list of variables since that conflicts with bootstrapping.
