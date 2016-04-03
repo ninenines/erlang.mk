@@ -154,7 +154,7 @@ if you know you will never use this project as a dependency,
 <code class="literal">=</code> will work. But to avoid it biting you later on, do this:</p><pre class="programlisting">DEPS_DIR ?= $(CURDIR)/libs</pre><p>The <code class="literal">$(CURDIR)</code> part is important, otherwise dependencies of
 dependencies will be fetched in the wrong directory.</p><p>Erlang.mk will also export the <code class="literal">REBAR_DEPS_DIR</code> variable for
 compatibility with Rebar build tools, as long as they are
-recent enough.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependencies_local_to_the_repository"></a>7.6. Dependencies local to the repository</h2></div></div></div><p>In addition to the dependencies that are fetched, Erlang.mk
+recent enough.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_many_applications_in_one_repository"></a>7.6. Many applications in one repository</h2></div></div></div><p>In addition to the dependencies that are fetched, Erlang.mk
 also allows you to have dependencies local to your repository.
 This kind of layout is sometimes called multi-application
 repositories, or repositories with multiple applications.</p><p>They work exactly the same as remote dependencies, except:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
