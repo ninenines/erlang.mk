@@ -184,6 +184,33 @@ Eshell V7.0  (abort with ^G)
 
 Simple as that!
 
+=== Getting started from scratch
+
+If you already have an application, or you want to have full
+control over what files will be created, you can setup Erlang.mk
+manually.
+
+Erlang.mk is very easy to setup: all that you need to do is to
+create a folder, put Erlang.mk in it, and write a one line
+Makefile containing:
+
+[source,make]
+include erlang.mk
+
+For a step by step:
+
+[source,bash]
+----
+$ mkdir hello_joe
+$ cd hello_joe
+$ curl https://raw.githubusercontent.com/ninenines/erlang.mk/master/erlang.mk
+$ echo "include erlang.mk" > Makefile
+$ make
+----
+
+From that point onward you can create an `src/` folder or start
+using templates.
+
 === Using spaces instead of tabs
 
 Erlang.mk defaults to tabs when creating files from templates.
