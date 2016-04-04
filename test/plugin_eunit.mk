@@ -1,6 +1,6 @@
 # EUnit plugin.
 
-EUNIT_CASES = all apps-only check erl-opts fun mod test-dir tests
+EUNIT_CASES = all apps-only check erl-opts fun mod priv test-dir tests
 EUNIT_TARGETS = $(addprefix eunit-,$(EUNIT_CASES))
 
 .PHONY: eunit $(EUNIT_TARGETS)
@@ -162,6 +162,24 @@ eunit-mod: build clean
 
 	$i "Check that we can run EUnit on a specific module"
 	$t $(MAKE) -C $(APP) eunit t=$(APP) $v
+
+eunit-priv: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Generate a module containing EUnit tests"
+	$t printf "%s\n" \
+		"-module($(APP))." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"ok_test() -> ?assert(is_list(code:priv_dir($(APP))) =:= true)." \
+		"-endif." > $(APP)/src/$(APP).erl
+
+	$i "Check that EUnit can resolve the priv_dir"
+	$t $(MAKE) -C $(APP) tests | grep -q "Test passed."
 
 eunit-test-dir: build clean
 
