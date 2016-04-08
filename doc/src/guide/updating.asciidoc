@@ -62,7 +62,7 @@ by modifying the value for `ERLANG_MK_BUILD_CONFIG`. You can also
 tell Erlang.mk to use a different temporary directory by changing
 the `ERLANG_MK_BUILD_DIR` variable.
 
-Alternatively you can filter a plugin in the build config by using the
+Alternatively you can filter out a plugin in the build config by using the
 `WITHOUT` variable the first time you generate the file. For example this
 commande will filter the index plugin:
 
