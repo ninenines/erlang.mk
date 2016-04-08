@@ -19,7 +19,7 @@ ERLANG_MK_FILENAME := $(realpath $(lastword $(MAKEFILE_LIST)))
 ERLANG_MK_VERSION = 1
 
 # Plugins ignored
-DEFAULT_WITHOUT = ""
+ERLANG_MK_WITHOUT = ""
 
 # Core configuration.
 
@@ -193,7 +193,7 @@ ERLANG_MK_COMMIT ?=
 ERLANG_MK_BUILD_CONFIG ?= build.config
 ERLANG_MK_BUILD_DIR ?= .erlang.mk.build
 
-WITHOUT ?= $(DEFAULT_WITHOUT)
+WITHOUT ?= $(ERLANG_MK_WITHOUT)
 WITHOUT := $(strip $(WITHOUT))
 
 erlang-mk:
