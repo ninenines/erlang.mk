@@ -18,7 +18,7 @@ ERLANG_MK_FILENAME := $(realpath $(lastword $(MAKEFILE_LIST)))
 
 ERLANG_MK_VERSION = 1
 
-# Plugins ignored
+# Ignored plugins
 ERLANG_MK_WITHOUT = ""
 
 # Core configuration.
