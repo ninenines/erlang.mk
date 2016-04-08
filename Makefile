@@ -31,7 +31,7 @@ ERLANG_MK_VERSION = $(shell git describe --tags --dirty)
 all:
 	awk 'FNR==1 && NR!=1{print ""}1' $(patsubst %,%.mk,$(BUILD_CONFIG)) \
 		| sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = $(ERLANG_MK_VERSION)/' \
-		| sed 's/^DEFAULT_WITHOUT = .*/DEFAULT_WITHOUT = $(WITHOUT)/' > $(ERLANG_MK)
+		| sed 's:^DEFAULT_WITHOUT = .*:DEFAULT_WITHOUT = $(WITHOUT):' > $(ERLANG_MK)
 
 ifdef p
 # Remove p from the list of variables since that conflicts with bootstrapping.
