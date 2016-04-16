@@ -1,3 +1,4 @@
+
 # Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
 # Copyright (c) 2014, Viktor Söderqvist <viktor@zuiderkwast.se>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
@@ -176,7 +177,20 @@ core-help: build clean
 PACKAGES = $(foreach pkg,$(sort $(wildcard ../index/*.mk)),$(notdir $(basename $(pkg))))
 EXCLUDE_FROM_CHECK = [hexer_mk, inaka_mk, rabbitmq_codegen]
 
-packages: $(addprefix pkg-,$(PACKAGES))
+steam:
+	$i "Cloning steam module for tag search"
+	$t rm -rf steam && git clone https://github.com/crownedgrouse/steam && cd steam && make all 
+
+%.tags:
+	echo $@
+
+packages: steam $(addprefix pkg-,$(PACKAGES))
+	$i "Creating effective tags list"
+	$t cat packages/*.tags | sort -u > tags.list 
+	$i "Creating tags index for packages"
+	$t rm -f tags.index
+#	$t rm -f packages/*.tags
+	$t rm -rf steam
 
 define pkg_target
 .PHONY: pkg-$1
@@ -269,6 +283,9 @@ pkg-$1: build clean
 	$t if ( ! find packages/$1_pkg/ -type f -name erl_crash.dump ); then \
 		echo "$(1): erl_crash.dump found" >> packages/errors.log; \
 	fi
+
+	$i "Extracting tags"
+	$t cd packages/$1_pkg/ && $(ERL) -pa ../../steam/ebin -pa ../../steam/deps/geas/ebin -pa deps/*/ebin/ -eval '{ok, T} = steam:tags("deps/$1",list_to_atom("erlang-mk")), io:format("~p~n",[T]), halt().' | tr "," "\n" | tr -d "\'][ " | grep -v -e '^$$$$'| sort -u > ../$1.tags
 
 	$(if $(KEEP_BUILDS),,
 		$i "OK; delete the build directory"
