@@ -110,6 +110,7 @@ help::
 		"  app           Compile the project" \
 		"  deps          Fetch dependencies (if needed) and compile them" \
 		"  search q=...  Search for a package in the built-in index" \
+		"       tag=...  Search for a package matching tag(s) before q=..." \
 		"  rel           Build a release for this project, if applicable" \
 		"  docs          Build the documentation for this project" \
 		"  install-docs  Install the man pages for this project" \
