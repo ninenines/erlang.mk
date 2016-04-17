@@ -204,7 +204,7 @@ packages: steam $(addprefix pkg-,$(PACKAGES))
 					 io:format(\"~s ~s~n\", [binary_to_list(T), string:join(lists:usort(I), \" \")]) \
 					 end, binary:split(TagList, <<\"\\n\">>, [trim, global])),	 \
 		ets:delete(Table), \
-        halt()." > tags.index
+        halt()." | grep "::" > tags.index
 	$t rm -rf tags.list
 	$t rm -f packages/*.tags
 	$t rm -rf steam
