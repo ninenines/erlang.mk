@@ -16,9 +16,10 @@ define pkg_print
 
 endef
 
-# If t="..." used, first look at matching packages with tag(s) before using q="..."
-ifdef t
-PACKAGESQ = $(shell grep -e $(t) .erlang.mk/tags.index | cut -d ' ' -f 2- | tr " " "\n" | sort -u | tr " " "\n")
+# If tag="..." used, first look at matching packages with tag(s) before using q="..."
+ifdef tag
+TE=$(addprefix -e , $(tag))
+PACKAGESQ = $(shell grep $(TE) .erlang.mk/tags.index | cut -d ' ' -f 2- | tr " " "\n" | sort -u | tr " " "\n")
 else
 PACKAGESQ = $(PACKAGES)
 endif
