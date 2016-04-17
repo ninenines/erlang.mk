@@ -111,6 +111,7 @@ help::
 		"  deps          Fetch dependencies (if needed) and compile them" \
 		"  search q=...  Search for a package in the built-in index" \
 		"       tag=...  Search for a package matching tag(s) before q=..." \
+		"  tags          List all available tags" \
 		"  rel           Build a release for this project, if applicable" \
 		"  docs          Build the documentation for this project" \
 		"  install-docs  Install the man pages for this project" \

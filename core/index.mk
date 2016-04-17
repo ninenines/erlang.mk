@@ -32,3 +32,7 @@ ifdef q
 else
 	$(foreach p,$(PACKAGESQ),$(call pkg_print,$(p)))
 endif
+
+tags:
+	$(verbose) printf "%s\n" $(shell cat .erlang.mk/tags.index | cut -d " " -f 1 )
+
