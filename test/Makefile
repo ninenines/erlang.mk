@@ -181,9 +181,6 @@ steam:
 	$i "Cloning steam module for tag search"
 	$t rm -rf steam && git clone https://github.com/crownedgrouse/steam && cd steam && make all 
 
-%.tags:
-	echo $@
-
 packages: steam $(addprefix pkg-,$(PACKAGES))
 	$i "Creating effective tags list"
 	$t cat packages/*.tags | sort -u > tags.list 
@@ -193,13 +190,13 @@ packages: steam $(addprefix pkg-,$(PACKAGES))
 		{ok, Files} = file:list_dir(Dir), \
 		Table = ets:new(tags, [duplicate_bag, private]), \
 		lists:foreach(fun(X) ->  Filename = filename:join(Dir, X), \
-								 {ok, Binary} = file:read_file(Filename), \
-								 Tags = binary:split(Binary, <<\"\\n\">>, [trim, global]), \
-								 Package = filename:rootname(X, \".tags\"), \
-								 lists:foreach(fun(T) -> \
-								    true = ets:insert(Table, {T, Package}) end \
-								 , Tags) \
-					  end, Files), \
+					 {ok, Binary} = file:read_file(Filename), \
+					 Tags = binary:split(Binary, <<\"\\n\">>, [trim, global]), \
+					 Package = filename:rootname(X, \".tags\"), \
+					 lists:foreach(fun(T) -> \
+		                         true = ets:insert(Table, {T, Package}) end \
+				, Tags) \
+				end, Files), \
 		{ok, TagList} = file:read_file(\"tags.list\"), \
 		lists:foreach(fun(T) ->  \
 					 Res = ets:take(Table, T), \

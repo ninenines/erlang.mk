@@ -16,11 +16,18 @@ define pkg_print
 
 endef
 
+# If t="..." used, first look at matching packages with tag(s) before using q="..."
+ifdef t
+PACKAGESQ = $(shell grep -e $(t) .erlang.mk/tags.index | cut -d ' ' -f 2- | tr " " "\n" | sort -u | tr " " "\n")
+else
+PACKAGESQ = $(PACKAGES)
+endif
+
 search:
 ifdef q
-	$(foreach p,$(PACKAGES), \
+	$(foreach p,$(PACKAGESQ), \
 		$(if $(findstring $(call core_lc,$(q)),$(call core_lc,$(pkg_$(p)_name) $(pkg_$(p)_description))), \
 			$(call pkg_print,$(p))))
 else
-	$(foreach p,$(PACKAGES),$(call pkg_print,$(p)))
+	$(foreach p,$(PACKAGESQ),$(call pkg_print,$(p)))
 endif
