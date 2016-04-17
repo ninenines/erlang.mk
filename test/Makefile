@@ -188,8 +188,28 @@ packages: steam $(addprefix pkg-,$(PACKAGES))
 	$i "Creating effective tags list"
 	$t cat packages/*.tags | sort -u > tags.list 
 	$i "Creating tags index for packages"
-	$t rm -f tags.index
-#	$t rm -f packages/*.tags
+	$t $(ERL) -eval " \
+		Dir = \"packages\", \
+		{ok, Files} = file:list_dir(Dir), \
+		Table = ets:new(tags, [duplicate_bag, private]), \
+		lists:foreach(fun(X) ->  Filename = filename:join(Dir, X), \
+								 {ok, Binary} = file:read_file(Filename), \
+								 Tags = binary:split(Binary, <<\"\\n\">>, [trim, global]), \
+								 Package = filename:rootname(X, \".tags\"), \
+								 lists:foreach(fun(T) -> \
+								    true = ets:insert(Table, {T, Package}) end \
+								 , Tags) \
+					  end, Files), \
+		{ok, TagList} = file:read_file(\"tags.list\"), \
+		lists:foreach(fun(T) ->  \
+					 Res = ets:take(Table, T), \
+					 I = lists:flatmap(fun({_, V})-> [V] end, Res), \
+					 io:format(\"~s ~s~n\", [binary_to_list(T), string:join(lists:usort(I), \" \")]) \
+					 end, binary:split(TagList, <<\"\\n\">>, [trim, global])),	 \
+		ets:delete(Table), \
+        halt()." > tags.index
+	$t rm -rf tags.list
+	$t rm -f packages/*.tags
 	$t rm -rf steam
 
 define pkg_target
