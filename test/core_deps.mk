@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
+CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-dir-include-lib apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 
 .PHONY: core-deps $(CORE_DEPS_TARGETS)
@@ -209,6 +209,46 @@ endif
 
 	$i "Check that all relevant files were removed"
 	$t test ! -e $(APP)/deps
+
+core-deps-apps-dir-include-lib: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Set a custom APPS_DIR"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "APPS_DIR ?= \$$(CURDIR)/deep/libs\n"}' $(APP)/Makefile
+
+	$i "Create new libraries boy_app and girl_app"
+	$t $(MAKE) -C $(APP) new-lib in=boy_app $v
+	$t $(MAKE) -C $(APP) new-lib in=girl_app $v
+
+	$i "Generate .erl and .hrl files in apps with mutual include_lib()"
+	$t echo '-module(boy).  -include_lib("girl_app/include/girl.hrl").' > $(APP)/deep/libs/boy_app/src/boy.erl
+	$t echo '-module(girl). -include_lib("boy_app/include/boy.hrl").' > $(APP)/deep/libs/girl_app/src/girl.erl
+	$t mkdir -p $(APP)/deep/libs/boy_app/include
+	$t echo '%% boy'  > $(APP)/deep/libs/boy_app/include/boy.hrl
+	$t mkdir -p $(APP)/deep/libs/girl_app/include
+	$t echo '%% girl' > $(APP)/deep/libs/girl_app/include/girl.hrl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+
+	$t test -f $(APP)/deep/libs/boy_app/boy_app.d
+	$t test -f $(APP)/deep/libs/boy_app/ebin/boy_app.app
+	$t test -f $(APP)/deep/libs/boy_app/ebin/boy.beam
+
+	$t test -f $(APP)/deep/libs/girl_app/girl_app.d
+	$t test -f $(APP)/deep/libs/girl_app/ebin/girl_app.app
+	$t test -f $(APP)/deep/libs/girl_app/ebin/girl.beam
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
 
 core-deps-apps-new-app: build clean
 
