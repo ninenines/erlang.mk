@@ -51,3 +51,8 @@ http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix.html[Mix].
 === reload.mk
 
 A https://github.com/bullno1/reload.mk[live reload plugin] for Erlang.mk.
+
+=== rust.mk
+
+A https://github.com/goertzenator/rust.mk[plugin] to build https://www.rust-lang.org/[Rust] crates and install binaries into `priv/`.  
+
