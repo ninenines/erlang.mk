@@ -15,15 +15,14 @@ dtl_verbose = $(dtl_verbose_$(V))
 
 # Core targets.
 
-DTL_FILES = $(sort $(call core_find,$(DTL_PATH),*.dtl))
+DTL_PATH := $(abspath $(DTL_PATH))
+DTL_FILES = $(call core_find,$(DTL_PATH),*.dtl)
 
 ifneq ($(DTL_FILES),)
 
-ifdef DTL_FULL_PATH
-BEAM_FILES += $(addprefix ebin/,$(patsubst %.dtl,%_dtl.beam,$(subst /,_,$(DTL_FILES:$(DTL_PATH)%=%))))
-else
-BEAM_FILES += $(addprefix ebin/,$(patsubst %.dtl,%_dtl.beam,$(notdir $(DTL_FILES))))
-endif
+DTL_NAMES   = $(addsuffix $(DTL_SUFFIX),$(DTL_FILES:$(DTL_PATH)/%.dtl=%))
+DTL_MODULES = $(if $(DTL_FULL_PATH),$(subst /,_,$(DTL_NAMES)),$(notdir $(DTL_NAMES)))
+BEAM_FILES += $(addsuffix .beam,$(addprefix ebin/,$(DTL_MODULES)))
 
 # Rebuild templates when the Makefile changes.
 $(DTL_FILES): $(MAKEFILE_LIST)
@@ -35,11 +34,11 @@ define erlydtl_compile.erl
 			"" ->
 				filename:basename(F, ".dtl");
 			_ ->
-				"$(DTL_PATH)" ++ F2 = filename:rootname(F, ".dtl"),
+				"$(DTL_PATH)/" ++ F2 = filename:rootname(F, ".dtl"),
 				re:replace(F2, "/",  "_",  [{return, list}, global])
 		end,
 		Module = list_to_atom(string:to_lower(Module0) ++ "$(DTL_SUFFIX)"),
-		case erlydtl:compile(F, Module, [$(DTL_OPTS)] ++ [{out_dir, "ebin/"}, return_errors, {doc_root, "templates"}]) of
+		case erlydtl:compile(F, Module, [$(DTL_OPTS)] ++ [{out_dir, "ebin/"}, return_errors]) of
 			ok -> ok;
 			{ok, _} -> ok
 		end
