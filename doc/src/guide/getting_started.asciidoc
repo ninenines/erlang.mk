@@ -27,14 +27,14 @@ in your Erlang distribution, or even in your OS packages.
 The next step is therefore to download it:
 
 [source,bash]
-$ wget https://raw.githubusercontent.com/ninenines/erlang.mk/master/erlang.mk
+$ wget https://erlang.mk/erlang.mk
 
 Or:
 
 [source,bash]
-$ curl https://raw.githubusercontent.com/ninenines/erlang.mk/master/erlang.mk
+$ curl https://erlang.mk/erlang.mk
 
-Alternatively, just https://raw.githubusercontent.com/ninenines/erlang.mk/master/erlang.mk[click on this link].
+Alternatively, just https://erlang.mk/erlang.mk[click on this link].
 
 Make sure you put the file inside the folder we created previously.
 
@@ -203,7 +203,7 @@ For a step by step:
 ----
 $ mkdir hello_joe
 $ cd hello_joe
-$ curl https://raw.githubusercontent.com/ninenines/erlang.mk/master/erlang.mk
+$ curl https://erlang.mk/erlang.mk
 $ echo "include erlang.mk" > Makefile
 $ make
 ----
