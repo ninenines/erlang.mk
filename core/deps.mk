@@ -53,7 +53,7 @@ deps::
 else
 deps:: $(ALL_DEPS_DIRS)
 ifndef IS_APP
-	for dep in $(ALL_APPS_DIRS) ; do \
+	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
 		mkdir -p $$dep/ebin; \
 	done
 	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
