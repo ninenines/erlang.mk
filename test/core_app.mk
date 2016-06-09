@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = appsrc-change asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib no-app no-makedep pt pt-erlc-opts xrl xrl-include yrl yrl-include
+CORE_APP_CASES = appsrc-change asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 
 .PHONY: core-app $(CORE_APP_TARGETS)
@@ -1009,6 +1009,26 @@ endif
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+core-app-project-mod: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate an application module"
+	$t printf "%s\n" \
+		"-module(app_mod)." \
+		"-export([start/2, stop/1])." \
+		"start(_StartType, _StartArgs) -> {ok, self()}." \
+		"stop(_State) -> ok." > $(APP)/src/app_mod.erl
+
+	$i "Build the application with PROJECT_MOD"
+	$t $(MAKE) -C $(APP) PROJECT_MOD=app_mod $v
+
+	$i "Check that the application starts correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval "ok = application:start($(APP)), halt()"
 
 core-app-pt: build clean
 
