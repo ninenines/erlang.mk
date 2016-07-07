@@ -1,6 +1,6 @@
 # Core: External plugins.
 
-CORE_PLUGINS_CASES = all one
+CORE_PLUGINS_CASES = all one test
 CORE_PLUGINS_TARGETS = $(addprefix core-plugins-,$(CORE_PLUGINS_CASES))
 
 .PHONY: core-plugins $(CORE_PLUGINS_TARGETS)
@@ -70,3 +70,43 @@ core-plugins-one: build clean
 
 	$i "Run 'make plugin2' and confirm the target doesn't exist"
 	$t ! $(MAKE) --no-print-directory -C $(APP) plugin2
+
+core-plugins-test: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Write external plugin touch_plugin"
+	$t mkdir $(APP)/touch_plugin
+	$t echo -e "app::" >> $(APP)/touch_plugin/plugins.mk
+	$t echo -e "\ttouch markerfile" >> $(APP)/touch_plugin/plugins.mk
+	$t echo -e "test-build:: app" >> $(APP)/touch_plugin/plugins.mk
+	$t echo -e "clean::" >> $(APP)/touch_plugin/plugins.mk
+	$t echo -e "\trm -f markerfile" >> $(APP)/touch_plugin/plugins.mk
+
+	$i "Inject external plugin dependencies into $(APP)"
+	$t echo 'BUILD_DEPS = touch_plugin' >>$(APP)/Makefile.tmp
+	$t echo 'DEP_PLUGINS = touch_plugin' >>$(APP)/Makefile.tmp
+	$t echo 'dep_touch_plugin = cp touch_plugin' >>$(APP)/Makefile.tmp
+	$t cat $(APP)/Makefile >>$(APP)/Makefile.tmp
+	$t mv $(APP)/Makefile.tmp $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the application was compiled correctly"
+	$t test -e $(APP)/markerfile
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the application was cleaned correctly"
+	$t test ! -e $(APP)/markerfile
+
+	$i "Run tests"
+	$t $(MAKE) -C $(APP) tests $v
+
+	$i "Check that the application was compiled correctly"
+	$t test -e $(APP)/markerfile
