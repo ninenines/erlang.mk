@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-build-count apps-conflict apps-deep-conflict apps-dir apps-dir-include-lib apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
+CORE_DEPS_CASES = apps plugin-test apps-build-count apps-conflict apps-deep-conflict apps-dir apps-dir-include-lib apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 
 .PHONY: core-deps $(CORE_DEPS_TARGETS)
@@ -1407,3 +1407,44 @@ core-deps-test: build clean
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(triq, Deps), \
 		halt()"
+
+core-deps-plugin-test:  build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Write external plugin touch_plugin"
+	$t mkdir $(APP)/touch_plugin
+	$t echo -e "app::" >> $(APP)/touch_plugin/plugins.mk
+	$t echo -e "\ttouch markerfile" >> $(APP)/touch_plugin/plugins.mk
+	$t echo -e "test-build:: app" >> $(APP)/touch_plugin/plugins.mk
+	$t echo -e "clean::" >> $(APP)/touch_plugin/plugins.mk
+	$t echo -e "\trm -f markerfile" >> $(APP)/touch_plugin/plugins.mk
+
+	$i "Inject external plugin dependencies into $(APP)"
+	$t echo 'BUILD_DEPS = touch_plugin' >>$(APP)/Makefile.tmp
+	$t echo 'DEP_PLUGINS = touch_plugin' >>$(APP)/Makefile.tmp
+	$t echo 'dep_touch_plugin = cp touch_plugin' >>$(APP)/Makefile.tmp
+	$t cat $(APP)/Makefile >>$(APP)/Makefile.tmp
+	$t mv $(APP)/Makefile.tmp $(APP)/Makefile
+
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the application was compiled correctly"
+	$t [ -e $(APP)/markerfile ]
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the application was cleaned correctly"
+	$t [ ! -e $(APP)/markerfile ]
+
+	$i "Run tests"
+	$t $(MAKE) -C $(APP) tests $v
+
+	$i "Check that the application was compiled correctly"
+	$t [ -e $(APP)/markerfile ]
