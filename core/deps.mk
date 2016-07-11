@@ -1,7 +1,7 @@
 # Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: distclean-deps
+.PHONY: apps distclean-deps
 
 # Configuration.
 
@@ -48,18 +48,28 @@ dep_verbose = $(dep_verbose_$(V))
 
 # Core targets.
 
+ifdef IS_APP
+apps::
+else
+apps:: $(ALL_APPS_DIRS)
+ifneq ($(IS_DEP),1)
+	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log
+endif
+	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
+		mkdir -p $$dep/ebin || exit $$?; \
+		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/apps.log; then \
+			:; \
+		else \
+			echo $$dep >> $(ERLANG_MK_TMP)/apps.log; \
+			$(MAKE) -C $$dep IS_APP=1 || exit $$?; \
+		fi \
+	done
+endif
+
 ifneq ($(SKIP_DEPS),)
 deps::
 else
-deps:: $(ALL_DEPS_DIRS)
-ifndef IS_APP
-	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
-		mkdir -p $$dep/ebin; \
-	done
-	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
-		$(MAKE) -C $$dep IS_APP=1 || exit $$?; \
-	done
-endif
+deps:: $(ALL_DEPS_DIRS) apps
 ifneq ($(IS_DEP),1)
 	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
 endif
