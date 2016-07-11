@@ -48,19 +48,35 @@ dep_verbose = $(dep_verbose_$(V))
 
 # Core targets.
 
+ifdef IS_APP
+apps::
+else
+apps:: $(ALL_APPS_DIRS)
+ifeq ($(IS_APP)$(IS_DEP),)
+	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log
+endif
+	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+# Create ebin directory for all apps to make sure Erlang recognizes them
+# as proper OTP applications when using -include_lib. This is a temporary
+# fix, a proper fix would be to compile apps/* in the right order.
+	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
+		mkdir -p $$dep/ebin || exit $$?; \
+	done
+	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
+		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/apps.log; then \
+			:; \
+		else \
+			echo $$dep >> $(ERLANG_MK_TMP)/apps.log; \
+			$(MAKE) -C $$dep IS_APP=1 || exit $$?; \
+		fi \
+	done
+endif
+
 ifneq ($(SKIP_DEPS),)
 deps::
 else
-deps:: $(ALL_DEPS_DIRS)
-ifndef IS_APP
-	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
-		mkdir -p $$dep/ebin; \
-	done
-	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
-		$(MAKE) -C $$dep IS_APP=1 || exit $$?; \
-	done
-endif
-ifneq ($(IS_DEP),1)
+deps:: $(ALL_DEPS_DIRS) apps
+ifeq ($(IS_APP)$(IS_DEP),)
 	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
 endif
 	$(verbose) mkdir -p $(ERLANG_MK_TMP)
