@@ -1,7 +1,7 @@
 # Copyright (c) 2013-2015, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: apps distclean-deps
+.PHONY: distclean-deps
 
 # Configuration.
 
