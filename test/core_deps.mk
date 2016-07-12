@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-conflict apps-deep-conflict apps-dir apps-dir-include-lib apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
+CORE_DEPS_CASES = apps apps-conflict apps-build-count apps-deep-conflict apps-dir apps-dir-include-lib apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 
 .PHONY: core-deps $(CORE_DEPS_TARGETS)
@@ -138,6 +138,42 @@ core-deps-apps-deep-conflict: build clean
 
 	$i "Check that Cowlib wasn't fetched"
 	$t test ! -e $(APP)/deps/cowlib
+
+core-deps-apps-build-count: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$t mkdir -p "$(APP)/priv/dep"
+	$t echo "PROJECT = fake_dep" > $(APP)/priv/dep/Makefile
+	$t echo "include ../../erlang.mk" >> $(APP)/priv/dep/Makefile
+
+	$i "Bootstrap a repository-local application my_app"
+	$t echo "DEPS = dep1 dep2 dep3 dep4" > $(APP)/Makefile
+	$t echo "dep_dep1 = cp ./priv/dep" >> $(APP)/Makefile
+	$t echo "dep_dep2 = cp ./priv/dep" >> $(APP)/Makefile
+	$t echo "dep_dep3 = cp ./priv/dep" >> $(APP)/Makefile
+	$t echo "dep_dep4 = cp ./priv/dep" >> $(APP)/Makefile
+	$t echo "include erlang.mk" >> $(APP)/Makefile
+
+	$i "Create a new application app_one"
+	$t $(MAKE) -C $(APP) new-app in=app_one $v
+	$t echo "all::" >> $(APP)/apps/app_one/Makefile
+	$t echo "	echo -n '#' >> count" >> $(APP)/apps/app_one/Makefile
+
+	$i "Create a new application app_two"
+	$t $(MAKE) -C $(APP) new-app in=app_two $v
+	$t echo "all::" >> $(APP)/apps/app_two/Makefile
+	$t echo "	echo -n '#' >> count" >> $(APP)/apps/app_two/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check the number of times each app was compiled"
+	$t test "`wc -c $(APP)/apps/app_one/count | awk '{printf $$1}'`" -le 2
+	$t test "`wc -c $(APP)/apps/app_two/count | awk '{printf $$1}'`" -le 2
 
 core-deps-apps-dir: build clean
 
