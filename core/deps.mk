@@ -55,8 +55,12 @@ apps:: $(ALL_APPS_DIRS)
 ifneq ($(IS_DEP),1)
 	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log
 endif
+# mkdir in separate loop for erl to recognize each other app as valid for the sake of include_lib
+# when compiling.
 	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
 		mkdir -p $$dep/ebin || exit $$?; \
+	done
+	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
 		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/apps.log; then \
 			:; \
 		else \

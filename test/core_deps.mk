@@ -139,6 +139,8 @@ core-deps-apps-deep-conflict: build clean
 	$i "Check that Cowlib wasn't fetched"
 	$t test ! -e $(APP)/deps/cowlib
 
+# Ensure that each APPS_DIR app isn't built multiple times when the project have multiple
+# dependencies.
 core-deps-apps-build-count: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -171,6 +173,7 @@ core-deps-apps-build-count: build clean
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
+# Checking against 2 or lower since each app is built an extra time in some cases.
 	$i "Check the number of times each app was compiled"
 	$t test "`wc -c $(APP)/apps/app_one/count | awk '{printf $$1}'`" -le 2
 	$t test "`wc -c $(APP)/apps/app_two/count | awk '{printf $$1}'`" -le 2
