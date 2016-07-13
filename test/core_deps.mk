@@ -163,20 +163,20 @@ core-deps-apps-build-count: build clean
 	$i "Create a new application app_one"
 	$t $(MAKE) -C $(APP) new-app in=app_one $v
 	$t echo "all::" >> $(APP)/apps/app_one/Makefile
-	$t echo "	echo -n '#' >> count" >> $(APP)/apps/app_one/Makefile
+	$t echo "	@echo -n '#' >> count" >> $(APP)/apps/app_one/Makefile
 
 	$i "Create a new application app_two"
 	$t $(MAKE) -C $(APP) new-app in=app_two $v
 	$t echo "all::" >> $(APP)/apps/app_two/Makefile
-	$t echo "	echo -n '#' >> count" >> $(APP)/apps/app_two/Makefile
+	$t echo "	@echo -n '#' >> count" >> $(APP)/apps/app_two/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
 # Checking against 2 or lower since each app is built an extra time in some cases.
 	$i "Check the number of times each app was compiled"
-	$t test "`wc -c $(APP)/apps/app_one/count | awk '{printf $$1}'`" -le 2
-	$t test "`wc -c $(APP)/apps/app_two/count | awk '{printf $$1}'`" -le 2
+	$t test "`wc -c $(APP)/apps/app_one/count | awk '{printf $$1}'`" -eq 1
+	$t test "`wc -c $(APP)/apps/app_two/count | awk '{printf $$1}'`" -eq 1
 
 core-deps-apps-dir: build clean
 

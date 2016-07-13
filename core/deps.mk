@@ -48,13 +48,20 @@ dep_verbose = $(dep_verbose_$(V))
 
 # Core targets.
 
+ifndef SUBMAKE
+apps::
+	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log
+
+deps::
+	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
+endif
+
 ifdef IS_APP
 apps::
 else
 apps:: $(ALL_APPS_DIRS)
-ifneq ($(IS_DEP),1)
-	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log
-endif
 # mkdir in separate loop for erl to recognize each other app as valid for the sake of include_lib
 # when compiling.
 	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
@@ -65,7 +72,7 @@ endif
 			:; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/apps.log; \
-			$(MAKE) -C $$dep IS_APP=1 || exit $$?; \
+			$(MAKE) -C $$dep IS_APP=1 SUBMAKE=1 || exit $$?; \
 		fi \
 	done
 endif
@@ -74,17 +81,13 @@ ifneq ($(SKIP_DEPS),)
 deps::
 else
 deps:: $(ALL_DEPS_DIRS) apps
-ifneq ($(IS_DEP),1)
-	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
-endif
-	$(verbose) mkdir -p $(ERLANG_MK_TMP)
 	$(verbose) for dep in $(ALL_DEPS_DIRS) ; do \
 		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/deps.log; then \
 			:; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/deps.log; \
 			if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
-				$(MAKE) -C $$dep IS_DEP=1 || exit $$?; \
+				$(MAKE) -C $$dep IS_DEP=1 SUBMAKE=1 || exit $$?; \
 			else \
 				echo "Error: No Makefile to build dependency $$dep."; \
 				exit 2; \
