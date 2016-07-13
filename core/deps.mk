@@ -48,22 +48,46 @@ dep_verbose = $(dep_verbose_$(V))
 
 # Core targets.
 
+is_app_or_dep = no
+ifdef IS_APP
+	is_app_or_dep = yes
+endif
+ifdef IS_DEP
+	is_app_or_dep = yes
+endif
+ifeq ($(is_app_or_dep),no)
+apps::
+	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log
+
+deps::
+	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
+endif
+
+ifdef IS_APP
+apps::
+else
+apps:: $(ALL_APPS_DIRS)
+# mkdir in separate loop for erl to recognize each other app as valid for the sake of include_lib
+# when compiling.
+	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
+		mkdir -p $$dep/ebin || exit $$?; \
+	done
+	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
+		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/apps.log; then \
+			:; \
+		else \
+			echo $$dep >> $(ERLANG_MK_TMP)/apps.log; \
+			$(MAKE) -C $$dep IS_APP=1 || exit $$?; \
+		fi \
+	done
+endif
+
 ifneq ($(SKIP_DEPS),)
 deps::
 else
-deps:: $(ALL_DEPS_DIRS)
-ifndef IS_APP
-	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
-		mkdir -p $$dep/ebin; \
-	done
-	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
-		$(MAKE) -C $$dep IS_APP=1 || exit $$?; \
-	done
-endif
-ifneq ($(IS_DEP),1)
-	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
-endif
-	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+deps:: $(ALL_DEPS_DIRS) apps
 	$(verbose) for dep in $(ALL_DEPS_DIRS) ; do \
 		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/deps.log; then \
 			:; \
