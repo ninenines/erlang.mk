@@ -48,7 +48,14 @@ dep_verbose = $(dep_verbose_$(V))
 
 # Core targets.
 
-ifndef SUBMAKE
+is_app_or_dep = no
+ifdef IS_APP
+	is_app_or_dep = yes
+endif
+ifdef IS_DEP
+	is_app_or_dep = yes
+endif
+ifeq ($(is_app_or_dep),no)
 apps::
 	$(verbose) mkdir -p $(ERLANG_MK_TMP)
 	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log
@@ -72,7 +79,7 @@ apps:: $(ALL_APPS_DIRS)
 			:; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/apps.log; \
-			$(MAKE) -C $$dep IS_APP=1 SUBMAKE=1 || exit $$?; \
+			$(MAKE) -C $$dep IS_APP=1 || exit $$?; \
 		fi \
 	done
 endif
@@ -87,7 +94,7 @@ deps:: $(ALL_DEPS_DIRS) apps
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/deps.log; \
 			if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
-				$(MAKE) -C $$dep IS_DEP=1 SUBMAKE=1 || exit $$?; \
+				$(MAKE) -C $$dep IS_DEP=1 || exit $$?; \
 			else \
 				echo "Error: No Makefile to build dependency $$dep."; \
 				exit 2; \
