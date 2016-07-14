@@ -32,7 +32,7 @@ $ wget https://erlang.mk/erlang.mk
 Or:
 
 [source,bash]
-$ curl https://erlang.mk/erlang.mk
+$ curl https://erlang.mk/erlang.mk -o erlang.mk
 
 Alternatively, just https://erlang.mk/erlang.mk[click on this link].
 
@@ -203,7 +203,7 @@ For a step by step:
 ----
 $ mkdir hello_joe
 $ cd hello_joe
-$ curl https://erlang.mk/erlang.mk
+$ curl https://erlang.mk/erlang.mk -o erlang.mk
 $ echo "include erlang.mk" > Makefile
 $ make
 ----
