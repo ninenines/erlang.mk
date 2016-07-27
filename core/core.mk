@@ -203,3 +203,12 @@ endif
 
 # The erlang.mk package index is bundled in the default erlang.mk build.
 # Search for the string "copyright" to skip to the rest of the code.
+
+# app/test-build clean rules must appear here before any others
+ifeq ($(wildcard ebin/test),)
+test-build:: clean
+	mkdir -p ebin
+	touch ebin/test
+else
+app:: clean
+endif
