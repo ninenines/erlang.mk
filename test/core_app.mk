@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = appsrc-change asn1 auto-git-id env erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-include yrl yrl-header yrl-include
+CORE_APP_CASES = appsrc-change asn1 auto-git-id env erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib name-special-char no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-include yrl yrl-header yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 
 .PHONY: core-app $(CORE_APP_TARGETS)
@@ -919,6 +919,27 @@ endif
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+ifndef LEGACY
+core-app-name-special-char: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Set PROJECT_DESCRIPTION = test % in the Makefile"
+	$t echo "PROJECT_DESCRIPTION = test %" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok,\"test %\"} = application:get_key($(APP), description), \
+		halt()"
+endif
 
 core-app-no-app: build clean
 
