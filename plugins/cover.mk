@@ -1,7 +1,7 @@
 # Copyright 2015, Viktor Söderqvist <viktor@zuiderkwast.se>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-COVER_REPORT_DIR = cover
+COVER_REPORT_DIR = $(LOCAL_ERLANG_MK_TMP)/cover
 
 # Hook in coverage to ct
 
@@ -10,15 +10,15 @@ ifdef CT_RUN
 # All modules in 'ebin'
 COVER_MODS = $(notdir $(basename $(call core_ls,ebin/*.beam)))
 
-test-build:: $(TEST_DIR)/ct.cover.spec
+test-build:: $(LOCAL_ERLANG_MK_TMP)/ct.cover.spec
 
-$(TEST_DIR)/ct.cover.spec:
+$(LOCAL_ERLANG_MK_TMP)/ct.cover.spec:
 	$(verbose) echo Cover mods: $(COVER_MODS)
 	$(gen_verbose) printf "%s\n" \
 		'{incl_mods,[$(subst $(space),$(comma),$(COVER_MODS))]}.' \
-		'{export,"$(CURDIR)/ct.coverdata"}.' > $@
+		'{export,"ct.coverdata"}.' > $@
 
-CT_RUN += -cover $(TEST_DIR)/ct.cover.spec
+CT_RUN += -cover $(LOCAL_ERLANG_MK_TMP)/ct.cover.spec
 endif
 endif
 
@@ -51,17 +51,17 @@ help::
 
 # Plugin specific targets
 
-COVERDATA = $(filter-out all.coverdata,$(wildcard *.coverdata))
+COVERDATA = $(filter-out $(LOCAL_ERLANG_MK_TMP)/all.coverdata, $(wildcard $(LOCAL_ERLANG_MK_TMP)/*.coverdata))
 
 .PHONY: coverdata-clean
 coverdata-clean:
 	$(gen_verbose) rm -f *.coverdata ct.cover.spec
 
 # Merge all coverdata files into one.
-all.coverdata: $(COVERDATA)
+$(LOCAL_ERLANG_MK_TMP)/all.coverdata: $(COVERDATA)
 	$(gen_verbose) $(ERL) -eval ' \
 		$(foreach f,$(COVERDATA),cover:import("$(f)") == ok orelse halt(1),) \
-		cover:export("$@"), halt(0).'
+		cover:export("$(LOCAL_ERLANG_MK_TMP)/$@"), halt(0).'
 
 # These are only defined if COVER_REPORT_DIR is non-empty. Set COVER_REPORT_DIR to
 # empty if you want the coverdata files but not the HTML report.

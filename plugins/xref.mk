@@ -11,7 +11,7 @@ else
 	XREF_ARGS := -c $(XREF_CONFIG)
 endif
 
-XREFR ?= $(CURDIR)/xrefr
+XREFR ?= $(ERLANG_MK_TMP)/xrefr
 export XREFR
 
 XREFR_URL ?= https://github.com/inaka/xref_runner/releases/download/0.2.2/xrefr

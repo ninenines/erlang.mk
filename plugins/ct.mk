@@ -11,6 +11,7 @@ ifneq ($(wildcard $(TEST_DIR)),)
 else
 	CT_SUITES ?=
 endif
+CT_LOGDIR ?= $(LOCAL_ERLANG_MK_TMP)/ct
 
 # Core targets.
 
@@ -33,13 +34,12 @@ CT_RUN = ct_run \
 	-noinput \
 	-pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin $(APPS_DIR)/*/ebin $(TEST_DIR) \
 	-dir $(TEST_DIR) \
-	-logdir $(CURDIR)/logs
+	-logdir $(CT_LOGDIR)
 
 ifeq ($(CT_SUITES),)
 ct: $(if $(IS_APP),,apps-ct)
 else
-ct: test-build $(if $(IS_APP),,apps-ct)
-	$(verbose) mkdir -p $(CURDIR)/logs/
+ct: test-build $(if $(IS_APP),,apps-ct) | $(CT_LOGDIR)
 	$(gen_verbose) $(CT_RUN) -sname ct_$(PROJECT) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS)
 endif
 
@@ -66,12 +66,14 @@ endif
 endif
 
 define ct_suite_target
-ct-$(1): test-build
-	$(verbose) mkdir -p $(CURDIR)/logs/
+ct-$(1): test-build | $(CT_LOGDIR)
 	$(gen_verbose) $(CT_RUN) -sname ct_$(PROJECT) -suite $(addsuffix _SUITE,$(1)) $(CT_EXTRA) $(CT_OPTS)
 endef
+
+$(CT_LOGDIR):
+	$(verbose) mkdir -p $@
 
 $(foreach test,$(CT_SUITES),$(eval $(call ct_suite_target,$(test))))
 
 distclean-ct:
-	$(gen_verbose) rm -rf $(CURDIR)/logs/
+	$(gen_verbose) rm -rf $(CT_LOGDIR)

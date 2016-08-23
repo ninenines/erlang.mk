@@ -22,7 +22,7 @@ dialyzer-app: build clean
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created"
-	$t test -f $(APP)/.$(APP).plt
+	$t test -f $(APP)/.erlang.mk/.$(APP).plt
 
 	$i "Create a module with a function that has no local return"
 	$t printf "%s\n" \
@@ -36,7 +36,7 @@ dialyzer-app: build clean
 	$t $(MAKE) -C $(APP) distclean $v
 
 	$i "Check that the PLT file was removed"
-	$t test ! -e $(APP)/.$(APP).plt
+	$t test ! -e $(APP)/.erlang.mk/.$(APP).plt
 
 dialyzer-apps-only: build clean
 
@@ -58,10 +58,10 @@ dialyzer-apps-only: build clean
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created automatically"
-	$t test -f $(APP)/.$(APP).plt
+	$t test -f $(APP)/.erlang.mk/.$(APP).plt
 
 	$i "Confirm that Cowlib was included in the PLT"
-	$t dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q cowlib
+	$t dialyzer --plt_info --plt $(APP)/.erlang.mk/.$(APP).plt | grep -q cowlib
 
 	$i "Create a module with a function that has no local return"
 	$t printf "%s\n" \
@@ -91,10 +91,10 @@ dialyzer-apps-with-local-deps: build clean
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created automatically"
-	$t test -f $(APP)/.$(APP).plt
+	$t test -f $(APP)/.erlang.mk/.$(APP).plt
 
 	$i "Confirm that my_core_app was NOT included in the PLT"
-	$t ! dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q my_core_app
+	$t ! dialyzer --plt_info --plt $(APP)/.erlang.mk/.$(APP).plt | grep -q my_core_app
 
 dialyzer-check: build clean
 
@@ -107,7 +107,7 @@ dialyzer-check: build clean
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) check $v
 
 	$i "Check that the PLT file was created"
-	$t test -f $(APP)/.$(APP).plt
+	$t test -f $(APP)/.erlang.mk/.$(APP).plt
 
 	$i "Create a module with a function that has no local return"
 	$t printf "%s\n" \
@@ -153,10 +153,10 @@ dialyzer-deps: build clean
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created"
-	$t test -f $(APP)/.$(APP).plt
+	$t test -f $(APP)/.erlang.mk/.$(APP).plt
 
 	$i "Confirm that Cowlib was included in the PLT"
-	$t dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q cowlib
+	$t dialyzer --plt_info --plt $(APP)/.erlang.mk/.$(APP).plt | grep -q cowlib
 
 dialyzer-erlc-opts: build clean
 
@@ -196,7 +196,7 @@ dialyzer-local-deps: build clean
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) plt $v
 
 	$i "Confirm that runtime_tools was included in the PLT"
-	$t dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q runtime_tools
+	$t dialyzer --plt_info --plt $(APP)/.erlang.mk/.$(APP).plt | grep -q runtime_tools
 
 dialyzer-opts: build clean
 
@@ -218,7 +218,7 @@ dialyzer-opts: build clean
 	$t ! $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 	$i "Check that the PLT file was created"
-	$t test -f $(APP)/.$(APP).plt
+	$t test -f $(APP)/.erlang.mk/.$(APP).plt
 
 	$i "Check that the output file was created"
 	$t test -f $(APP)/output.txt
@@ -237,4 +237,4 @@ dialyzer-plt-apps: build clean
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) plt $v
 
 	$i "Confirm that runtime_tools was included in the PLT"
-	$t dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q runtime_tools
+	$t dialyzer --plt_info --plt $(APP)/.erlang.mk/.$(APP).plt | grep -q runtime_tools

@@ -28,9 +28,9 @@ ct-all: build clean
 	$i "Check that Common Test runs tests"
 # We can't pipe CT's output without it crashing, so let's check that
 # the command succeeds and log files are created instead.
-	$t test ! -e $(APP)/logs/index.html
+	$t test ! -e $(APP)/.erlang.mk/ct/index.html
 	$t $(MAKE) -C $(APP) ct $v
-	$t test -f $(APP)/logs/index.html
+	$t test -f $(APP)/.erlang.mk/ct/index.html
 
 	$i "Generate a Common Test suite with a failing test case"
 	$t printf "%s\n" \
@@ -44,11 +44,11 @@ ct-all: build clean
 
 	$i "Check that logs are kept on clean"
 	$t $(MAKE) -C $(APP) clean $v
-	$t test -f $(APP)/logs/index.html
+	$t test -f $(APP)/.erlang.mk/ct/index.html
 
 	$i "Check that logs are deleted on distclean"
 	$t $(MAKE) -C $(APP) distclean $v
-	$t test ! -e $(APP)/logs/index.html
+	$t test ! -e $(APP)/.erlang.mk/ct/index.html
 
 ct-apps-only: build clean
 
@@ -92,11 +92,11 @@ ct-apps-only: build clean
 	$i "Check that Common Test runs tests"
 # We can't pipe CT's output without it crashing, so let's check that
 # the command succeeds and log files are created instead.
-	$t test ! -e $(APP)/apps/my_app/logs/index.html
-	$t test ! -e $(APP)/apps/my_lib/logs/index.html
+	$t test ! -e $(APP)/apps/my_app/.erlang.mk/ct/index.html
+	$t test ! -e $(APP)/apps/my_lib/.erlang.mk/ct/index.html
 	$t $(MAKE) -C $(APP) ct $v
-	$t test -f $(APP)/apps/my_app/logs/index.html
-	$t test -f $(APP)/apps/my_lib/logs/index.html
+	$t test -f $(APP)/apps/my_app/.erlang.mk/ct/index.html
+	$t test -f $(APP)/apps/my_lib/.erlang.mk/ct/index.html
 
 ct-case: build clean
 
@@ -134,9 +134,9 @@ ct-check: build clean
 		"ok(_) -> ok." > $(APP)/test/$(APP)_SUITE.erl
 
 	$i "Check that Common Test runs on 'make check'"
-	$t test ! -e $(APP)/logs/index.html
+	$t test ! -e $(APP)/.erlang.mk/ct/index.html
 	$t $(MAKE) -C $(APP) check $v
-	$t test -f $(APP)/logs/index.html
+	$t test -f $(APP)/.erlang.mk/ct/index.html
 
 ct-group: build clean
 
@@ -180,7 +180,7 @@ ct-opts: build clean
 	$t $(MAKE) -C $(APP) ct $v
 
 	$i "Check that Common Test uses options from CT_OPTS"
-	$t grep -q hello_ct_opts $(APP)/logs/index.html
+	$t grep -q hello_ct_opts $(APP)/.erlang.mk/ct/index.html
 
 ct-suite: build clean
 
@@ -221,6 +221,6 @@ ct-tests: build clean
 		"ok(_) -> ok." > $(APP)/test/$(APP)_SUITE.erl
 
 	$i "Check that Common Test runs on 'make tests'"
-	$t test ! -e $(APP)/logs/index.html
+	$t test ! -e $(APP)/.erlang.mk/ct/index.html
 	$t $(MAKE) -C $(APP) tests $v
-	$t test -f $(APP)/logs/index.html
+	$t test -f $(APP)/.erlang.mk/ct/index.html

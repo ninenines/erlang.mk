@@ -5,7 +5,7 @@
 
 # Configuration.
 
-DIALYZER_PLT ?= $(CURDIR)/.$(PROJECT).plt
+DIALYZER_PLT ?= $(LOCAL_ERLANG_MK_TMP)/.$(PROJECT).plt
 export DIALYZER_PLT
 
 PLT_APPS ?=
