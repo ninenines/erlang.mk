@@ -12,7 +12,7 @@ COVER_MODS = $(notdir $(basename $(call core_ls,ebin/*.beam)))
 
 test-build:: $(LOCAL_ERLANG_MK_TMP)/ct.cover.spec
 
-$(LOCAL_ERLANG_MK_TMP)/ct.cover.spec:
+$(LOCAL_ERLANG_MK_TMP)/ct.cover.spec: | $(LOCAL_ERLANG_MK_TMP)
 	$(verbose) echo Cover mods: $(COVER_MODS)
 	$(gen_verbose) printf "%s\n" \
 		'{incl_mods,[$(subst $(space),$(comma),$(COVER_MODS))]}.' \
@@ -58,7 +58,7 @@ coverdata-clean:
 	$(gen_verbose) rm -f *.coverdata ct.cover.spec
 
 # Merge all coverdata files into one.
-$(LOCAL_ERLANG_MK_TMP)/all.coverdata: $(COVERDATA)
+$(LOCAL_ERLANG_MK_TMP)/all.coverdata: $(COVERDATA) | $(LOCAL_ERLANG_MK_TMP)
 	$(gen_verbose) $(ERL) -eval ' \
 		$(foreach f,$(COVERDATA),cover:import("$(f)") == ok orelse halt(1),) \
 		cover:export("$(LOCAL_ERLANG_MK_TMP)/$@"), halt(0).'
@@ -114,7 +114,7 @@ define cover_report.erl
 endef
 
 cover-report:
-	$(gen_verbose) mkdir -p $(COVER_REPORT_DIR)
+	$(verbose) mkdir -p $(COVER_REPORT_DIR)
 	$(gen_verbose) $(call erlang,$(cover_report.erl))
 
 endif

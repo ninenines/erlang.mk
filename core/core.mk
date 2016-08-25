@@ -88,6 +88,9 @@ rel::
 
 check:: tests
 
+$(LOCAL_ERLANG_MK_TMP):
+	$(verbose) mkdir -p $(LOCAL_ERLANG_MK_TMP)
+
 clean:: clean-crashdump
 
 clean-crashdump:
