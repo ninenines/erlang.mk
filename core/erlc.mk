@@ -132,7 +132,7 @@ YRL_ERL_FILES = $(addprefix src/,$(patsubst %.yrl,%.erl,$(notdir $(YRL_FILES))))
 ERL_FILES += $(YRL_ERL_FILES)
 
 $(PROJECT).d:: $(XRL_FILES) $(YRL_FILES)
-	$(if $(strip $?),$(xyrl_verbose) erlc -v -o src/ $?)
+	$(if $(strip $?),$(xyrl_verbose) erlc -v -o src/ $(YRL_ERLC_OPTS) $?)
 
 # Erlang and Core Erlang files.
 
