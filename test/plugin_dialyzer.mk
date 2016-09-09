@@ -1,6 +1,6 @@
 # Dialyzer plugin.
 
-DIALYZER_CASES = app apps-only apps-with-local-deps check custom-plt deps erlc-opts local-deps opts plt-apps
+DIALYZER_CASES = app apps-only apps-with-local-deps beam check custom-plt deps erlc-opts local-deps opts plt-apps
 DIALYZER_TARGETS = $(addprefix dialyzer-,$(DIALYZER_CASES))
 
 ifneq ($(shell which sem 2>/dev/null),)
@@ -95,6 +95,34 @@ dialyzer-apps-with-local-deps: build clean
 
 	$i "Confirm that my_core_app was NOT included in the PLT"
 	$t ! dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q my_core_app
+
+dialyzer-beam: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Add lager to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\n"}' $(APP)/Makefile
+
+	$i "Add lager_transform to ERLC_OPTS"
+	$t echo "ERLC_OPTS += +'{parse_transform, lager_transform}'" >> $(APP)/Makefile
+
+	$i "Make Dialyzer use the beam files"
+	$t echo "DIALYZER_DIRS = -r ebin" >> $(APP)/Makefile
+
+	$i "Create a module that calls lager"
+	$t printf "%s\n" \
+		"-module(use_lager)." \
+		"-export([doit/0])." \
+		"doit() -> lager:error(\"Some message\")." > $(APP)/src/use_lager.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Run Dialyzer"
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 dialyzer-check: build clean
 
