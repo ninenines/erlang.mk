@@ -118,9 +118,6 @@ dialyzer-beam: build clean
 		"-export([doit/0])." \
 		"doit() -> lager:error(\"Some message\")." > $(APP)/src/use_lager.erl
 
-	$i "Build the application"
-	$t $(MAKE) -C $(APP) $v
-
 	$i "Run Dialyzer"
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
