@@ -191,18 +191,18 @@ dialyzer-erlc-opts: build clean
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
 	$i "Create a header file in a non-standard directory"
-	$t mkdir $(APP)/exotic/
-	$t touch $(APP)/exotic/dialyze.hrl
+	$t mkdir $(APP)/exotic-include-path/
+	$t touch $(APP)/exotic-include-path/dialyze.hrl
 
 	$i "Create a module that includes this header"
 	$t printf "%s\n" \
 		"-module(no_warn)." \
 		"-export([doit/0])." \
 		"-include(\"dialyze.hrl\")." \
-		"doit() -> ok." > $(APP)/src/no_warn.erl
+		"doit() -> ?OK." > $(APP)/src/no_warn.erl
 
 	$i "Point ERLC_OPTS to the non-standard include directory"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "ERLC_OPTS += -I exotic\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ERLC_OPTS += -I exotic-include-path -DOK=ok\n"}' $(APP)/Makefile
 
 	$i "Run Dialyzer"
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
