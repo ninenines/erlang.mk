@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = appsrc-change asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-include yrl yrl-include yrl-header
+CORE_APP_CASES = appsrc-change asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-include yrl yrl-header yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 
 .PHONY: core-app $(CORE_APP_TARGETS)
@@ -1467,14 +1467,13 @@ core-app-yrl-header: build clean
 	$i "Create the yrl header file"
 	$t mkdir $(APP)/include
 	$t echo "-export([forty_two/0])." > $(APP)/include/yecc_header.hrl
-	# a bunch of gobbldygook we don't actually care about, we just
-	# need to exist so we don't get errors.
-	$t echo "-export([ yeccpars1/5, yeccerror/1, yeccpars2/7, yeccpars2_0/7, yeccpars2_1/7, yeccpars2_2/7, yeccpars2_3/7, yeccpars2_5/7, yeccpars2_6/7, yeccpars2_7/7, yeccpars2_9/7, yeccpars2_11/7, 'yeccgoto_\'E\''/7, 'yeccgoto_\'F\''/7, 'yeccgoto_\'T\''/7, yeccpars2_9_/1, yeccpars2_11_/1, yeccpars2_7_/1])." >> $(APP)/include/yecc_header.hrl
+# A bunch of gobbldygook we don't actually care about, they just
+# need to exist so we don't get errors.
+	$t echo "-export([yeccpars1/5, yeccerror/1, yeccpars2/7, yeccpars2_0/7, yeccpars2_1/7, yeccpars2_2/7, yeccpars2_3/7, yeccpars2_5/7, yeccpars2_6/7, yeccpars2_7/7, yeccpars2_9/7, yeccpars2_11/7, 'yeccgoto_\'E\''/7, 'yeccgoto_\'F\''/7, 'yeccgoto_\'T\''/7, yeccpars2_9_/1, yeccpars2_11_/1, yeccpars2_7_/1])." >> $(APP)/include/yecc_header.hrl
 	$t echo "yeccpars1(_,_,_,_,_) -> throw(not_implemented)." >> $(APP)/include/yecc_header.hrl
 	$t echo "yeccerror(_) -> throw(not_implemented)." >> $(APP)/include/yecc_header.hrl
-	# and required bits done, now part we'll actually test for.
+# Required bits done, now part we'll actually test for.
 	$t echo "forty_two() -> 42." >> $(APP)/include/yecc_header.hrl
-
 
 	$i "Generate unrelated .erl files"
 	$t echo "-module(boy)." > $(APP)/src/boy.erl
@@ -1482,7 +1481,6 @@ core-app-yrl-header: build clean
 
 	$i "Build the application"
 	$t YRL_ERLC_OPTS="-I include/yecc_header.hrl" $(MAKE) -C $(APP) $v
-#	$t $(MAKE) -C $(APP) $v
 
 	$i "Check that all compiled files exist"
 	$t test -f $(APP)/$(APP).d
