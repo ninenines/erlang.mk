@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = appsrc-change asn1 auto-git-id erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-include yrl yrl-include
+CORE_APP_CASES = appsrc-change asn1 auto-git-id env erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-include yrl yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 
 .PHONY: core-app $(CORE_APP_TARGETS)
@@ -196,6 +196,40 @@ endif
 		{ok, ID} = application:get_key($(APP), id), \
 		true = ID =/= [], \
 		halt()"
+
+ifndef LEGACY
+core-app-env: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Define PROJECT_ENV"
+	$t echo "PROJECT_ENV = [{test_key, test_value}]" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, test_value} = application:get_env($(APP), test_key), \
+		halt()"
+
+	$i "Define PROJECT_ENV with escape in string, special char"
+	$t echo "PROJECT_ENV = [{test_atom, '\\\$$\$$test'}, {test_key, \"\\\"test_\\tvalue\\\"\"}]" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, \"\\\"test_\\tvalue\\\"\"} = application:get_env($(APP), test_key), \
+		{ok, '\\\$$test'} = application:get_env($(APP), test_atom), \
+		halt()"
+endif
 
 core-app-erlc-exclude: build clean
 

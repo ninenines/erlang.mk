@@ -25,6 +25,7 @@ PROJECT := $(strip $(PROJECT))
 
 PROJECT_VERSION ?= rolling
 PROJECT_MOD ?= $(PROJECT)_app
+PROJECT_ENV ?= []
 
 # Verbosity.
 

@@ -130,6 +130,8 @@ your situation.
         The application callback module.
 `PROJECT_REGISTERED`::
 	List of the names of all registered processes.
+`PROJECT_ENV`::
+	Configuration parameters used by the application.
 `LOCAL_DEPS`::
 	List of Erlang/OTP applications this project depends on,
 	excluding `erts`, `kernel` and `stdlib`, or list of
