@@ -1,6 +1,6 @@
 # ErlyDTL plugin.
 
-ERLYDTL_CASES = compile full-path opts path-full-path-suffix suffix
+ERLYDTL_CASES = compile full-path include-template opts path-full-path-suffix suffix
 ERLYDTL_TARGETS = $(addprefix erlydtl-,$(ERLYDTL_CASES))
 
 .PHONY: erlydtl $(ERLYDTL_TARGETS)
@@ -61,6 +61,33 @@ erlydtl-full-path: build clean
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:load($(APP)), \
 		{ok, [deep_$(APP)_two_dtl, $(APP_)_one_dtl]} = application:get_key($(APP), modules), \
+		halt()"
+
+erlydtl-include-template: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate ErlyDTL templates"
+	$t mkdir -p $(APP)/dtl/foo/
+	$t echo '{% include "foo/bar.dtl" %}' > $(APP)/dtl/foo.dtl
+	$t echo '{% var %}' > $(APP)/dtl/foo/bar.dtl
+	$t echo '{% extends "bar.dtl" %}' > $(APP)/dtl/foo/baz.dtl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) DEPS=erlydtl DTL_PATH=dtl DTL_FULL_PATH=1 DTL_SUFFIX= $v
+
+	$i "Check that ErlyDTL templates are compiled"
+	$t test -f $(APP)/ebin/foo.beam
+	$t test -f $(APP)/ebin/foo_bar.beam
+	$t test -f $(APP)/ebin/foo_baz.beam
+
+	$i "Check that ErlyDTL generated modules are included in .app file"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, [foo, foo_bar, foo_baz]} = application:get_key($(APP), modules), \
 		halt()"
 
 erlydtl-opts: build clean
