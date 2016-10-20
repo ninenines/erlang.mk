@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = appsrc-change asn1 auto-git-id env erlc-exclude erlc-opts erlc-opts-filter error generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib name-special-char no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-include yrl yrl-header yrl-include
+CORE_APP_CASES = appsrc-change asn1 auto-git-id env erlc-exclude erlc-opts erlc-opts-filter error extra-keys generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib name-special-char no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-include yrl yrl-header yrl-include
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 
 .PHONY: core-app $(CORE_APP_TARGETS)
@@ -228,6 +228,45 @@ core-app-env: build clean
 		ok = application:load($(APP)), \
 		{ok, \"\\\"test_\\tvalue\\\"\"} = application:get_env($(APP), test_key), \
 		{ok, '\\\$$test'} = application:get_env($(APP), test_atom), \
+		halt()"
+
+core-app-extra-keys: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Define PROJECT_APP_EXTRA_KEYS"
+	$t printf "define PROJECT_APP_EXTRA_KEYS\n\t{maxT, 10000},\n\t{non_standard_key, test_value}\nendef\n" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, 10000} = application:get_key($(APP), maxT), \
+		AppFile = filename:join(code:lib_dir($(APP), ebin), atom_to_list($(APP)) ++ \".app\"), \
+		{ok, [App]} = file:consult(AppFile), \
+		{application, $(APP), Props} = App, \
+		test_value = proplists:get_value(non_standard_key, Props),\
+		halt()"
+
+	$i "Define PROJECT_APP_EXTRA_KEYS with escape in string, special char"
+	$t echo "PROJECT_APP_EXTRA_KEYS = {non_standard_atom, '\\\$$\$$my_app'}, {non_standard_string, \"\\\"test_\\tvalue\\\"\"}" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		AppFile = filename:join(code:lib_dir($(APP), ebin), atom_to_list($(APP)) ++ \".app\"), \
+		{ok, [App]} = file:consult(AppFile), \
+		{application, $(APP), Props} = App, \
+		'\\\$$my_app' = proplists:get_value(non_standard_atom, Props),\
+		\"\\\"test_\\tvalue\\\"\" = proplists:get_value(non_standard_string, Props),\
 		halt()"
 endif
 

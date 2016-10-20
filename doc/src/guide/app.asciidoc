@@ -132,6 +132,11 @@ your situation.
 	List of the names of all registered processes.
 `PROJECT_ENV`::
 	Configuration parameters used by the application.
+`PROJECT_APP_EXTRA_KEYS`::
+	Other keys you want to add to the application `.app` file.
+	The variable content is written as-is to the `.app` file,
+	so be sure to format valid Erlang terms. For example:
+	`PROJECT_APP_EXTRA_KEYS = {maxT, 10000}, {start_phases, [...]}`.
 `LOCAL_DEPS`::
 	List of Erlang/OTP applications this project depends on,
 	excluding `erts`, `kernel` and `stdlib`, or list of
