@@ -1,4 +1,4 @@
-# Copyright (c) 2015, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2015-2016, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 # Verbosity.

@@ -290,7 +290,7 @@ you can always run `make help`:
 ----
 $ make help
 erlang.mk (version 1.2.0-642-gccd2b9f) is distributed under the terms of the ISC License.
-Copyright (c) 2013-2015 Loïc Hoguin <essen@ninenines.eu>
+Copyright (c) 2013-2016 Loïc Hoguin <essen@ninenines.eu>
 
 Usage: [V=1] make [target]...
 

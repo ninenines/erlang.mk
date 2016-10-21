@@ -1,4 +1,5 @@
-# Copyright 2015, Viktor Söderqvist <viktor@zuiderkwast.se>
+# Copyright (c) 2016, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2015, Viktor Söderqvist <viktor@zuiderkwast.se>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 COVER_REPORT_DIR = cover

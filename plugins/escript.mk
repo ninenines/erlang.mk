@@ -1,4 +1,5 @@
-# Copyright (c) 2014 Dave Cottlehuber <dch@skunkwerks.at>
+# Copyright (c) 2016, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2014, Dave Cottlehuber <dch@skunkwerks.at>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: distclean-escript escript
