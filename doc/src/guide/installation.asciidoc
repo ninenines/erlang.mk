@@ -1,23 +1,51 @@
 [[installation]]
 == Installation
 
-This chapter explains how to setup your system in
-order to use Erlang.mk.
-
 === On Unix
 
-Erlang.mk requires GNU Make to be installed. GNU Make 3.81
-or later is required. GNU Make 4.1 or later is recommended,
-as this is the version Erlang.mk is developed on.
+Erlang.mk requires GNU Make to be installed. While it will
+currently work with GNU Make 3.81, support for this version
+is deprecated and will be removed in 2017. We recommend
+GNU Make 4.1 or later.
+
+Git and Erlang/OTP must also be installed.
 
 Some functionality requires that Autoconf 2.59 or later be
 installed, in order to compile Erlang/OTP. Erlang/OTP may
 have further requirements depending on your needs.
 
-Erlang.mk currently requires Erlang/OTP to be installed in
-order to compile Erlang projects.
-
 Some packages may require additional libraries.
+
+==== Linux
+
+The commands to install packages vary between distributions:
+
+.Arch Linux
+[source,bash]
+$ pacman -Sy erlang git make
+
+==== FreeBSD
+
+FreeBSD comes with binary and source packages:
+
+.Install binary packages
+[source,bash]
+$ pkg install erl git gmake
+
+==== OS X and macOS
+
+While Apple distributes their own GNU Make, their version is
+very old and plagued with numerous bugs. It is recommended
+to install a more recent version from either Homebrew or
+MacPorts:
+
+.Homebrew
+[source,bash]
+$ brew install erlang git homebrew/dupes/make
+
+.MacPorts
+[source,bash]
+$ sudo port install erlang git gmake
 
 === On Windows
 

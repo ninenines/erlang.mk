@@ -18,6 +18,16 @@ ERLANG_MK_FILENAME := $(realpath $(lastword $(MAKEFILE_LIST)))
 
 ERLANG_MK_VERSION = 1
 
+# Make 3.81 and 3.82 are deprecated.
+
+ifeq ($(MAKE_VERSION),3.81)
+$(warning Please upgrade to GNU Make 4 or later: https://erlang.mk/guide/installation.html)
+endif
+
+ifeq ($(MAKE_VERSION),3.82)
+$(warning Please upgrade to GNU Make 4 or later: https://erlang.mk/guide/installation.html)
+endif
+
 # Core configuration.
 
 PROJECT ?= $(notdir $(CURDIR))
