@@ -28,8 +28,13 @@ as an Erlang.mk plugin.
 
 === hexer.mk
 
-An https://github.com/inaka/hexer.mk[Hex plugin] for Erlang.mk.
-Hex is a https://hex.pm/[package manager for the Elixir ecosystem].
+An https://github.com/inaka/hexer.mk[Hex plugin] for Erlang.mk
+using the `hexer` tool.
+
+=== hexpm.mk
+
+Another https://github.com/botsunit/hexpm.mk[Hex plugin] for
+Erlang.mk, with support for Hex dependency operators.
 
 === jorel
 
