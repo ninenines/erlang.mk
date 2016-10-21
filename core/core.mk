@@ -16,7 +16,7 @@
 
 ERLANG_MK_FILENAME := $(realpath $(lastword $(MAKEFILE_LIST)))
 
-ERLANG_MK_VERSION = 1
+ERLANG_MK_VERSION = rolling
 
 # Make 3.81 and 3.82 are deprecated.
 
