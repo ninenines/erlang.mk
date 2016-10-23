@@ -105,6 +105,13 @@ your situation.</p><div class="variablelist"><dl class="variablelist"><dt><span 
 </span></dt><dd>
     Configuration parameters used by the application.
 </dd><dt><span class="term">
+<code class="literal">PROJECT_APP_EXTRA_KEYS</code>
+</span></dt><dd>
+    Other keys you want to add to the application <code class="literal">.app</code> file.
+    The variable content is written as-is to the <code class="literal">.app</code> file,
+    so be sure to format valid Erlang terms. For example:
+    <code class="literal">PROJECT_APP_EXTRA_KEYS = {maxT, 10000}, {start_phases, [...]}</code>.
+</dd><dt><span class="term">
 <code class="literal">LOCAL_DEPS</code>
 </span></dt><dd>
     List of Erlang/OTP applications this project depends on,
