@@ -30,7 +30,7 @@ FreeBSD comes with binary and source packages:
 
 .Install binary packages
 [source,bash]
-$ pkg install erl git gmake
+$ pkg install erlang git gmake
 
 ==== OS X and macOS
 
