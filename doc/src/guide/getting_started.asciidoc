@@ -32,7 +32,7 @@ $ wget https://erlang.mk/erlang.mk
 Or:
 
 [source,bash]
-$ curl https://erlang.mk/erlang.mk -o erlang.mk
+$ curl -O https://erlang.mk/erlang.mk
 
 Alternatively, just https://erlang.mk/erlang.mk[click on this link].
 
