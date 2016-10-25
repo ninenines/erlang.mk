@@ -10,7 +10,7 @@ ci::
 else
 
 ifeq ($(strip $(KERL)),)
-KERL := $(CURDIR)/.erlang.mk/kerl/kerl
+KERL := $(ERLANG_MK_TMP)/kerl/kerl
 endif
 
 export KERL
