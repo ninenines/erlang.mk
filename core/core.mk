@@ -161,30 +161,7 @@ else
 core_native_path = $1
 endif
 
-ifeq ($(shell which wget 2>/dev/null | wc -l), 1)
-define core_http_get
-	wget --no-check-certificate -O $(1) $(2)|| rm $(1)
-endef
-else
-define core_http_get.erl
-	ssl:start(),
-	inets:start(),
-	case httpc:request(get, {"$(2)", []}, [{autoredirect, true}], []) of
-		{ok, {{_, 200, _}, _, Body}} ->
-			case file:write_file("$(1)", Body) of
-				ok -> ok;
-				{error, R1} -> halt(R1)
-			end;
-		{error, R2} ->
-			halt(R2)
-	end,
-	halt(0).
-endef
-
-define core_http_get
-	$(call erlang,$(call core_http_get.erl,$(call core_native_path,$1),$2))
-endef
-endif
+core_http_get = curl -Lf$(if $(filter-out 0,$(V)),,s)o $(call core_native_path,$1) $2
 
 core_eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 
