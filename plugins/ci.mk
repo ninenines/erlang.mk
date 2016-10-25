@@ -18,6 +18,8 @@ export KERL
 KERL_GIT ?= https://github.com/kerl/kerl
 KERL_COMMIT ?= master
 
+KERL_MAKEFLAGS ?=
+
 OTP_GIT ?= https://github.com/erlang/otp
 
 CI_INSTALL_DIR ?= $(HOME)/erlang
@@ -46,7 +48,7 @@ $(foreach otp,$(CI_OTP),$(eval $(call ci_target,$(otp))))
 define ci_otp_target
 ifeq ($(wildcard $(CI_INSTALL_DIR)/$(1)),)
 $(CI_INSTALL_DIR)/$(1): $(KERL)
-	$(KERL) build git $(OTP_GIT) $(1) $(1)
+	MAKEFLAGS="$(KERL_MAKEFLAGS)" $(KERL) build git $(OTP_GIT) $(1) $(1)
 	$(KERL) install $(1) $(CI_INSTALL_DIR)/$(1)
 endif
 endef
