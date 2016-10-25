@@ -51,13 +51,8 @@ ifneq ($(wildcard src/),)
 
 # Targets.
 
-ifeq ($(wildcard ebin/test),)
 app:: deps $(PROJECT).d
 	$(verbose) $(MAKE) --no-print-directory app-build
-else
-app:: clean deps $(PROJECT).d
-	$(verbose) $(MAKE) --no-print-directory app-build
-endif
 
 ifeq ($(wildcard src/$(PROJECT_MOD).erl),)
 define app_file
