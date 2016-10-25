@@ -1,7 +1,7 @@
 # Copyright (c) 2015-2016, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: ci ci-setup distclean-kerl
+.PHONY: ci ci-prepare ci-setup distclean-kerl
 
 KERL ?= $(CURDIR)/kerl
 export KERL
