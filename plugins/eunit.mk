@@ -36,7 +36,7 @@ define eunit.erl
 	case "$(COVER)" of
 		"" -> ok;
 		_ ->
-			cover:export("eunit.coverdata")
+			cover:export("$(LOCAL_ERLANG_MK_TMP)/eunit.coverdata")
 	end,
 	halt()
 endef

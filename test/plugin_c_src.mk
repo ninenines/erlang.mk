@@ -24,7 +24,7 @@ c-src-nif: build clean
 	$i "Check that all compiled files exist"
 	$t test -f $(APP)/$(APP).d
 	$t test -f $(APP)/c_src/$(APP).o
-	$t test -f $(APP)/c_src/env.mk
+	$t test -f $(APP)/.erlang.mk/env.mk
 	$t test -f $(APP)/ebin/$(APP).app
 	$t test -f $(APP)/ebin/$(APP).beam
 ifeq ($(PLATFORM),msys2)
@@ -49,7 +49,7 @@ endif
 	$i "Check that all compiled files exist"
 	$t test -f $(APP)/$(APP).d
 	$t test -f $(APP)/c_src/$(APP).o
-	$t test -f $(APP)/c_src/env.mk
+	$t test -f $(APP)/.erlang.mk/env.mk
 	$t test -f $(APP)/ebin/$(APP).app
 	$t test -f $(APP)/ebin/$(APP).beam
 ifeq ($(PLATFORM),msys2)
@@ -86,4 +86,4 @@ endif
 	$t $(MAKE) -C $(APP) distclean $v
 
 	$i "Check that all files were removed"
-	$t test ! -e $(APP)/c_src/env.mk
+	$t test ! -e $(APP)/.erlang.mk/env.mk

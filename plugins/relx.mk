@@ -5,7 +5,7 @@
 
 # Configuration.
 
-RELX ?= $(CURDIR)/relx
+RELX ?= $(ERLANG_MK_TMP)/relx
 RELX_CONFIG ?= $(CURDIR)/relx.config
 
 RELX_URL ?= https://github.com/erlware/relx/releases/download/v3.19.0/relx

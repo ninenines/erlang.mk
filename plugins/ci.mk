@@ -3,7 +3,7 @@
 
 .PHONY: ci ci-setup distclean-kerl
 
-KERL ?= $(CURDIR)/kerl
+KERL ?= $(ERLANG_MK_TMP)/kerl
 export KERL
 
 KERL_URL ?= https://raw.githubusercontent.com/yrashk/kerl/master/kerl

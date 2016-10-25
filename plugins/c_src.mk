@@ -6,7 +6,7 @@
 # Configuration.
 
 C_SRC_DIR ?= $(CURDIR)/c_src
-C_SRC_ENV ?= $(C_SRC_DIR)/env.mk
+C_SRC_ENV ?= $(LOCAL_ERLANG_MK_TMP)/env.mk
 C_SRC_OUTPUT ?= $(CURDIR)/priv/$(PROJECT)
 C_SRC_TYPE ?= shared
 
@@ -124,6 +124,7 @@ endif
 
 ifneq ($(wildcard $(C_SRC_DIR)),)
 $(C_SRC_ENV):
+	$(verbose) mkdir -p $(dir $(C_SRC_ENV))
 	$(verbose) $(ERL) -eval "file:write_file(\"$(call core_native_path,$(C_SRC_ENV))\", \
 		io_lib:format( \
 			\"ERTS_INCLUDE_DIR ?= ~s/erts-~s/include/~n\" \

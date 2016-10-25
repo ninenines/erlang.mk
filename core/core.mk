@@ -53,6 +53,7 @@ gen_verbose = $(gen_verbose_$(V))
 
 ERLANG_MK_TMP ?= $(CURDIR)/.erlang.mk
 export ERLANG_MK_TMP
+LOCAL_ERLANG_MK_TMP ?= $(CURDIR)/.erlang.mk
 
 # "erl" command.
 
@@ -97,6 +98,9 @@ rel::
 	$(verbose) :
 
 check:: tests
+
+$(LOCAL_ERLANG_MK_TMP):
+	$(verbose) mkdir -p $(LOCAL_ERLANG_MK_TMP)
 
 clean:: clean-crashdump
 
