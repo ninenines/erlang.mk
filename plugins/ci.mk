@@ -3,19 +3,25 @@
 
 .PHONY: ci ci-prepare ci-setup distclean-kerl
 
-KERL ?= $(CURDIR)/kerl
-export KERL
-
-KERL_URL ?= https://raw.githubusercontent.com/yrashk/kerl/master/kerl
-
-OTP_GIT ?= https://github.com/erlang/otp
-
-CI_INSTALL_DIR ?= $(HOME)/erlang
 CI_OTP ?=
 
 ifeq ($(strip $(CI_OTP)),)
 ci::
 else
+
+ifeq ($(strip $(KERL)),)
+KERL := $(CURDIR)/.erlang.mk/kerl/kerl
+endif
+
+export KERL
+
+KERL_GIT ?= https://github.com/kerl/kerl
+KERL_COMMIT ?= master
+
+OTP_GIT ?= https://github.com/erlang/otp
+
+CI_INSTALL_DIR ?= $(HOME)/erlang
+
 ci:: $(addprefix ci-,$(CI_OTP))
 
 ci-prepare: $(addprefix $(CI_INSTALL_DIR)/,$(CI_OTP))
@@ -48,7 +54,9 @@ endef
 $(foreach otp,$(CI_OTP),$(eval $(call ci_otp_target,$(otp))))
 
 $(KERL):
-	$(gen_verbose) $(call core_http_get,$(KERL),$(KERL_URL))
+	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+	$(gen_verbose) git clone $(KERL_GIT) $(ERLANG_MK_TMP)/kerl
+	$(verbose) cd $(ERLANG_MK_TMP)/kerl && git checkout $(KERL_COMMIT)
 	$(verbose) chmod +x $(KERL)
 
 help::
