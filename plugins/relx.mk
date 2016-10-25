@@ -1,11 +1,11 @@
 # Copyright (c) 2013-2016, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: relx-rel distclean-relx-rel distclean-relx run
+.PHONY: relx-rel distclean-relx-rel run
 
 # Configuration.
 
-RELX ?= $(CURDIR)/relx
+RELX ?= $(ERLANG_MK_TMP)/relx
 RELX_CONFIG ?= $(CURDIR)/relx.config
 
 RELX_URL ?= https://github.com/erlware/relx/releases/download/v3.19.0/relx
@@ -26,7 +26,7 @@ rel:: relx-rel
 endif
 endif
 
-distclean:: distclean-relx-rel distclean-relx
+distclean:: distclean-relx-rel
 
 # Plugin-specific targets.
 
@@ -39,9 +39,6 @@ relx-rel: $(RELX) rel-deps app
 
 distclean-relx-rel:
 	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)
-
-distclean-relx:
-	$(gen_verbose) rm -rf $(RELX)
 
 # Run target.
 
