@@ -135,7 +135,41 @@ those from C.</p><p>Similarly, if project A depends on projects B, C and D,
 regardless of the order, and A, B and C depend on a
 different version of D, it will always be A’s version
 that wins, because we fetch all dependencies of A before
-fetching those from B or C.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_ignoring_unwanted_dependencies"></a>7.4. Ignoring unwanted dependencies</h2></div></div></div><p>Sometimes, you may want to ignore dependencies entirely.
+fetching those from B or C.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_fetching_and_listing_dependencies_only"></a>7.4. Fetching and listing dependencies only</h2></div></div></div><p>You can fetch all dependencies recursively without building anything,
+with the <code class="literal">make fetch-deps</code> command. It follows the same rules described
+in the section above.</p><p>You can list all dependencies recursively, again without building
+anything, with the <code class="literal">make list-deps</code> command. It will obviously need
+to fetch all dependencies exactly like <code class="literal">make fetch-deps</code>. Once
+everything is fetched, it prints a sorted list of absolute paths to the
+dependencies.</p><p>By default, <code class="literal">fetch-deps</code> and <code class="literal">list-deps</code> work on the <code class="literal">BUILD_DEPS</code>
+and <code class="literal">DEPS</code> lists only. To also fetch/list <code class="literal">TEST_DEPS</code>, <code class="literal">DOC_DEPS</code>,
+<code class="literal">REL_DEPS</code> and/or <code class="literal">SHELL_DEPS</code>, you have two possibilities:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+You can use <code class="literal">make fetch-test-deps</code>, <code class="literal">make fetch-doc-deps</code>, <code class="literal">make
+  fetch-rel-deps</code> and <code class="literal">make fetch-shell-deps</code> commands respectively.
+  If you want to list them, you can use <code class="literal">make list-test-deps</code>, <code class="literal">make
+  list-doc-deps</code>, <code class="literal">make list-rel-deps</code> and <code class="literal">make list-shell-deps</code>
+  respectively.
+</li><li class="listitem">
+You can use <code class="literal">make fetch-deps</code> or <code class="literal">make list-deps</code> with the Makefile
+  variable <code class="literal">DEP_TYPES</code> set to a list of dependency types you want.
+  The types are <code class="literal">test</code>, <code class="literal">doc</code>, <code class="literal">rel</code> and <code class="literal">shell</code> respectively. For
+  example, you can list test and doc dependencies with <code class="literal">make list-deps
+  DEP_TYPES='test doc'</code>.
+</li></ul></div><p>Note that only first level ‘TEST_DEPS<code class="literal">, `DOC_DEPS</code>, <code class="literal">REL_DEPS</code> and
+<code class="literal">SHELL_DEPS</code> are included, not dependencies’ one. In other word,
+<code class="literal">make list-test-deps</code> lists the <code class="literal">TEST_DEPS</code> of your project, but not
+<code class="literal">TEST_DEPS</code> of the projects yours depend on.</p><p>No matter which method you use, <code class="literal">BUILD_DEPS</code> and <code class="literal">DEPS</code> are always
+included.</p><p>Internally, the <code class="literal">make fetch-*</code> commands store the complete list of
+dependencies in files named <code class="literal">$(ERLANG_MK_RECURSIVE_DEPS_LIST)</code>,
+<code class="literal">$(ERLANG_MK_RECURSIVE_TEST_DEPS_LIST)</code>,
+<code class="literal">$(ERLANG_MK_RECURSIVE_DOC_DEPS_LIST)</code>,
+<code class="literal">$(ERLANG_MK_RECURSIVE_REL_DEPS_LIST)</code> and
+<code class="literal">$(ERLANG_MK_RECURSIVE_SHELL_DEPS_LIST)</code>. Those files are simply printed
+by the <code class="literal">make list-*</code> commands.</p><p><code class="literal">make list-*</code> commands are made for human beings. If you need the list
+of dependencies in a Makefile or a script, you should use the content
+of those files directly instead. The reason is that <code class="literal">make fetch-*</code> and
+<code class="literal">make list-*</code> may have unwanted content in their output, such as actual
+fetching of dependencies.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_ignoring_unwanted_dependencies"></a>7.5. Ignoring unwanted dependencies</h2></div></div></div><p>Sometimes, you may want to ignore dependencies entirely.
 Not even fetch them. You may want to do this because a
 project you depend on depends on an application you do
 not need (like a dependency for building documentation
@@ -145,7 +179,7 @@ variable:</p><pre class="programlisting">IGNORE_DEPS += edown proper</pre><p>Thi
 building. It is therefore safe to write:</p><pre class="programlisting">IGNORE_DEPS += edown proper
 TEST_DEPS = proper</pre><p>The PropEr application will be fetched as intended when
 running <code class="literal">make tests</code> or <code class="literal">make check</code>. It will however
-not be fetched when running <code class="literal">make</code> or <code class="literal">make deps</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependencies_directory"></a>7.5. Dependencies directory</h2></div></div></div><p>Dependencies are fetched in <span class="emphasis"><em>$(DEPS_DIR)</em></span>. By default this is
+not be fetched when running <code class="literal">make</code> or <code class="literal">make deps</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependencies_directory"></a>7.6. Dependencies directory</h2></div></div></div><p>Dependencies are fetched in <span class="emphasis"><em>$(DEPS_DIR)</em></span>. By default this is
 the <span class="emphasis"><em>deps</em></span> directory. You can change this default, but you
 should only do so if it was not defined previously. Erlang.mk
 uses this variable to tell dependencies where to fetch their
@@ -154,7 +188,7 @@ if you know you will never use this project as a dependency,
 <code class="literal">=</code> will work. But to avoid it biting you later on, do this:</p><pre class="programlisting">DEPS_DIR ?= $(CURDIR)/libs</pre><p>The <code class="literal">$(CURDIR)</code> part is important, otherwise dependencies of
 dependencies will be fetched in the wrong directory.</p><p>Erlang.mk will also export the <code class="literal">REBAR_DEPS_DIR</code> variable for
 compatibility with Rebar build tools, as long as they are
-recent enough.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_many_applications_in_one_repository"></a>7.6. Many applications in one repository</h2></div></div></div><p>In addition to the dependencies that are fetched, Erlang.mk
+recent enough.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_many_applications_in_one_repository"></a>7.7. Many applications in one repository</h2></div></div></div><p>In addition to the dependencies that are fetched, Erlang.mk
 also allows you to have dependencies local to your repository.
 This kind of layout is sometimes called multi-application
 repositories, or repositories with multiple applications.</p><p>They work exactly the same as remote dependencies, except:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
@@ -178,7 +212,7 @@ command will create the necessary directories and bootstrap
 the application.</p><p>For example, to create a full fledged OTP application as
 a local dependency:</p><pre class="programlisting">$ make new-app in=webchat</pre><p>Or, the same as an OTP library:</p><pre class="programlisting">$ make new-lib in=webchat</pre><p>Templates also work with local dependencies, from the root
 directory of the project. You do need however to tell
-Erlang.mk to create the files in the correct application:</p><pre class="programlisting">$ make new t=gen_server n=my_server in=webchat</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_repositories_with_no_application_at_the_root_level"></a>7.7. Repositories with no application at the root level</h2></div></div></div><p>It’s possible to use Erlang.mk with only applications in
+Erlang.mk to create the files in the correct application:</p><pre class="programlisting">$ make new t=gen_server n=my_server in=webchat</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_repositories_with_no_application_at_the_root_level"></a>7.8. Repositories with no application at the root level</h2></div></div></div><p>It’s possible to use Erlang.mk with only applications in
 <span class="emphasis"><em>$(APPS_DIR)</em></span>, and nothing at the root of the repository.
 Just create a folder, put the <span class="emphasis"><em>erlang.mk</em></span> file in it,
 write a Makefile that includes it, and start creating
@@ -186,7 +220,7 @@ your applications.</p><p>Similarly, it’s possible to have a repository with on
 dependencies found in <span class="emphasis"><em>$(DEPS_DIR)</em></span>. You just need to
 create a Makefile and specify the dependencies you want.
 This allows you to create a repository for handling the
-building of releases, for example.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_autopatch"></a>7.8. Autopatch</h2></div></div></div><p>Erlang.mk will automatically patch all the dependencies it
+building of releases, for example.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_autopatch"></a>7.9. Autopatch</h2></div></div></div><p>Erlang.mk will automatically patch all the dependencies it
 fetches. It needs to do this to ensure that the dependencies
 become compatible with not only Erlang.mk, but also with
 the version of Erlang.mk that is currently used.</p><p>When fetching a dependency, the following operations are
@@ -223,7 +257,7 @@ empty Makefile generated, for compatibility purposes.
 Other projects with no Makefile are left untouched.
 </li></ul></div><p>You can disable the replacing of the <span class="emphasis"><em>erlang.mk</em></span> file by
 defining the <code class="literal">NO_AUTOPATCH_ERLANG_MK</code> variable:</p><pre class="programlisting">NO_AUTOPATCH_ERLANG_MK = 1</pre><p>You can also disable autopatch entirely for a few select
-projects using the <code class="literal">NO_AUTOPATCH</code> variable:</p><pre class="programlisting">NO_AUTOPATCH = cowboy ranch cowlib</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_skipping_deps"></a>7.9. Skipping deps</h2></div></div></div><p>It is possible to temporarily skip all dependency operations.
+projects using the <code class="literal">NO_AUTOPATCH</code> variable:</p><pre class="programlisting">NO_AUTOPATCH = cowboy ranch cowlib</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_skipping_deps"></a>7.10. Skipping deps</h2></div></div></div><p>It is possible to temporarily skip all dependency operations.
 This is done by defining the <code class="literal">SKIP_DEPS</code> variable. Use cases
 include being somewhere with no connection to download them,
 or perhaps a peculiar setup.</p><p>A typical usage would be:</p><pre class="programlisting">$ make SKIP_DEPS=1</pre><p>When the variable is defined:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
