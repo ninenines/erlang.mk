@@ -855,12 +855,12 @@ core-deps-fetch-hex: build clean
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add Cowboy 1.0.0 to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = hex 1.0.0\n"}' $(APP)/Makefile
+	$i "Add Cowboy 1.0.0 and inaka_mixer 0.1.5 to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy mixer\ndep_cowboy = hex 1.0.0\ndep_mixer = hex 0.1.5 inaka_mixer\n"}' $(APP)/Makefile
 
 ifdef LEGACY
-	$i "Add Cowboy to the applications key in the .app.src file"
-	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
+	$i "Add Cowboy and Mixer to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,mixer,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
@@ -870,13 +870,16 @@ endif
 	$t test -d $(APP)/deps/cowboy
 	$t test -d $(APP)/deps/cowlib
 	$t test -d $(APP)/deps/ranch
+	$t test -d $(APP)/deps/mixer
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
-		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch]], \
+		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch, mixer]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(cowboy, Deps), \
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
+		true = lists:member(mixer, Deps), \
+		{ok, \"0.1.5\"} = application:get_key(mixer, vsn), \
 		halt()"
 
 core-deps-fetch-hg: build clean

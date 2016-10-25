@@ -167,7 +167,7 @@ The following table lists all existing methods:
 | hg             | hg repo commit  | Clone the Mercurial repository and update to the given version
 | svn            | svn repo        | Checkout the given SVN repository
 | cp             | cp path/to/repo | Recursively copy a local directory
-| hex            | hex version     | Download the given project version from hex.pm
+| hex            | hex vsn [pkg]   | Download the given project version from hex.pm
 | fail           | N/A             | Always fail, reserved for internal use
 | legacy         | N/A             | Legacy Erlang.mk fetcher, reserved for internal use
 |===
@@ -219,6 +219,12 @@ link:https://hex.pm/[Hex repository]:
 
 [source,make]
 dep_cowboy = hex 1.0.3
+
+If the package name in hex.pm doesn't match the name of your app,
+you can specify a second parameter with the package name:
+
+[source,make]
+dep_jiffy = hex 0.14.5 barrel_jiffy
 
 ==== Custom fetch methods
 
