@@ -93,7 +93,7 @@ stop(_State) ->
 endef
 
 define bs_relx_config
-{release, {$p_release, "1"}, [$p]}.
+{release, {$p_release, "1"}, [$p, sasl, runtime_tools]}.
 {extended_start_script, true}.
 {sys_config, "rel/sys.config"}.
 {vm_args, "rel/vm.args"}.
