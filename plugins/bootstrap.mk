@@ -55,7 +55,7 @@ ifdef SP
 define bs_Makefile
 PROJECT = $p
 PROJECT_DESCRIPTION = New project
-PROJECT_VERSION = 0.0.1
+PROJECT_VERSION = 0.1.0
 
 # Whitespace to be used when creating files from templates.
 SP = $(SP)
@@ -65,7 +65,7 @@ else
 define bs_Makefile
 PROJECT = $p
 PROJECT_DESCRIPTION = New project
-PROJECT_VERSION = 0.0.1
+PROJECT_VERSION = 0.1.0
 
 endef
 endif
@@ -73,7 +73,7 @@ endif
 define bs_apps_Makefile
 PROJECT = $p
 PROJECT_DESCRIPTION = New project
-PROJECT_VERSION = 0.0.1
+PROJECT_VERSION = 0.1.0
 
 include $(call core_relpath,$(dir $(ERLANG_MK_FILENAME)),$(APPS_DIR)/app)/erlang.mk
 endef
