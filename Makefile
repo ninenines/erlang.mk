@@ -58,6 +58,7 @@ search:
 clean:
 	$(MAKE) -C test clean
 	rm -rf doc/guide.pdf doc/html
+	git checkout erlang.mk
 
 docs:
 	$(MAKE) -f core/core.mk -f core/docs.mk -f plugins/asciidoc.mk asciidoc
