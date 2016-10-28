@@ -57,7 +57,7 @@ relx-relup: build clean
 
 	$i "Set the initial application version"
 ifeq ($(LEGACY),1)
-	$t sed -i s/"{vsn, \"0.1.0\"}"/"{vsn, \"1\"}"/ $(APP)/src/$(APP).app.src
+	$t sed -i.bak s/"{vsn, \"0.1.0\"}"/"{vsn, \"1\"}"/ $(APP)/src/$(APP).app.src
 else
 	$t echo "PROJECT_VERSION = 1" >> $(APP)/Makefile
 endif
@@ -72,13 +72,13 @@ endif
 	$t $(MAKE) -C $(APP) $v
 
 	$i "Update the test module"
-	$t sed -i s/"test() -> old."/"test() -> new."/ $(APP)/src/test.erl
+	$t sed -i.bak s/"test() -> old."/"test() -> new."/ $(APP)/src/test.erl
 
 	$i "Bump the application version"
 ifeq ($(LEGACY),1)
-	$t sed -i s/"{vsn, \"1\"}"/"{vsn, \"2\"}"/ $(APP)/src/$(APP).app.src
+	$t sed -i.bak s/"{vsn, \"1\"}"/"{vsn, \"2\"}"/ $(APP)/src/$(APP).app.src
 else
-	$t sed -i s/"PROJECT_VERSION = 1"/"PROJECT_VERSION = 2"/ $(APP)/Makefile
+	$t sed -i.bak s/"PROJECT_VERSION = 1"/"PROJECT_VERSION = 2"/ $(APP)/Makefile
 endif
 
 	$i "Generate a .appup for the application"
@@ -89,7 +89,7 @@ endif
 		"}." > $(APP)/ebin/$(APP).appup
 
 	$i "Bump the release version"
-	$t sed -i s/"1"/"2"/ $(APP)/relx.config
+	$t sed -i.bak s/"1"/"2"/ $(APP)/relx.config
 
 	$i "Build a new release with a relup as a tarball"
 	$t $(MAKE) -C $(APP) relup $v
