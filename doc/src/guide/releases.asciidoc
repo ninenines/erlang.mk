@@ -17,12 +17,11 @@ RELX_CONFIG = $(CURDIR)/webchat.config
 
 Relx does not need to be installed. Erlang.mk will download
 and build it automatically.
-// @todo We are going to fetch relx from repository in the future.
 
 The Relx executable will be saved in the '$(RELX)' file. This
 location defaults to '$(CURDIR)/relx' and can be overriden.
 
-// @todo You can use a custom repository by ???
+// @todo You can use a custom location by ???
 
 === Configuration
 
@@ -56,6 +55,10 @@ the `rel` target can be used:
 [source,bash]
 $ make rel
 
+Erlang.mk always generates a tarball alongside the release,
+which can be directly uploaded to a server. The tarball is
+located at `$(RELX_OUTPUT_DIR)/<name>/<name>-<vsn>.tar.gz`.
+
 === Running the release
 
 Erlang.mk provides a convenience function for running the
@@ -68,3 +71,50 @@ This command will also build the project and generate the
 release if they weren't already. It starts the release in
 _console mode_, meaning you will also have a shell ready to
 use to check things as needed.
+
+=== Upgrading a release
+
+Erlang.mk provides a `relup` target for generating release
+upgrades. Release upgrades allow updating the code and the
+state of a running release without restarting it.
+
+Once your changes are done, you need to update the version
+of the application(s) that will be updated. You also need
+to update the version of the release.
+
+For each application that needs to be updated, an
+http://erlang.org/doc/man/appup.html[appup file]
+must be written. Refer to the Erlang/OTP documentation
+for more details.
+
+For the purpose of this section, assume the initial release
+version was `1`, and the new version is `2`. The name of the
+release will be `example`.
+
+Once all this is done, you can build the tarball for the
+release upgrade:
+
+[source,bash]
+$ make relup
+
+This will create an archive at the root directory of the
+release, `$(RELX_OUTPUT_DIR)/example/example-2.tar.gz`.
+
+Move the archive to the correct location on the running
+node. From the release's root directory:
+
+[source,bash]
+$ mkdir releases/2/
+$ mv path/to/example-2.tar.gz releases/2/
+
+Finally, upgrade the release:
+
+[source,bash]
+$ bin/example_release upgrade "2/example_release"
+
+Or on Windows:
+
+[source,bash]
+$ bin/example_release.cmd upgrade "2/example_release"
+
+Your release was upgraded!

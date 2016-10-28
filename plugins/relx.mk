@@ -1,7 +1,7 @@
 # Copyright (c) 2013-2016, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: relx-rel distclean-relx-rel run
+.PHONY: relx-rel relx-relup distclean-relx-rel run
 
 # Configuration.
 
@@ -23,6 +23,8 @@ endif
 ifeq ($(IS_DEP),)
 ifneq ($(wildcard $(RELX_CONFIG)),)
 rel:: relx-rel
+
+relup:: relx-relup
 endif
 endif
 
@@ -35,7 +37,10 @@ $(RELX):
 	$(verbose) chmod +x $(RELX)
 
 relx-rel: $(RELX) rel-deps app
-	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release tar
+
+relx-relup: $(RELX) rel-deps app
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release relup tar
 
 distclean-relx-rel:
 	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)

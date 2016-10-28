@@ -69,7 +69,7 @@ endif
 		"test() -> old." > $(APP)/src/test.erl
 
 	$i "Build the initial release as a tarball"
-	$t $(MAKE) -C $(APP) RELX_OPTS="release tar" $v
+	$t $(MAKE) -C $(APP) $v
 
 	$i "Update the test module"
 	$t sed -i s/"test() -> old."/"test() -> new."/ $(APP)/src/test.erl
@@ -92,7 +92,7 @@ endif
 	$t sed -i s/"1"/"2"/ $(APP)/relx.config
 
 	$i "Build a new release with a relup as a tarball"
-	$t $(MAKE) -C $(APP) RELX_OPTS="release relup tar" $v
+	$t $(MAKE) -C $(APP) relup $v
 
 	$i "Test that both releases are available"
 	$t test -f $(APP)/_rel/$(APP)_release/$(APP)_release-1.tar.gz
@@ -185,7 +185,7 @@ relx-tar: build clean
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
 	$i "Build the release as a tarball"
-	$t $(MAKE) RELX_OPTS="release tar" -C $(APP) $v
+	$t $(MAKE) -C $(APP) $v
 
 	$i "Check that tarball exists"
 	$t test -f $(APP)/_rel/$(APP)_release/$(APP)_release-1.tar.gz
