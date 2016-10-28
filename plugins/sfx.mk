@@ -3,12 +3,13 @@
 
 .PHONY: sfx
 
-ifdef RELX_RELEASE
+ifdef RELX_REL
 ifdef SFX
 
 # Configuration.
 
-SFX_OUTPUT = $(RELX_OUTPUT_DIR)/$(RELX_RELEASE).run
+SFX_ARCHIVE ?= $(RELX_OUTPUT_DIR)/$(RELX_REL_NAME)/$(RELX_REL_NAME)-$(RELX_REL_VSN).tar.gz
+SFX_OUTPUT_FILE ?= $(RELX_OUTPUT_DIR)/$(RELX_REL_NAME).run
 
 # Core targets.
 
@@ -26,7 +27,7 @@ REL=$${FILENAME%.*}
 
 tail -n+$$ARCHIVE $$0 | tar -xzf - -C $$TMPDIR
 
-$$TMPDIR/$$REL/bin/$$REL console
+$$TMPDIR/bin/$$REL console
 RET=$$?
 
 rm -rf $$TMPDIR
@@ -37,9 +38,9 @@ __ARCHIVE_BELOW__
 endef
 
 sfx:
-	$(call render_template,sfx_stub,$(SFX_OUTPUT))
-	$(gen_verbose) tar -C $(RELX_OUTPUT_DIR) -czf - $(RELX_RELEASE) >> $(SFX_OUTPUT)
-	$(verbose) chmod +x $(SFX_OUTPUT)
+	$(call render_template,sfx_stub,$(SFX_OUTPUT_FILE))
+	$(gen_verbose) cat $(SFX_ARCHIVE) >> $(SFX_OUTPUT_FILE)
+	$(verbose) chmod +x $(SFX_OUTPUT_FILE)
 
 endif
 endif

@@ -53,15 +53,17 @@ else
 
 define get_relx_release.erl
 	{ok, Config} = file:consult("$(RELX_CONFIG)"),
-	{release, {Name, _}, _} = lists:keyfind(release, 1, Config),
-	io:format("~s", [Name]),
+	{release, {Name, Vsn}, _} = lists:keyfind(release, 1, Config),
+	io:format("~s ~s", [Name, Vsn]),
 	halt(0).
 endef
 
-RELX_RELEASE = `$(call erlang,$(get_relx_release.erl))`
+RELX_REL := $(shell $(call erlang,$(get_relx_release.erl)))
+RELX_REL_NAME := $(word 1,$(RELX_REL))
+RELX_REL_VSN := $(word 2,$(RELX_REL))
 
 run: all
-	$(verbose) $(RELX_OUTPUT_DIR)/$(RELX_RELEASE)/bin/$(RELX_RELEASE) console
+	$(verbose) $(RELX_OUTPUT_DIR)/$(RELX_REL_NAME)/bin/$(RELX_REL_NAME) console
 
 help::
 	$(verbose) printf "%s\n" "" \
