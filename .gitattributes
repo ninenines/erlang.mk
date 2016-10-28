@@ -1,1 +1,1 @@
-erlang.mk -nodiff
+erlang.mk -diff
