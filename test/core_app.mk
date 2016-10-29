@@ -1138,7 +1138,7 @@ core-app-pt: build clean
 		"-module(my_pt)." \
 		"-export([parse_transform/2])." \
 		"parse_transform(Forms, _) ->" \
-		"	io:format(\"*** Running my_pt parse_transform.~n\")," \
+		"	io:format(\"# Running my_pt parse_transform.~n\")," \
 		"	Forms." > $(APP)/src/my_pt.erl
 
 	$i "Generate a .erl file that uses the my_pt parse_transform"
@@ -1176,7 +1176,7 @@ core-app-pt-erlc-opts: build clean
 		"-module(my_pt)." \
 		"-export([parse_transform/2])." \
 		"parse_transform(Forms, _) ->" \
-		"	io:format(\"*** Running my_pt parse_transform.~n\")," \
+		"	io:format(\"# Running my_pt parse_transform.~n\")," \
 		"	Forms." > $(APP)/deps/my_pt_dep/src/my_pt.erl
 
 	$i "Add my_pt_dep to the list of dependencies"
