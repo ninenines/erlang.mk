@@ -33,7 +33,7 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="history.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> </td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="contributing"></a>Chapter 25. Contributing</h2></div></div></div><p>You are welcome and encouraged to contribute.</p><p>This is how.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_priorities"></a>25.1. Priorities</h2></div></div></div><p>From the most important to the least important:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="history.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> </td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="contributing"></a>Chapter 26. Contributing</h2></div></div></div><p>You are welcome and encouraged to contribute.</p><p>This is how.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_priorities"></a>26.1. Priorities</h2></div></div></div><p>From the most important to the least important:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 Bugs
 </li><li class="listitem">
 Package issues/additions
@@ -41,7 +41,7 @@ Package issues/additions
 Refactoring
 </li><li class="listitem">
 Features
-</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_bugs"></a>25.2. Bugs</h2></div></div></div><p>If you have found a bug, you should open a ticket. Include
+</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_bugs"></a>26.2. Bugs</h2></div></div></div><p>If you have found a bug, you should open a ticket. Include
 everything relevant including the command you used, output,
 a link to the code that triggers the issue, why you think
 this is a bug, etc.</p><p>If you think you have found a bug but you are not sure, you
@@ -49,7 +49,7 @@ should open a ticket as previously explained.</p><p>If you have found a bug and 
 NOW, open a ticket as previously explained.</p><p>Once you have opened a ticket, be patient, try to answer
 questions in a timely manner and confirm that the bug was
 indeed fixed when it is.</p><p>If you can’t be patient, either try to solve the bug and
-contribute the fix back or become a paying customer.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_code"></a>25.3. Code</h2></div></div></div><p>The code is located in the <span class="emphasis"><em>core/*.mk</em></span> and <span class="emphasis"><em>plugins/*.mk</em></span> files.
+contribute the fix back or become a paying customer.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_code"></a>26.3. Code</h2></div></div></div><p>The code is located in the <span class="emphasis"><em>core/*.mk</em></span> and <span class="emphasis"><em>plugins/*.mk</em></span> files.
 The tests are located in the <span class="emphasis"><em>test/Makefile</em></span> and <span class="emphasis"><em>test/*.mk</em></span> files.</p><p>If you have a fix or a hack for a bug, you should open a
 pull request. Any fix should include a test case that fails
 before the fix and is working after.</p><p>If you have a test case that reproduces a bug, but no fix for
@@ -62,7 +62,7 @@ The value 4 is particular and shows expanded commands right
 before they are executed.</p><p>To run tests in parallel, use the <code class="literal">-j</code> option. It is generally
 a good idea to also use the <code class="literal">-k</code> option to run all tests even
 if one fails. For example: <code class="literal">make check -j 32 -k</code>.</p><p>Some changes should be tested against all packages. Continue
-reading for more details on testing them.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_packages"></a>25.4. Packages</h2></div></div></div><p>You can search existing packages using the <code class="literal">make search q=STRING</code>
+reading for more details on testing them.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_packages"></a>26.4. Packages</h2></div></div></div><p>You can search existing packages using the <code class="literal">make search q=STRING</code>
 command. This can be done both from an Erlang.mk project or
 directly from the Erlang.mk repository.</p><p>Packages can be added to the index using the <code class="literal">pkg_add.sh</code> script.</p><pre class="programlisting">$ git clone https://github.com/$YOURUSERNAME/erlang.mk
 $ cd erlang.mk
@@ -75,12 +75,12 @@ where <code class="literal">PACKAGE</code> is the name of the package, for examp
 This can take a long time. Some packages will fail with certain
 versions of Erlang, or if a prerequisite is missing from your system.
 You can of course speed things up using the <code class="literal">-j</code> and <code class="literal">-k</code> flags.</p><p>After all packages have been tested, you can run the command
-<code class="literal">make summary</code> to know what changed since the previous run.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_documentation"></a>25.5. Documentation</h2></div></div></div><p>The documentation is always right.</p><p>If you think you have found a mistake in the documentation,
+<code class="literal">make summary</code> to know what changed since the previous run.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_documentation"></a>26.5. Documentation</h2></div></div></div><p>The documentation is always right.</p><p>If you think you have found a mistake in the documentation,
 this is a bug. You can either open a ticket or send a pull
 request.</p><p>To make sure that the documentation changes work, install
-the listed <a class="link" href="asciidoc.html" title="Chapter 12. AsciiDoc documentation">Requirements</a>
-<a class="xref" href="asciidoc.html" title="Chapter 12. AsciiDoc documentation">Chapter 12, <em>AsciiDoc documentation</em></a> on your system and
-run <code class="literal">make docs</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_feature_requests"></a>25.6. Feature requests</h2></div></div></div><p>If you have an awesome idea or need something that Erlang.mk
+the listed <a class="link" href="asciidoc.html" title="Chapter 13. AsciiDoc documentation">Requirements</a>
+<a class="xref" href="asciidoc.html" title="Chapter 13. AsciiDoc documentation">Chapter 13, <em>AsciiDoc documentation</em></a> on your system and
+run <code class="literal">make docs</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_feature_requests"></a>26.6. Feature requests</h2></div></div></div><p>If you have an awesome idea or need something that Erlang.mk
 doesn’t provide yet, open a ticket. Provide as much detail as
 possible.</p><p>If you have code, great! Open a pull request as previously
 explained.</p><p>If not, you can still improve your feature request by writing
