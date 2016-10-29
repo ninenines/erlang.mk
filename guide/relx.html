@@ -48,11 +48,26 @@ directory. You can also override it:</p><pre class="programlisting">RELX_OUTPUT_
 release. As mentioned before, Erlang.mk will automatically
 generate it when it detects the <span class="emphasis"><em>$(RELX_CONFIG)</em></span> file. This
 means the following command will also build the release:</p><pre class="programlisting">$ make</pre><p>If you need to generate the release, and only the release,
-the <code class="literal">rel</code> target can be used:</p><pre class="programlisting">$ make rel</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_the_release"></a>9.4. Running the release</h2></div></div></div><p>Erlang.mk provides a convenience function for running the
+the <code class="literal">rel</code> target can be used:</p><pre class="programlisting">$ make rel</pre><p>Erlang.mk always generates a tarball alongside the release,
+which can be directly uploaded to a server. The tarball is
+located at <code class="literal">$(RELX_OUTPUT_DIR)/&lt;name&gt;/&lt;name&gt;-&lt;vsn&gt;.tar.gz</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_the_release"></a>9.4. Running the release</h2></div></div></div><p>Erlang.mk provides a convenience function for running the
 release with one simple command:</p><pre class="programlisting">$ make run</pre><p>This command will also build the project and generate the
 release if they weren’t already. It starts the release in
 <span class="emphasis"><em>console mode</em></span>, meaning you will also have a shell ready to
-use to check things as needed.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ports.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="escript.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+use to check things as needed.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_upgrading_a_release"></a>9.5. Upgrading a release</h2></div></div></div><p>Erlang.mk provides a <code class="literal">relup</code> target for generating release
+upgrades. Release upgrades allow updating the code and the
+state of a running release without restarting it.</p><p>Once your changes are done, you need to update the version
+of the application(s) that will be updated. You also need
+to update the version of the release.</p><p>For each application that needs to be updated, an
+<a class="ulink" href="http://erlang.org/doc/man/appup.html" target="_top">appup file</a>
+must be written. Refer to the Erlang/OTP documentation
+for more details.</p><p>For the purpose of this section, assume the initial release
+version was <code class="literal">1</code>, and the new version is <code class="literal">2</code>. The name of the
+release will be <code class="literal">example</code>.</p><p>Once all this is done, you can build the tarball for the
+release upgrade:</p><pre class="programlisting">$ make relup</pre><p>This will create an archive at the root directory of the
+release, <code class="literal">$(RELX_OUTPUT_DIR)/example/example-2.tar.gz</code>.</p><p>Move the archive to the correct location on the running
+node. From the release’s root directory:</p><pre class="programlisting">$ mkdir releases/2/
+$ mv path/to/example-2.tar.gz releases/2/</pre><p>Finally, upgrade the release:</p><pre class="programlisting">$ bin/example_release upgrade "2/example_release"</pre><p>Or on Windows:</p><pre class="programlisting">$ bin/example_release.cmd upgrade "2/example_release"</pre><p>Your release was upgraded!</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ports.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="escript.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>
