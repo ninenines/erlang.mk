@@ -16,7 +16,7 @@ dtl_verbose = $(dtl_verbose_$(V))
 # Core targets.
 
 DTL_PATH := $(abspath $(DTL_PATH))
-DTL_FILES = $(call core_find,$(DTL_PATH),*.dtl)
+DTL_FILES := $(sort $(call core_find,$(DTL_PATH),*.dtl))
 
 ifneq ($(DTL_FILES),)
 

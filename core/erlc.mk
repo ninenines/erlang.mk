@@ -91,8 +91,10 @@ app-build: ebin/$(PROJECT).app
 
 # Source files.
 
-ERL_FILES = $(sort $(call core_find,src/,*.erl))
-CORE_FILES = $(sort $(call core_find,src/,*.core))
+ALL_SRC_FILES := $(sort $(call core_find,src/,*))
+
+ERL_FILES := $(filter %.erl,$(ALL_SRC_FILES))
+CORE_FILES := $(filter %.core,$(ALL_SRC_FILES))
 
 # ASN.1 files.
 
@@ -125,11 +127,11 @@ endif
 
 # Leex and Yecc files.
 
-XRL_FILES = $(sort $(call core_find,src/,*.xrl))
+XRL_FILES := $(filter %.xrl,$(ALL_SRC_FILES))
 XRL_ERL_FILES = $(addprefix src/,$(patsubst %.xrl,%.erl,$(notdir $(XRL_FILES))))
 ERL_FILES += $(XRL_ERL_FILES)
 
-YRL_FILES = $(sort $(call core_find,src/,*.yrl))
+YRL_FILES := $(filter %.yrl,$(ALL_SRC_FILES))
 YRL_ERL_FILES = $(addprefix src/,$(patsubst %.yrl,%.erl,$(notdir $(YRL_FILES))))
 ERL_FILES += $(YRL_ERL_FILES)
 

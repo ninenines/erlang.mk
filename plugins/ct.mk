@@ -6,11 +6,13 @@
 # Configuration.
 
 CT_OPTS ?=
+
 ifneq ($(wildcard $(TEST_DIR)),)
-	CT_SUITES ?= $(sort $(subst _SUITE.erl,,$(notdir $(call core_find,$(TEST_DIR)/,*_SUITE.erl))))
-else
-	CT_SUITES ?=
+ifndef CT_SUITES
+CT_SUITES := $(sort $(subst _SUITE.erl,,$(notdir $(call core_find,$(TEST_DIR)/,*_SUITE.erl))))
 endif
+endif
+CT_SUITES ?=
 
 # Core targets.
 
