@@ -1,0 +1,49 @@
+[[sfx]]
+== Self-extracting releases
+
+Erlang.mk allows you to package xref:relx[Relx releases] as
+self-extracting archives. These archives contain all the
+files in the release and come in the form of a script that
+will extract and run the release automatically.
+
+This allows you to package the release as a single file
+that can then be executed.
+
+This feature is currently experimental. Feedback is much
+appreciated.
+
+=== Generating the self-extracting archive
+
+To generate a self-extracting release, all you need to do
+is pass the `SFX=1` variable to Make when you build the
+release:
+
+[source,bash]
+$ make SFX=1
+
+This will create a self-extracting archive in
+`$RELX_OUTPUT_DIR/<name>.run`. For example if the release
+is named `hello_world` and `$RELX_OUTPUT_DIR` is the default,
+the file will be located at `_rel/hello_world.run`.
+
+=== Running the release
+
+Simply execute the script to get started:
+
+[source,bash]
+----
+$ ./_rel/hello_world.run
+Exec: /tmp/tmp.3eeEq7E1ta/erts-8.1/bin/erlexec ...
+Root: /tmp/tmp.3eeEq7E1ta
+/tmp/tmp.3eeEq7E1ta
+Erlang/OTP 19 [erts-8.1] [source] [64-bit] [smp:4:4] ...
+
+Eshell V8.1  (abort with ^G)
+(hello_world@localhost)1>
+----
+
+As you can see the archive is extracted to a temporary
+directory before the release can be started.
+
+The self-extracting script currently only supports starting
+the release in `console` mode.

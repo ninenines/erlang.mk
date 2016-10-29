@@ -26,6 +26,8 @@ include::ports.asciidoc[NIFs and port drivers]
 
 include::releases.asciidoc[Releases]
 
+include::sfx.asciidoc[Self-extracting releases]
+
 include::escripts.asciidoc[Escripts]
 
 include::compat.asciidoc[Compatibility with other build tools]

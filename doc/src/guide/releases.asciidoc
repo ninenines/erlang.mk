@@ -98,7 +98,7 @@ release upgrade:
 $ make relup
 
 This will create an archive at the root directory of the
-release, `$(RELX_OUTPUT_DIR)/example/example-2.tar.gz`.
+release, `$RELX_OUTPUT_DIR/example/example-2.tar.gz`.
 
 Move the archive to the correct location on the running
 node. From the release's root directory:
