@@ -1,6 +1,74 @@
 [[escript]]
 == Escripts
 
-// @todo Write it.
+Escripts are an alternative to release. They are meant to be
+used for small command line executables written in Erlang.
 
-Placeholder chapter.
+They are not self-contained, unlike xref:relx[releases].
+Erlang must be installed for them to run. This however means
+that they are fairly small compared to releases.
+
+For self-contained executables, check xref:sfx[self-extracting releases].
+
+Erlang.mk uses `p7zip` by default to generate the escript
+archive. Make sure it is installed.
+
+=== Generating an escript
+
+Run the following command to generate an escript:
+
+[source,bash]
+$ make escript
+
+This will by default create an escript with the same name as
+the project, in the project's directory. If the project is
+called `relx` then the escript will be in `./relx`.
+
+You can run the escript as you would any executable:
+
+[source,bash]
+$ ./relx
+
+=== Configuration
+
+You can change the name of the escript by setting `ESCRIPT_NAME`.
+The name determines both the default output file name and the
+entry module containing the function `main/1`.
+
+`ESCRIPT_FILE` can be set if you need a different file name
+or location.
+
+The escript header can be entirely customized. The first line
+is the shebang, set by `ESCRIPT_SHEBANG`. The second line is
+a comment, set by `ESCRIPT_COMMENT`. The third line is the
+arguments the VM will use when running the escript, set by
+`ESCRIPT_EMU_ARGS`.
+
+Finally, `ESCRIPT_ZIP` can be set to customize the command used
+to create the zip file. Read on for more information.
+
+=== Extra files
+
+Generating an escript is a two-part process. First, a zip file
+is created with the contents of the escript. Then a header is
+added to this file to create the escript.
+
+It is possible to add commands that will be executed between
+the two steps. You can for example add extra files to the zip
+archive:
+
+[source,make]
+----
+escript-zip::
+    $(verbose) $(ESCRIPT_ZIP) $(ESCRIPT_ZIP_FILE) priv/templates/*
+----
+
+The `ESCRIPT_ZIP` variable contains the command to run to add
+files to the zip archive `ESCRIPT_ZIP_FILE`.
+
+=== Optimizing for size
+
+Erlang.mk will by default compile BEAM files with debug
+information. You may want to disable this behavior to obtain
+smaller escript files. Simply set `ERLC_OPTS` to a value that
+does not include `+debug_info`.
