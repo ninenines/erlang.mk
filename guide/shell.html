@@ -34,7 +34,7 @@ div.navfooter{margin-bottom:1em}
 <main>
 
 <div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="tests.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="eunit.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="shell"></a>Chapter 15. Erlang shell</h2></div></div></div><p>Erlang.mk provides a convenient target for starting a shell
-with all the paths set properly to experiment with your code.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_4"></a>15.1. Configuration</h2></div></div></div><p>The <code class="literal">SHELL_DEPS</code> variable can be used to define dependencies
+with all the paths set properly to experiment with your code.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_5"></a>15.1. Configuration</h2></div></div></div><p>The <code class="literal">SHELL_DEPS</code> variable can be used to define dependencies
 that are only to be used when the <code class="literal">make shell</code> command is called.
 For example, if you want to use <span class="emphasis"><em>kjell</em></span> as your shell:</p><pre class="programlisting">SHELL_DEPS = kjell</pre><p>Dependencies are downloaded and compiled the first time you
 run the <code class="literal">make shell</code> command.</p><p>You can customize the executable used to start the Erlang shell.

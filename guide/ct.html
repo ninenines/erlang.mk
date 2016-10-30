@@ -39,7 +39,7 @@ Test suites.</p><div class="section"><div class="titlepage"><div><div><h2 class=
 is the best place to learn how to write tests. Erlang.mk
 requires that file names for test suites end with <span class="emphasis"><em>_SUITE.erl</em></span>
 and that the files be located in the <span class="emphasis"><em>$(TEST_DIR)</em></span> directory.
-This defaults to <span class="emphasis"><em>test/</em></span>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_6"></a>17.2. Configuration</h2></div></div></div><p>The <code class="literal">CT_OPTS</code> variable allows you to set extra Common Test
+This defaults to <span class="emphasis"><em>test/</em></span>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_7"></a>17.2. Configuration</h2></div></div></div><p>The <code class="literal">CT_OPTS</code> variable allows you to set extra Common Test
 options. Options are documented in the
 <a class="ulink" href="http://www.erlang.org/doc/apps/common_test/run_test_chapter.html" target="_top">Common Test user guide</a>.
 You can use it to set Common Test hooks, for example:</p><pre class="programlisting">CT_OPTS = -ct_hooks cowboy_ct_hook</pre><p>The <code class="literal">CT_SUITES</code> variable can be used to override what
