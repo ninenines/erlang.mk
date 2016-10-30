@@ -75,6 +75,9 @@ endif
 ifneq ($(SKIP_DEPS),)
 deps::
 else
+ifeq ($(ALL_DEPS_DIRS),)
+deps:: apps
+else
 deps:: $(ALL_DEPS_DIRS) apps
 ifeq ($(IS_APP)$(IS_DEP),)
 	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
@@ -93,6 +96,7 @@ endif
 			fi \
 		fi \
 	done
+endif
 endif
 
 # Deps related targets.

@@ -42,7 +42,8 @@ define filter_opts.erl
 endef
 
 $(DIALYZER_PLT): deps app
-	$(verbose) dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(OTP_DEPS) $(LOCAL_DEPS) $(DEPS)
+	$(verbose) dialyzer --build_plt --apps erts kernel stdlib $(PLT_APPS) $(OTP_DEPS) $(LOCAL_DEPS) \
+		`cat $(ERLANG_MK_TMP)/deps.log`
 
 plt: $(DIALYZER_PLT)
 
