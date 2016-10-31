@@ -14,6 +14,9 @@ asciidoc-build: build clean
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
+	$i "Add asciideck to the local dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = asciideck\n"}' $(APP)/Makefile
+
 	$i "Only enable man pages section 3"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "MAN_SECTIONS = 3\n"}' $(APP)/Makefile
 
@@ -68,6 +71,9 @@ asciidoc-docs: build clean
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
+	$i "Add asciideck to the local dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = asciideck\n"}' $(APP)/Makefile
+
 	$i "Generate AsciiDoc documentation"
 	$t mkdir -p $(APP)/doc/src/guide/
 	$t printf "%s\n" \
@@ -85,6 +91,9 @@ asciidoc-guide: build clean
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Add asciideck to the local dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = asciideck\n"}' $(APP)/Makefile
 
 	$i "Generate AsciiDoc documentation"
 	$t mkdir -p $(APP)/doc/src/guide/ $(APP)/doc/src/manual/
@@ -111,6 +120,9 @@ asciidoc-install: build clean
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
+	$i "Add asciideck to the local dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = asciideck\n"}' $(APP)/Makefile
+
 	$i "Only enable man pages section 3"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "MAN_SECTIONS = 3\n"}' $(APP)/Makefile
 
@@ -136,6 +148,9 @@ asciidoc-manual: build clean
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
+	$i "Add asciideck to the local dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = asciideck\n"}' $(APP)/Makefile
+
 	$i "Only enable man pages section 3"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "MAN_SECTIONS = 3\n"}' $(APP)/Makefile
 
@@ -150,9 +165,18 @@ asciidoc-manual: build clean
 		"erlang_mk - Erlang.mk test" "" \
 		"== Description" "" \
 		"Hello world!" > $(APP)/doc/src/manual/erlang_mk.asciidoc
+	$t printf "%s\n" \
+		"= name_changed(3)" "" \
+		"== Name" "" \
+		"name_changed - Manual page name different than output" "" \
+		"== Description" "" \
+		"Name changed!" > $(APP)/doc/src/manual/change_name.asciidoc
 
-	$i "Check that only the manual is generated on 'make asciidoc-manual'"
+	$i "Run 'make asciidoc-manual'"
 	$t $(MAKE) -C $(APP) asciidoc-manual $v
+
+	$i "Check that only the manual was generated"
 	$t test ! -e $(APP)/doc/guide.pdf
 	$t test ! -e $(APP)/doc/html/
 	$t test -f $(APP)/doc/man3/erlang_mk.3.gz
+	$t test -f $(APP)/doc/man3/name_changed.3.gz
