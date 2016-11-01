@@ -65,14 +65,14 @@ asciidoc-manual:: doc-deps
 
 asciidoc-manual:: $(ASCIIDOC_MANUAL_FILES)
 	$(call erlang,$(call asciidoc2man.erl,$?))
-	$(foreach s,$(MAN_SECTIONS),mkdir -p doc/man$s/ && mv doc/src/manual/*.$s.gz doc/man$s/)
+	$(foreach s,$(MAN_SECTIONS),mkdir -p doc/man$s/ && mv doc/src/manual/*.$s.gz doc/man$s/;)
 
 install-docs:: install-asciidoc
 
 install-asciidoc: asciidoc-manual
 	$(foreach s,$(MAN_SECTIONS),\
 		mkdir -p $(MAN_INSTALL_PATH)/man$s/ && \
-		install -g `id -u` -o `id -g` -m 0644 doc/man$s/*.gz $(MAN_INSTALL_PATH)/man$s/)
+		install -g `id -u` -o `id -g` -m 0644 doc/man$s/*.gz $(MAN_INSTALL_PATH)/man$s/;)
 
 distclean-asciidoc-manual:
 	$(gen_verbose) rm -rf $(addprefix doc/man,$(MAN_SECTIONS))

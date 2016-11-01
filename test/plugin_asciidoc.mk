@@ -17,9 +17,6 @@ asciidoc-build: build clean
 	$i "Add asciideck to the local dependencies"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = asciideck\n"}' $(APP)/Makefile
 
-	$i "Only enable man pages section 3"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "MAN_SECTIONS = 3\n"}' $(APP)/Makefile
-
 	$i "Run AsciiDoc"
 	$t $(MAKE) -C $(APP) asciidoc $v
 
@@ -27,6 +24,7 @@ asciidoc-build: build clean
 	$t test ! -e $(APP)/doc/guide.pdf
 	$t test ! -e $(APP)/doc/html/
 	$t test ! -e $(APP)/doc/man3/
+	$t test ! -e $(APP)/doc/man7/
 
 	$i "Generate AsciiDoc documentation"
 	$t mkdir -p $(APP)/doc/src/guide/ $(APP)/doc/src/manual/
@@ -39,6 +37,12 @@ asciidoc-build: build clean
 		"erlang_mk - Erlang.mk test" "" \
 		"== Description" "" \
 		"Hello world!" > $(APP)/doc/src/manual/erlang_mk.asciidoc
+	$t printf "%s\n" \
+		"= erlang_mk(7)" "" \
+		"== Name" "" \
+		"erlang_mk - Erlang.mk application" "" \
+		"== Description" "" \
+		"Summer is better than winter!" > $(APP)/doc/src/manual/erlang_mk_app.asciidoc
 
 	$i "Run AsciiDoc"
 	$t $(MAKE) -C $(APP) asciidoc $v
@@ -47,6 +51,7 @@ asciidoc-build: build clean
 	$t test -f $(APP)/doc/guide.pdf
 	$t test -d $(APP)/doc/html/
 	$t test -f $(APP)/doc/man3/erlang_mk.3.gz
+	$t test -f $(APP)/doc/man7/erlang_mk.7.gz
 
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
@@ -55,6 +60,7 @@ asciidoc-build: build clean
 	$t test ! -e $(APP)/doc/guide.pdf
 	$t test ! -e $(APP)/doc/html/
 	$t test ! -e $(APP)/doc/man3/
+	$t test ! -e $(APP)/doc/man7/
 
 	$i "Generate an invalid AsciiDoc file"
 	$t printf "%s\n" \
