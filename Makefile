@@ -61,7 +61,7 @@ clean:
 	git checkout erlang.mk
 
 docs:
-	$(MAKE) -f core/core.mk -f core/docs.mk -f plugins/asciidoc.mk asciidoc
+	$(MAKE) -f core/core.mk -f core/docs.mk -f plugins/asciidoc.mk asciidoc DEPS=asciideck
 
 up:
 	git clone git@github.com:ninenines/erlang.mk.git gh-pages
