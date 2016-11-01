@@ -38,10 +38,12 @@ used for small command line executables written in Erlang.</p><p>They are not se
 <a class="xref" href="relx.html" title="Chapter 9. Releases">Chapter 9, <em>Releases</em></a>.
 Erlang must be installed for them to run. This however means
 that they are fairly small compared to releases.</p><p>For self-contained executables, check <a class="link" href="sfx.html" title="Chapter 10. Self-extracting releases">self-extracting releases</a>
-<a class="xref" href="sfx.html" title="Chapter 10. Self-extracting releases">Chapter 10, <em>Self-extracting releases</em></a>.</p><p>Erlang.mk uses <code class="literal">p7zip</code> by default to generate the escript
-archive. Make sure it is installed.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_an_escript"></a>11.1. Generating an escript</h2></div></div></div><p>Run the following command to generate an escript:</p><pre class="programlisting">$ make escript</pre><p>This will by default create an escript with the same name as
+<a class="xref" href="sfx.html" title="Chapter 10. Self-extracting releases">Chapter 10, <em>Self-extracting releases</em></a>.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_requirements"></a>11.1. Requirements</h2></div></div></div><p>Erlang.mk uses <code class="literal">p7zip</code> by default to generate the escript
+archive. Make sure it is installed. On most systems the
+package is named <code class="literal">p7zip</code>; on Ubuntu you need <code class="literal">p7zip-full</code>.</p><p>If <code class="literal">p7zip</code> is unavailable, <code class="literal">zip</code> may be used by setting
+the <code class="literal">ESCRIPT_ZIP</code> variable. For example:</p><pre class="programlisting">$ make escript ESCRIPT_ZIP=zip</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_an_escript"></a>11.2. Generating an escript</h2></div></div></div><p>Run the following command to generate an escript:</p><pre class="programlisting">$ make escript</pre><p>This will by default create an escript with the same name as
 the project, in the project’s directory. If the project is
-called <code class="literal">relx</code> then the escript will be in <code class="literal">./relx</code>.</p><p>You can run the escript as you would any executable:</p><pre class="programlisting">$ ./relx</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_2"></a>11.2. Configuration</h2></div></div></div><p>You can change the name of the escript by setting <code class="literal">ESCRIPT_NAME</code>.
+called <code class="literal">relx</code> then the escript will be in <code class="literal">./relx</code>.</p><p>You can run the escript as you would any executable:</p><pre class="programlisting">$ ./relx</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_2"></a>11.3. Configuration</h2></div></div></div><p>You can change the name of the escript by setting <code class="literal">ESCRIPT_NAME</code>.
 The name determines both the default output file name and the
 entry module containing the function <code class="literal">main/1</code>.</p><p><code class="literal">ESCRIPT_FILE</code> can be set if you need a different file name
 or location.</p><p>The escript header can be entirely customized. The first line
@@ -49,13 +51,13 @@ is the shebang, set by <code class="literal">ESCRIPT_SHEBANG</code>. The second 
 a comment, set by <code class="literal">ESCRIPT_COMMENT</code>. The third line is the
 arguments the VM will use when running the escript, set by
 <code class="literal">ESCRIPT_EMU_ARGS</code>.</p><p>Finally, <code class="literal">ESCRIPT_ZIP</code> can be set to customize the command used
-to create the zip file. Read on for more information.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_extra_files"></a>11.3. Extra files</h2></div></div></div><p>Generating an escript is a two-part process. First, a zip file
+to create the zip file. Read on for more information.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_extra_files"></a>11.4. Extra files</h2></div></div></div><p>Generating an escript is a two-part process. First, a zip file
 is created with the contents of the escript. Then a header is
 added to this file to create the escript.</p><p>It is possible to add commands that will be executed between
 the two steps. You can for example add extra files to the zip
 archive:</p><pre class="programlisting">escript-zip::
     $(verbose) $(ESCRIPT_ZIP) $(ESCRIPT_ZIP_FILE) priv/templates/*</pre><p>The <code class="literal">ESCRIPT_ZIP</code> variable contains the command to run to add
-files to the zip archive <code class="literal">ESCRIPT_ZIP_FILE</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_optimizing_for_size"></a>11.4. Optimizing for size</h2></div></div></div><p>Erlang.mk will by default compile BEAM files with debug
+files to the zip archive <code class="literal">ESCRIPT_ZIP_FILE</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_optimizing_for_size"></a>11.5. Optimizing for size</h2></div></div></div><p>Erlang.mk will by default compile BEAM files with debug
 information. You may want to disable this behavior to obtain
 smaller escript files. Simply set <code class="literal">ERLC_OPTS</code> to a value that
 does not include <code class="literal">+debug_info</code>.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="sfx.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="compat.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
