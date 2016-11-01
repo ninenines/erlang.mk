@@ -10,8 +10,17 @@ that they are fairly small compared to releases.
 
 For self-contained executables, check xref:sfx[self-extracting releases].
 
+=== Requirements
+
 Erlang.mk uses `p7zip` by default to generate the escript
-archive. Make sure it is installed.
+archive. Make sure it is installed. On most systems the
+package is named `p7zip`; on Ubuntu you need `p7zip-full`.
+
+If `p7zip` is unavailable, `zip` may be used by setting
+the `ESCRIPT_ZIP` variable. For example:
+
+[source,bash]
+$ make escript ESCRIPT_ZIP=zip
 
 === Generating an escript
 
