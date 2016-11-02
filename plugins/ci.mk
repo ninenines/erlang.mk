@@ -4,8 +4,14 @@
 .PHONY: ci ci-prepare ci-setup distclean-kerl
 
 CI_OTP ?=
+CI_HIPE ?=
 
-ifeq ($(strip $(CI_OTP)),)
+ifeq ($(CI_VM),native)
+ERLC_OPTS += +native
+TEST_ERLC_OPTS += +native
+endif
+
+ifeq ($(strip $(CI_OTP) $(CI_HIPE)),)
 ci::
 else
 
@@ -24,9 +30,9 @@ OTP_GIT ?= https://github.com/erlang/otp
 
 CI_INSTALL_DIR ?= $(HOME)/erlang
 
-ci:: $(addprefix ci-,$(CI_OTP))
+ci:: $(addprefix ci-,$(CI_OTP) $(addsuffix -native,$(CI_HIPE)))
 
-ci-prepare: $(addprefix $(CI_INSTALL_DIR)/,$(CI_OTP))
+ci-prepare: $(addprefix $(CI_INSTALL_DIR)/,$(CI_OTP) $(addsuffix -native,$(CI_HIPE)))
 
 ci-setup::
 
@@ -40,10 +46,12 @@ ci-$(1): $(CI_INSTALL_DIR)/$(1)
 		PATH="$(CI_INSTALL_DIR)/$(1)/bin:$(PATH)" \
 		CI_OTP_RELEASE="$(1)" \
 		CT_OPTS="-label $(1)" \
+		CI_VM="$(2)" \
 		$(MAKE) ci-setup tests
 endef
 
-$(foreach otp,$(CI_OTP),$(eval $(call ci_target,$(otp))))
+$(foreach otp,$(CI_OTP),$(eval $(call ci_target,$(otp),otp)))
+$(foreach otp,$(CI_HIPE),$(eval $(call ci_target,$(otp)-native,native)))
 
 define ci_otp_target
 ifeq ($(wildcard $(CI_INSTALL_DIR)/$(1)),)
@@ -54,6 +62,17 @@ endif
 endef
 
 $(foreach otp,$(CI_OTP),$(eval $(call ci_otp_target,$(otp))))
+
+define ci_hipe_target
+ifeq ($(wildcard $(CI_INSTALL_DIR)/$1-native),)
+$(CI_INSTALL_DIR)/$1-native: $(KERL)
+	KERL_CONFIGURE_OPTIONS=--enable-native-libs \
+		MAKEFLAGS="$(KERL_MAKEFLAGS)" $(KERL) build git $(OTP_GIT) $1 $1-native
+	$(KERL) install $1-native $(CI_INSTALL_DIR)/$1-native
+endif
+endef
+
+$(foreach otp,$(CI_HIPE),$(eval $(call ci_hipe_target,$(otp))))
 
 $(KERL):
 	$(verbose) mkdir -p $(ERLANG_MK_TMP)
