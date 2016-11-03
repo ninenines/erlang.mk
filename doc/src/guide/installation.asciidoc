@@ -32,6 +32,8 @@ FreeBSD comes with binary and source packages:
 [source,bash]
 $ pkg install erlang git gmake
 
+On FreeBSD the `make` command is BSD Make. Use `gmake` instead.
+
 ==== OS X and macOS
 
 While Apple distributes their own GNU Make, their version is
@@ -42,6 +44,9 @@ MacPorts:
 .Homebrew
 [source,bash]
 $ brew install erlang git homebrew/dupes/make
+
+Homebrew installs GNU Make as `gmake`. The `make` command
+is the one provided by Apple.
 
 .MacPorts
 [source,bash]
