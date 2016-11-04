@@ -5,17 +5,17 @@
 
 CI_OTP ?=
 CI_HIPE ?=
-CI_HIPE_LLVM ?=
+CI_ERLLVM ?=
 
 ifeq ($(CI_VM),native)
 ERLC_OPTS += +native
 TEST_ERLC_OPTS += +native
-else ifeq ($(CI_VM),native-llvm)
+else ifeq ($(CI_VM),erllvm)
 ERLC_OPTS += +native +'{hipe, [to_llvm]}'
 TEST_ERLC_OPTS += +native +'{hipe, [to_llvm]}'
 endif
 
-ifeq ($(strip $(CI_OTP) $(CI_HIPE) $(CI_HIPE_LLVM)),)
+ifeq ($(strip $(CI_OTP) $(CI_HIPE) $(CI_ERLLVM)),)
 ci::
 else
 
@@ -34,11 +34,13 @@ OTP_GIT ?= https://github.com/erlang/otp
 
 CI_INSTALL_DIR ?= $(HOME)/erlang
 
-ci:: $(addprefix ci-,$(CI_OTP) $(addsuffix -native,$(CI_HIPE)) $(addsuffix -native-llvm,$(CI_HIPE_LLVM)))
+ci:: $(addprefix ci-,$(CI_OTP) $(addsuffix -native,$(CI_HIPE)) $(addsuffix -erllvm,$(CI_ERLLVM)))
 
 ci-prepare: $(addprefix $(CI_INSTALL_DIR)/,$(CI_OTP) $(addsuffix -native,$(CI_HIPE)))
 
 ci-setup::
+
+ci-extra::
 
 ci_verbose_0 = @echo " CI    " $(1);
 ci_verbose = $(ci_verbose_$(V))
@@ -52,11 +54,12 @@ ci-$1: $(CI_INSTALL_DIR)/$2
 		CT_OPTS="-label $1" \
 		CI_VM="$3" \
 		$(MAKE) ci-setup tests
+	$(verbose) $(MAKE) --no-print-directory ci-extra
 endef
 
 $(foreach otp,$(CI_OTP),$(eval $(call ci_target,$(otp),$(otp),otp)))
 $(foreach otp,$(CI_HIPE),$(eval $(call ci_target,$(otp)-native,$(otp)-native,native)))
-$(foreach otp,$(CI_HIPE_LLVM),$(eval $(call ci_target,$(otp)-native-llvm,$(otp)-native,native-llvm)))
+$(foreach otp,$(CI_ERLLVM),$(eval $(call ci_target,$(otp)-erllvm,$(otp)-native,erllvm)))
 
 define ci_otp_target
 ifeq ($(wildcard $(CI_INSTALL_DIR)/$(1)),)
@@ -77,7 +80,7 @@ $(CI_INSTALL_DIR)/$1-native: $(KERL)
 endif
 endef
 
-$(foreach otp,$(sort $(CI_HIPE) $(CI_HIPE_LLVM)),$(eval $(call ci_hipe_target,$(otp))))
+$(foreach otp,$(sort $(CI_HIPE) $(CI_ERLLLVM)),$(eval $(call ci_hipe_target,$(otp))))
 
 $(KERL):
 	$(verbose) mkdir -p $(ERLANG_MK_TMP)
