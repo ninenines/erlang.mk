@@ -1,6 +1,6 @@
 # Common Test plugin.
 
-CT_CASES = all apps-only case check group opts suite tests
+CT_CASES = all apps-only root-suites-with-subapps case check group opts suite tests
 CT_TARGETS = $(addprefix ct-,$(CT_CASES))
 
 .PHONY: ct $(CT_TARGETS)
@@ -97,6 +97,34 @@ ct-apps-only: build clean
 	$t $(MAKE) -C $(APP) ct $v
 	$t test -f $(APP)/apps/my_app/logs/index.html
 	$t test -f $(APP)/apps/my_lib/logs/index.html
+
+ct-root-suites-with-subapps: build clean
+
+	$i "Create a multi application repository with root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/.
+	$t echo "include erlang.mk" > $(APP)/Makefile
+
+	$i "Create a new library named my_lib"
+	$t $(MAKE) -C $(APP) new-lib in=my_lib $v
+
+	$i "Populate my_lib"
+	$t printf "%s\n" \
+		"-module(my_lib)." \
+		"-export([random_int/0])." \
+		"random_int() -> 4." > $(APP)/apps/my_lib/src/my_lib.erl
+
+	$i "Generate a Common Test suite in root application"
+	$t mkdir $(APP)/test
+	$t printf "%s\n" \
+		"-module(my_root_SUITE)." \
+		"-export([all/0, ok/1, call_my_lib/1])." \
+		"all() -> [ok, call_my_lib]." \
+		"ok(_) -> ok." \
+		"call_my_lib(_) -> 4 = my_lib:random_int()." > $(APP)/test/my_root_SUITE.erl
+
+	$i "Check that Common Test runs tests"
+	$t $(MAKE) -C $(APP) ct $v CT_SUITES=my_root
 
 ct-case: build clean
 
