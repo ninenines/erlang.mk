@@ -115,8 +115,6 @@ define dep_autopatch
 			$(call dep_autopatch2,$(1)); \
 		elif [ -n "`find $(DEPS_DIR)/$(1)/ -type f -name \*.mk -not -name erlang.mk -exec grep -i "^[^#].*rebar" '{}' \;`" ]; then \
 			$(call dep_autopatch2,$(1)); \
-		else \
-			$(call erlang,$(call dep_autopatch_app.erl,$(1))); \
 		fi \
 	else \
 		if [ ! -d $(DEPS_DIR)/$(1)/src/ ]; then \
@@ -128,6 +126,8 @@ define dep_autopatch
 endef
 
 define dep_autopatch2
+	mv -n $(DEPS_DIR)/$1/ebin/$1.app $(DEPS_DIR)/$1/src/$1.app.src; \
+	rm -f $(DEPS_DIR)/$1/ebin/$1.app; \
 	if [ -f $(DEPS_DIR)/$1/src/$1.app.src.script ]; then \
 		$(call erlang,$(call dep_autopatch_appsrc_script.erl,$(1))); \
 	fi; \
@@ -439,22 +439,6 @@ define dep_autopatch_rebar.erl
 	halt()
 endef
 
-define dep_autopatch_app.erl
-	UpdateModules = fun(App) ->
-		case filelib:is_regular(App) of
-			false -> ok;
-			true ->
-				{ok, [{application, '$(1)', L0}]} = file:consult(App),
-				Mods = filelib:fold_files("$(call core_native_path,$(DEPS_DIR)/$1/src)", "\\\\.erl$$", true,
-					fun (F, Acc) -> [list_to_atom(filename:rootname(filename:basename(F)))|Acc] end, []),
-				L = lists:keystore(modules, 1, L0, {modules, Mods}),
-				ok = file:write_file(App, io_lib:format("~p.~n", [{application, '$(1)', L}]))
-		end
-	end,
-	UpdateModules("$(call core_native_path,$(DEPS_DIR)/$1/ebin/$1.app)"),
-	halt()
-endef
-
 define dep_autopatch_appsrc_script.erl
 	AppSrc = "$(call core_native_path,$(DEPS_DIR)/$1/src/$1.app.src)",
 	AppSrcScript = AppSrc ++ ".script",
@@ -571,6 +555,7 @@ ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 		$$(call dep_autopatch,$(DEP_NAME)) \
 	fi
 endif
+	$(verbose) rm -rf $(DEPS_DIR)/$(DEP_NAME)/ebin/
 endef
 
 $(foreach dep,$(BUILD_DEPS) $(DEPS),$(eval $(call dep_target,$(dep))))
