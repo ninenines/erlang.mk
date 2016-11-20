@@ -106,6 +106,7 @@ endif
 # in practice only Makefile is needed so far.
 define dep_autopatch
 	if [ -f $(DEPS_DIR)/$(1)/erlang.mk ]; then \
+		rm -rf $(DEPS_DIR)/$1/ebin/; \
 		$(call erlang,$(call dep_autopatch_appsrc.erl,$(1))); \
 		$(call dep_autopatch_erlang_mk,$(1)); \
 	elif [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
@@ -555,7 +556,6 @@ ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 		$$(call dep_autopatch,$(DEP_NAME)) \
 	fi
 endif
-	$(verbose) rm -rf $(DEPS_DIR)/$(DEP_NAME)/ebin/
 endef
 
 $(foreach dep,$(BUILD_DEPS) $(DEPS),$(eval $(call dep_target,$(dep))))
