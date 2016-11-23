@@ -21,6 +21,7 @@ ERLANG_MK_VERSION = $(shell git describe --tags --dirty)
 .PHONY: all check
 
 all:
+	export LC_COLLATE=C; \
 	awk 'FNR==1 && NR!=1{print ""}1' $(patsubst %,%.mk,$(BUILD_CONFIG)) \
 		| sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = $(ERLANG_MK_VERSION)/' > $(ERLANG_MK)
 
