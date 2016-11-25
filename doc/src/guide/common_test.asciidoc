@@ -35,6 +35,12 @@ is `http`:
 [source,make]
 CT_SUITES = http ws
 
+The `CT_LOGS_DIR` variable can be used to set where HTML
+log files are to be written. This defaults to 'logs/'.
+
+[source,make]
+CT_LOGS_DIR = ct_output_log_dir
+
 === Usage
 
 To run all tests (including Common Test):
