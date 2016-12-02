@@ -48,6 +48,7 @@ MAN_VERSION ?= $(PROJECT_VERSION)
 define asciidoc2man.erl
 try
 	[begin
+		io:format(" ADOC   ~s~n", [F]),
 		ok = asciideck:to_manpage(asciideck:parse_file(F), #{
 			compress => gzip,
 			outdir => filename:dirname(F),
@@ -56,7 +57,8 @@ try
 		})
 	end || F <- [$(shell echo $(addprefix $(comma)\",$(addsuffix \",$1)) | sed 's/^.//')]],
 	halt(0)
-catch _:_ ->
+catch C:E ->
+	io:format("Exception ~p:~p~nStacktrace: ~p~n", [C, E, erlang:get_stacktrace()]),
 	halt(1)
 end.
 endef
