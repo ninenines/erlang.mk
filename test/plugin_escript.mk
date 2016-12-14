@@ -1,6 +1,6 @@
 # Escript plugin.
 
-ESCRIPT_CASES = build deps extra
+ESCRIPT_CASES = build deps distclean extra
 ESCRIPT_TARGETS = $(addprefix escript-,$(ESCRIPT_CASES))
 
 .PHONY: escript $(ESCRIPT_TARGETS)
@@ -59,6 +59,34 @@ escript-deps: build clean
 
 	$i "Check that the escript contains the dependency"
 	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q ranch
+
+escript-distclean: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Use a non-standard name for the escript"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ESCRIPT_FILE = real-escript\n"}' $(APP)/Makefile
+
+	$i "Generate a module containing a function main/1"
+	$t printf "%s\n" \
+		"-module($(APP))." \
+		"-export([main/1])." \
+		'main(_) -> io:format("good~n").' > $(APP)/src/$(APP).erl
+
+	$i "Build the escript"
+	$t $(MAKE) -C $(APP) escript $v
+
+	$i "Check that the escript runs"
+	$t test ! -f $(APP)/$(APP)
+	$t $(APP)/real-escript | grep -q good
+
+	$i "Check that make distclean removes the generated escript"
+	$t $(MAKE) -C $(APP) distclean $v
+	$t test ! -f $(APP)/$(APP)
+	$t test ! -f $(APP)/real-escript
 
 escript-extra: build clean
 
