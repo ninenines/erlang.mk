@@ -284,6 +284,17 @@ include erlang.mk
 ERLC_OPTS := $(filter-out -Werror,$(ERLC_OPTS))
 ----
 
+==== ERLC_ASN1_OPTS
+
+`ERLC_ASN1_OPTS` can be used to pass compiler options when compiling
+ASN.1 files.  Please refer to the
+http://erlang.org/doc/man/asn1ct.html[asn1ct manual] for the full list.
+
+By default, Erlang.mk will leave this empty.
+
+You can redefine this variable in your Makefile.
+Please see the `ERLC_OPTS` section for instructions.
+
 ==== ERLC_EXCLUDE
 
 `ERLC_EXCLUDE` can be used to exclude some modules from the
