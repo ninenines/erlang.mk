@@ -149,6 +149,21 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Build the application with ERLC_ASN1_OPTS set"
+	$t echo "ERLC_ASN1_OPTS += +'{record_name_prefix,\"FOO-\"}'" >> $(APP)/Makefile
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the application was built with ERLC_ASN1_OPTS set"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+	  Attrs = 'Def':module_info(attributes), \
+		Asn1Info = proplists:get_value(asn1_info, Attrs), \
+		Opts = proplists:get_value(options, Asn1Info), \
+		true = lists:member({record_name_prefix, \"FOO-\"}, Opts), \
+		halt()"
+
 core-app-auto-git-id: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
