@@ -172,7 +172,10 @@ completely, either before or after including Erlang.mk:</p><pre class="programli
 sets, by defining ERLC_OPTS after including Erlang.mk using the
 <code class="literal">:=</code> operator.</p><pre class="programlisting">include erlang.mk
 
-ERLC_OPTS := $(filter-out -Werror,$(ERLC_OPTS))</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_erlc_exclude"></a>6.6.2. ERLC_EXCLUDE</h3></div></div></div><p><code class="literal">ERLC_EXCLUDE</code> can be used to exclude some modules from the
+ERLC_OPTS := $(filter-out -Werror,$(ERLC_OPTS))</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_erlc_asn1_opts"></a>6.6.2. ERLC_ASN1_OPTS</h3></div></div></div><p><code class="literal">ERLC_ASN1_OPTS</code> can be used to pass compiler options when compiling
+ASN.1 files.  Please refer to the
+<a class="ulink" href="http://erlang.org/doc/man/asn1ct.html" target="_top">asn1ct manual</a> for the full list.</p><p>By default, Erlang.mk will leave this empty.</p><p>You can redefine this variable in your Makefile.
+Please see the <code class="literal">ERLC_OPTS</code> section for instructions.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_erlc_exclude"></a>6.6.3. ERLC_EXCLUDE</h3></div></div></div><p><code class="literal">ERLC_EXCLUDE</code> can be used to exclude some modules from the
 compilation. It’s there for handling special cases, you should
 not normally need it.</p><p>To exclude a module, simply list it in the variable, either
 before or after including Erlang.mk:</p><pre class="programlisting">ERLC_EXCLUDE = cowboy_http2</pre></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_cold_and_hot_builds"></a>6.7. Cold and hot builds</h2></div></div></div><p>The first time you run <code class="literal">make</code>, Erlang.mk will build everything.</p><p>The second time you run <code class="literal">make</code>, and all subsequent times, Erlang.mk
