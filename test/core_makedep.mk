@@ -14,8 +14,8 @@ core-makedep-behaviour: build clean
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 	$t mkdir $(APP)/src/core
 	$i "Generate related .erl files"
-	$t echo "-module(human).\n-callback live() -> 'ok'." > $(APP)/src/core/human.erl
-	$t echo "-module(boy).\n-behaviour(human).\n-export([live/0]).\nlive() -> ok." > $(APP)/src/boy.erl
+	$t printf "%s\n" "-module(human)." "-callback live() -> 'ok'." > $(APP)/src/core/human.erl
+	$t printf "%s\n" "-module(boy)." "-behaviour(human)." "-export([live/0])." "live() -> ok." > $(APP)/src/boy.erl
 	$t $(MAKE) -C $(APP) $v
 	$i "Check that all compiled files exist"
 	$t test -f $(APP)/$(APP).d
@@ -30,8 +30,8 @@ core-makedep-import: build clean
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 	$t mkdir $(APP)/src/core
 	$i "Generate related .erl files"
-	$t echo "-module(human).\n-export([live/0]).\nlive() -> ok." > $(APP)/src/core/human.erl
-	$t echo "-module(boy).\n-import(human,[live/0])." > $(APP)/src/boy.erl
+	$t printf "%s\n" "-module(human)." "-export([live/0])." "live() -> ok." > $(APP)/src/core/human.erl
+	$t printf "%s\n" "-module(boy)." "-import(human,[live/0])." > $(APP)/src/boy.erl
 	$t $(MAKE) -C $(APP) $v
 	$i "Check that all compiled files exist"
 	$t test -f $(APP)/$(APP).d
