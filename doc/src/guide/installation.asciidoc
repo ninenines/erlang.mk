@@ -22,7 +22,7 @@ The commands to install packages vary between distributions:
 
 .Arch Linux
 [source,bash]
-$ pacman -Sy erlang git make
+$ pacman -S erlang git make
 
 ==== FreeBSD
 
