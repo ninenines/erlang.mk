@@ -167,6 +167,7 @@ The following table lists all existing methods:
 | hg             | hg repo commit  | Clone the Mercurial repository and update to the given version
 | svn            | svn repo        | Checkout the given SVN repository
 | cp             | cp path/to/repo | Recursively copy a local directory
+| ln             | ln path/to/repo | Symbolically link a local directory
 | hex            | hex version     | Download the given project version from hex.pm
 | fail           | N/A             | Always fail, reserved for internal use
 | legacy         | N/A             | Legacy Erlang.mk fetcher, reserved for internal use
