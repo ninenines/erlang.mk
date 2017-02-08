@@ -1,6 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-build-count apps-conflict apps-deep-conflict apps-dir apps-dir-include-lib apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-svn ignore list-deps mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
+CORE_DEPS_CASES = apps apps-build-count apps-conflict apps-deep-conflict apps-dir apps-dir-include-lib apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-ln fetch-svn ignore list-deps mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
 CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
 
 .PHONY: core-deps $(CORE_DEPS_TARGETS)
@@ -1097,6 +1097,39 @@ core-deps-fetch-legacy: build clean
 
 	$i "Check that building the application works with IS_DEP=1"
 	$t $(MAKE) -C $(APP) IS_DEP=1 $v
+
+core-deps-fetch-ln: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap a new OTP library named my_dep inside $(APP)"
+	$t mkdir $(APP)/my_dep
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
+
+	$i "Add my_dep to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = ln $(CURDIR)/$(APP)/my_dep/\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add my_dep to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tmy_dep,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/my_dep
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), my_dep]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(my_dep, Deps), \
+		halt()"
 
 core-deps-fetch-svn: build clean
 
