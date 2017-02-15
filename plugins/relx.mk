@@ -58,7 +58,13 @@ else
 
 define get_relx_release.erl
 	{ok, Config} = file:consult("$(RELX_CONFIG)"),
-	{release, {Name, Vsn}, _} = lists:keyfind(release, 1, Config),
+	{release, {Name, Vsn0}, _} = lists:keyfind(release, 1, Config),
+	Vsn = case Vsn0 of
+		{cmd, Cmd} -> os:cmd(Cmd);
+		semver -> "";
+		{semver, _} -> "";
+		VsnStr -> Vsn0
+	end,
 	io:format("~s ~s", [Name, Vsn]),
 	halt(0).
 endef

@@ -3,7 +3,7 @@
 # Sleeps when interacting with relx script are necessary after start and upgrade
 # as both of those interactions are not synchronized.
 
-RELX_CASES = rel relup start-stop tar
+RELX_CASES = rel relup start-stop tar vsn
 RELX_TARGETS = $(addprefix relx-,$(RELX_CASES))
 
 .PHONY: relx $(RELX_TARGETS)
@@ -195,3 +195,20 @@ relx-tar: build clean
 
 	$i "Check that tarball exists"
 	$t test -f $(APP)/_rel/$(APP)_release/$(APP)_release-1.tar.gz
+
+relx-vsn: build clean
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Replace the vsn"
+	$t sed -i.bak s/"\"1\""/"{cmd, \"echo -n 2\"}"/ $(APP)/relx.config
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the correct release exists"
+	$t ! test -d $(APP)/_rel/$(APP)_release/releases/1
+	$t test -d $(APP)/_rel/$(APP)_release/releases/2
