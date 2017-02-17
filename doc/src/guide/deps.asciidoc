@@ -397,9 +397,20 @@ They work exactly the same as remote dependencies, except:
 * They are not deleted on `make distclean`
 * They are not automatically added to the application resource file
 
-To properly fill the application resource file, you will
-need to define the `LOCAL_DEPS` variable for each relevant
-application, the same as for OTP applications.
+To properly fill the application resource file and compile apps in
+the right order, you will need to define the `LOCAL_DEPS` variable
+for each relevant application, the same as for OTP applications. Apps
+can depend on each other in this way, and their compilation order
+will follow the same rules as regular dependencies in `DEPS`.
+
+The top-level `LOCAL_DEPS` variable, if defined, will determine which
+apps (along with their dependencies) to build, and also which apps
+should be added to the top-level application resource file, if there
+is one. This may be useful, for example, for specifying a different
+set of apps to build for different releases. If `LOCAL_DEPS` is not
+defined, then all apps in the '$(APPS_DIR)' will be built, but none
+will be automatically added to the top-level application resource
+file.
 
 If there is a conflict between a local dependency and a
 remote dependency, then the local dependency always wins;

@@ -479,6 +479,155 @@ core-deps-apps-only: build clean
 	$i "Check that all relevant files were removed"
 	$t test ! -e $(APP)/deps
 
+core-deps-apps-local-deps: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a new application my_app_1"
+	$t $(MAKE) -C $(APP) new-app in=my_app_1 $v
+
+	$i "Add Lager to the list of dependencies of my_app_1, and add the lager parse_transform"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\nERLC_OPTS+=+{parse_transform,lager_transform}\n"}' $(APP)/apps/my_app_1/Makefile
+
+	$i "Add a lager:error/2 call to my_app_1_app.erl that will fail if the parse_transform doesn't run"
+	$t perl -ni.bak -e 'print;if (/^-export/){print "\n-export([log/0]).\n"} if (eof) {print "\nlog() -> lager:error(\"test\", []).\n"}' $(APP)/apps/my_app_1/src/my_app_1_app.erl
+
+	$i "Create a new application my_app_2"
+	$t $(MAKE) -C $(APP) new-app in=my_app_2 $v
+
+	$i "Add my_app_1 to the list of local dependencies of my_app_2, don't add lager, but add the lager parse_transform (this will fail unless my_app_1 was indeed built first)"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = my_app_1\nERLC_OPTS+=+{parse_transform,lager_transform}\n"}' $(APP)/apps/my_app_2/Makefile
+
+	$i "Add a lager:error/2 call to my_app_2_app.erl that will fail if the parse_transform doesn't run"
+	$t perl -ni.bak -e 'print;if (/^-export/){print "\n-export([log/0]).\n"} if (eof) {print "\nlog() -> lager:error(\"test\", []).\n"}' $(APP)/apps/my_app_2/src/my_app_2_app.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/apps/my_app_1/my_app_1.d
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1.app
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1_app.beam
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1_sup.beam
+	$t test -f $(APP)/apps/my_app_2/my_app_2.d
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2.app
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_app.beam
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_sup.beam
+	$t test -f $(APP)/deps/lager/ebin/lager.app
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Test after swapping my_app_1 and my_app_2 to make sure lexical ordering didnt incidentally build the correct app first"
+
+	$i "Add my_app_2 to the list of local dependencies of my_app_1, don't add lager, but add the lager parse_transform (this will fail unless my_app_2 was indeed built first)"
+	$t mv $(APP)/apps/my_app_1/Makefile{.bak,}
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = my_app_2\nERLC_OPTS+=+{parse_transform,lager_transform}\n"}' $(APP)/apps/my_app_1/Makefile
+
+	$i "Add Lager to the list of dependencies of my_app_2, and add the lager parse_transform"
+	$t mv $(APP)/apps/my_app_2/Makefile{.bak,}
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\nERLC_OPTS+=+{parse_transform,lager_transform}\n"}' $(APP)/apps/my_app_2/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/apps/my_app_1/my_app_1.d
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1.app
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1_app.beam
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1_sup.beam
+	$t test -f $(APP)/apps/my_app_2/my_app_2.d
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2.app
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_app.beam
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_sup.beam
+	$t test -f $(APP)/deps/lager/ebin/lager.app
+
+core-deps-apps-local-deps-circular: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a new application my_app_1"
+	$t $(MAKE) -C $(APP) new-app in=my_app_1 $v
+
+	$i "Create a new application my_app_2"
+	$t $(MAKE) -C $(APP) new-app in=my_app_2 $v
+
+	$i "Add my_app_1 to the list of local dependencies of my_app_2"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = my_app_1\n"}' $(APP)/apps/my_app_2/Makefile
+
+	$i "Add my_app_2 to the list of local dependencies of my_app_1"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = my_app_2\n"}' $(APP)/apps/my_app_1/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/apps/my_app_1/my_app_1.d
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1.app
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1_app.beam
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1_sup.beam
+	$t test -f $(APP)/apps/my_app_2/my_app_2.d
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2.app
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_app.beam
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_sup.beam
+
+core-deps-apps-toplevel-local-deps: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a new application my_app_1"
+	$t $(MAKE) -C $(APP) new-app in=my_app_1 $v
+
+	$i "Add my_app_1 to the list of toplevel local dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = my_app_1\n"}' $(APP)/Makefile
+
+	$i "Create a new application my_app_2"
+	$t $(MAKE) -C $(APP) new-app in=my_app_2 $v
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/apps/my_app_1/my_app_1.d
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1.app
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1_app.beam
+	$t test -f $(APP)/apps/my_app_1/ebin/my_app_1_sup.beam
+
+	$i "Check that my_app_2 compiled files DO NOT exist"
+	$t test ! -e $(APP)/apps/my_app_2/my_app_2.d
+	$t test ! -e $(APP)/apps/my_app_2/ebin/my_app_2.app
+	$t test ! -e $(APP)/apps/my_app_2/ebin/my_app_2_app.beam
+	$t test ! -e $(APP)/apps/my_app_2/ebin/my_app_2_sup.beam
+
+	$i "Add my_app_2 to the list of local dependencies of my_app_1"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = my_app_2\n"}' $(APP)/apps/my_app_1/Makefile
+
+	$i "Rebuild the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that my_app_2 compiled files exist"
+	$t test -f $(APP)/apps/my_app_2/my_app_2.d
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2.app
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_app.beam
+	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_sup.beam
+
 core-deps-autopatch-rebar: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
