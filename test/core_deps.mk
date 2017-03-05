@@ -33,7 +33,7 @@ core-deps-apps: build clean
 	$t test -f $(APP)/apps/my_app/ebin/my_app.app
 	$t test -f $(APP)/apps/my_app/ebin/boy.beam
 	$t test -f $(APP)/apps/my_app/ebin/girl.beam
-	$t test -d $(APP)/deps/cowlib
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
 
 # Applications in apps are compiled automatically but not added
 # to the application resource file unless they are listed in LOCAL_DEPS.
@@ -48,6 +48,18 @@ core-deps-apps: build clean
 		{ok, Mods = [boy, girl]} = application:get_key(my_app, modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+	$i "Clean Cowlib"
+	$t $(MAKE) -C $(APP)/deps/cowlib clean $v
+
+	$i "Check that Cowlib compiled files were removed"
+	$t test ! -e $(APP)/deps/cowlib/ebin/cowlib.app
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that Cowlib compiled files exist"
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
 
 	$i "Clean the application"
 	$t $(MAKE) -C $(APP) clean $v
@@ -427,7 +439,7 @@ core-deps-apps-only: build clean
 	$t test -f $(APP)/apps/my_app/ebin/my_app_app.beam
 	$t test -f $(APP)/apps/my_app/ebin/my_app_sup.beam
 	$t test -f $(APP)/apps/my_app/ebin/my_server.beam
-	$t test -d $(APP)/deps/cowlib/
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/apps/*/ebin/ -eval " \
@@ -435,6 +447,18 @@ core-deps-apps-only: build clean
 		{ok, Mods = [my_app_app, my_app_sup, my_server]} = application:get_key(my_app, modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+	$i "Clean Cowlib"
+	$t $(MAKE) -C $(APP)/deps/cowlib clean $v
+
+	$i "Check that Cowlib compiled files were removed"
+	$t test ! -e $(APP)/deps/cowlib/ebin/cowlib.app
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that Cowlib compiled files exist"
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
 
 	$i "Clean the application"
 	$t $(MAKE) -C $(APP) clean $v

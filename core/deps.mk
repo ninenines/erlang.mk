@@ -1,7 +1,7 @@
 # Copyright (c) 2013-2016, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: distclean-deps
+.PHONY: distclean-deps clean-tmp-deps.log
 
 # Configuration.
 
@@ -51,7 +51,7 @@ dep_verbose = $(dep_verbose_$(V))
 ifdef IS_APP
 apps::
 else
-apps:: $(ALL_APPS_DIRS)
+apps:: $(ALL_APPS_DIRS) clean-tmp-deps.log
 ifeq ($(IS_APP)$(IS_DEP),)
 	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log
 endif
@@ -72,16 +72,15 @@ endif
 	done
 endif
 
-ifneq ($(SKIP_DEPS),)
-deps::
-else
-ifeq ($(ALL_DEPS_DIRS),)
-deps:: apps
-else
-deps:: $(ALL_DEPS_DIRS) apps
+clean-tmp-deps.log:
 ifeq ($(IS_APP)$(IS_DEP),)
 	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
 endif
+
+ifneq ($(SKIP_DEPS),)
+deps::
+else
+deps:: $(ALL_DEPS_DIRS) apps clean-tmp-deps.log
 	$(verbose) mkdir -p $(ERLANG_MK_TMP)
 	$(verbose) for dep in $(ALL_DEPS_DIRS) ; do \
 		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/deps.log; then \
@@ -96,7 +95,6 @@ endif
 			fi \
 		fi \
 	done
-endif
 endif
 
 # Deps related targets.
