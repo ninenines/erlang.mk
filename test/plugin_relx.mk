@@ -114,28 +114,57 @@ else
 	$t test `$(APP)/tmp/bin/$(APP)_release rpcterms test test` = old
 endif
 
-	$i "Move the relup tarball to the release directory"
+	$i "Check that it's 1 avalible version"
+ifeq ($(PLATFORM),msys2)
+	$t test `$(APP)/tmp/bin/$(APP)_release.cmd versions |wc -l` = "2"
+else
+	$t test `$(APP)/tmp/bin/$(APP)_release versions |wc -l` = "2"
+endif
+
+	$i "Copy the relup tarball to the release directory"
 	$t mkdir $(APP)/tmp/releases/2
-	$t mv $(APP)/_rel/$(APP)_release/$(APP)_release-2.tar.gz $(APP)/tmp/releases/2/$(APP)_release.tar.gz
+	$t cp $(APP)/_rel/$(APP)_release/$(APP)_release-2.tar.gz $(APP)/tmp/releases/2/$(APP)_release.tar.gz
+	$t test -f $(APP)/tmp/releases/2/$(APP)_release.tar.gz
 
 	$i "Upgrade the release and confirm it runs the new code"
 ifeq ($(PLATFORM),msys2)
-	$t $(APP)/tmp/bin/$(APP)_release.cmd upgrade "2/$(APP)_release" $v
+	$t $(APP)/tmp/bin/$(APP)_release.cmd upgrade "2"
 	$t sleep 1
 	$t test `$(APP)/tmp/bin/$(APP)_release.cmd rpcterms test test` = new
+else
+	$i "Upgrade running release"
+	$t $(APP)/tmp/bin/$(APP)_release upgrade "2"
+	$t sleep 1
+	$t test `$(APP)/tmp/bin/$(APP)_release rpcterms test test` = new
+endif
+
+	$i "Check that it's 2 avalible versions"
+ifeq ($(PLATFORM),msys2)
+	$t test `$(APP)/tmp/bin/$(APP)_release.cmd versions |wc -l` = "3"
+else
+	$t test `$(APP)/tmp/bin/$(APP)_release versions |wc -l` = "3"
+endif
+
+	$i "Downgrade the release and confirm it runs the old code"
+ifeq ($(PLATFORM),msys2)
+	$t $(APP)/tmp/bin/$(APP)_release.cmd downgrade "1"
+	$t sleep 1
+	$t test `$(APP)/tmp/bin/$(APP)_release.cmd rpcterms test test` = old
+else
+	$i "Downgrade running release"
+	$t $(APP)/tmp/bin/$(APP)_release downgrade "1"
+	$t sleep 1
+	$t test `$(APP)/tmp/bin/$(APP)_release rpcterms test test` = old
+endif
 
 	$i "Stop the release"
+ifeq ($(PLATFORM),msys2)
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd stop $v
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd uninstall $v
 else
-	$i "Upgrade running release"
-	$t $(APP)/tmp/bin/$(APP)_release upgrade "2/$(APP)_release" $v
-	$t sleep 1
-	$t test `$(APP)/tmp/bin/$(APP)_release rpcterms test test` = new
-
-	$i "Stop the release"
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
 endif
+
 
 relx-start-stop: build clean
 
