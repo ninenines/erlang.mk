@@ -11,6 +11,11 @@ RELX_CONFIG ?= $(CURDIR)/relx.config
 RELX_URL ?= https://github.com/erlware/relx/releases/download/v3.19.0/relx
 RELX_OPTS ?=
 RELX_OUTPUT_DIR ?= _rel
+RELX_TAR ?= 1
+
+ifdef SFX
+	RELX_TAR = 1
+endif
 
 ifeq ($(firstword $(RELX_OPTS)),-o)
 	RELX_OUTPUT_DIR = $(word 2,$(RELX_OPTS))
@@ -37,10 +42,20 @@ $(RELX):
 	$(verbose) chmod +x $(RELX)
 
 relx-rel: $(RELX) rel-deps app
-	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release $(if $(SFX),tar)
+ifeq ($(RELX_TAR), 1)
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release tar
+else
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release
+endif
+
 
 relx-relup: $(RELX) rel-deps app
-	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release relup $(if $(SFX),tar)
+ifeq ($(RELX_TAR), 1)
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release relup tar
+else
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release relup
+endif
+
 
 distclean-relx-rel:
 	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)
