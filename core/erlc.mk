@@ -238,7 +238,7 @@ $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES):
 ebin/$(PROJECT).app:: $(ERLANG_MK_TMP)/last-makefile-change
 endif
 
--include $(PROJECT).d
+include $(wildcard $(PROJECT).d)
 
 ebin/$(PROJECT).app:: ebin/
 
