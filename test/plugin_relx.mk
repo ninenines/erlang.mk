@@ -3,7 +3,7 @@
 # Sleeps when interacting with relx script are necessary after start and upgrade
 # as both of those interactions are not synchronized.
 
-RELX_CASES = rel relup start-stop tar
+RELX_CASES = rel relup script semver start-stop tar
 RELX_TARGETS = $(addprefix relx-,$(RELX_CASES))
 
 .PHONY: relx $(RELX_TARGETS)
@@ -47,6 +47,68 @@ relx-rel: build clean
 
 	$i "Check that the output directory was removed entirely"
 	$t test ! -d $(APP)/_rel/
+
+relx-script: build clean
+
+	$i "Bootstrap a new release name $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Create relx script that sets the release version"
+
+	$t echo "{release, {Name, _Ver}, Apps} = lists:keyfind(release, 1, CONFIG)," > $(APP)/relx.config.script
+	$t echo "lists:keystore(release, 1, CONFIG, {release, {Name, \"2\"}, Apps})." >> $(APP)/relx.config.script
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the release version is correct"
+	$t test -d $(APP)/_rel/$(APP)_release/releases/2
+
+relx-semver: build clean
+
+	$i "Bootstrap a new release name $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Set relx version to 'semver'"
+	$t sed -i.bak s/"{$(APP)_release, \"1\"}"/"{$(APP)_release, semver}"/ $(APP)/relx.config
+
+	$i "Init git repo"
+	$t touch $(APP)/repo_file
+	$t touch $(APP)/git.log
+	$t git -C $(APP)/ init >> $(APP)/git.log
+	$t git -C $(APP)/ add repo_file >> $(APP)/git.log 
+	$t git -C $(APP)/ commit --no-verify --message="Initial commit" >> $(APP)/git.log
+	$t git -C $(APP)/ tag --force v2.0.0 >> $(APP)/git.log
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the release version is correct"
+	$t test -d $(APP)/_rel/$(APP)_release/releases/2.0.0
+	
+	$i "Create new commit to dirty the version"
+	$t echo "-" >> $(APP)/repo_file
+	$t git -C $(APP) add repo_file >> $(APP)/git.log
+	$t git -C $(APP) commit --no-verify --message="Update commit" >> $(APP)/git.log
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the new release is correct"
+	$t test -d $(APP)/_rel/$(APP)_release/releases/2.0.0+build.1.ref*
+
+	$i "Create new version tag"
+	$t git -C $(APP)/ tag --force v2.1.0 >> $(APP)/git.log
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the new release is correct"
+	$t test -d $(APP)/_rel/$(APP)_release/releases/2.1.0
 
 relx-relup: build clean
 
