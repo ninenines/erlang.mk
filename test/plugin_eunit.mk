@@ -1,6 +1,6 @@
 # EUnit plugin.
 
-EUNIT_CASES = all apps-only check erl-opts fun mod priv test-dir tests multiapps-no-root-check-exit-code
+EUNIT_CASES = all apps-only apps-only-error check erl-opts fun mod priv test-dir tests
 EUNIT_TARGETS = $(addprefix eunit-,$(EUNIT_CASES))
 
 .PHONY: eunit $(EUNIT_TARGETS)
@@ -81,66 +81,54 @@ eunit-apps-only: build clean
 
 	$i "Check that EUnit runs tests"
 
-eunit-multiapps-no-root-check-exit-code: build clean
+eunit-apps-only-error: build clean
 
-		$i "Create a multi application repository with no root application"
-		$t mkdir $(APP)/
-		$t cp ../erlang.mk $(APP)/
-		$t echo "include erlang.mk" > $(APP)/Makefile
+	$i "Create a multi application repository with no root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t echo "include erlang.mk" > $(APP)/Makefile
 
-		$i "Create a new application named my_app1"
-		$t $(MAKE) -C $(APP) new-app in=my_app1 $v
+	$i "Create a new application named my_app1"
+	$t $(MAKE) -C $(APP) new-app in=my_app1 $v
 
-		$i "Create a new application named my_app2"
-		$t $(MAKE) -C $(APP) new-app in=my_app2 $v
+	$i "Create a new application named my_app2"
+	$t $(MAKE) -C $(APP) new-app in=my_app2 $v
 
-		$i "Create a new library named my_lib"
-		$t $(MAKE) -C $(APP) new-lib in=my_lib $v
+	$i "Create a new library named my_lib"
+	$t $(MAKE) -C $(APP) new-lib in=my_lib $v
 
-		$i "Check that EUnit detects no tests"
-		$t $(MAKE) -C $(APP) eunit | grep -q "There were no tests to run."
+	$i "Check that EUnit detects no tests"
+	$t $(MAKE) -C $(APP) eunit | grep -q "There were no tests to run."
 
-		$i "Generate a module containing broken EUnit tests in my_app1"
-		$t printf "%s\n" \
-			"-module(my_app1)." \
-			"-ifdef(TEST)." \
-			"-include_lib(\"eunit/include/eunit.hrl\")." \
-			"bad_test() -> ?assert(0 =:= 1)." \
-			"-endif." > $(APP)/apps/my_app1/src/my_app1.erl
+	$i "Generate a module containing broken EUnit tests in my_app1"
+	$t printf "%s\n" \
+		"-module(my_app1)." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"bad_test() -> ?assert(0 =:= 1)." \
+		"-endif." > $(APP)/apps/my_app1/src/my_app1.erl
 
-		$i "Generate a module containing EUnit good tests in my_app2"
-		$t printf "%s\n" \
-			"-module(my_app2)." \
-			"-ifdef(TEST)." \
-			"-include_lib(\"eunit/include/eunit.hrl\")." \
-			"ok_test() -> ok." \
-			"-endif." > $(APP)/apps/my_app2/src/my_app2.erl
+	$i "Generate a module containing EUnit good tests in my_app2"
+	$t printf "%s\n" \
+		"-module(my_app2)." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"ok_test() -> ok." \
+		"-endif." > $(APP)/apps/my_app2/src/my_app2.erl
 
-		$i "Generate a module containing EUnit tests in my_lib"
-		$t printf "%s\n" \
-			"-module(my_lib)." \
-			"-ifdef(TEST)." \
-			"-include_lib(\"eunit/include/eunit.hrl\")." \
-			"ok_test() -> ok." \
-			"-endif." > $(APP)/apps/my_lib/src/my_lib.erl
+	$i "Generate a module containing EUnit tests in my_lib"
+	$t printf "%s\n" \
+		"-module(my_lib)." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"ok_test() -> ok." \
+		"-endif." > $(APP)/apps/my_lib/src/my_lib.erl
 
-		$i "Check exit code of EUnit for the module with broken test should be non-zero"
-		$t ( set +e; $(MAKE) -C $(APP)/apps/my_app1 eunit ; if [ $$? -ne 0 ] ; then \
-			echo "Test passed exit-code is non-zero" ; \
-		else \
-			echo "Test failed exit-code is zero" ; \
-			exit 100; \
-		fi )
+	$i "Check exit code of EUnit for the module with broken test should be non-zero"
+	$t ! $(MAKE) -C $(APP)/apps/my_app1 eunit $v
 
-		$i "Check exit code of EUnit for the whole project with broken test should be non-zero"
-		$t ( set +e; $(MAKE) -C $(APP) eunit ; if [ $$? -ne 0 ] ; then \
-			echo "Test passed exit-code is non-zero" ; \
-		else \
-			echo "Test failed exit-code is zero" ; \
-			exit 100; \
-		fi )
-
-
+	$i "Check exit code of EUnit for the whole project with broken test should be non-zero"
+	$t ! $(MAKE) -C $(APP) eunit $v
 
 eunit-check: build clean
 
