@@ -48,6 +48,23 @@ relx-rel: build clean
 	$i "Check that the output directory was removed entirely"
 	$t test ! -d $(APP)/_rel/
 
+relx-vsn: build clean
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+	
+	$i "Replace the vsn"
+	$t sed -i.bak s/"\"1\""/"{cmd, \"echo -n 2\"}"/ $(APP)/relx.config
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the correct release exists"
+	$t ! test -d $(APP)/_rel/$(APP)_release/releases/1
+	$t test -d $(APP)/_rel/$(APP)_release/releases/2
+
 relx-relup: build clean
 
 	$i "Bootstrap a new release named $(APP)"
