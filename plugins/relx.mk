@@ -57,7 +57,7 @@ run:
 else
 
 define get_relx_release.erl
-	{ok, Config} = file:consult("$(RELX_CONFIG)"),
+	{ok, Config} = file:consult("$(call core_native_path,$(RELX_CONFIG))"),
 	{release, {Name, Vsn0}, _} = lists:keyfind(release, 1, Config),
 	Vsn = case Vsn0 of
 		{cmd, Cmd} -> os:cmd(Cmd);
