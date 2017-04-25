@@ -42,18 +42,10 @@ $(RELX):
 	$(verbose) chmod +x $(RELX)
 
 relx-rel: $(RELX) rel-deps app
-ifeq ($(RELX_TAR),1)
-	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release tar
-else
-	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release
-endif
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release $(if $(filter 1,$(RELX_TAR)),tar)
 
 relx-relup: $(RELX) rel-deps app
-ifeq ($(RELX_TAR),1)
-	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release relup tar
-else
-	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release relup
-endif
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release relup $(if $(filter 1,$(RELX_TAR)),tar)
 
 distclean-relx-rel:
 	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)

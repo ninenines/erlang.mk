@@ -184,6 +184,12 @@ relx-tar: build clean
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
+	$i "Build the release without a tarball"
+	$t $(MAKE) -C $(APP) RELX_TAR=0 $v
+
+	$i "Check that tarball doesn't exist"
+	$t test ! -e $(APP)/_rel/$(APP)_release/$(APP)_release-1.tar.gz
+
 	$i "Build the release as a tarball"
 	$t $(MAKE) -C $(APP) $v
 
