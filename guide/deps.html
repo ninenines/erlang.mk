@@ -199,9 +199,18 @@ They are not autopatched
 They are not deleted on <code class="literal">make distclean</code>
 </li><li class="listitem">
 They are not automatically added to the application resource file
-</li></ul></div><p>To properly fill the application resource file, you will
-need to define the <code class="literal">LOCAL_DEPS</code> variable for each relevant
-application, the same as for OTP applications.</p><p>If there is a conflict between a local dependency and a
+</li></ul></div><p>To properly fill the application resource file and compile apps in
+the right order, you will need to define the <code class="literal">LOCAL_DEPS</code> variable
+for each relevant application, the same as for OTP applications. Apps
+can depend on each other in this way, and their compilation order
+will follow the same rules as regular dependencies in <code class="literal">DEPS</code>.</p><p>The top-level <code class="literal">LOCAL_DEPS</code> variable, if defined, will determine which
+apps (along with their dependencies) to build, and also which apps
+should be added to the top-level application resource file, if there
+is one. This may be useful, for example, for specifying a different
+set of apps to build for different releases. If <code class="literal">LOCAL_DEPS</code> is not
+defined, then all apps in the <span class="emphasis"><em>$(APPS_DIR)</em></span> will be built, but none
+will be automatically added to the top-level application resource
+file.</p><p>If there is a conflict between a local dependency and a
 remote dependency, then the local dependency always wins;
 an error will be triggered when trying to fetch the
 conflicting remote dependency.</p><p>To start using dependencies local to the repository, simply
