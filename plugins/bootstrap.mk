@@ -444,9 +444,6 @@ endif
 ifndef t
 	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME [in=APP])
 endif
-ifndef tpl_$(t)
-	$(error Unknown template)
-endif
 ifndef n
 	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME [in=APP])
 endif

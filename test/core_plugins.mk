@@ -1,6 +1,6 @@
 # Core: External plugins.
 
-CORE_PLUGINS_CASES = all one test
+CORE_PLUGINS_CASES = all one templates test
 CORE_PLUGINS_TARGETS = $(addprefix core-plugins-,$(CORE_PLUGINS_CASES))
 
 .PHONY: core-plugins $(CORE_PLUGINS_TARGETS)
@@ -70,6 +70,44 @@ core-plugins-one: build clean
 
 	$i "Run 'make plugin2' and confirm the target doesn't exist"
 	$t ! $(MAKE) --no-print-directory -C $(APP) plugin2
+
+core-plugins-templates: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a local git repository with a plugin containing a template"
+	$t mkdir -p $(APP)/plugin_dep
+	$t printf "%s\n" \
+		"define tpl_test_mk" \
+		"-module(test_mk)." \
+		"endef" > $(APP)/plugin_dep/plugins.mk
+	$t cd $(APP)/plugin_dep && \
+		git init -q && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q -m "Tests"
+
+	$i "Add dependency and plugins to the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = plugin_dep\ndep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master\nDEP_PLUGINS = plugin_dep\n"}' $(APP)/Makefile
+
+	$i "Run 'make list-templates' and check that it prints test_mk"
+	$t $(MAKE) --no-print-directory -C $(APP) list-templates | grep -qw test_mk
+
+	$i "Create a new file using the template"
+	$t $(MAKE) --no-print-directory -C $(APP) new t=test_mk n=test_mk
+
+	$i "Confirm the file exists"
+	$t test -f $(APP)/src/test_mk.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the file was compiled correctly"
+	$t test -f $(APP)/ebin/test_mk.beam
 
 core-plugins-test: build clean
 
