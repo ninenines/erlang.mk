@@ -177,7 +177,7 @@ core-app-auto-git-id: build clean
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
-		git commit -q -m "Tests"
+		git commit -q --no-gpg-sign -m "Tests"
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v

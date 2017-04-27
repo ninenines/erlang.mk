@@ -985,7 +985,7 @@ core-deps-fetch-git-submodule: build clean
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
-		git commit -q -m "Tests"
+		git commit -q --no-gpg-sign -m "Tests"
 
 	$i "Add the submodule to my_dep"
 	$t mkdir $(APP)/deps
@@ -995,7 +995,7 @@ core-deps-fetch-git-submodule: build clean
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
-		git commit -q -m "Tests"
+		git commit -q --no-gpg-sign -m "Tests"
 
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
@@ -1168,7 +1168,7 @@ define add_dep_and_subdep
 		git config user.name "Testsuite" && \
 		git config user.email "testsuite@erlang.mk" && \
 		git add . && \
-		git commit -q -m "Initial commit")
+		git commit -q --no-gpg-sign -m "Initial commit")
 
 	$i "Bootstrap a new OTP library named $(APP)-$(1)dep"
 	$t mkdir $(APP)-$(1)dep/
@@ -1187,7 +1187,7 @@ define add_dep_and_subdep
 		git config user.name "Testsuite" && \
 		git config user.email "testsuite@erlang.mk" && \
 		git add . && \
-		git commit -q -m "Initial commit")
+		git commit -q --no-gpg-sign -m "Initial commit")
 endef
 
 core-deps-list-deps: build clean
@@ -1224,7 +1224,7 @@ dep_shelldep = git file://$(abspath $(APP)-shelldep) master\
 		git config user.name "Testsuite" && \
 		git config user.email "testsuite@erlang.mk" && \
 		git add . && \
-		git commit -q -m "Initial commit")
+		git commit -q --no-gpg-sign -m "Initial commit")
 
 	$i "List application dependencies"
 	$t $(MAKE) -C $(APP) --no-print-directory list-deps $v

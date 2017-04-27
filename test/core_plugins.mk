@@ -28,7 +28,7 @@ core-plugins-all: build clean
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
-		git commit -q -m "Tests"
+		git commit -q --no-gpg-sign -m "Tests"
 
 	$i "Add dependency and plugins to the Makefile"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = plugin_dep\ndep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master\nDEP_PLUGINS = plugin_dep\n"}' $(APP)/Makefile
@@ -60,7 +60,7 @@ core-plugins-one: build clean
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
-		git commit -q -m "Tests"
+		git commit -q --no-gpg-sign -m "Tests"
 
 	$i "Add dependency and plugins to the Makefile"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = plugin_dep\ndep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master\nDEP_PLUGINS = plugin_dep/mk/plugin1.mk\n"}' $(APP)/Makefile
@@ -89,7 +89,7 @@ core-plugins-templates: build clean
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
-		git commit -q -m "Tests"
+		git commit -q --no-gpg-sign -m "Tests"
 
 	$i "Add dependency and plugins to the Makefile"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = plugin_dep\ndep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master\nDEP_PLUGINS = plugin_dep\n"}' $(APP)/Makefile

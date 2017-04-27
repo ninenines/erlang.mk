@@ -21,7 +21,7 @@ core-upgrade-conflicting-configs: build clean
 		git checkout -q -b test-modified-build.config && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
-		git commit -q -a -m 'Modify build.config' && \
+		git commit -q --no-gpg-sign -a -m 'Modify build.config' && \
 		git checkout master)
 
 	$i "Point application to an alternate erlang.mk repository"
@@ -92,7 +92,7 @@ core-upgrade-custom-repo: build clean
 		git checkout -q -b test-copyright && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
-		git commit -q -a -m 'Add Testsuite copyright' && \
+		git commit -q --no-gpg-sign -a -m 'Add Testsuite copyright' && \
 		git checkout master)
 
 	$i "Point application to an alternate erlang.mk repository"
