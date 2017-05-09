@@ -17,10 +17,9 @@ endef
 
 define compile_proto.erl
 	[begin
-		Dir = filename:dirname(filename:dirname(F)),
 		protobuffs_compile:generate_source(F,
-			[{output_include_dir, Dir ++ "/include"},
-				{output_src_dir, Dir ++ "/ebin"}])
+			[{output_include_dir, "./include"},
+				{output_src_dir, "./ebin"}])
 	end || F <- string:tokens("$(1)", " ")],
 	halt().
 endef
