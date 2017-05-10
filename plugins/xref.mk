@@ -20,9 +20,9 @@ XREFR_URL ?= https://github.com/inaka/xref_runner/releases/download/0.2.2/xrefr
 # Core targets.
 
 help::
-	$(verbose) printf "%s\n" "" \
-		"Xref targets:" \
-		"  xref        Run Xrefr using $XREF_CONFIG as config file if defined"
+	$(verbose) printf '%s\n' '' \
+		'Xref targets:' \
+		'  xref        Run Xrefr using $$XREF_CONFIG as config file if defined'
 
 distclean:: distclean-xref
 
