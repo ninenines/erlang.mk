@@ -1582,8 +1582,12 @@ ifeq ($(PLATFORM),msys2)
 else
 	$i "Start the release and check that Recon is loaded"
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release start $v
-	$t test -n "`$(APP)/_rel/$(APP)_release/bin/$(APP)_release rpcterms \
-		application loaded_applications | grep recon`"
+	$t apps="Node is not running!"; \
+		while test "$$apps" = "Node is not running!"; do \
+			apps=$$($(APP)/_rel/$(APP)_release/bin/$(APP)_release \
+			rpcterms \ application loaded_applications); \
+		done; \
+		echo "$$apps" | grep -q recon
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
 endif
 
