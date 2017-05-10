@@ -15,5 +15,5 @@ ifneq ($(SKIP_DEPS),)
 rel-deps:
 else
 rel-deps: $(ALL_REL_DEPS_DIRS)
-	$(verbose) for dep in $(ALL_REL_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
+	$(verbose) set -e; for dep in $(ALL_REL_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
 endif

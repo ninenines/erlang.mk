@@ -65,22 +65,20 @@ ifeq ($(IS_APP)$(IS_DEP),)
 	$(verbose) rm -f $(ERLANG_MK_RECURSIVE_TMP_LIST)
 endif
 ifndef IS_APP
-	$(verbose) for dep in $(ALL_APPS_DIRS) ; do \
+	$(verbose) set -e; for dep in $(ALL_APPS_DIRS) ; do \
 		$(MAKE) -C $$dep $@ \
 		 IS_APP=1 \
-		 ERLANG_MK_RECURSIVE_TMP_LIST=$(ERLANG_MK_RECURSIVE_TMP_LIST) \
-		 || exit $$?; \
+		 ERLANG_MK_RECURSIVE_TMP_LIST=$(ERLANG_MK_RECURSIVE_TMP_LIST); \
 	done
 endif
-	$(verbose) for dep in $^ ; do \
+	$(verbose) set -e; for dep in $^ ; do \
 		if ! grep -qs ^$$dep$$ $(ERLANG_MK_RECURSIVE_TMP_LIST); then \
 			echo $$dep >> $(ERLANG_MK_RECURSIVE_TMP_LIST); \
 			if grep -qs -E "^[[:blank:]]*include[[:blank:]]+(erlang\.mk|.*/erlang\.mk)$$" \
 			 $$dep/GNUmakefile $$dep/makefile $$dep/Makefile; then \
 				$(MAKE) -C $$dep fetch-deps \
 				 IS_DEP=1 \
-				 ERLANG_MK_RECURSIVE_TMP_LIST=$(ERLANG_MK_RECURSIVE_TMP_LIST) \
-				 || exit $$?; \
+				 ERLANG_MK_RECURSIVE_TMP_LIST=$(ERLANG_MK_RECURSIVE_TMP_LIST); \
 			fi \
 		fi \
 	done
