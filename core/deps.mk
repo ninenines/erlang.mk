@@ -25,9 +25,13 @@ export REBAR_DEPS_DIR
 # They both use the core_dep_plugin macro.
 
 define core_dep_plugin
+ifeq ($(2),$(PROJECT))
+-include $$(patsubst $(PROJECT)/%,%,$(1))
+else
 -include $(DEPS_DIR)/$(1)
 
 $(DEPS_DIR)/$(1): $(DEPS_DIR)/$(2) ;
+endif
 endef
 
 DEP_EARLY_PLUGINS ?=
