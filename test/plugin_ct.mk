@@ -76,7 +76,10 @@ ct-apps: build clean
 		"call_my_lib(_) -> 4 = my_lib:random_int()." > $(APP)/test/my_root_SUITE.erl
 
 	$i "Check that Common Test runs tests"
-	$t $(MAKE) -C $(APP) ct $v CT_SUITES=my_root
+	$t $(MAKE) -C $(APP) ct $v
+
+	$i "Check that Common Test runs tests from a specific test suite"
+	$t $(MAKE) -C $(APP) ct CT_SUITES=my_root $v
 
 ct-apps-only: build clean
 

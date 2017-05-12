@@ -41,9 +41,12 @@ CT_RUN = ct_run \
 ifeq ($(CT_SUITES),)
 ct: $(if $(IS_APP),,apps-ct)
 else
+# We do not run tests if we are in an apps/* with no test directory.
+ifneq ($(IS_APP)$(wildcard $(TEST_DIR)),1)
 ct: test-build $(if $(IS_APP),,apps-ct)
 	$(verbose) mkdir -p $(CT_LOGS_DIR)
 	$(gen_verbose) $(CT_RUN) -sname ct_$(PROJECT) -suite $(addsuffix _SUITE,$(CT_SUITES)) $(CT_OPTS)
+endif
 endif
 
 ifneq ($(ALL_APPS_DIRS),)
