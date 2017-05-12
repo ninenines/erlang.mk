@@ -1,6 +1,6 @@
 # Core: External plugins.
 
-CORE_PLUGINS_CASES = all early one templates test
+CORE_PLUGINS_CASES = all early early-local local one templates test
 CORE_PLUGINS_TARGETS = $(addprefix core-plugins-,$(CORE_PLUGINS_CASES))
 
 .PHONY: core-plugins $(CORE_PLUGINS_TARGETS)
@@ -64,6 +64,48 @@ core-plugins-early: build clean
 	$i "Check that all dependencies were fetched"
 	$t test -e $(APP)/deps/cowlib
 	$t test -e $(APP)/deps/ranch
+
+core-plugins-early-local: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create two internal plugin makefiles"
+	$t mkdir -p $(APP)/mk
+	$t echo "plugin1: ; @echo \$$@" > $(APP)/mk/plugin1.mk
+	$t echo "plugin2: ; @echo \$$@" > $(APP)/early-plugins.mk
+
+	$i "Add dependency and plugins to the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEP_EARLY_PLUGINS = \$$(PROJECT) \$$(PROJECT)/mk/plugin1.mk\n"}' $(APP)/Makefile
+
+	$i "Run 'make plugin1' and check that it prints plugin1"
+	$t $(MAKE) --no-print-directory -C $(APP) plugin1 | grep -qw plugin1
+
+	$i "Run 'make plugin2' and check that it prints plugin2"
+	$t $(MAKE) --no-print-directory -C $(APP) plugin2 | grep -qw plugin2
+
+core-plugins-local: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create two internal plugin makefiles"
+	$t mkdir -p $(APP)/mk
+	$t echo "plugin1: ; @echo \$$@" > $(APP)/mk/plugin1.mk
+	$t echo "plugin2: ; @echo \$$@" > $(APP)/plugins.mk
+
+	$i "Add dependency and plugins to the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEP_PLUGINS = \$$(PROJECT) \$$(PROJECT)/mk/plugin1.mk\n"}' $(APP)/Makefile
+
+	$i "Run 'make plugin1' and check that it prints plugin1"
+	$t $(MAKE) --no-print-directory -C $(APP) plugin1 | grep -qw plugin1
+
+	$i "Run 'make plugin2' and check that it prints plugin2"
+	$t $(MAKE) --no-print-directory -C $(APP) plugin2 | grep -qw plugin2
 
 core-plugins-one: build clean
 
