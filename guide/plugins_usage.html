@@ -65,7 +65,21 @@ file:</p><pre class="programlisting">THIS := $(dir $(realpath $(lastword $(MAKEF
 include $(THIS)/mk/dist.mk
 include $(THIS)/mk/templates.mk</pre><p>The <code class="literal">THIS</code> variable is required to relatively include files.</p><p>This allows users to not only be able to select individual
 plugins, but also select all plugins from the dependency
-in one go if they wish to do so.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="plugins.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="plugins.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="plugins_list.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+in one go if they wish to do so.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_early_stage_plugins"></a>22.4. Early-stage plugins</h2></div></div></div><p>Plugins declared in <code class="literal">DEP_PLUGINS</code> are loaded near the end of Erlang.mk.
+That’s why you have access to all previously initialized variables.
+However, if you want your plugin to add common dependencies to
+your applications, a regular is loaded too late in the process.
+You need to use "Early-stage plugins". They are declared using the
+<code class="literal">DEP_EARLY_PLUGINS</code> variable instead. Plugins listed in this variable
+are loaded near the beginning of Erlang.mk Otherwise, they work exactly
+the same.</p><p>If you only give the name of a dependency, the default file loaded is
+<span class="emphasis"><em>early-plugins.mk</em></span>. You can specify a filename exactly like you would
+have done it with regular plugins.</p><pre class="programlisting"># In your application's Makefile
+BUILD_DEPS = common_deps
+DEP_EARLY_PLUGINS = common_deps</pre><pre class="programlisting"># In the plugin's early-plugins.mk
+DEPS += cowboy
+TEST_DEPS = ct_helper
+dep_ct_helper = git https://github.com/ninenines/ct_helper master</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="plugins.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="plugins.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="plugins_list.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>
