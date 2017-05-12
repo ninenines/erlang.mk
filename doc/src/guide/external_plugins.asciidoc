@@ -75,3 +75,29 @@ The `THIS` variable is required to relatively include files.
 This allows users to not only be able to select individual
 plugins, but also select all plugins from the dependency
 in one go if they wish to do so.
+
+=== Early-stage plugins
+
+Plugins declared in `DEP_PLUGINS` are loaded near the end of Erlang.mk.
+That's why you have access to all previously initialized variables.
+However, if you want your plugin to add common dependencies to
+your applications, a regular is loaded too late in the process.
+You need to use "Early-stage plugins". They are declared using the
+`DEP_EARLY_PLUGINS` variable instead. Plugins listed in this variable
+are loaded near the beginning of Erlang.mk Otherwise, they work exactly
+the same.
+
+If you only give the name of a dependency, the default file loaded is
+'early-plugins.mk'. You can specify a filename exactly like you would
+have done it with regular plugins.
+
+[source,make]
+# In your application's Makefile
+BUILD_DEPS = common_deps
+DEP_EARLY_PLUGINS = common_deps
+
+[source,make]
+# In the plugin's early-plugins.mk
+DEPS += cowboy
+TEST_DEPS = ct_helper
+dep_ct_helper = git https://github.com/ninenines/ct_helper master

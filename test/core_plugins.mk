@@ -1,6 +1,6 @@
 # Core: External plugins.
 
-CORE_PLUGINS_CASES = all one templates test
+CORE_PLUGINS_CASES = all early one templates test
 CORE_PLUGINS_TARGETS = $(addprefix core-plugins-,$(CORE_PLUGINS_CASES))
 
 .PHONY: core-plugins $(CORE_PLUGINS_TARGETS)
@@ -38,6 +38,32 @@ core-plugins-all: build clean
 
 	$i "Run 'make plugin2' and check that it prints plugin2"
 	$t test -n "`$(MAKE) -C $(APP) plugin2 | grep plugin2`"
+
+core-plugins-early: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Write external plugin adddep_plugin"
+	$t mkdir $(APP)/adddep_plugin
+	$t echo -e "DEPS += cowlib" >> $(APP)/adddep_plugin/early-plugins.mk
+
+	$i "Inject external plugin dependencies into $(APP)"
+	$t echo 'DEPS = ranch' >>$(APP)/Makefile.tmp
+	$t echo 'BUILD_DEPS = adddep_plugin' >>$(APP)/Makefile.tmp
+	$t echo 'DEP_EARLY_PLUGINS = adddep_plugin' >>$(APP)/Makefile.tmp
+	$t echo 'dep_adddep_plugin = cp adddep_plugin' >>$(APP)/Makefile.tmp
+	$t cat $(APP)/Makefile >>$(APP)/Makefile.tmp
+	$t mv $(APP)/Makefile.tmp $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -e $(APP)/deps/cowlib
+	$t test -e $(APP)/deps/ranch
 
 core-plugins-one: build clean
 
