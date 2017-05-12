@@ -5,12 +5,6 @@
 
 DEP_PLUGINS ?=
 
-define core_dep_plugin
--include $(DEPS_DIR)/$(1)
-
-$(DEPS_DIR)/$(1): $(DEPS_DIR)/$(2) ;
-endef
-
 $(foreach p,$(DEP_PLUGINS),\
 	$(eval $(if $(findstring /,$p),\
 		$(call core_dep_plugin,$p,$(firstword $(subst /, ,$p))),\
