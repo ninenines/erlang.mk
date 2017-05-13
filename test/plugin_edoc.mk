@@ -1,6 +1,6 @@
 # EDoc plugin.
 
-EDOC_CASES = build docs no-overview opts
+EDOC_CASES = build docs no-overview opts src-dirs
 EDOC_TARGETS = $(addprefix edoc-,$(EDOC_CASES))
 
 .PHONY: edoc $(EDOC_TARGETS)
@@ -110,3 +110,26 @@ edoc-opts: build clean
 	$t test -f $(APP)/doc/README.md
 	$t test -f $(APP)/doc/$(APP)_app.md
 	$t test -f $(APP)/doc/$(APP)_sup.md
+
+edoc-src-dirs: build clean
+
+	$i "Create a multi application repository with a root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Create a new application my_app"
+	$t $(MAKE) -C $(APP) new-app in=my_app $v
+
+	$i "Add apps directories to the list of EDoc source directories"
+	$t echo 'EDOC_SRC_DIRS = $$(ALL_APPS_DIRS)' >> $(APP)/Makefile
+
+	$i "Run EDoc"
+	$t $(MAKE) -C $(APP) edoc $v
+
+	$i "Check that the generated documentation includes modules from both apps"
+	$t test -f $(APP)/doc/index.html
+	$t test -f $(APP)/doc/$(APP)_app.html
+	$t test -f $(APP)/doc/$(APP)_sup.html
+	$t test -f $(APP)/doc/my_app_app.html
+	$t test -f $(APP)/doc/my_app_sup.html

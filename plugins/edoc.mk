@@ -6,28 +6,28 @@
 # Configuration.
 
 EDOC_OPTS ?=
-EDOC_SRC_DIRS ?= $(ALL_APPS_DIRS) $(ALL_DEPS_DIRS)
+EDOC_SRC_DIRS ?=
 
-# TODO: use double-quote instead of single + atom_to_list
-#       The problem is in correctly escaping double-quotes
 define edoc.erl
-	SrcPaths = lists:foldl(fun (P, Acc) ->
-	                         filelib:wildcard(atom_to_list(P) ++ "/{src,c_src}") ++ Acc
-	                       end, [], [$(call comma_list,$(patsubst %,'%',$(EDOC_SRC_DIRS)))]),
-	DefaultOpts = [ {source_path, SrcPaths}
-	               ,{subpackages, false} ],
+	SrcPaths = lists:foldl(fun(P, Acc) ->
+		filelib:wildcard(atom_to_list(P) ++ "/{src,c_src}") ++ Acc
+	end, [], [$(call comma_list,$(patsubst %,'%',$(EDOC_SRC_DIRS)))]),
+	DefaultOpts = [{source_path, SrcPaths}, {subpackages, false}],
 	edoc:application($(1), ".", [$(2)] ++ DefaultOpts),
 	halt(0).
 endef
 
 # Core targets.
-docs:: distclean-edoc edoc
+
+ifneq ($(strip $(EDOC_SRC_DIRS)$(wildcard doc/overview.edoc)),)
+docs:: edoc
+endif
 
 distclean:: distclean-edoc
 
 # Plugin-specific targets.
 
-edoc: doc-deps
+edoc: distclean-edoc doc-deps
 	$(gen_verbose) $(call erlang,$(call edoc.erl,$(PROJECT),$(EDOC_OPTS)))
 
 distclean-edoc:
