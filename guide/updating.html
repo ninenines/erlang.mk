@@ -56,10 +56,16 @@ awk 'FNR==1 &amp;&amp; NR!=1{print ""}1' core/core.mk index/*.mk core/index.mk c
     | sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = 1.2.0-642-gccd2b9f/' &gt; erlang.mk
 make[1]: Leaving directory '/home/essen/tmp/emkg/hello_joe/.erlang.mk.build'
 cp .erlang.mk.build/erlang.mk ./erlang.mk
-rm -rf .erlang.mk.build</pre><p>All that’s left to do is to commit the file!</p><p>Yep, it’s that easy.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_customizing_the_build"></a>4.3. Customizing the build</h2></div></div></div><p>Erlang.mk allows you to customize which plugins are to be included
-in the <span class="emphasis"><em>erlang.mk</em></span> file. You can do so by maintaining your own
-<span class="emphasis"><em>build.config</em></span> file in your repository. Erlang.mk will automatically
-use it the next time you run <code class="literal">make erlang-mk</code>.</p><p>The <span class="emphasis"><em>build.config</em></span> file contains the list of all files that will
+rm -rf .erlang.mk.build</pre><p>All that’s left to do is to commit the file!</p><p>Yep, it’s that easy.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_customizing_the_build"></a>4.3. Customizing the build</h2></div></div></div><p>Erlang.mk allows you to customize which components are to be included
+in the <span class="emphasis"><em>erlang.mk</em></span> file. The <code class="literal">WITHOUT</code> variable allows you to
+remove components from the default Erlang.mk build. The <span class="emphasis"><em>build.config</em></span>
+file lets you define exactly what goes in (including your own code!),
+and in what order.</p><p>The <code class="literal">WITHOUT</code> file contains the list of components to exclude from
+the build. For example, to exclude the package index and the EDoc
+plugin when bootstrapping your application:</p><pre class="programlisting">$ make -f erlang.mk bootstrap WITHOUT="index plugins/edoc"</pre><p>The generated Erlang.mk will never include those components when
+you update it, until you change your mind and use the <code class="literal">WITHOUT</code>
+variable again when you upgrade:</p><pre class="programlisting">$ make erlang-mk WITHOUT=index</pre><p>The <span class="emphasis"><em>build.config</em></span> file is automatically used when you bootstrap
+Erlang.mk or when you update it with <code class="literal">make erlang-mk</code>.</p><p>The <span class="emphasis"><em>build.config</em></span> file contains the list of all files that will
 be built into the resulting <span class="emphasis"><em>erlang.mk</em></span> file. You can start from
 the <a class="ulink" href="https://github.com/ninenines/erlang.mk/blob/master/build.config" target="_top">most recent version</a>
 and customize to your needs.</p><p>You can also name the file differently or put it in a separate folder
