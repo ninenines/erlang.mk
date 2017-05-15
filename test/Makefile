@@ -123,54 +123,6 @@ endef
 
 $(eval $(foreach t,$(patsubst %.mk,%,$(patsubst plugin_%,%,$(wildcard plugin_*.mk))),$(call include_plugin,$t)))
 
-# Tests that don't easily fit into other categories.
-
-core:: core-clean-crash-dump core-distclean-tmp core-help
-
-.PHONY: core-clean-crash-dump core-distclean-tmp core-help
-
-core-clean-crash-dump: build clean
-
-	$i "Bootstrap a new OTP library named $(APP)"
-	$t mkdir $(APP)/
-	$t cp ../erlang.mk $(APP)/
-	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-
-	$i "Create a fake erl_crash.dump file"
-	$t touch $(APP)/erl_crash.dump
-
-	$i "Clean the application"
-	$t $(MAKE) -C $(APP) clean $v
-
-	$i "Check that the crash dump is removed"
-	$t test ! -e $(APP)/erl_crash.dump
-
-core-distclean-tmp: build clean
-
-	$i "Bootstrap a new OTP application named $(APP)"
-	$t mkdir $(APP)/
-	$t cp ../erlang.mk $(APP)/
-	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap all $v
-
-	$i "Check that a .erlang.mk directory exists"
-	$t test -d $(APP)/.erlang.mk
-
-	$i "Distclean the application"
-	$t $(MAKE) -C $(APP) distclean $v
-
-	$i "Check that .erlang.mk directory got removed"
-	$t test ! -e $(APP)/.erlang.mk
-
-core-help: build clean
-
-	$i "Bootstrap a new OTP library named $(APP)"
-	$t mkdir $(APP)/
-	$t cp ../erlang.mk $(APP)/
-	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-
-	$i "Run 'make help' and check that it prints help"
-	$t test -n "`$(MAKE) -C $(APP) help` | grep Usage"
-
 # Packages.
 
 PACKAGES = $(foreach pkg,$(sort $(wildcard ../index/*.mk)),$(notdir $(basename $(pkg))))

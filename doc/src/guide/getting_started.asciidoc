@@ -78,17 +78,6 @@ to bootstrap. This operation is done only once. Consult the
 xref:updating[Updating Erlang.mk] chapter for more
 information.
 
-[NOTE]
-----
-By default the file contains a package index. To filter it, run the command
-above with the `WITHOUT=index` argument.
-
-[source,bash]
-$ make -f erlang.mk bootstrap WITHOUT=index
-
-This command will generate the file without the index.
-----
-
 Of course, the generated project can now be compiled:
 
 [source,bash]

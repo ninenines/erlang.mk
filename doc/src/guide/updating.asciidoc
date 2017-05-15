@@ -47,10 +47,28 @@ Yep, it's that easy.
 
 === Customizing the build
 
-Erlang.mk allows you to customize which plugins are to be included
-in the 'erlang.mk' file. You can do so by maintaining your own
-'build.config' file in your repository. Erlang.mk will automatically
-use it the next time you run `make erlang-mk`.
+Erlang.mk allows you to customize which components are to be included
+in the 'erlang.mk' file. The `WITHOUT` variable allows you to
+remove components from the default Erlang.mk build. The 'build.config'
+file lets you define exactly what goes in (including your own code!),
+and in what order.
+
+The `WITHOUT` file contains the list of components to exclude from
+the build. For example, to exclude the package index and the EDoc
+plugin when bootstrapping your application:
+
+[source,bash]
+$ make -f erlang.mk bootstrap WITHOUT="index plugins/edoc"
+
+The generated Erlang.mk will never include those components when
+you update it, until you change your mind and use the `WITHOUT`
+variable again when you upgrade:
+
+[source,bash]
+$ make erlang-mk WITHOUT=index
+
+The 'build.config' file is automatically used when you bootstrap
+Erlang.mk or when you update it with `make erlang-mk`.
 
 The 'build.config' file contains the list of all files that will
 be built into the resulting 'erlang.mk' file. You can start from
@@ -61,10 +79,3 @@ You can also name the file differently or put it in a separate folder
 by modifying the value for `ERLANG_MK_BUILD_CONFIG`. You can also
 tell Erlang.mk to use a different temporary directory by changing
 the `ERLANG_MK_BUILD_DIR` variable.
-
-Alternatively you can filter out a plugin in the build config by using the
-`WITHOUT` variable the first time you generate the file. For example this
-commande will filter the index plugin:
-
-[source,bash]
-$ make -f erlang.mk WITHOUT=index
