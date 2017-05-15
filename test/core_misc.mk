@@ -62,7 +62,11 @@ core-without-edoc: clean
 	$i "Confirm that the EDoc plugin was not included."
 	$t ! grep -q distclean-edoc $(APP)/erlang.mk
 
-# @todo Update Erlang.mk and confirm this sticks.
+	$i "Update Erlang.mk"
+	$t $(MAKE) -C $(APP) -f erlang.mk erlang-mk $v
+
+	$i "Confirm that the EDoc plugin is still not included."
+	$t ! grep -q distclean-edoc $(APP)/erlang.mk
 
 core-without-index: clean
 
@@ -75,7 +79,11 @@ core-without-index: clean
 	$i "Confirm that the index was not included."
 	$t ! grep -q pkg_cowboy $(APP)/erlang.mk
 
-# @todo Update Erlang.mk and confirm this sticks.
+	$i "Update Erlang.mk"
+	$t $(MAKE) -C $(APP) -f erlang.mk erlang-mk $v
+
+	$i "Confirm that the index is still not included."
+	$t ! grep -q pkg_cowboy $(APP)/erlang.mk
 
 core-without-many: clean
 
