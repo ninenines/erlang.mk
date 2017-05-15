@@ -252,10 +252,11 @@ Rebar projects are automatically converted to use Erlang.mk
 as their build tool. This essentially patches Rebar out, and
 fixes and converts the project to be compatible with Erlang.mk.
 </li><li class="listitem">
-Erlang.mk projects have their <span class="emphasis"><em>erlang.mk</em></span> file redirect to
-the top-level project’s Erlang.mk. This is to ensure that
-functionality works across all dependencies, even if the
-dependency’s Erlang.mk is outdated.
+Erlang.mk projects have their <span class="emphasis"><em>Makefile</em></span> patched, if necessary,
+to include the top-level project’s Erlang.mk. This is to ensure
+that functionality works across all dependencies, even if the
+dependency’s Erlang.mk is outdated. The patched Makefile
+can be safely committed if necessary.
 </li><li class="listitem">
 Other Erlang projects get a small Erlang.mk Makefile
 generated automatically.
