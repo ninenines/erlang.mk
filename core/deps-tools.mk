@@ -74,7 +74,7 @@ endif
 	$(verbose) set -e; for dep in $^ ; do \
 		if ! grep -qs ^$$dep$$ $(ERLANG_MK_RECURSIVE_TMP_LIST); then \
 			echo $$dep >> $(ERLANG_MK_RECURSIVE_TMP_LIST); \
-			if grep -qs -E "^[[:blank:]]*include[[:blank:]]+(erlang\.mk|.*/erlang\.mk)$$" \
+			if grep -qs -E "^[[:blank:]]*include[[:blank:]]+(erlang\.mk|.*/erlang\.mk|.*ERLANG_MK_FILENAME.*)$$" \
 			 $$dep/GNUmakefile $$dep/makefile $$dep/Makefile; then \
 				$(MAKE) -C $$dep fetch-deps \
 				 IS_DEP=1 \

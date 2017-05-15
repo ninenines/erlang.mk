@@ -164,11 +164,15 @@ define dep_autopatch_noop
 	printf "noop:\n" > $(DEPS_DIR)/$(1)/Makefile
 endef
 
-# Overwrite erlang.mk with the current file by default.
+# Replace "include erlang.mk" with a line that will load the parent Erlang.mk
+# if given. Do it for all 3 possible Makefile file names.
 ifeq ($(NO_AUTOPATCH_ERLANG_MK),)
 define dep_autopatch_erlang_mk
-	echo "include $(call core_relpath,$(dir $(ERLANG_MK_FILENAME)),$(DEPS_DIR)/app)/erlang.mk" \
-		> $(DEPS_DIR)/$1/erlang.mk
+	$t for f in Makefile makefile GNUmakefile; do \
+		if [ -f $(DEPS_DIR)/$1/$$f ]; then \
+			sed -i.bak s/'include *erlang.mk'/'include $$(if $$(ERLANG_MK_FILENAME),$$(ERLANG_MK_FILENAME),erlang.mk)'/ $(DEPS_DIR)/$1/$$f; \
+		fi \
+	done
 endef
 else
 define dep_autopatch_erlang_mk
@@ -411,7 +415,7 @@ define dep_autopatch_rebar.erl
 			end,
 			[PortSpec(S) || S <- PortSpecs]
 	end,
-	Write("\ninclude $(call core_relpath,$(dir $(ERLANG_MK_FILENAME)),$(DEPS_DIR)/app)/erlang.mk"),
+	Write("\ninclude $$\(if $$\(ERLANG_MK_FILENAME),$$\(ERLANG_MK_FILENAME),erlang.mk)"),
 	RunPlugin = fun(Plugin, Step) ->
 		case erlang:function_exported(Plugin, Step, 2) of
 			false -> ok;
