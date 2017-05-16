@@ -1,6 +1,6 @@
 # ErlyDTL plugin.
 
-ERLYDTL_CASES = compile full-path include-template opts path-full-path-suffix suffix
+ERLYDTL_CASES = compile custom-tag full-path include-template opts path-full-path-suffix suffix
 ERLYDTL_TARGETS = $(addprefix erlydtl-,$(ERLYDTL_CASES))
 
 .PHONY: erlydtl $(ERLYDTL_TARGETS)
@@ -34,6 +34,53 @@ erlydtl-compile: build clean
 		ok = application:load($(APP)), \
 		{ok, [$(APP_)_one_dtl, $(APP)_two_dtl]} = application:get_key($(APP), modules), \
 		halt()"
+
+erlydtl-custom-tag: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add ErlyDTL to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = erlydtl\n"}' $(APP)/Makefile
+
+	$i "Generate an ErlyDTL library module containing a custom tag"
+	$t printf "%s\n" \
+		"-module($(APP)_lib)." \
+		"-behavior(erlydtl_library)." \
+		"-export([version/0, inventory/1, mytag/2])." \
+		"version() -> 1." \
+		"inventory(filters) -> [];" \
+		"inventory(tags) -> [mytag]." \
+		"mytag(_,_) -> <<\"hello\">>." > $(APP)/src/$(APP)_lib.erl
+
+	$i "Add our library to the ErlyDTL options"
+	$t echo "DTL_OPTS = {libraries, [{erlang_mk, $(APP)_lib}]}" >> $(APP)/Makefile
+
+	$i "Generate an ErlyDTL template that uses a custom tag"
+	$t mkdir $(APP)/templates/
+	$t printf "%s\n" \
+		"{% load erlang_mk %}" \
+		"{% mytag as value %}" \
+		"{{ value }}" > $(APP)/templates/$(APP).dtl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the ErlyDTL template is compiled"
+	$t test -f $(APP)/ebin/$(APP)_dtl.beam
+
+	$i "Check that ErlyDTL generated modules are included in .app file"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, [$(APP_)_dtl, $(APP)_lib]} = application:get_key($(APP), modules), \
+		halt()"
+
+	$i "Confirm the custom tag is used"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval \
+		'file:write_file("$(APP)/OUT", element(2, $(APP)_dtl:render())), halt()'
+	$t cat $(APP)/OUT | grep -q hello
 
 erlydtl-full-path: build clean
 
