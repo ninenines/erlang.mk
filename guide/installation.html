@@ -52,7 +52,9 @@ is the one provided by Apple.</p><p><strong>MacPorts. </strong>
 </p><pre class="programlisting">$ sudo port install erlang git gmake</pre><p>
 </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_on_windows"></a>1.2. On Windows</h2></div></div></div><p>Erlang.mk can be used on Windows inside an MSYS2 environment.
 Cygwin, MSYS (the original) and native Windows (both Batch
-and PowerShell) are currently not supported.</p><p>The rest of this section details how to setup Erlang/OTP and
+and PowerShell) are currently not supported.</p><div class="note" style="margin-left: 0; margin-right: 10%;"><h3 class="title">Note</h3><p>Erlang.mk expects Unix line breaks in most of the files
+(LF instead of CRLF). Make sure to configure your text editor
+adequately.</p></div><p>The rest of this section details how to setup Erlang/OTP and
 MSYS2 in order to use Erlang.mk.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_installing_erlang_otp"></a>1.2.1. Installing Erlang/OTP</h3></div></div></div><p>Erlang.mk requires Erlang/OTP to be installed. The OTP team
 provides binaries of Erlang/OTP for all major and minor releases,
 available from the <a class="ulink" href="http://www.erlang.org/download.html" target="_top">official download page</a>.
