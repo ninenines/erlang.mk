@@ -54,7 +54,7 @@ distclean-relx-rel:
 # Run target.
 
 ifeq ($(wildcard $(RELX_CONFIG)),)
-run:
+run::
 else
 
 define get_relx_release.erl
@@ -78,7 +78,7 @@ ifeq ($(PLATFORM),msys2)
 RELX_REL_EXT := .cmd
 endif
 
-run: all
+run:: all
 	$(verbose) $(RELX_OUTPUT_DIR)/$(RELX_REL_NAME)/bin/$(RELX_REL_NAME)$(RELX_REL_EXT) console
 
 help::
