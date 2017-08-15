@@ -58,8 +58,9 @@ export PATH := $(KERL_INSTALL_DIR)/$(ERLANG_OTP)/bin:$(PATH)
 $(eval $(call kerl_otp_target,$(ERLANG_OTP)))
 
 # Build Erlang/OTP only if it doesn't already exist.
-ifeq ($(wildcard $(KERL_INSTALL_DIR)/$(ERLANG_OTP)),)
-BUILD_ERLANG_OTP := $(shell $(MAKE) $(KERL_INSTALL_DIR)/$(ERLANG_OTP))
+ifeq ($(wildcard $(KERL_INSTALL_DIR)/$(ERLANG_OTP))$(BUILD_ERLANG_OTP),)
+$(info Building Erlang/OTP $(ERLANG_OTP)... Please wait...)
+BUILD_ERLANG_OTP := $(shell $(MAKE) $(KERL_INSTALL_DIR)/$(ERLANG_OTP) BUILD_ERLANG_OTP=1)
 endif
 
 else
@@ -70,8 +71,9 @@ export PATH := $(KERL_INSTALL_DIR)/$(ERLANG_HIPE)-native/bin:$(PATH)
 $(eval $(call kerl_hipe_target,$(ERLANG_HIPE)))
 
 # Build Erlang/OTP only if it doesn't already exist.
-ifeq ($(wildcard $(KERL_INSTALL_DIR)/$(ERLANG_HIPE)),)
-BUILD_ERLANG_OTP := $(shell $(MAKE) $(KERL_INSTALL_DIR)/$(ERLANG_HIPE))
+ifeq ($(wildcard $(KERL_INSTALL_DIR)/$(ERLANG_HIPE))$(BUILD_ERLANG_OTP),)
+$(info Building HiPE-enabled Erlang/OTP $(ERLANG_OTP)... Please wait...)
+BUILD_ERLANG_OTP := $(shell $(MAKE) $(KERL_INSTALL_DIR)/$(ERLANG_HIPE) BUILD_ERLANG_OTP=1)
 endif
 
 endif
