@@ -53,27 +53,25 @@ ERLANG_HIPE ?=
 
 # Use kerl to enforce a specific Erlang/OTP version for a project.
 ifneq ($(strip $(ERLANG_OTP)),)
-export ERLANG_OTP
 export PATH := $(KERL_INSTALL_DIR)/$(ERLANG_OTP)/bin:$(PATH)
 $(eval $(call kerl_otp_target,$(ERLANG_OTP)))
 
 # Build Erlang/OTP only if it doesn't already exist.
 ifeq ($(wildcard $(KERL_INSTALL_DIR)/$(ERLANG_OTP))$(BUILD_ERLANG_OTP),)
 $(info Building Erlang/OTP $(ERLANG_OTP)... Please wait...)
-BUILD_ERLANG_OTP := $(shell $(MAKE) $(KERL_INSTALL_DIR)/$(ERLANG_OTP) BUILD_ERLANG_OTP=1)
+$(shell $(MAKE) $(KERL_INSTALL_DIR)/$(ERLANG_OTP) ERLANG_OTP=$(ERLANG_OTP) BUILD_ERLANG_OTP=1 >&2)
 endif
 
 else
 # Same for a HiPE enabled VM.
 ifneq ($(strip $(ERLANG_HIPE)),)
-export ERLANG_HIPE
 export PATH := $(KERL_INSTALL_DIR)/$(ERLANG_HIPE)-native/bin:$(PATH)
 $(eval $(call kerl_hipe_target,$(ERLANG_HIPE)))
 
 # Build Erlang/OTP only if it doesn't already exist.
 ifeq ($(wildcard $(KERL_INSTALL_DIR)/$(ERLANG_HIPE))$(BUILD_ERLANG_OTP),)
 $(info Building HiPE-enabled Erlang/OTP $(ERLANG_OTP)... Please wait...)
-BUILD_ERLANG_OTP := $(shell $(MAKE) $(KERL_INSTALL_DIR)/$(ERLANG_HIPE) BUILD_ERLANG_OTP=1)
+$(shell $(MAKE) $(KERL_INSTALL_DIR)/$(ERLANG_HIPE) ERLANG_HIPE=$(ERLANG_HIPE) BUILD_ERLANG_OTP=1 >&2)
 endif
 
 endif
