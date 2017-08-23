@@ -9,7 +9,10 @@ ifeq ($(filter triq,$(DEPS) $(TEST_DEPS)),triq)
 tests:: triq
 
 define triq_check.erl
-	code:add_pathsa(["$(call core_native_path,$(CURDIR)/ebin)", "$(call core_native_path,$(DEPS_DIR)/*/ebin)", "$(call core_native_path,$(TEST_DIR))"]),
+	code:add_pathsa([
+		"$(call core_native_path,$(CURDIR)/ebin)",
+		"$(call core_native_path,$(DEPS_DIR)/*/ebin)",
+		"$(call core_native_path,$(TEST_DIR))"]),
 	try
 		case $(1) of
 			all -> [true] =:= lists:usort([triq:check(M) || M <- [$(call comma_list,$(3))]]);
@@ -36,7 +39,8 @@ triq: test-build
 endif
 else
 triq: test-build
-	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(wildcard ebin/*.beam))) $(notdir $(basename $(call core_find,$(TEST_DIR)/,*.beam))))))
+	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename \
+		$(wildcard ebin/*.beam) $(call core_find,$(TEST_DIR)/,*.beam))))))
 	$(gen_verbose) $(call erlang,$(call triq_check.erl,all,undefined,$(MODULES)))
 endif
 endif
