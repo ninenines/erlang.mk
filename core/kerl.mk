@@ -54,6 +54,7 @@ ERLANG_HIPE ?=
 # Use kerl to enforce a specific Erlang/OTP version for a project.
 ifneq ($(strip $(ERLANG_OTP)),)
 export PATH := $(KERL_INSTALL_DIR)/$(ERLANG_OTP)/bin:$(PATH)
+SHELL := env PATH=$(PATH) $(SHELL)
 $(eval $(call kerl_otp_target,$(ERLANG_OTP)))
 
 # Build Erlang/OTP only if it doesn't already exist.
@@ -66,6 +67,7 @@ else
 # Same for a HiPE enabled VM.
 ifneq ($(strip $(ERLANG_HIPE)),)
 export PATH := $(KERL_INSTALL_DIR)/$(ERLANG_HIPE)-native/bin:$(PATH)
+SHELL := env PATH=$(PATH) $(SHELL)
 $(eval $(call kerl_hipe_target,$(ERLANG_HIPE)))
 
 # Build Erlang/OTP only if it doesn't already exist.
