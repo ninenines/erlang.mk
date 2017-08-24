@@ -15,13 +15,16 @@ KERL_GIT ?= https://github.com/kerl/kerl
 KERL_COMMIT ?= master
 
 KERL_MAKEFLAGS ?=
-
-OTP_GIT ?= https://github.com/erlang/otp
+KERL_BUILD_BACKEND ?=
+OTP_GITHUB_URL ?= https://github.com/erlang/otp
 
 define kerl_otp_target
 ifeq ($(wildcard $(KERL_INSTALL_DIR)/$(1)),)
 $(KERL_INSTALL_DIR)/$(1): $(KERL)
-	MAKEFLAGS="$(KERL_MAKEFLAGS)" $(KERL) build git $(OTP_GIT) $(1) $(1)
+	MAKEFLAGS="$(KERL_MAKEFLAGS)" \
+	KERL_BUILD_BACKEND="$(KERL_BUILD_BACKEND)" \
+	OTP_GITHUB_URL="$(OTP_GITHUB_URL)" \
+		$(KERL) build $(1) $(1)
 	$(KERL) install $(1) $(KERL_INSTALL_DIR)/$(1)
 endif
 endef
@@ -30,8 +33,11 @@ define kerl_hipe_target
 ifeq ($(wildcard $(KERL_INSTALL_DIR)/$1-native),)
 $(KERL_INSTALL_DIR)/$1-native: $(KERL)
 	KERL_CONFIGURE_OPTIONS=--enable-native-libs \
-		MAKEFLAGS="$(KERL_MAKEFLAGS)" $(KERL) build git $(OTP_GIT) $1 $1-native
-	$(KERL) install $1-native $(KERL_INSTALL_DIR)/$1-native
+	MAKEFLAGS="$(KERL_MAKEFLAGS)" \
+	KERL_BUILD_BACKEND="$(KERL_BUILD_BACKEND)" \
+	OTP_GITHUB_URL="$(OTP_GITHUB_URL)" \
+		$(KERL) build $(1) $(1)-native
+	$(KERL) install $(1)-native $(KERL_INSTALL_DIR)/$(1)-native
 endif
 endef
 
