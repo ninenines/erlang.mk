@@ -172,7 +172,7 @@ endef
 # if given. Do it for all 3 possible Makefile file names.
 ifeq ($(NO_AUTOPATCH_ERLANG_MK),)
 define dep_autopatch_erlang_mk
-	$t for f in Makefile makefile GNUmakefile; do \
+	for f in Makefile makefile GNUmakefile; do \
 		if [ -f $(DEPS_DIR)/$1/$$f ]; then \
 			sed -i.bak s/'include *erlang.mk'/'include $$(if $$(ERLANG_MK_FILENAME),$$(ERLANG_MK_FILENAME),erlang.mk)'/ $(DEPS_DIR)/$1/$$f; \
 		fi \
