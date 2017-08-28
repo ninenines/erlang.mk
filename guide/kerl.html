@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Erlang.mk User Guide</title>
+<style type="text/css"><!--
+body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
+header {align-items:center;display:flex;justify-content:center}
+header nav.left{text-align:right;width:150px}
+header nav.right{text-align:left;width:150px}
+header nav a{display:block;margin:1.5em 1em}
+main{margin-top:2em;text-align:justify}
+main h2, main h3{margin-top:2em}
+main h1, main div.chapter>div.titlepage h2{font-size:2em;margin-top:.67em}
+a{color:#d9230f;text-decoration:none}
+a:hover{text-decoration:underline}
+a.xref{display:none}
+h1, h2, h3{font-weight:normal}
+div.navfooter{margin-bottom:1em}
+--></style>
+</head>
+<body>
+<header>
+	<nav class="left">
+		<a href="index.html">User guide</a>
+		<a href="getting_started.html">Tutorials</a>
+	</nav>
+	<a href="/" class="logo"><img src="../res/logo-small.png" alt="Erlang.mk" title="Erlang.mk: A build tool for Erlang that just works" height="200" width="206"/></a>
+	<nav class="right">
+		<a href="https://github.com/ninenines/erlang.mk/tree/master/index">470+ packages</a>
+		<a href="https://github.com/ninenines/erlang.mk/issues">Issues?</a>
+	</nav>
+</header>
+<main>
+
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="escript.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="compat.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="kerl"></a>Chapter 12. OTP version management</h2></div></div></div><p>Erlang.mk comes with integrated support for
+<a class="ulink" href="https://github.com/kerl/kerl" target="_top">Kerl</a>, a shell script that
+automates the downloading, building and installing of
+Erlang/OTP. It can be used to easily build a specific
+Erlang/OTP version (with or without custom build options)
+or maintain different versions side by side.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_versions"></a>12.1. Erlang versions</h2></div></div></div><p>Erlang.mk uses the Git tags from Erlang/OTP to identify
+OTP versions. The most recent tag at the time of writing
+is <code class="literal">OTP-20.0.4</code>, which is a patch release of <code class="literal">OTP-20.0</code>.
+A patch release is a non-official release containing a
+few fixes on top of the official release.</p><p>Older versions used a slightly different versioning scheme
+and tag format, for example: <code class="literal">OTP_R16B03</code>. Beware though,
+there also was an <code class="literal">OTP_R16B03-1</code> release that fixed a
+critical issue in the initial release.</p><p>The README file for all official Erlang/OTP releases can
+be found on <a class="ulink" href="http://www.erlang.org/downloads" target="_top">erlang.org</a>.
+To obtain information about patch releases when they are
+released you need to be subscribed to the
+<a class="ulink" href="http://erlang.org/mailman/listinfo/erlang-questions" target="_top">erlang-questions mailing list</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="otp_version_pinning"></a>12.2. OTP version pinning</h2></div></div></div><p>Erlang.mk can use a specific version of Erlang/OTP when
+interacting with your project. This can be very useful
+when you are working with a team because you can define
+the version you need in the Makefile and Erlang.mk will
+ensure this version is used by everyone in your team.</p><p>To pin the version all you need to do is to set the
+<code class="literal">ERLANG_OTP</code> variable in your Makefile before including
+Erlang.mk. For example, to use <code class="literal">OTP-20.0.4</code>:</p><pre class="programlisting">ERLANG_OTP = OTP-20.0.4
+
+include erlang.mk</pre><p>The next time you run <code class="literal">make</code> Erlang.mk will build and
+use the version you configured.</p><p>Note that there has been reports that this functionality
+is not compatible with the <code class="literal">.ONESHELL</code> feature from
+GNU Make.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_continuous_integration"></a>12.3. Continuous integration</h2></div></div></div><p>Erlang.mk can automatically test your project against
+many different Erlang/OTP versions. This functionality
+is documented in the <a class="link" href="ci.html" title="Chapter 20. Continuous integration">Continuous integration</a>
+<a class="xref" href="ci.html" title="Chapter 20. Continuous integration">Chapter 20, <em>Continuous integration</em></a> chapter.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuring_kerl"></a>12.4. Configuring Kerl</h2></div></div></div><p>All of the Kerl variables can be configured directly in the
+Makefile. All you need to do is to export them. For example,
+to change the installation directory for the Erlang/OTP
+versions managed by Kerl, you could add the following to
+your Makefile:</p><pre class="programlisting">export KERL_INSTALL_DIR = $(CURDIR)/erlang</pre><p>When configuring paths like this, always make sure to provide
+an absolute path in the value. Erlang.mk will NOT expand them
+automatically for you.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="escript.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="compat.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+</main>
+</body>
+</html>

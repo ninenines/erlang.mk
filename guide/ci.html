@@ -33,7 +33,37 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="coverage.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="dialyzer.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ci"></a>Chapter 19. Continuous integration</h2></div></div></div><p>Placeholder chapter.</p></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="coverage.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tests.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="dialyzer.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="coverage.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="dialyzer.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ci"></a>Chapter 20. Continuous integration</h2></div></div></div><p>Erlang.mk comes with some support for continuous integration,
+aimed at open source projects that need to support more than
+one specific Erlang/OTP release. (If you target one specific
+release, check the <a class="link" href="kerl.html#otp_version_pinning" title="12.2. OTP version pinning">OTP version pinning</a>
+<a class="xref" href="kerl.html#otp_version_pinning" title="12.2. OTP version pinning">Section 12.2, “OTP version pinning”</a>
+section of the <a class="link" href="kerl.html" title="Chapter 12. OTP version management">OTP version management</a>
+<a class="xref" href="kerl.html" title="Chapter 12. OTP version management">Chapter 12, <em>OTP version management</em></a> chapter.)</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuring_erlang_otp_versions_to_test"></a>20.1. Configuring Erlang/OTP versions to test</h2></div></div></div><p>To use the CI plugin you must first configure which versions
+of Erlang/OTP will be used. Erlang.mk provides three separate
+configuration variables depending on whether you need a normal
+OTP release, a HiPE-enabled release or an ErLLVM-enabled release.</p><p>At the time of writing, this is how you would test against all
+the most recent patch releases of Erlang/OTP 19 and above:</p><pre class="programlisting">CI_OTP = OTP-19.0.7 OTP-19.1.6 OTP-19.2.3 OTP-19.3.6.2 OTP-20.0.4</pre><p>If you want to test against HiPE and ErLLVM but only with the
+latest version of Erlang/OTP, the following could work:</p><pre class="programlisting">CI_HIPE = $(lastword $(CI_OTP))
+CI_ERLLVM = $(CI_HIPE)</pre><p>Consult the <a class="link" href="kerl.html" title="Chapter 12. OTP version management">OTP version management</a>
+<a class="xref" href="kerl.html" title="Chapter 12. OTP version management">Chapter 12, <em>OTP version management</em></a> chapter for more
+information about Erlang/OTP versions and customization of the
+Erlang/OTP builds.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_tests_across_all_configured_versions"></a>20.2. Running tests across all configured versions</h2></div></div></div><p>The recommended way to run the <code class="literal">ci</code> target is with the option
+<code class="literal">-k</code>. It will ensure that tests are run for all configured
+Erlang/OTP versions, even if there are errors:</p><pre class="programlisting">$ make ci -k</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_extending_the_ci_targets"></a>20.3. Extending the CI targets</h2></div></div></div><p>The <code class="literal">ci</code> target can be extended. For example to run Dialyzer
+at the end of CI:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+ci
+</span></dt><dd>
+dialyze
+</dd></dl></div><p>Additional setup can be done by extending the <code class="literal">ci-setup</code>
+target. This target is ran before testing each individual
+Erlang/OTP version.</p><p>For example, to ensure dependencies are re-fetched/built
+before testing individual Erlang/OTP releases:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+ci-setup
+</span></dt><dd>
+distclean
+</dd></dl></div><p>Similarly, the <code class="literal">ci-extra</code> target can be extended to run
+extra commands after an Erlang/OTP version has been tested.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="coverage.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tests.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="dialyzer.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>
