@@ -51,18 +51,10 @@ information about Erlang/OTP versions and customization of the
 Erlang/OTP builds.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_tests_across_all_configured_versions"></a>20.2. Running tests across all configured versions</h2></div></div></div><p>The recommended way to run the <code class="literal">ci</code> target is with the option
 <code class="literal">-k</code>. It will ensure that tests are run for all configured
 Erlang/OTP versions, even if there are errors:</p><pre class="programlisting">$ make ci -k</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_extending_the_ci_targets"></a>20.3. Extending the CI targets</h2></div></div></div><p>The <code class="literal">ci</code> target can be extended. For example to run Dialyzer
-at the end of CI:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-ci
-</span></dt><dd>
-dialyze
-</dd></dl></div><p>Additional setup can be done by extending the <code class="literal">ci-setup</code>
+at the end of CI:</p><pre class="programlisting">ci:: dialyze</pre><p>Additional setup can be done by extending the <code class="literal">ci-setup</code>
 target. This target is ran before testing each individual
 Erlang/OTP version.</p><p>For example, to ensure dependencies are re-fetched/built
-before testing individual Erlang/OTP releases:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-ci-setup
-</span></dt><dd>
-distclean
-</dd></dl></div><p>Similarly, the <code class="literal">ci-extra</code> target can be extended to run
+before testing individual Erlang/OTP releases:</p><pre class="programlisting">ci-setup:: distclean</pre><p>Similarly, the <code class="literal">ci-extra</code> target can be extended to run
 extra commands after an Erlang/OTP version has been tested.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="coverage.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tests.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="dialyzer.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
