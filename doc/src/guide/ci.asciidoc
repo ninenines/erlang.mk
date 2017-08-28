@@ -1,6 +1,62 @@
 [[ci]]
 == Continuous integration
 
-// @todo Write it.
+Erlang.mk comes with some support for continuous integration,
+aimed at open source projects that need to support more than
+one specific Erlang/OTP release. (If you target one specific
+release, check the xref:otp_version_pinning[OTP version pinning]
+section of the xref:kerl[OTP version management] chapter.)
 
-Placeholder chapter.
+=== Configuring Erlang/OTP versions to test
+
+To use the CI plugin you must first configure which versions
+of Erlang/OTP will be used. Erlang.mk provides three separate
+configuration variables depending on whether you need a normal
+OTP release, a HiPE-enabled release or an ErLLVM-enabled release.
+
+At the time of writing, this is how you would test against all
+the most recent patch releases of Erlang/OTP 19 and above:
+
+[source,make]
+CI_OTP = OTP-19.0.7 OTP-19.1.6 OTP-19.2.3 OTP-19.3.6.2 OTP-20.0.4
+
+If you want to test against HiPE and ErLLVM but only with the
+latest version of Erlang/OTP, the following could work:
+
+[source,make]
+CI_HIPE = $(lastword $(CI_OTP))
+CI_ERLLVM = $(CI_HIPE)
+
+Consult the xref:kerl[OTP version management] chapter for more
+information about Erlang/OTP versions and customization of the
+Erlang/OTP builds.
+
+=== Running tests across all configured versions
+
+The recommended way to run the `ci` target is with the option
+`-k`. It will ensure that tests are run for all configured
+Erlang/OTP versions, even if there are errors:
+
+[source,bash]
+$ make ci -k
+
+=== Extending the CI targets
+
+The `ci` target can be extended. For example to run Dialyzer
+at the end of CI:
+
+[source,make]
+ci:: dialyze
+
+Additional setup can be done by extending the `ci-setup`
+target. This target is ran before testing each individual
+Erlang/OTP version.
+
+For example, to ensure dependencies are re-fetched/built
+before testing individual Erlang/OTP releases:
+
+[source,make]
+ci-setup:: distclean
+
+Similarly, the `ci-extra` target can be extended to run
+extra commands after an Erlang/OTP version has been tested.

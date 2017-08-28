@@ -1,0 +1,76 @@
+[[kerl]]
+== OTP version management
+
+Erlang.mk comes with integrated support for
+https://github.com/kerl/kerl[Kerl], a shell script that
+automates the downloading, building and installing of
+Erlang/OTP. It can be used to easily build a specific
+Erlang/OTP version (with or without custom build options)
+or maintain different versions side by side.
+
+=== Erlang versions
+
+Erlang.mk uses the Git tags from Erlang/OTP to identify
+OTP versions. The most recent tag at the time of writing
+is `OTP-20.0.4`, which is a patch release of `OTP-20.0`.
+A patch release is a non-official release containing a
+few fixes on top of the official release.
+
+Older versions used a slightly different versioning scheme
+and tag format, for example: `OTP_R16B03`. Beware though,
+there also was an `OTP_R16B03-1` release that fixed a
+critical issue in the initial release.
+
+The README file for all official Erlang/OTP releases can
+be found on http://www.erlang.org/downloads[erlang.org].
+To obtain information about patch releases when they are
+released you need to be subscribed to the
+http://erlang.org/mailman/listinfo/erlang-questions[erlang-questions mailing list].
+
+[[otp_version_pinning]]
+=== OTP version pinning
+
+Erlang.mk can use a specific version of Erlang/OTP when
+interacting with your project. This can be very useful
+when you are working with a team because you can define
+the version you need in the Makefile and Erlang.mk will
+ensure this version is used by everyone in your team.
+
+To pin the version all you need to do is to set the
+`ERLANG_OTP` variable in your Makefile before including
+Erlang.mk. For example, to use `OTP-20.0.4`:
+
+[source,make]
+----
+ERLANG_OTP = OTP-20.0.4
+
+include erlang.mk
+----
+
+The next time you run `make` Erlang.mk will build and
+use the version you configured.
+
+Note that there has been reports that this functionality
+is not compatible with the `.ONESHELL` feature from
+GNU Make.
+
+=== Continuous integration
+
+Erlang.mk can automatically test your project against
+many different Erlang/OTP versions. This functionality
+is documented in the xref:ci[Continuous integration] chapter.
+
+=== Configuring Kerl
+
+All of the Kerl variables can be configured directly in the
+Makefile. All you need to do is to export them. For example,
+to change the installation directory for the Erlang/OTP
+versions managed by Kerl, you could add the following to
+your Makefile:
+
+[source,make]
+export KERL_INSTALL_DIR = $(CURDIR)/erlang
+
+When configuring paths like this, always make sure to provide
+an absolute path in the value. Erlang.mk will NOT expand them
+automatically for you.

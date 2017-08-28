@@ -30,6 +30,8 @@ include::sfx.asciidoc[Self-extracting releases]
 
 include::escripts.asciidoc[Escripts]
 
+include::kerl.asciidoc[OTP version management]
+
 include::compat.asciidoc[Compatibility with other build tools]
 
 [[docs]]
