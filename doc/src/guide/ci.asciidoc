@@ -46,7 +46,9 @@ The `ci` target can be extended. For example to run Dialyzer
 at the end of CI:
 
 [source,make]
+----
 ci:: dialyze
+----
 
 Additional setup can be done by extending the `ci-setup`
 target. This target is ran before testing each individual
@@ -56,7 +58,9 @@ For example, to ensure dependencies are re-fetched/built
 before testing individual Erlang/OTP releases:
 
 [source,make]
+----
 ci-setup:: distclean
+----
 
 Similarly, the `ci-extra` target can be extended to run
 extra commands after an Erlang/OTP version has been tested.
