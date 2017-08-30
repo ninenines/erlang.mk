@@ -249,6 +249,8 @@ define dep_autopatch_rebar.erl
 				lists:foreach(fun
 					({d, D}) ->
 						Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n");
+					({d, DKey, DVal}) ->
+						Write("ERLC_OPTS += -D" ++ atom_to_list(DKey) ++ "=" ++ atom_to_list(DVal) ++ "\n");
 					({i, I}) ->
 						Write(["ERLC_OPTS += -I ", I, "\n"]);
 					({platform_define, Regex, D}) ->
