@@ -271,6 +271,7 @@ define dep_autopatch_rebar.erl
 			{_, Deps} ->
 				[begin case case Dep of
 							{N, S} when is_atom(N), is_list(S) -> {N, {hex, S}};
+							{_, S, {pkg, N}} -> {N, {hex, S}};
 							{N, S} when is_tuple(S) -> {N, S};
 							{N, _, S} -> {N, S};
 							{N, _, S, _} -> {N, S};
