@@ -80,7 +80,9 @@ ifneq ($(COVER_REPORT_DIR),)
 .PHONY: cover-report-clean cover-report
 
 cover-report-clean:
-	$(gen_verbose) rm -rf $(COVER_REPORT_DIR) $(COVER_DATA_DIR)
+	$(gen_verbose) rm -rf $(COVER_REPORT_DIR)
+	# Remove the COVER_DATA_DIR only if it is empty.
+	-$(verbose) rmdir $(COVER_DATA_DIR)
 
 ifeq ($(COVERDATA),)
 cover-report:

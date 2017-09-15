@@ -84,6 +84,12 @@ cover-custom-dir: build clean
 	$t $(MAKE) -C $(APP) distclean $v
 	$t test ! -e $(APP)/custom_dir/
 
+	$i "Check that the custom dir is not removed if not empty"
+	$t mkdir $(APP)/custom_dir
+	$t touch $(APP)/custom_dir/file
+	$t $(MAKE) -C $(APP) distclean $v
+	$t test -f $(APP)/custom_dir/file
+
 cover-eunit: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
