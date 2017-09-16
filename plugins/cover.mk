@@ -81,8 +81,7 @@ ifneq ($(COVER_REPORT_DIR),)
 
 cover-report-clean:
 	$(gen_verbose) rm -rf $(COVER_REPORT_DIR)
-	# Remove the COVER_DATA_DIR only if it is empty.
-	-$(verbose) rmdir $(COVER_DATA_DIR)
+	$(if $(shell ls -A $(COVER_DATA_DIR)/),,$(verbose) rmdir $(COVER_DATA_DIR))
 
 ifeq ($(COVERDATA),)
 cover-report:
