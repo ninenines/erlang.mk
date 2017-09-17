@@ -98,3 +98,37 @@ The source files are automatically gathered from the contents
 of '$(C_SRC_DIR)'. Erlang.mk looks for '.c', '.C', '.cc' and '.cpp'
 source files. You can define the variable `SOURCES` to manually
 list the files to compile.
+
+=== Propagating compile and linker flags to sub-Makefiles
+
+In some cases it might be necessary to propagate the flags
+you just defined to the sub-Makefiles of your local project.
+You generally can't just export those as this could impact
+the building of dependencies.
+
+Makefiles allow you to export variables for specific targets.
+When doing this, the variables will be exported only when
+this target runs, and not for other targets. It is therefore
+possible to export them when building the C code without
+impacting other build steps.
+
+By adding this to your Makefile all five variables will be
+made available to sub-Makefiles when building C code:
+
+[source,make]
+----
+app-c_src: export CC +=
+app-c_src: export CFLAGS +=
+app-c_src: export CPPFLAGS +=
+app-c_src: export LDFLAGS +=
+app-c_src: export LDLIBS +=
+----
+
+Appending an empty string to the existing value is necessary
+because Makefiles expect an assignment for target-specific
+exports. Alternatively you can set a new value:
+
+[source,make]
+----
+app-c_src: export CFLAGS = -O3
+----
