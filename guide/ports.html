@@ -95,7 +95,21 @@ be overriden.</p><div class="variablelist"><dl class="variablelist"><dt><span cl
 </dd></dl></div><p>The source files are automatically gathered from the contents
 of <span class="emphasis"><em>$(C_SRC_DIR)</em></span>. Erlang.mk looks for <span class="emphasis"><em>.c</em></span>, <span class="emphasis"><em>.C</em></span>, <span class="emphasis"><em>.cc</em></span> and <span class="emphasis"><em>.cpp</em></span>
 source files. You can define the variable <code class="literal">SOURCES</code> to manually
-list the files to compile.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="deps.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="relx.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+list the files to compile.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_propagating_compile_and_linker_flags_to_sub_makefiles"></a>8.4. Propagating compile and linker flags to sub-Makefiles</h2></div></div></div><p>In some cases it might be necessary to propagate the flags
+you just defined to the sub-Makefiles of your local project.
+You generally can’t just export those as this could impact
+the building of dependencies.</p><p>Makefiles allow you to export variables for specific targets.
+When doing this, the variables will be exported only when
+this target runs, and not for other targets. It is therefore
+possible to export them when building the C code without
+impacting other build steps.</p><p>By adding this to your Makefile all five variables will be
+made available to sub-Makefiles when building C code:</p><pre class="programlisting">app-c_src: export CC +=
+app-c_src: export CFLAGS +=
+app-c_src: export CPPFLAGS +=
+app-c_src: export LDFLAGS +=
+app-c_src: export LDLIBS +=</pre><p>Appending an empty string to the existing value is necessary
+because Makefiles expect an assignment for target-specific
+exports. Alternatively you can set a new value:</p><pre class="programlisting">app-c_src: export CFLAGS = -O3</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="deps.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="relx.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>
