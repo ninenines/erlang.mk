@@ -43,7 +43,7 @@ MacPorts:
 
 .Homebrew
 [source,bash]
-$ brew install erlang git homebrew/dupes/make
+$ brew install erlang git make
 
 Homebrew installs GNU Make as `gmake`. The `make` command
 is the one provided by Apple.
