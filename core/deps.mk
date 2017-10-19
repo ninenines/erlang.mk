@@ -241,6 +241,10 @@ define dep_autopatch_rebar.erl
 	Write("C_SRC_TYPE = rebar\n"),
 	Write("DRV_CFLAGS = -fPIC\nexport DRV_CFLAGS\n"),
 	Write(["ERLANG_ARCH = ", rebar_utils:wordsize(), "\nexport ERLANG_ARCH\n"]),
+	ToList = fun
+		(V) when is_atom(V) -> atom_to_list(V);
+		(V) when is_list(V) -> "'\\"" ++ V ++ "\\"'"
+	end,
 	fun() ->
 		Write("ERLC_OPTS = +debug_info\nexport ERLC_OPTS\n"),
 		case lists:keyfind(erl_opts, 1, Conf) of
@@ -248,18 +252,18 @@ define dep_autopatch_rebar.erl
 			{_, ErlOpts} ->
 				lists:foreach(fun
 					({d, D}) ->
-						Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n");
+						Write("ERLC_OPTS += -D" ++ ToList(D) ++ "=1\n");
 					({d, DKey, DVal}) ->
-						Write("ERLC_OPTS += -D" ++ atom_to_list(DKey) ++ "=" ++ atom_to_list(DVal) ++ "\n");
+						Write("ERLC_OPTS += -D" ++ ToList(DKey) ++ "=" ++ ToList(DVal) ++ "\n");
 					({i, I}) ->
 						Write(["ERLC_OPTS += -I ", I, "\n"]);
 					({platform_define, Regex, D}) ->
 						case rebar_utils:is_arch(Regex) of
-							true -> Write("ERLC_OPTS += -D" ++ atom_to_list(D) ++ "=1\n");
+							true -> Write("ERLC_OPTS += -D" ++ ToList(D) ++ "=1\n");
 							false -> ok
 						end;
 					({parse_transform, PT}) ->
-						Write("ERLC_OPTS += +'{parse_transform, " ++ atom_to_list(PT) ++ "}'\n");
+						Write("ERLC_OPTS += +'{parse_transform, " ++ ToList(PT) ++ "}'\n");
 					(_) -> ok
 				end, ErlOpts)
 		end,
