@@ -74,7 +74,7 @@ install-docs:: install-asciidoc
 install-asciidoc: asciidoc-manual
 	$(foreach s,$(MAN_SECTIONS),\
 		mkdir -p $(MAN_INSTALL_PATH)/man$s/ && \
-		install -g `id -u` -o `id -g` -m 0644 doc/man$s/*.gz $(MAN_INSTALL_PATH)/man$s/;)
+		install -g `id -g` -o `id -u` -m 0644 doc/man$s/*.gz $(MAN_INSTALL_PATH)/man$s/;)
 
 distclean-asciidoc-manual:
 	$(gen_verbose) rm -rf $(addprefix doc/man,$(MAN_SECTIONS))
