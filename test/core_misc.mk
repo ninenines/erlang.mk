@@ -5,9 +5,9 @@
 CORE_MISC_CASES = clean-crash-dump distclean-tmp help without-edoc without-index without-many
 CORE_MISC_TARGETS = $(addprefix core-,$(CORE_MISC_CASES))
 
-.PHONY: $(CORE_MISC_TARGETS)
+.PHONY: core-misc $(CORE_MISC_TARGETS)
 
-core:: $(CORE_MISC_TARGETS)
+core-misc: $(CORE_MISC_TARGETS)
 
 core-clean-crash-dump: build clean
 
