@@ -8,7 +8,7 @@
 SPHINX_BUILD ?= sphinx-build
 SPHINX_SOURCE ?= doc
 SPHINX_CONFDIR ?=
-SPHINX_BUILDERS ?= html
+SPHINX_FORMATS ?= html
 SPHINX_DOCTREES ?= $(ERLANG_MK_TMP)/sphinx.doctrees
 SPHINX_OPTS ?=
 
@@ -46,7 +46,7 @@ distclean:: distclean-sphinx
 # Plugin-specific targets.
 
 sphinx:
-	$(foreach B,$(SPHINX_BUILDERS),$(call sphinx.build,$B))
+	$(foreach F,$(SPHINX_FORMATS),$(call sphinx.build,$F))
 
 distclean-sphinx:
-	$(gen_verbose) rm -rf $(filter-out $(SPHINX_SOURCE),$(foreach B,$(SPHINX_BUILDERS),$(call sphinx.output,$B)))
+	$(gen_verbose) rm -rf $(filter-out $(SPHINX_SOURCE),$(foreach F,$(SPHINX_FORMATS),$(call sphinx.output,$F)))
