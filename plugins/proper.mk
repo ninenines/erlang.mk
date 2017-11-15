@@ -15,7 +15,7 @@ define proper_check.erl
 			case atom_to_list(F) of
 				"prop_" ++ _ ->
 					io:format("Testing ~p:~p/0~n", [M, F]),
-					proper:quickcheck(M:F());
+					proper:quickcheck(M:F(), nocolors);
 				_ ->
 					true
 			end
@@ -25,7 +25,7 @@ define proper_check.erl
 		case $(1) of
 			all -> [true] =:= lists:usort([Module(M) || M <- [$(call comma_list,$(3))]]);
 			module -> Module($(2));
-			function -> proper:quickcheck($(2))
+			function -> proper:quickcheck($(2), nocolors)
 		end
 	of
 		true -> halt(0);
