@@ -35,6 +35,9 @@ all:
 		| sed 's/^ERLANG_MK_VERSION =.*/ERLANG_MK_VERSION = $(ERLANG_MK_VERSION)/' \
 		| sed 's:^ERLANG_MK_WITHOUT =.*:ERLANG_MK_WITHOUT = $(WITHOUT):' > $(ERLANG_MK)
 
+lint: all
+	$(MAKE) -f erlang.mk --warn-undefined-variables
+
 ifdef p
 # Remove p from the list of variables since that conflicts with bootstrapping.
 MAKEOVERRIDES := $(filter-out p=$p,$(MAKEOVERRIDES))
