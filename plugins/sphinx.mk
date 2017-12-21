@@ -39,9 +39,8 @@ endef
 
 ifneq ($(wildcard $(if $(SPHINX_CONFDIR),$(SPHINX_CONFDIR),$(SPHINX_SOURCE))/conf.py),)
 docs:: sphinx
-endif
-
 distclean:: distclean-sphinx
+endif
 
 help::
 	$(verbose) printf "%s\n" "" \
