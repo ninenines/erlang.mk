@@ -41,6 +41,8 @@ include::asciidoc.asciidoc[Asciidoc documentation]
 
 include::edoc.asciidoc[EDoc comments]
 
+include::sphinx.asciidoc[Sphinx documentation]
+
 [[tests]]
 = Tests
 
