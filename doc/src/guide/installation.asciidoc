@@ -24,6 +24,10 @@ The commands to install packages vary between distributions:
 [source,bash]
 $ pacman -S erlang git make
 
+Alpine Linux and other distributions based on BusyBox come
+with an incompatible `awk` program. Installing the GNU Awk
+(`gawk` on Alpine) solves this issue.
+
 ==== FreeBSD
 
 FreeBSD comes with binary and source packages:
