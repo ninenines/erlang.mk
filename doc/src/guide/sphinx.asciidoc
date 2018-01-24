@@ -1,21 +1,21 @@
 [[sphinx]]
 == Sphinx documentation
 
-Erlang.mk includes targets for running
+Erlang.mk includes targets for running the
 http://www.sphinx-doc.org/[Sphinx documentation generator], which can produce
 documentation in various formats, like HTML, man pages, Texinfo, LaTeX, and
 others.
 
 === Writing Sphinx documentation
 
-Sphinx generates documentation form a set of
+Sphinx generates documentation from a set of
 http://www.sphinx-doc.org/en/stable/rest.html[reST] documents. There is
 a http://www.sphinx-doc.org/en/stable/tutorial.html[quick start guide] on
 Sphinx' website. For Erlang.mk, we'll set up a minimal environment instead.
 
 === Basic setup
 
-By default, Erlang.mk expects Sphinx documentation to be placed in 'doc'
+By default, Erlang.mk expects Sphinx documentation to be placed in the 'doc'
 directory, with 'doc/conf.py' config file in particular. The file contains
 information about the project, among the other things.
 
@@ -34,7 +34,6 @@ It points to a 'doc/index.rst' document. A simple skeleton includes a table of
 contents for all documentation, and links to generated index of terms and
 a search page:
 
-[literal]
 ----
 My Project
 ==========
@@ -56,7 +55,6 @@ Indices and tables
 The skeleton above has a link to one other page, 'doc/other_page.rst'. Simple
 header with some text will do for now:
 
-[literal]
 ----
 Other Page
 ==========
@@ -64,7 +62,7 @@ Other Page
 Lorem ipsum dolor sit amet...
 ----
 
-The files above are enough to build HTML documentation to 'html' directory.
+The files above are enough to build HTML documentation to the 'html' directory.
 
 [source,bash]
 $ make docs     # all the docs, including EDoc and AsciiDoc if applicable
@@ -72,32 +70,31 @@ $ make sphinx   # Sphinx docs specifically
 
 === Erlang.mk configuration
 
-Default Erlang.mk settings are equivalent to adding to project's makefile
-following lines:
+Erlang.mk defaults to the following configuration:
 
 [source,make]
 SPHINX_FORMATS = html
 SPHINX_SOURCE = doc
 
-To change the location of Sphinx sources, you need to set `$(SPHINX_SOURCE)`
-variable. 'conf.py' file should also be placed in that directory, unless you
+To change the location of Sphinx sources, you need to set the `$(SPHINX_SOURCE)`
+variable. The 'conf.py' file should also be placed in that directory, unless you
 specify `$(SPHINX_CONFDIR)`.
 
-Variable `$(SPHINX_OPTS)` allows to provide options to `sphinx-build`, which
+The variable `$(SPHINX_OPTS)` allows to provide options to `sphinx-build`, which
 is particularly useful for `-D name=value` options. You can even forego
-'doc/conf.py' file, using `-D name=value` in combination with `-C` option,
-though you will need to manually call `make sphinx` or add `sphinx` target to
-dependencies of `docs`.
+'doc/conf.py' file, using `-D name=value` in combination with the `-C` option,
+though in this case you will need to manually call `make sphinx` or add the
+`sphinx` target to dependencies of `docs`.
 
-`$(SPHINX_FORMATS)` variable lists formats to generate. By default only HTML
-is generated, but it can also include man pages or LaTeX document for building
-PDF. See
-http://www.sphinx-doc.org/en/stable/invocation.html#cmdoption-sphinx-build-b[description of `-b` option]
-for `sphinx-build` for list of known formats.
+The `$(SPHINX_FORMATS)` variable lists formats to generate. By default only HTML
+is generated, but it can also build man pages or LaTeX documents which can later
+be converted to PDF. See the
+http://www.sphinx-doc.org/en/stable/invocation.html#cmdoption-sphinx-build-b[description of the `-b` option]
+for `sphinx-build` for a list of known formats.
 
 Formats are by default generated to a directory called after the format
 ('html' for HTML, 'man' for man pages, and so on). To change this behaviour
-for specific format, you can set `$(sphinx_$(format)_output)` variable, e.g.
+for a specific format, you can set the `$(sphinx_$(format)_output)` variable, e.g.
 `$(sphinx_html_output)` for 'html' or `$(sphinx_man_output)` for 'man'.
 There are also `$(sphinx_$(format)_opts)` variables for setting `sphinx-build`
 options for a single format only.
@@ -105,7 +102,7 @@ options for a single format only.
 === Generating man pages
 
 To generate man pages, you need to include `man` in `$(SPHINX_FORMATS)` in
-your makefile and define `man_pages` option in 'doc/conf.py':
+your Makefile and define the `man_pages` option in 'doc/conf.py':
 
 [source,python]
 ----
@@ -114,21 +111,19 @@ man_pages = [
 ]
 ----
 
-As http://www.sphinx-doc.org/en/stable/config.html#options-for-manual-page-output[Sphinx documentation]
-says, the structure is following:
+As the
+http://www.sphinx-doc.org/en/stable/config.html#options-for-manual-page-output[Sphinx documentation]
+indicates, the structure is:
 
-* 'doc_name' is the path to man page's source (relative `$(SPHINX_SOURCE)`),
+* `doc_name` is the path to the man page's source (relative `$(SPHINX_SOURCE)`),
   without the '.rst' suffix
-* 'page_name' is the name of resulting man page, which will be used as a base
-  for output file name and will be included in generated man page
-* 'Manpage Title' is a short, one-line description, which will be included in
-  generated man page on a position that's used by `apropos` command
-* 'Page Author' (or more of them) will be included in autogenerated 'AUTHOR'
-  section, and leaving this field empty disables generating 'AUTHOR' section
-* '1' is the number of section of the man page
+* `page_name` is the name of the resulting man page, which will be used as a base
+  for the output file name and will be included in the generated man page
+* `Manpage Title` is a short, one-line description, which will be included in
+  the generated man page on a position that's used by the `apropos` command
+* `Page Author` (or more of them) will be included in the autogenerated `AUTHOR`
+  section. Leaving this field empty disables generating the `AUTHOR` section
+* `1` is the man page section number
 
-With the above configuration (and Erlang.mk defaults), 'doc/doc_name.rst' will
+With the above configuration (and Erlang.mk's defaults), 'doc/doc_name.rst' will
 be used to generate 'man/page_name.1'.
-
-NOTE: You probably want to include a link to the man page in other
-documentation, possibly in 'doc/index.rst'.
