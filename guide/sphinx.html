@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Erlang.mk User Guide</title>
+<style type="text/css"><!--
+body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
+header {align-items:center;display:flex;justify-content:center}
+header nav.left{text-align:right;width:150px}
+header nav.right{text-align:left;width:150px}
+header nav a{display:block;margin:1.5em 1em}
+main{margin-top:2em;text-align:justify}
+main h2, main h3{margin-top:2em}
+main h1, main div.chapter>div.titlepage h2{font-size:2em;margin-top:.67em}
+a{color:#d9230f;text-decoration:none}
+a:hover{text-decoration:underline}
+a.xref{display:none}
+h1, h2, h3{font-weight:normal}
+div.navfooter{margin-bottom:1em}
+--></style>
+</head>
+<body>
+<header>
+	<nav class="left">
+		<a href="index.html">User guide</a>
+		<a href="getting_started.html">Tutorials</a>
+	</nav>
+	<a href="/" class="logo"><img src="../res/logo-small.png" alt="Erlang.mk" title="Erlang.mk: A build tool for Erlang that just works" height="200" width="206"/></a>
+	<nav class="right">
+		<a href="https://github.com/ninenines/erlang.mk/tree/master/index">470+ packages</a>
+		<a href="https://github.com/ninenines/erlang.mk/issues">Issues?</a>
+	</nav>
+</header>
+<main>
+
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="edoc.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="tests.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="sphinx"></a>Chapter 16. Sphinx documentation</h2></div></div></div><p>Erlang.mk includes targets for running the
+<a class="ulink" href="http://www.sphinx-doc.org/" target="_top">Sphinx documentation generator</a>, which can produce
+documentation in various formats, like HTML, man pages, Texinfo, LaTeX, and
+others.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_sphinx_documentation"></a>16.1. Writing Sphinx documentation</h2></div></div></div><p>Sphinx generates documentation from a set of
+<a class="ulink" href="http://www.sphinx-doc.org/en/stable/rest.html" target="_top">reST</a> documents. There is
+a <a class="ulink" href="http://www.sphinx-doc.org/en/stable/tutorial.html" target="_top">quick start guide</a> on
+Sphinx' website. For Erlang.mk, we’ll set up a minimal environment instead.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_basic_setup"></a>16.2. Basic setup</h2></div></div></div><p>By default, Erlang.mk expects Sphinx documentation to be placed in the <span class="emphasis"><em>doc</em></span>
+directory, with <span class="emphasis"><em>doc/conf.py</em></span> config file in particular. The file contains
+information about the project, among the other things.</p><p>A minimal <span class="emphasis"><em>doc/conf.py</em></span> will look similar to this:</p><pre class="programlisting">project = 'My Project'
+version = '0.0'
+release = '0.0.1'
+master_doc = 'index'
+source_suffix = '.rst'</pre><p>It points to a <span class="emphasis"><em>doc/index.rst</em></span> document. A simple skeleton includes a table of
+contents for all documentation, and links to generated index of terms and
+a search page:</p><pre class="screen">My Project
+==========
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+
+   other_page
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`</pre><p>The skeleton above has a link to one other page, <span class="emphasis"><em>doc/other_page.rst</em></span>. Simple
+header with some text will do for now:</p><pre class="screen">Other Page
+==========
+
+Lorem ipsum dolor sit amet...</pre><p>The files above are enough to build HTML documentation to the <span class="emphasis"><em>html</em></span> directory.</p><pre class="programlisting">$ make docs     # all the docs, including EDoc and AsciiDoc if applicable
+$ make sphinx   # Sphinx docs specifically</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_configuration"></a>16.3. Erlang.mk configuration</h2></div></div></div><p>Erlang.mk defaults to the following configuration:</p><pre class="programlisting">SPHINX_FORMATS = html
+SPHINX_SOURCE = doc</pre><p>To change the location of Sphinx sources, you need to set the <code class="literal">$(SPHINX_SOURCE)</code>
+variable. The <span class="emphasis"><em>conf.py</em></span> file should also be placed in that directory, unless you
+specify <code class="literal">$(SPHINX_CONFDIR)</code>.</p><p>The variable <code class="literal">$(SPHINX_OPTS)</code> allows to provide options to <code class="literal">sphinx-build</code>, which
+is particularly useful for <code class="literal">-D name=value</code> options. You can even forego
+<span class="emphasis"><em>doc/conf.py</em></span> file, using <code class="literal">-D name=value</code> in combination with the <code class="literal">-C</code> option,
+though in this case you will need to manually call <code class="literal">make sphinx</code> or add the
+<code class="literal">sphinx</code> target to dependencies of <code class="literal">docs</code>.</p><p>The <code class="literal">$(SPHINX_FORMATS)</code> variable lists formats to generate. By default only HTML
+is generated, but it can also build man pages or LaTeX documents which can later
+be converted to PDF. See the
+<a class="ulink" href="http://www.sphinx-doc.org/en/stable/invocation.html#cmdoption-sphinx-build-b" target="_top">description of the <code class="literal">-b</code> option</a>
+for <code class="literal">sphinx-build</code> for a list of known formats.</p><p>Formats are by default generated to a directory called after the format
+(<span class="emphasis"><em>html</em></span> for HTML, <span class="emphasis"><em>man</em></span> for man pages, and so on). To change this behaviour
+for a specific format, you can set the <code class="literal">$(sphinx_$(format)_output)</code> variable, e.g.
+<code class="literal">$(sphinx_html_output)</code> for <span class="emphasis"><em>html</em></span> or <code class="literal">$(sphinx_man_output)</code> for <span class="emphasis"><em>man</em></span>.
+There are also <code class="literal">$(sphinx_$(format)_opts)</code> variables for setting <code class="literal">sphinx-build</code>
+options for a single format only.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_man_pages"></a>16.4. Generating man pages</h2></div></div></div><p>To generate man pages, you need to include <code class="literal">man</code> in <code class="literal">$(SPHINX_FORMATS)</code> in
+your Makefile and define the <code class="literal">man_pages</code> option in <span class="emphasis"><em>doc/conf.py</em></span>:</p><pre class="programlisting">man_pages = [
+    ('doc_name', 'page_name', 'Manpage Title', ['Page Author'], 1),
+]</pre><p>As the
+<a class="ulink" href="http://www.sphinx-doc.org/en/stable/config.html#options-for-manual-page-output" target="_top">Sphinx documentation</a>
+indicates, the structure is:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<code class="literal">doc_name</code> is the path to the man page’s source (relative <code class="literal">$(SPHINX_SOURCE)</code>),
+  without the <span class="emphasis"><em>.rst</em></span> suffix
+</li><li class="listitem">
+<code class="literal">page_name</code> is the name of the resulting man page, which will be used as a base
+  for the output file name and will be included in the generated man page
+</li><li class="listitem">
+<code class="literal">Manpage Title</code> is a short, one-line description, which will be included in
+  the generated man page on a position that’s used by the <code class="literal">apropos</code> command
+</li><li class="listitem">
+<code class="literal">Page Author</code> (or more of them) will be included in the autogenerated <code class="literal">AUTHOR</code>
+  section. Leaving this field empty disables generating the <code class="literal">AUTHOR</code> section
+</li><li class="listitem">
+<code class="literal">1</code> is the man page section number
+</li></ul></div><p>With the above configuration (and Erlang.mk’s defaults), <span class="emphasis"><em>doc/doc_name.rst</em></span> will
+be used to generate <span class="emphasis"><em>man/page_name.1</em></span>.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="edoc.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="docs.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tests.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+</main>
+</body>
+</html>
