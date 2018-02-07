@@ -108,7 +108,8 @@ define compile_asn1
 	$(verbose) mkdir -p include/
 	$(asn1_verbose) erlc -v -I include/ -o asn1/ +noobj $(ERLC_ASN1_OPTS) $(1)
 	$(verbose) mv asn1/*.erl src/
-	$(verbose) mv asn1/*.hrl include/
+	$(verbose) ls asn1/*.hrl >/dev/null 2>&1 && mv asn1/*.hrl include/ || true
+	$(verbose) $(foreach header,$(wildcard asn1/*.hrl),mv $(header) include/$(basename $(header)))
 	$(verbose) mv asn1/*.asn1db include/
 endef
 

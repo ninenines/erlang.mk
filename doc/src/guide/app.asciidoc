@@ -235,7 +235,9 @@ then built normally.
 In addition, Erlang.mk keeps track of header files (`.hrl`)
 as described at the end of this chapter. It can also compile
 C code, as described in the xref:ports[NIFs and port drivers]
-chapter.
+chapter.  Header files are not tracked under the `maps` option,
+which instructs the ASN.1 compiler to not generate any `.hrl`
+files with record definitions, but instead use maps.
 
 Erlang.mk also comes with plugins for the following formats:
 
