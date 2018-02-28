@@ -480,7 +480,10 @@ define dep_autopatch_appsrc_script.erl
 	Bindings0 = erl_eval:new_bindings(),
 	Bindings1 = erl_eval:add_binding('CONFIG', Conf0, Bindings0),
 	Bindings = erl_eval:add_binding('SCRIPT', AppSrcScript, Bindings1),
-	{ok, [Conf]} = file:script(AppSrcScript, Bindings),
+	Conf = case file:script(AppSrcScript, Bindings) of
+		{ok, [C]} -> C;
+		{ok, C} -> C
+	end,
 	ok = file:write_file(AppSrc, io_lib:format("~p.~n", [Conf])),
 	halt()
 endef
