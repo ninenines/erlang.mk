@@ -78,7 +78,7 @@ docs:
 	$(MAKE) -f core/core.mk -f core/docs.mk -f plugins/asciidoc.mk asciidoc DEPS=asciideck
 
 up:
-	git clone git@github.com:ninenines/erlang.mk.git gh-pages
+	git clone --depth 1 git@github.com:ninenines/erlang.mk.git gh-pages
 	cd gh-pages && git checkout gh-pages
 	cd gh-pages && make
 	cd gh-pages && git push origin gh-pages
