@@ -3,7 +3,7 @@
 # Sleeps when interacting with relx script are necessary after start and upgrade
 # as both of those interactions are not synchronized.
 
-RELX_CASES = rel relup start-stop tar vsn
+RELX_CASES = rel bare-rel relup start-stop tar vsn
 RELX_TARGETS = $(addprefix relx-,$(RELX_CASES))
 
 .PHONY: relx $(RELX_TARGETS)
@@ -53,6 +53,27 @@ relx-rel: build clean
 
 	$i "Check that the output directory was removed entirely"
 	$t test ! -d $(APP)/_rel/
+
+relx-bare-rel: build clean
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) rel $v
+
+	$i "Check that relx was downloaded"
+	$t test -f $(APP)/.erlang.mk/relx
+
+	$i "Check that the release was built"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/1
 
 relx-relup: build clean
 
