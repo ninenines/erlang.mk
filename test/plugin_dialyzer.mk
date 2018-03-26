@@ -1,6 +1,6 @@
 # Dialyzer plugin.
 
-DIALYZER_CASES = app apps-only apps-with-local-deps beam check custom-plt deps erlc-opts local-deps opts plt-apps plt-ebin-only
+DIALYZER_CASES = app apps-only apps-with-local-deps beam check custom-plt deps erlc-opts local-deps opts plt-apps plt-ebin-only beam-fullpath src-fullpath
 DIALYZER_TARGETS = $(addprefix dialyzer-,$(DIALYZER_CASES))
 
 ifneq ($(shell which sem 2>/dev/null),)
@@ -291,3 +291,69 @@ dialyzer-plt-ebin-only: build clean
 
 	$i "Confirm that rebar files were not included in the PLT"
 	$t ! dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q rebar
+
+dialyzer-beam-fullpath: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Create a module with a function that has no local return"
+	$t printf "%s\n" \
+		"-module(warn_me)." \
+		"doit() -> 1 = 2, ok." > $(APP)/src/warn_me.erl
+
+	$i "Disable warnings; our test .xrl files aren't perfect"
+	$t echo "DIALYZER_DIRS = -r ebin" >> $(APP)/Makefile
+
+	$i "Disable warnings; our test .xrl files aren't perfect"
+	$t echo "DIALYZER_OPTS += --fullpath -o dialyzer.out" >> $(APP)/Makefile
+
+	$i "Disable warnings; our test .xrl files aren't perfect"
+	$t echo "ERLC_OPTS=+debug_info" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Confirm that Dialyzer errors out"
+	$t ! $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
+
+	$i "Confirm that Dialyzer report contains fullpath"
+	$t grep $(APP)/src/warn_me.erl $(APP)/dialyzer.out
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that the PLT file was removed"
+	$t test ! -e $(APP)/.$(APP).plt
+
+dialyzer-src-fullpath: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Create a module with a function that has no local return"
+	$t printf "%s\n" \
+		"-module(warn_me)." \
+		"doit() -> 1 = 2, ok." > $(APP)/src/warn_me.erl
+
+	$i "Disable warnings; our test .xrl files aren't perfect"
+	$t echo "DIALYZER_OPTS += --fullpath -o dialyzer.out" >> $(APP)/Makefile
+
+	$i "Disable warnings; our test .xrl files aren't perfect"
+	$t echo "ERLC_OPTS=+debug_info" >> $(APP)/Makefile
+
+	$i "Confirm that Dialyzer errors out"
+	$t ! $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
+
+	$i "Confirm that Dialyzer report contains fullpath"
+	$t grep $(APP)/src/warn_me.erl $(APP)/dialyzer.out
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that the PLT file was removed"
+	$t test ! -e $(APP)/.$(APP).plt
