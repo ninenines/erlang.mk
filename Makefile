@@ -83,3 +83,21 @@ up:
 	cd gh-pages && make
 	cd gh-pages && git push origin gh-pages
 	rm -rf gh-pages
+
+ifdef p
+XDG_DATA_HOME ?= $(HOME)/.local/share
+INSTALL_DIR ?= $(XDG_DATA_HOME)/erlang.mk/lib
+
+install: check
+	for dep in `ls test/packages/$p_pkg/deps/`; do \
+		rm -rf $(INSTALL_DIR)/$$dep; \
+		mkdir -p $(INSTALL_DIR)/$$dep; \
+		cp -r test/packages/$p_pkg/deps/$$dep/ebin $(INSTALL_DIR)/$$dep/; \
+		if [ -d test/packages/$p_pkg/deps/$$dep/priv ]; then \
+			cp -r test/packages/$p_pkg/deps/$$dep/priv $(INSTALL_DIR)/$$dep/; \
+		fi; \
+	done
+else
+install:
+	@echo "Usage: $(MAKE) install p=<package name>"
+endif
