@@ -146,6 +146,8 @@ define makedep.erl
 	E = ets:new(makedep, [bag]),
 	G = digraph:new([acyclic]),
 	ErlFiles = lists:usort(string:tokens("$(ERL_FILES)", " ")),
+	DepsDirs = lists:usort(string:tokens("$(wildcard $(DEPS_DIR)/*/src) $(wildcard $(DEPS_DIR)/*/include)", ", ")),
+	AppsDirs = lists:usort(string:tokens("$(wildcard $(APPS_DIR)/*/src) $(wildcard $(APPS_DIR)/*/include)", ", ")),
 	Modules = [{list_to_atom(filename:basename(F, ".erl")), F} || F <- ErlFiles],
 	Add = fun (Mod, Dep) ->
 		case lists:keyfind(Dep, 1, Modules) of
@@ -160,33 +162,47 @@ define makedep.erl
 	end,
 	AddHd = fun (F, Mod, DepFile) ->
 		case file:open(DepFile, [read]) of
-			{error, enoent} -> ok;
+			{error, enoent} ->
+				ok;
 			{ok, Fd} ->
 				F(F, Fd, Mod),
 				{_, ModFile} = lists:keyfind(Mod, 1, Modules),
 				ets:insert(E, {ModFile, DepFile})
 		end
 	end,
+	SearchHrl = fun
+		F(_Hrl, []) -> {error,enoent};
+		F(Hrl, [Dir|Dirs]) ->
+			HrlF = filename:join([Dir,Hrl]),
+			case filelib:is_file(HrlF) of
+				true  -> {ok, HrlF};
+				false -> F(Hrl,Dirs)
+			end
+	end,
 	Attr = fun
-		(F, Mod, behavior, Dep) -> Add(Mod, Dep);
-		(F, Mod, behaviour, Dep) -> Add(Mod, Dep);
-		(F, Mod, compile, {parse_transform, Dep}) -> Add(Mod, Dep);
-		(F, Mod, compile, Opts) when is_list(Opts) ->
+		(_F, Mod, behavior, Dep) ->
+			Add(Mod, Dep);
+		(_F, Mod, behaviour, Dep) ->
+			Add(Mod, Dep);
+		(_F, Mod, compile, {parse_transform, Dep}) ->
+			Add(Mod, Dep);
+		(_F, Mod, compile, Opts) when is_list(Opts) ->
 			case proplists:get_value(parse_transform, Opts) of
 				undefined -> ok;
 				Dep -> Add(Mod, Dep)
 			end;
 		(F, Mod, include, Hrl) ->
-			case filelib:is_file("include/" ++ Hrl) of
-				true -> AddHd(F, Mod, "include/" ++ Hrl);
-				false ->
-					case filelib:is_file("src/" ++ Hrl) of
-						true -> AddHd(F, Mod, "src/" ++ Hrl);
-						false -> false
-					end
+			case SearchHrl(Hrl, ["src", "include","$(APPS_DIR)","$(DEPS_DIR)"]++AppsDirs++DepsDirs) of
+				{ok, FoundHrl} -> AddHd(F, Mod, FoundHrl);
+				{error, _} -> false
 			end;
-		(F, Mod, include_lib, "$1/include/" ++ Hrl) -> AddHd(F, Mod, "include/" ++ Hrl);
-		(F, Mod, include_lib, Hrl) -> AddHd(F, Mod, "include/" ++ Hrl);
+		(F, Mod, include_lib, "$1/include/" ++ Hrl) ->
+			AddHd(F, Mod, "include/" ++ Hrl);
+		(F, Mod, include_lib, Hrl) ->
+			case SearchHrl(Hrl, ["src", "include","$(APPS_DIR)","$(DEPS_DIR)"]++AppsDirs++DepsDirs) of
+				{ok, FoundHrl} -> AddHd(F, Mod, FoundHrl);
+				{error, _} -> false
+			end;
 		(F, Mod, import, {Imp, _}) ->
 			IsFile =
 				case lists:keyfind(Imp, 1, Modules) of
@@ -234,6 +250,8 @@ endef
 
 ifeq ($(if $(NO_MAKEDEP),$(wildcard $(PROJECT).d),),)
 $(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl) $(MAKEFILE_LIST)
+	## TODO: Analyze if it is possible to use erlc -M instead of makedep.erl
+	## e.g.: erlc -M -MG -MF $@ -I $(APPS_DIR) -I $(DEPS_DIR) -I include/ src/*
 	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))
 endif
 
