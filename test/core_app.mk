@@ -1,6 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = appsrc-change asn1 auto-git-id env erlc-exclude erlc-opts erlc-opts-filter error extra-keys generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib name-special-char no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-help xrl-include yrl yrl-header yrl-include hrl-include-lib hrl-include-lib-recursive hrl-multiapps-include-lib hrl-multiapps-include-lib-recursive hrl-include-lib-src core-app-hrl-include-lib-src-recursive
+CORE_APP_CASES = appsrc-change asn1 auto-git-id env erlc-exclude erlc-opts erlc-opts-filter error extra-keys generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib name-special-char no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-help xrl-include yrl yrl-header yrl-include hrl-include-lib hrl-include-lib-recursive hrl-multiapps-include-lib hrl-multiapps-include-lib-recursive core-app-hrl-include-lib-src core-app-hrl-include-lib-src-recursive hlr-deps
 
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 
@@ -2325,4 +2325,95 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
+core-app-hlr-deps: build clean
+	$i "Create a multi application repository with no root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t echo "include erlang.mk" > $(APP)/Makefile
 
+	$i "Create a new application named my_app"
+	$t $(MAKE) -C $(APP) new-lib in=my_app $v
+
+	$t echo "DEPS = cowlib" > $(APP)/apps/my_app/Makefile
+	$t echo "include ../../erlang.mk" >> $(APP)/apps/my_app/Makefile
+	$t printf "%s\n" "-module(boy)." "-include_lib(\"cowlib/include/cow_inline.hrl\")." > $(APP)/apps/my_app/src/boy.erl
+	$t printf "%s\n" "-module(girl)." > $(APP)/apps/my_app/src/girl.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/boy.beam
+	$t test -f $(APP)/apps/my_app/ebin/girl.beam
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
+
+# Applications in apps are compiled automatically but not added
+# to the application resource file unless they are listed in LOCAL_DEPS.
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/*/ebin/ -eval " \
+		ok = application:load(my_app), \
+		{ok, MyAppDeps} = application:get_key(my_app, applications), \
+		true = lists:member(cowlib, MyAppDeps), \
+		halt()"
+
+$i "Touch cowlib .hrl file; check that only required files are rebuilt"
+	$t printf "%s\n" \
+		$(APP)/apps/my_app/my_app.d \
+		$(APP)/apps/my_app/ebin/my_app.app \
+		$(APP)/apps/my_app/ebin/boy.beam \
+		$(APP)/apps/my_app/src/boy.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/deps/cowlib/include/cow_inline.hrl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP)/apps/my_app -type f -newer $(APP)/deps/cowlib/include/cow_inline.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Clean Cowlib"
+	$t $(MAKE) -C $(APP)/deps/cowlib clean $v
+
+	$i "Check that Cowlib compiled files were removed"
+	$t test ! -e $(APP)/deps/cowlib/ebin/cowlib.app
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that Cowlib compiled files exist"
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that Cowlib is still here"
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Check that all relevant files were removed"
+	$t test ! -e $(APP)/apps/my_app/my_app.d
+	$t test ! -e $(APP)/apps/my_app/ebin/my_app.app
+	$t test ! -e $(APP)/apps/my_app/ebin/boy.beam
+	$t test ! -e $(APP)/apps/my_app/ebin/girl.beam
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that all relevant files were removed"
+	$t test ! -e $(APP)/deps
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/boy.beam
+	$t test -f $(APP)/apps/my_app/ebin/girl.beam
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/*/ebin/ -eval " \
+		ok = application:load(my_app), \
+		{ok, MyAppDeps} = application:get_key(my_app, applications), \
+		true = lists:member(cowlib, MyAppDeps), \
+		halt()"
