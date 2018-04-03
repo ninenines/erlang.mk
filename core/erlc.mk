@@ -146,8 +146,8 @@ define makedep.erl
 	E = ets:new(makedep, [bag]),
 	G = digraph:new([acyclic]),
 	ErlFiles = lists:usort(string:tokens("$(ERL_FILES)", " ")),
-	DepsDirs = lists:usort(string:tokens("$(wildcard $(DEPS_DIR)/*/src) $(wildcard $(DEPS_DIR)/*/include)", ", ")),
-	AppsDirs = lists:usort(string:tokens("$(wildcard $(APPS_DIR)/*/src) $(wildcard $(APPS_DIR)/*/include)", ", ")),
+	DepsDirs = lists:usort(string:tokens("$(wildcard $(DEPS_DIR)/*/src) $(wildcard $(DEPS_DIR)/*/include)", " ")),
+	AppsDirs = lists:usort(string:tokens("$(wildcard $(APPS_DIR)/*/src) $(wildcard $(APPS_DIR)/*/include)", " ")),
 	Modules = [{list_to_atom(filename:basename(F, ".erl")), F} || F <- ErlFiles],
 	Add = fun (Mod, Dep) ->
 		case lists:keyfind(Dep, 1, Modules) of
@@ -165,9 +165,13 @@ define makedep.erl
 			{error, enoent} ->
 				ok;
 			{ok, Fd} ->
-				F(F, Fd, Mod),
 				{_, ModFile} = lists:keyfind(Mod, 1, Modules),
-				ets:insert(E, {ModFile, DepFile})
+				case ets:match(E, {ModFile, DepFile}) of
+					[] ->
+						ets:insert(E, {ModFile, DepFile}),
+						F(F, Fd, Mod,0);
+					_ -> ok
+				end
 		end
 	end,
 	SearchHrl = fun
@@ -196,8 +200,6 @@ define makedep.erl
 				{ok, FoundHrl} -> AddHd(F, Mod, FoundHrl);
 				{error, _} -> false
 			end;
-		(F, Mod, include_lib, "$1/include/" ++ Hrl) ->
-			AddHd(F, Mod, "include/" ++ Hrl);
 		(F, Mod, include_lib, Hrl) ->
 			case SearchHrl(Hrl, ["src", "include","$(APPS_DIR)","$(DEPS_DIR)"]++AppsDirs++DepsDirs) of
 				{ok, FoundHrl} -> AddHd(F, Mod, FoundHrl);
@@ -215,21 +217,29 @@ define makedep.erl
 			end;
 		(_, _, _, _) -> ok
 	end,
-	MakeDepend = fun(F, Fd, Mod) ->
-		case io:parse_erl_form(Fd, undefined) of
-			{ok, {attribute, _, Key, Value}, _} ->
-				Attr(F, Mod, Key, Value),
-				F(F, Fd, Mod);
-			{eof, _} ->
-				file:close(Fd);
-			_ ->
-				F(F, Fd, Mod)
-		end
+	MakeDepend = fun
+		(F, Fd, Mod, StartLocation) ->
+			{ok, Filename} = file:pid2name(Fd),
+			case io:parse_erl_form(Fd, undefined, StartLocation) of
+				{ok, AbsData, EndLocation} ->
+					case AbsData of
+						{attribute, _, Key, Value} ->
+							Attr(F, Mod, Key, Value),
+							F(F, Fd, Mod, EndLocation);
+						_ -> F(F, Fd, Mod, EndLocation)
+					end;
+				{eof, _ } -> file:close(Fd);
+				{error, ErrorDescription } ->
+					file:close(Fd);
+				{error, ErrorInfo, ErrorLocation} ->
+					F(F, Fd, Mod, ErrorLocation)
+			end,
+			ok
 	end,
 	[begin
 		Mod = list_to_atom(filename:basename(F, ".erl")),
 		{ok, Fd} = file:open(F, [read]),
-		MakeDepend(MakeDepend, Fd, Mod)
+		MakeDepend(MakeDepend, Fd, Mod,0)
 	end || F <- ErlFiles],
 	Depend = sofs:to_external(sofs:relation_to_family(sofs:relation(ets:tab2list(E)))),
 	CompileFirst = [X || X <- lists:reverse(digraph_utils:topsort(G)), [] =/= digraph:in_neighbours(G, X)],
@@ -248,10 +258,10 @@ define makedep.erl
 	halt()
 endef
 
+## TODO: Analyze if it is possible to use erlc -M instead of makedep.erl
+## e.g.: erlc -M -MG -MF $@ -I $(APPS_DIR) -I $(DEPS_DIR) -I include/ src/*
 ifeq ($(if $(NO_MAKEDEP),$(wildcard $(PROJECT).d),),)
 $(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl) $(MAKEFILE_LIST)
-	## TODO: Analyze if it is possible to use erlc -M instead of makedep.erl
-	## e.g.: erlc -M -MG -MF $@ -I $(APPS_DIR) -I $(DEPS_DIR) -I include/ src/*
 	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))
 endif
 
