@@ -146,8 +146,14 @@ define makedep.erl
 	E = ets:new(makedep, [bag]),
 	G = digraph:new([acyclic]),
 	ErlFiles = lists:usort(string:tokens("$(ERL_FILES)", " ")),
-	DepsDirs = lists:usort(string:tokens("$(wildcard $(DEPS_DIR)/*/src) $(wildcard $(DEPS_DIR)/*/include)", " ")),
-	AppsDirs = lists:usort(string:tokens("$(wildcard $(APPS_DIR)/*/src) $(wildcard $(APPS_DIR)/*/include)", " ")),
+	DepsDir = "$(call core_native_path,$(DEPS_DIR))",
+	AppsDir = "$(call core_native_path,$(APPS_DIR))",
+	DepsDirsSrc = "$(if $(wildcard $(DEPS_DIR)/*/src), $(call core_native_path,$(wildcard $(DEPS_DIR)/*/src)))",
+	DepsDirsInc = "$(if $(wildcard $(DEPS_DIR)/*/include), $(call core_native_path,$(wildcard $(DEPS_DIR)/*/include)))",
+	AppsDirsSrc = "$(if $(wildcard $(APPS_DIR)/*/src), $(call core_native_path,$(wildcard $(APPS_DIR)/*/src)))",
+	AppsDirsInc = "$(if $(wildcard $(APPS_DIR)/*/include), $(call core_native_path,$(wildcard $(APPS_DIR)/*/include)))",
+	DepsDirs = lists:usort(string:tokens(DepsDirsSrc++DepsDirsInc, " ")),
+	AppsDirs = lists:usort(string:tokens(AppsDirsSrc++AppsDirsInc, " ")),
 	Modules = [{list_to_atom(filename:basename(F, ".erl")), F} || F <- ErlFiles],
 	Add = fun (Mod, Dep) ->
 		case lists:keyfind(Dep, 1, Modules) of
@@ -179,7 +185,8 @@ define makedep.erl
 		F(Hrl, [Dir|Dirs]) ->
 			HrlF = filename:join([Dir,Hrl]),
 			case filelib:is_file(HrlF) of
-				true  -> {ok, HrlF};
+				true  ->
+				{ok, HrlF};
 				false -> F(Hrl,Dirs)
 			end
 	end,
@@ -196,12 +203,12 @@ define makedep.erl
 				Dep -> Add(Mod, Dep)
 			end;
 		(F, Mod, include, Hrl) ->
-			case SearchHrl(Hrl, ["src", "include","$(APPS_DIR)","$(DEPS_DIR)"]++AppsDirs++DepsDirs) of
+			case SearchHrl(Hrl, ["src", "include",AppsDir,DepsDir]++AppsDirs++DepsDirs) of
 				{ok, FoundHrl} -> AddHd(F, Mod, FoundHrl);
 				{error, _} -> false
 			end;
 		(F, Mod, include_lib, Hrl) ->
-			case SearchHrl(Hrl, ["src", "include","$(APPS_DIR)","$(DEPS_DIR)"]++AppsDirs++DepsDirs) of
+			case SearchHrl(Hrl, ["src", "include",AppsDir,DepsDir]++AppsDirs++DepsDirs) of
 				{ok, FoundHrl} -> AddHd(F, Mod, FoundHrl);
 				{error, _} -> false
 			end;
