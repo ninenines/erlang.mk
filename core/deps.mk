@@ -332,7 +332,8 @@ define dep_autopatch_rebar.erl
 	Write("\npre-deps::\n"),
 	Write("\npre-app::\n"),
 	PatchHook = fun(Cmd) ->
-		case Cmd of
+		Cmd2 = re:replace(Cmd, "^([g]?make)(.*)( -C.*)", "\\\\1\\\\3\\\\2", [{return, list}]),
+		case Cmd2 of
 			"make -C" ++ Cmd1 -> "$$\(MAKE) -C" ++ Escape(Cmd1);
 			"gmake -C" ++ Cmd1 -> "$$\(MAKE) -C" ++ Escape(Cmd1);
 			"make " ++ Cmd1 -> "$$\(MAKE) -f Makefile.orig.mk " ++ Escape(Cmd1);
