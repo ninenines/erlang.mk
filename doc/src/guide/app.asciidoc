@@ -164,6 +164,30 @@ Any space before and after the value is dropped.
 xref:deps[Dependencies] are covered in details in
 the next chapter.
 
+===== `PROJECT_ENV`
+
+If you have a large set of environment variables, you may find it
+easier to use a text file instead.  Do this by including the
+following in your Makefile:
+
+[source,make]
+----
+PROJECT_ENV_FILE = src/env.src
+PROJECT_ENV = $(subst \n,$(newline),$(shell cat $(PROJECT_ENV_FILE) | sed -e 's/$$/\\n/;'))
+ebin/$(PROJECT).app:: $(PROJECT_ENV_FILE)
+----
+
+As like for the contents of `PROJECT_ENV`, the file is similarly
+used:
+
+[source,erlang]
+----
+[
+  {chips, [currysauce,{mushypeas,false}]},
+  {pizza, [{size,large},{toppings,[anchovies]}]}
+]
+----
+
 ==== Legacy method
 
 The 'src/$(PROJECT).app.src' file is a legacy method of
