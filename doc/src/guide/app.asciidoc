@@ -164,6 +164,42 @@ Any space before and after the value is dropped.
 xref:deps[Dependencies] are covered in details in
 the next chapter.
 
+==== Application environment
+
+The `PROJECT_ENV` variable is used to set the application
+environment:
+
+[source,make]
+----
+define PROJECT_ENV
+[
+  {chips, [currysauce,{mushypeas,false}]},
+  {pizza, [{size,large},{toppings,[anchovies]}]}
+]
+endef
+----
+
+If you have a large set of environment variables, you may find it
+easier to use a separate file. Do this by including the following
+in your Makefile:
+
+[source,make]
+----
+PROJECT_ENV_FILE = src/env.src
+PROJECT_ENV = $(subst \n,$(newline),$(shell cat $(PROJECT_ENV_FILE) | sed -e 's/$$/\\n/;'))
+ebin/$(PROJECT).app:: $(PROJECT_ENV_FILE)
+----
+
+The file has the same contents as the `PROJECT_ENV` variable:
+
+[source,erlang]
+----
+[
+  {chips, [currysauce,{mushypeas,false}]},
+  {pizza, [{size,large},{toppings,[anchovies]}]}
+]
+----
+
 ==== Legacy method
 
 The 'src/$(PROJECT).app.src' file is a legacy method of
