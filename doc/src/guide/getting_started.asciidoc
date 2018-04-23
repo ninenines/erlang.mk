@@ -242,7 +242,7 @@ target:
 
 [source,bash]
 $ make list-templates
-Available templates: cowboy_http cowboy_loop cowboy_rest cowboy_ws gen_fsm gen_server ranch_protocol supervisor
+Available templates: cowboy_http cowboy_loop cowboy_rest cowboy_ws gen_fsm gen_server gen_statem ranch_protocol supervisor
 
 To generate a module, let's say a `gen_server`, all you need to
 do is to call `make new` with the appropriate arguments:
