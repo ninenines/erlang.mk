@@ -32,17 +32,17 @@ endif
 ifeq ($(wildcard src),)
 test-build:: ERLC_OPTS=$(TEST_ERLC_OPTS)
 test-build:: clean deps test-deps
-	$(verbose) $(MAKE) --no-print-directory test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
+	$(verbose) $(MAKE) --no-print-directory test-dir ERLC_OPTS="$(call escape_dquotes,$(TEST_ERLC_OPTS))"
 else
 ifeq ($(wildcard ebin/test),)
 test-build:: ERLC_OPTS=$(TEST_ERLC_OPTS)
 test-build:: clean deps test-deps $(PROJECT).d
-	$(verbose) $(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
+	$(verbose) $(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(call escape_dquotes,$(TEST_ERLC_OPTS))"
 	$(gen_verbose) touch ebin/test
 else
 test-build:: ERLC_OPTS=$(TEST_ERLC_OPTS)
 test-build:: deps test-deps $(PROJECT).d
-	$(verbose) $(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(TEST_ERLC_OPTS)"
+	$(verbose) $(MAKE) --no-print-directory app-build test-dir ERLC_OPTS="$(call escape_dquotes,$(TEST_ERLC_OPTS))"
 endif
 
 clean:: clean-test-dir

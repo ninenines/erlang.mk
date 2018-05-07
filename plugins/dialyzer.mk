@@ -57,4 +57,4 @@ dialyze:
 else
 dialyze: $(DIALYZER_PLT)
 endif
-	$(verbose) dialyzer --no_native `$(ERL) -eval "$(subst $(newline),,$(subst ",\",$(call filter_opts.erl)))" -extra $(ERLC_OPTS)` $(DIALYZER_DIRS) $(DIALYZER_OPTS)
+	$(verbose) dialyzer --no_native `$(ERL) -eval "$(subst $(newline),,$(call escape_dquotes,$(call filter_opts.erl)))" -extra $(ERLC_OPTS)` $(DIALYZER_DIRS) $(DIALYZER_OPTS)

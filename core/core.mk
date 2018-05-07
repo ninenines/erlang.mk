@@ -154,9 +154,13 @@ define comma_list
 $(subst $(space),$(comma),$(strip $(1)))
 endef
 
+define escape_dquotes
+$(subst ",\",$1)
+endef
+
 # Adding erlang.mk to make Erlang scripts who call init:get_plain_arguments() happy.
 define erlang
-$(ERL) $(2) -pz $(ERLANG_MK_TMP)/rebar/ebin -eval "$(subst $(newline),,$(subst ",\",$(1)))" -- erlang.mk
+$(ERL) $2 -pz $(ERLANG_MK_TMP)/rebar/ebin -eval "$(subst $(newline),,$(call escape_dquotes,$1))" -- erlang.mk
 endef
 
 ifeq ($(PLATFORM),msys2)
