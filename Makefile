@@ -25,7 +25,7 @@ BUILD_CONFIG = $(shell sed "s/\#.*//" $(BUILD_CONFIG_FILE) \
 endif
 
 ERLANG_MK ?= erlang.mk
-ERLANG_MK_VERSION = $(shell git describe --tags --dirty)
+ERLANG_MK_VERSION = $(shell git describe --dirty --tags --always)
 
 .PHONY: all check
 
