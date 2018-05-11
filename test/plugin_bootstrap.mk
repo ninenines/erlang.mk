@@ -181,7 +181,7 @@ bootstrap-templates: build clean
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Check that we can get the list of templates"
-	$t test `$(MAKE) -C $(APP) --no-print-directory list-templates V=0 | wc -l` -eq 1
+	$t test `$(MAKE) -C $(APP) --no-print-directory list-templates V=0 | wc -l` -gt 1
 
 	$i "Generate one of each template"
 	$t $(MAKE) -C $(APP) --no-print-directory new t=gen_fsm n=my_fsm
