@@ -1,6 +1,46 @@
 # Core: Building applications.
 
-CORE_APP_CASES = appsrc-change asn1 auto-git-id env erlc-exclude erlc-opts erlc-opts-filter error extra-keys generate-erl generate-erl-include generate-erl-prepend hrl hrl-recursive makefile-change mib name-special-char no-app no-makedep project-mod pt pt-erlc-opts xrl xrl-help xrl-include yrl yrl-header yrl-include
+CORE_APP_CASES = appsrc-change \
+   asn1 \
+   auto-git-id \
+   env \
+   erlc-exclude \
+   erlc-opts \
+   erlc-opts-filter \
+   error \
+   extra-keys \
+   generate-erl \
+   generate-erl-include \
+   generate-erl-prepend \
+   hrl \
+   hrl-recursive \
+   makefile-change \
+   mib \
+   name-special-char \
+   no-app \
+   no-makedep \
+   project-mod \
+   pt \
+   pt-erlc-opts \
+   xrl \
+   xrl-help \
+   xrl-include \
+   yrl \
+   yrl-header \
+   yrl-include \
+   hrl-include-lib \
+   hrl-include-lib-recursive \
+   hrl-multiapps-include-lib \
+   hrl-multiapps-include-lib-recursive \
+   hrl-include-lib-src \
+   hrl-include-lib-src-recursive \
+   hlr-deps \
+   hrl-include-loop \
+   hrl-include_lib-loop \
+   hrl-include-loop-define-protected \
+   hrl-include_lib-loop-define-protected \
+   hrl-multiapps-include-loop-define-protected
+
 CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
 
 .PHONY: core-app $(CORE_APP_TARGETS)
@@ -1758,3 +1798,862 @@ endif
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+core-app-hrl-include-lib: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .hrl files"
+	$t mkdir $(APP)/include/
+	$t touch $(APP)/include/blue.hrl $(APP)/include/red.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include_lib(\"blue.hrl\")." > $(APP)/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include_lib(\"red.hrl\")." > $(APP)/src/use_red.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/use_blue.beam
+	$t test -f $(APP)/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch one .hrl file; check that only required files are rebuilt"
+# The use_red.erl gets touched because of its dependency to red.hrl.
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam \
+		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/include/red.hrl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/include/red.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/include/blue.hrl
+	$t test -f $(APP)/include/red.hrl
+ifdef LEGACY
+	$t test -f $(APP)/src/$(APP).app.src
+endif
+	$t test -f $(APP)/src/use_blue.erl
+	$t test -f $(APP)/src/use_red.erl
+
+	$i "Check that all build artifacts are removed"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/use_blue.beam
+	$t test -f $(APP)/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-hrl-include-lib-recursive: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .hrl files"
+	$t mkdir $(APP)/include/
+	$t touch $(APP)/include/blue.hrl $(APP)/include/pill.hrl
+	$t echo "-include_lib(\"pill.hrl\")." > $(APP)/include/red.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include_lib(\"blue.hrl\")." > $(APP)/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include_lib(\"red.hrl\")." > $(APP)/src/use_red.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/use_blue.beam
+	$t test -f $(APP)/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch the deepest .hrl file; check that only required files are rebuilt"
+# The use_red.erl gets touched because of its dependency to red.hrl and pill.hrl.
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam \
+		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/include/pill.hrl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/include/pill.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/include/blue.hrl
+	$t test -f $(APP)/include/pill.hrl
+	$t test -f $(APP)/include/red.hrl
+ifdef LEGACY
+	$t test -f $(APP)/src/$(APP).app.src
+endif
+	$t test -f $(APP)/src/use_blue.erl
+	$t test -f $(APP)/src/use_red.erl
+
+	$i "Check that all build artifacts are removed"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/use_blue.beam
+	$t test -f $(APP)/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-hrl-multiapps-include-lib: build clean
+	$i "Create a multi application repository with no root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t echo "include erlang.mk" > $(APP)/Makefile
+
+	$i "Create a new application named my_app"
+	$t $(MAKE) -C $(APP) new-lib in=my_app $v
+
+	$i "Create a new library named my_lib"
+	$t $(MAKE) -C $(APP) new-lib in=my_lib $v
+
+	$i "Add my_lib as LOCAL_DEPS of my_app"
+	$t echo "LOCAL_DEPS = my_lib" >> $(APP)/apps/my_app/Makefile
+
+
+	$i "Generate .hrl files"
+	$t mkdir $(APP)/apps/my_lib/include/
+	$t touch $(APP)/apps/my_lib/include/blue.hrl $(APP)/apps/my_lib/include/red.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include_lib(\"my_lib/include/blue.hrl\")." > $(APP)/apps/my_app/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include_lib(\"my_lib/include/red.hrl\")." > $(APP)/apps/my_app/src/use_red.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/use_blue.beam
+	$t test -f $(APP)/apps/my_app/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/my_app/ebin/ $(APP)/apps/my_lib/ebin/ -eval " \
+		{ok, _Apps } = application:ensure_all_started(my_app), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch one .hrl file; check that only required files are rebuilt"
+# The use_red.erl gets touched because of its dependency to red.hrl.
+	$t printf "%s\n" \
+		$(APP)/apps/my_app/my_app.d \
+		$(APP)/apps/my_app/ebin/my_app.app \
+		$(APP)/apps/my_app/ebin/use_red.beam \
+		$(APP)/apps/my_app/src/use_red.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/apps/my_lib/include/red.hrl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP)/apps/my_app -type f -newer $(APP)/apps/my_lib/include/red.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/my_app/ebin/ $(APP)/apps/my_lib/ebin/ -eval " \
+		{ok, _Apps } = application:ensure_all_started(my_app), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/apps/my_lib/Makefile
+	$t test -f $(APP)/apps/my_lib/include/blue.hrl
+	$t test -f $(APP)/apps/my_lib/include/red.hrl
+	$t test -f $(APP)/apps/my_app/Makefile
+	$t test -f $(APP)/apps/my_app/src/use_blue.erl
+	$t test -f $(APP)/apps/my_app/src/use_red.erl
+ifdef LEGACY
+	$t test -f $(APP)/apps/my_lib.app.src
+	$t test -f $(APP)/apps/my_app.app.src
+endif
+
+	$i "Check that all build artifacts are removed"
+	$t test ! -e $(APP)/apps/my_lib/my_app.d
+	$t test ! -e $(APP)/apps/my_lib/ebin/
+	$t test ! -e $(APP)/apps/my_app/my_app.d
+	$t test ! -e $(APP)/apps/my_app/ebin/
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/use_blue.beam
+	$t test -f $(APP)/apps/my_app/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/my_app/ebin/ $(APP)/apps/my_lib/ebin/ -eval " \
+		{ok, _Apps } = application:ensure_all_started(my_app), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-hrl-multiapps-include-lib-recursive: build clean
+	$i "Create a multi application repository with no root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t echo "include erlang.mk" > $(APP)/Makefile
+
+	$i "Create a new application named my_app"
+	$t $(MAKE) -C $(APP) new-lib in=my_app $v
+
+	$i "Create a new library named my_lib"
+	$t $(MAKE) -C $(APP) new-lib in=my_lib $v
+
+	$i "Add my_lib as LOCAL_DEPS of my_app"
+	$t echo "LOCAL_DEPS = my_lib" >> $(APP)/apps/my_app/Makefile
+
+
+	$i "Generate .hrl files"
+	$t mkdir $(APP)/apps/my_lib/include/
+	$t touch $(APP)/apps/my_lib/include/blue.hrl $(APP)/apps/my_lib/include/red.hrl $(APP)/apps/my_lib/include/pill.hrl
+	$t echo "-include(\"pill.hrl\")." > $(APP)/apps/my_lib/include/red.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include_lib(\"my_lib/include/blue.hrl\")." > $(APP)/apps/my_app/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include_lib(\"my_lib/include/red.hrl\")." > $(APP)/apps/my_app/src/use_red.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/use_blue.beam
+	$t test -f $(APP)/apps/my_app/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/my_app/ebin/ $(APP)/apps/my_lib/ebin/ -eval " \
+		{ok, _Apps } = application:ensure_all_started(my_app), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch one .hrl file; check that only required files are rebuilt"
+# The use_red.erl gets touched because of its dependency to red.hrl.
+	$t printf "%s\n" \
+		$(APP)/apps/my_app/my_app.d \
+		$(APP)/apps/my_app/ebin/my_app.app \
+		$(APP)/apps/my_app/ebin/use_red.beam \
+		$(APP)/apps/my_app/src/use_red.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/apps/my_lib/include/pill.hrl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP)/apps/my_app -type f -newer $(APP)/apps/my_lib/include/pill.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/my_app/ebin/ $(APP)/apps/my_lib/ebin/ -eval " \
+		{ok, _Apps } = application:ensure_all_started(my_app), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/apps/my_lib/Makefile
+	$t test -f $(APP)/apps/my_lib/include/blue.hrl
+	$t test -f $(APP)/apps/my_lib/include/red.hrl
+	$t test -f $(APP)/apps/my_lib/include/pill.hrl
+	$t test -f $(APP)/apps/my_app/Makefile
+	$t test -f $(APP)/apps/my_app/src/use_blue.erl
+	$t test -f $(APP)/apps/my_app/src/use_red.erl
+ifdef LEGACY
+	$t test -f $(APP)/apps/my_lib.app.src
+	$t test -f $(APP)/apps/my_app.app.src
+endif
+
+	$i "Check that all build artifacts are removed"
+	$t test ! -e $(APP)/apps/my_lib/my_app.d
+	$t test ! -e $(APP)/apps/my_lib/ebin/
+	$t test ! -e $(APP)/apps/my_app/my_app.d
+	$t test ! -e $(APP)/apps/my_app/ebin/
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/use_blue.beam
+	$t test -f $(APP)/apps/my_app/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/my_app/ebin/ $(APP)/apps/my_lib/ebin/ -eval " \
+		{ok, _Apps } = application:ensure_all_started(my_app), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-hrl-include-lib-src: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$t touch $(APP)/src/blue.hrl $(APP)/src/red.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include_lib(\"blue.hrl\")." > $(APP)/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include_lib(\"red.hrl\")." > $(APP)/src/use_red.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/use_blue.beam
+	$t test -f $(APP)/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch one .hrl file; check that only required files are rebuilt"
+# The use_red.erl gets touched because of its dependency to red.hrl.
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam \
+		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/src/red.hrl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/src/red.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/src/blue.hrl
+	$t test -f $(APP)/src/red.hrl
+ifdef LEGACY
+	$t test -f $(APP)/src/$(APP).app.src
+endif
+	$t test -f $(APP)/src/use_blue.erl
+	$t test -f $(APP)/src/use_red.erl
+
+	$i "Check that all build artifacts are removed"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/use_blue.beam
+	$t test -f $(APP)/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-hrl-include-lib-src-recursive: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .hrl files"
+	$t touch $(APP)/src/blue.hrl $(APP)/src/pill.hrl
+	$t echo "-include_lib(\"pill.hrl\")." > $(APP)/src/red.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include_lib(\"blue.hrl\")." > $(APP)/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include_lib(\"red.hrl\")." > $(APP)/src/use_red.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/use_blue.beam
+	$t test -f $(APP)/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch the deepest .hrl file; check that only required files are rebuilt"
+# The use_red.erl gets touched because of its dependency to red.hrl and pill.hrl.
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam \
+		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/src/pill.hrl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/src/pill.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/src/blue.hrl
+	$t test -f $(APP)/src/pill.hrl
+	$t test -f $(APP)/src/red.hrl
+ifdef LEGACY
+	$t test -f $(APP)/src/$(APP).app.src
+endif
+	$t test -f $(APP)/src/use_blue.erl
+	$t test -f $(APP)/src/use_red.erl
+
+	$i "Check that all build artifacts are removed"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/ebin/
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/use_blue.beam
+	$t test -f $(APP)/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+core-app-hlr-deps: build clean
+	$i "Create a multi application repository with no root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t echo "include erlang.mk" > $(APP)/Makefile
+
+	$i "Create a new application named my_app"
+	$t $(MAKE) -C $(APP) new-lib in=my_app $v
+
+	$t echo "DEPS = cowlib" > $(APP)/apps/my_app/Makefile
+	$t echo "include ../../erlang.mk" >> $(APP)/apps/my_app/Makefile
+	$t printf "%s\n" "-module(boy)." "-include_lib(\"cowlib/include/cow_inline.hrl\")." > $(APP)/apps/my_app/src/boy.erl
+	$t printf "%s\n" "-module(girl)." > $(APP)/apps/my_app/src/girl.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/boy.beam
+	$t test -f $(APP)/apps/my_app/ebin/girl.beam
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
+
+# Applications in apps are compiled automatically but not added
+# to the application resource file unless they are listed in LOCAL_DEPS.
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/*/ebin/ -eval " \
+		ok = application:load(my_app), \
+		{ok, MyAppDeps} = application:get_key(my_app, applications), \
+		true = lists:member(cowlib, MyAppDeps), \
+		halt()"
+
+$i "Touch cowlib .hrl file; check that only required files are rebuilt"
+	$t printf "%s\n" \
+		$(APP)/apps/my_app/my_app.d \
+		$(APP)/apps/my_app/ebin/my_app.app \
+		$(APP)/apps/my_app/ebin/boy.beam \
+		$(APP)/apps/my_app/src/boy.erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/deps/cowlib/include/cow_inline.hrl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP)/apps/my_app -type f -newer $(APP)/deps/cowlib/include/cow_inline.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Clean Cowlib"
+	$t $(MAKE) -C $(APP)/deps/cowlib clean $v
+
+	$i "Check that Cowlib compiled files were removed"
+	$t test ! -e $(APP)/deps/cowlib/ebin/cowlib.app
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that Cowlib compiled files exist"
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that Cowlib is still here"
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Check that all relevant files were removed"
+	$t test ! -e $(APP)/apps/my_app/my_app.d
+	$t test ! -e $(APP)/apps/my_app/ebin/my_app.app
+	$t test ! -e $(APP)/apps/my_app/ebin/boy.beam
+	$t test ! -e $(APP)/apps/my_app/ebin/girl.beam
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that all relevant files were removed"
+	$t test ! -e $(APP)/deps
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/boy.beam
+	$t test -f $(APP)/apps/my_app/ebin/girl.beam
+	$t test -d $(APP)/deps/cowlib
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/*/ebin/ -eval " \
+		ok = application:load(my_app), \
+		{ok, MyAppDeps} = application:get_key(my_app, applications), \
+		true = lists:member(cowlib, MyAppDeps), \
+		halt()"
+
+core-app-hrl-include-loop: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .hrl files with header loop"
+	$t mkdir $(APP)/include/
+	$t printf "%s\n" "-include(\"blue.hrl\")." > $(APP)/include/red.hrl
+	$t printf "%s\n" "-include(\"red.hrl\")." > $(APP)/include/blue.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include(\"blue.hrl\")." > $(APP)/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include(\"red.hrl\")." > $(APP)/src/use_red.erl
+
+
+	$i "Build the application. Compilation should fail"
+	$t ! $(MAKE) -C $(APP) $v
+
+	$i "Check .d file"
+	$t grep "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+
+core-app-hrl-include_lib-loop: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .hrl files with heaeder loop"
+	$t mkdir $(APP)/include/
+	$t printf "%s\n" "-include_lib(\"blue.hrl\")." > $(APP)/include/red.hrl
+	$t printf "%s\n" "-include_lib(\"red.hrl\")." > $(APP)/include/blue.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include_lib(\"blue.hrl\")." > $(APP)/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include_lib(\"red.hrl\")." > $(APP)/src/use_red.erl
+
+
+	$i "Build the application. Compilation should fail"
+	$t ! $(MAKE) -C $(APP) $v
+
+	$i "Check .d file"
+	$t grep "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+
+core-app-hrl-include-loop-define-protected: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .hrl files with hrl loop protection "
+	$t mkdir $(APP)/include/
+	$t printf "%s\n" "-ifndef(BLUE_HRL_LOADED)." "-define(BLUE_HRL_LOADED,true)." "-include(\"red.hrl\")." "-endif." > $(APP)/include/blue.hrl
+	$t printf "%s\n" "-ifndef(RED_HRL_LOADED)." "-define(RED_HRL_LOADED,true)." "-include(\"blue.hrl\")." "-endif." > $(APP)/include/red.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include(\"blue.hrl\")." > $(APP)/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include(\"red.hrl\")." > $(APP)/src/use_red.erl
+
+	$i "Build the application. Compilation should fail"
+	$t ! $(MAKE) -C $(APP) $v ; ret=$$?
+
+	$i "Check .d file"
+	$t grep "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+
+core-app-hrl-include_lib-loop-define-protected: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .hrl files with hrl loop protection "
+	$t mkdir $(APP)/include/
+	$t printf "%s\n" "-ifndef(BLUE_HRL_LOADED)." "-define(BLUE_HRL_LOADED,true)." "-include_lib(\"red.hrl\")." "-endif." > $(APP)/include/blue.hrl
+	$t printf "%s\n" "-ifndef(RED_HRL_LOADED)." "-define(RED_HRL_LOADED,true)." "-include_lib(\"blue.hrl\")." "-endif." > $(APP)/include/red.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include_lib(\"blue.hrl\")." > $(APP)/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include_lib(\"red.hrl\")." > $(APP)/src/use_red.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v ; ret=$$?
+
+	$i "Check .d file"
+	$t grep "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+
+core-app-hrl-multiapps-include-loop-define-protected: build clean
+	$i "Create a multi application repository with no root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t echo "include erlang.mk" > $(APP)/Makefile
+
+	$i "Create a new application named my_app"
+	$t $(MAKE) -C $(APP) new-lib in=my_app $v
+
+	$i "Create a new library named my_lib"
+	$t $(MAKE) -C $(APP) new-lib in=my_lib $v
+
+	$i "Add my_lib as LOCAL_DEPS of my_app"
+	$t echo "LOCAL_DEPS = my_lib" >> $(APP)/apps/my_app/Makefile
+
+
+	$i "Generate .hrl files"
+	$t mkdir $(APP)/apps/my_lib/include/
+	$t printf "%s\n" "-ifndef(BLUE_HRL_LOADED)." "-define(BLUE_HRL_LOADED,true)." "-include_lib(\"red.hrl\")." "-endif." > $(APP)/apps/my_lib/include/blue.hrl
+	$t printf "%s\n" "-ifndef(RED_HRL_LOADED)." "-define(RED_HRL_LOADED,true)." "-include_lib(\"blue.hrl\")." "-endif." > $(APP)/apps/my_lib/include/red.hrl
+
+	$i "Generate .erl files dependent from headers"
+	$t printf "%s\n" "-module(use_blue)." "-include_lib(\"my_lib/include/blue.hrl\")." > $(APP)/apps/my_app/src/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." "-include_lib(\"my_lib/include/red.hrl\")." > $(APP)/apps/my_app/src/use_red.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/use_blue.beam
+	$t test -f $(APP)/apps/my_app/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/my_app/ebin/ $(APP)/apps/my_lib/ebin/ -eval " \
+		{ok, _Apps } = application:ensure_all_started(my_app), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Touch one .hrl file; check that only required files are rebuilt"
+# The use_red.erl gets touched because of its dependency to red.hrl.
+	$t printf "%s\n" \
+		$(APP)/apps/my_app/my_app.d \
+		$(APP)/apps/my_app/ebin/my_app.app \
+		$(APP)/apps/my_app/ebin/use_red.beam \
+		$(APP)/apps/my_app/src/use_red.erl \
+		$(APP)/apps/my_app/src/use_blue.erl \
+		$(APP)/apps/my_app/ebin/use_blue.beam | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/apps/my_lib/include/red.hrl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP)/apps/my_app -type f -newer $(APP)/apps/my_lib/include/red.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/my_app/ebin/ $(APP)/apps/my_lib/ebin/ -eval " \
+		{ok, _Apps } = application:ensure_all_started(my_app), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that source files still exist"
+	$t test -f $(APP)/Makefile
+	$t test -f $(APP)/erlang.mk
+	$t test -f $(APP)/apps/my_lib/Makefile
+	$t test -f $(APP)/apps/my_lib/include/blue.hrl
+	$t test -f $(APP)/apps/my_lib/include/red.hrl
+	$t test -f $(APP)/apps/my_app/Makefile
+	$t test -f $(APP)/apps/my_app/src/use_blue.erl
+	$t test -f $(APP)/apps/my_app/src/use_red.erl
+ifdef LEGACY
+	$t test -f $(APP)/apps/my_lib.app.src
+	$t test -f $(APP)/apps/my_app.app.src
+endif
+
+	$i "Check that all build artifacts are removed"
+	$t test ! -e $(APP)/apps/my_lib/my_app.d
+	$t test ! -e $(APP)/apps/my_lib/ebin/
+	$t test ! -e $(APP)/apps/my_app/my_app.d
+	$t test ! -e $(APP)/apps/my_app/ebin/
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/use_blue.beam
+	$t test -f $(APP)/apps/my_app/ebin/use_red.beam
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/apps/my_app/ebin/ $(APP)/apps/my_lib/ebin/ -eval " \
+		{ok, _Apps } = application:ensure_all_started(my_app), \
+		{ok, Mods = [use_blue, use_red]} \
+			= application:get_key(my_app, modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
