@@ -9,7 +9,10 @@ ifeq ($(filter proper,$(DEPS) $(TEST_DEPS)),proper)
 tests:: proper
 
 define proper_check.erl
-	code:add_pathsa(["$(call core_native_path,$(CURDIR)/ebin)", "$(call core_native_path,$(DEPS_DIR)/*/ebin)"]),
+	code:add_pathsa([
+		"$(call core_native_path,$(CURDIR)/ebin)",
+		"$(call core_native_path,$(DEPS_DIR)/*/ebin)",
+		"$(call core_native_path,$(TEST_DIR))"]),
 	Module = fun(M) ->
 		[true] =:= lists:usort([
 			case atom_to_list(F) of
@@ -47,7 +50,8 @@ proper: test-build
 endif
 else
 proper: test-build
-	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename $(wildcard ebin/*.beam))))))
+	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename \
+		$(wildcard ebin/*.beam) $(call core_find,$(TEST_DIR)/,*.beam))))))
 	$(gen_verbose) $(call erlang,$(call proper_check.erl,all,undefined,$(MODULES)))
 endif
 endif

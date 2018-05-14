@@ -1,4 +1,4 @@
-# Triq plugin
+# Triq plugin.
 
 TRIQ_CASES = test-dir
 TRIQ_TARGETS = $(addprefix triq-,$(TRIQ_CASES))
@@ -8,6 +8,7 @@ TRIQ_TARGETS = $(addprefix triq-,$(TRIQ_CASES))
 triq: $(TRIQ_TARGETS)
 
 triq-test-dir: build clean
+
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
@@ -24,7 +25,7 @@ triq-test-dir: build clean
 		"prop_foo() -> ?FORALL(_, any(), true)." \
 		"-endif." > $(APP)/src/$(APP).erl
 
-	$i "Generate a module containing Triq properies in TEST_DIR"
+	$i "Generate a module containing Triq properties in TEST_DIR"
 	$t mkdir $(APP)/test
 	$t printf "%s\n" \
 		"-module($(APP)_tests)." \
