@@ -1954,7 +1954,6 @@ core-app-hrl-multiapps-include-lib: build clean
 	$i "Add my_lib as LOCAL_DEPS of my_app"
 	$t echo "LOCAL_DEPS = my_lib" >> $(APP)/apps/my_app/Makefile
 
-
 	$i "Generate .hrl files"
 	$t mkdir $(APP)/apps/my_lib/include/
 	$t touch $(APP)/apps/my_lib/include/blue.hrl $(APP)/apps/my_lib/include/red.hrl
@@ -2057,7 +2056,6 @@ core-app-hrl-multiapps-include-lib-recursive: build clean
 
 	$i "Add my_lib as LOCAL_DEPS of my_app"
 	$t echo "LOCAL_DEPS = my_lib" >> $(APP)/apps/my_app/Makefile
-
 
 	$i "Generate .hrl files"
 	$t mkdir $(APP)/apps/my_lib/include/
@@ -2435,13 +2433,12 @@ core-app-hrl-include-loop: build clean
 	$t printf "%s\n" "-module(use_blue)." "-include(\"blue.hrl\")." > $(APP)/src/use_blue.erl
 	$t printf "%s\n" "-module(use_red)." "-include(\"red.hrl\")." > $(APP)/src/use_red.erl
 
-
 	$i "Build the application. Compilation should fail"
 	$t ! $(MAKE) -C $(APP) $v
 
 	$i "Check .d file"
-	$t grep "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
-	$t grep "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 
 core-app-hrl-include_lib-loop: build clean
 
@@ -2459,13 +2456,12 @@ core-app-hrl-include_lib-loop: build clean
 	$t printf "%s\n" "-module(use_blue)." "-include_lib(\"blue.hrl\")." > $(APP)/src/use_blue.erl
 	$t printf "%s\n" "-module(use_red)." "-include_lib(\"red.hrl\")." > $(APP)/src/use_red.erl
 
-
 	$i "Build the application. Compilation should fail"
 	$t ! $(MAKE) -C $(APP) $v
 
 	$i "Check .d file"
-	$t grep "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
-	$t grep "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 
 core-app-hrl-include-loop-define-protected: build clean
 
@@ -2487,8 +2483,8 @@ core-app-hrl-include-loop-define-protected: build clean
 	$t ! $(MAKE) -C $(APP) $v ; ret=$$?
 
 	$i "Check .d file"
-	$t grep "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
-	$t grep "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 
 core-app-hrl-include_lib-loop-define-protected: build clean
 
@@ -2510,8 +2506,8 @@ core-app-hrl-include_lib-loop-define-protected: build clean
 	$t $(MAKE) -C $(APP) $v ; ret=$$?
 
 	$i "Check .d file"
-	$t grep "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
-	$t grep "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 
 core-app-hrl-multiapps-include-loop-define-protected: build clean
 
@@ -2528,7 +2524,6 @@ core-app-hrl-multiapps-include-loop-define-protected: build clean
 
 	$i "Add my_lib as LOCAL_DEPS of my_app"
 	$t echo "LOCAL_DEPS = my_lib" >> $(APP)/apps/my_app/Makefile
-
 
 	$i "Generate .hrl files"
 	$t mkdir $(APP)/apps/my_lib/include/
