@@ -2,8 +2,7 @@
 #
 # The miscellaneous tests use the prefix "core-", not "core-misc-".
 
-CORE_MISC_CASES = clean-crash-dump distclean-tmp help without-edoc without-index without-many
-CORE_MISC_TARGETS = $(addprefix core-,$(CORE_MISC_CASES))
+CORE_MISC_TARGETS = $(filter-out core-misc,$(call list_targets,core))
 
 .PHONY: core-misc $(CORE_MISC_TARGETS)
 

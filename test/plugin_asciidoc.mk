@@ -1,7 +1,6 @@
 # AsciiDoc plugin.
 
-ASCIIDOC_CASES = build docs guide install manual
-ASCIIDOC_TARGETS = $(addprefix asciidoc-,$(ASCIIDOC_CASES))
+ASCIIDOC_TARGETS = $(call list_targets,asciidoc)
 
 .PHONY: asciidoc $(ASCIIDOC_TARGETS)
 

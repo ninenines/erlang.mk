@@ -1,7 +1,6 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_CASES = apps apps-build-count apps-conflict apps-deep-conflict apps-dir apps-dir-include-lib apps-new-app apps-new-lib apps-new-tpl apps-only autopatch-rebar build-c-8cc build-c-imagejs build-erl build-js dep-commit dir doc fetch-cp fetch-custom fetch-fail-bad fetch-fail-unknown fetch-git fetch-git-submodule fetch-hex fetch-hg fetch-legacy fetch-ln fetch-svn ignore list-deps mv mv-rebar no-autopatch no-autopatch-erlang-mk no-autopatch-rebar order-first order-top otp pkg rel search shell skip test
-CORE_DEPS_TARGETS = $(addprefix core-deps-,$(CORE_DEPS_CASES))
+CORE_DEPS_TARGETS = $(call list_targets,core-deps)
 
 .PHONY: core-deps $(CORE_DEPS_TARGETS)
 

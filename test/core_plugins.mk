@@ -1,7 +1,6 @@
 # Core: External plugins.
 
-CORE_PLUGINS_CASES = all early early-local local one templates templates-apps-only test
-CORE_PLUGINS_TARGETS = $(addprefix core-plugins-,$(CORE_PLUGINS_CASES))
+CORE_PLUGINS_TARGETS = $(call list_targets,core-plugins)
 
 .PHONY: core-plugins $(CORE_PLUGINS_TARGETS)
 

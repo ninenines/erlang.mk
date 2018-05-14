@@ -1,7 +1,6 @@
 # Escript plugin.
 
-ESCRIPT_CASES = build deps distclean extra
-ESCRIPT_TARGETS = $(addprefix escript-,$(ESCRIPT_CASES))
+ESCRIPT_TARGETS = $(call list_targets,escript)
 
 .PHONY: escript $(ESCRIPT_TARGETS)
 

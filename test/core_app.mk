@@ -1,47 +1,6 @@
 # Core: Building applications.
 
-CORE_APP_CASES = appsrc-change \
-   asn1 \
-   auto-git-id \
-   env \
-   erlc-exclude \
-   erlc-opts \
-   erlc-opts-filter \
-   error \
-   extra-keys \
-   generate-erl \
-   generate-erl-include \
-   generate-erl-prepend \
-   hrl \
-   hrl-recursive \
-   makefile-change \
-   mib \
-   name-special-char \
-   no-app \
-   no-makedep \
-   project-mod \
-   pt \
-   pt-erlc-opts \
-   xrl \
-   xrl-help \
-   xrl-include \
-   yrl \
-   yrl-header \
-   yrl-include \
-   hrl-include-lib \
-   hrl-include-lib-recursive \
-   hrl-multiapps-include-lib \
-   hrl-multiapps-include-lib-recursive \
-   hrl-include-lib-src \
-   hrl-include-lib-src-recursive \
-   hrl-deps \
-   hrl-include-loop \
-   hrl-include_lib-loop \
-   hrl-include-loop-define-protected \
-   hrl-include_lib-loop-define-protected \
-   hrl-multiapps-include-loop-define-protected
-
-CORE_APP_TARGETS = $(addprefix core-app-,$(CORE_APP_CASES))
+CORE_APP_TARGETS = $(call list_targets,core-app)
 
 .PHONY: core-app $(CORE_APP_TARGETS)
 
@@ -2660,4 +2619,3 @@ endif
 			= application:get_key(my_app, modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
-

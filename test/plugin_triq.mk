@@ -1,7 +1,6 @@
 # Triq plugin.
 
-TRIQ_CASES = test-dir
-TRIQ_TARGETS = $(addprefix triq-,$(TRIQ_CASES))
+TRIQ_TARGETS = $(call list_targets,triq)
 
 .PHONY: triq $(TRIQ_TARGETS)
 

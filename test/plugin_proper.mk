@@ -1,7 +1,6 @@
 # PropEr plugin.
 
-PROPER_CASES = test-dir
-PROPER_TARGETS = $(addprefix proper-,$(PROPER_CASES))
+PROPER_TARGETS = $(call list_targets,proper)
 
 .PHONY: proper $(PROPER_TARGETS)
 

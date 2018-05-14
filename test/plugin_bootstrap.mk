@@ -1,7 +1,6 @@
 # Bootstrap plugin.
 
-BOOTSTRAP_CASES = app lib rel sp tab templates
-BOOTSTRAP_TARGETS = $(addprefix bootstrap-,$(BOOTSTRAP_CASES))
+BOOTSTRAP_TARGETS = $(call list_targets,bootstrap)
 
 .PHONY: bootstrap $(BOOTSTRAP_TARGETS)
 

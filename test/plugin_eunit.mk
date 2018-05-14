@@ -1,7 +1,6 @@
 # EUnit plugin.
 
-EUNIT_CASES = all apps-only apps-only-error check erl-opts fun mod priv test-dir tests
-EUNIT_TARGETS = $(addprefix eunit-,$(EUNIT_CASES))
+EUNIT_TARGETS = $(call list_targets,eunit)
 
 .PHONY: eunit $(EUNIT_TARGETS)
 

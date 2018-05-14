@@ -3,8 +3,7 @@
 # Sleeps when interacting with relx script are necessary after start and upgrade
 # as both of those interactions are not synchronized.
 
-RELX_CASES = rel bare-rel relup start-stop tar vsn
-RELX_TARGETS = $(addprefix relx-,$(RELX_CASES))
+RELX_TARGETS = $(call list_targets,relx)
 
 .PHONY: relx $(RELX_TARGETS)
 

@@ -1,7 +1,6 @@
 # Core: COMPILE_FIRST dependencies generation.
 
-CORE_MAKEDEP_CASES = behavior import
-CORE_MAKEDEP_TARGETS = $(addprefix core-makedep-,$(CORE_MAKEDEP_CASES))
+CORE_MAKEDEP_TARGETS = $(call list_targets,core-makedep)
 
 .PHONY: core-makedep $(CORE_MAKEDEP_TARGETS)
 

@@ -1,7 +1,6 @@
 # ErlyDTL plugin.
 
-ERLYDTL_CASES = compile custom-tag full-path include-template opts path-full-path-suffix suffix
-ERLYDTL_TARGETS = $(addprefix erlydtl-,$(ERLYDTL_CASES))
+ERLYDTL_TARGETS = $(call list_targets,erlydtl)
 
 .PHONY: erlydtl $(ERLYDTL_TARGETS)
 

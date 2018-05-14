@@ -1,7 +1,6 @@
 # Common Test plugin.
 
-COVER_CASES = ct custom-dir eunit eunit-apps-only report-and-merge
-COVER_TARGETS = $(addprefix cover-,$(COVER_CASES))
+COVER_TARGETS = $(call list_targets,cover)
 
 .PHONY: cover $(COVER_TARGETS)
 

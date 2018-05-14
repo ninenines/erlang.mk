@@ -1,7 +1,6 @@
 # Core: Erlang.mk upgrade.
 
-CORE_UPGRADE_CASES = conflicting-configs custom-build-dir custom-config custom-repo no-config renamed-config
-CORE_UPGRADE_TARGETS = $(addprefix core-upgrade-,$(CORE_UPGRADE_CASES))
+CORE_UPGRADE_TARGETS = $(call list_targets,core-upgrade)
 
 .PHONY: core-upgrade $(CORE_UPGRADE_TARGETS)
 

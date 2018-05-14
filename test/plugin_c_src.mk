@@ -1,7 +1,6 @@
 # C source plugin.
 
-C_SRC_CASES = cpp custom dir env nif port
-C_SRC_TARGETS = $(addprefix c-src-,$(C_SRC_CASES))
+C_SRC_TARGETS = $(call list_targets,c-src)
 
 .PHONY: c-src $(C_SRC_TARGETS)
 

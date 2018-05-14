@@ -1,7 +1,6 @@
 # Dialyzer plugin.
 
-DIALYZER_CASES = app apps-only apps-with-local-deps beam check custom-plt deps erlc-opts local-deps opts plt-apps plt-ebin-only
-DIALYZER_TARGETS = $(addprefix dialyzer-,$(DIALYZER_CASES))
+DIALYZER_TARGETS = $(call list_targets,dialyzer)
 
 ifneq ($(shell which sem 2>/dev/null),)
 	DIALYZER_MUTEX = sem --fg --id dialyzer

@@ -1,7 +1,6 @@
 # Sphinx plugin.
 
-SPHINX_CASES = build source-dir formats format-opts
-SPHINX_TARGETS = $(addprefix sphinx-,$(SPHINX_CASES))
+SPHINX_TARGETS = $(call list_targets,sphinx)
 
 .PHONY: sphinx $(SPHINX_TARGETS)
 

@@ -1,7 +1,6 @@
 # Shell plugin.
 
-SHELL_CASES = default kjell
-SHELL_TARGETS = $(addprefix shell-,$(SHELL_CASES))
+SHELL_TARGETS = $(call list_targets,shell)
 
 .PHONY: shell $(C_SRC_TARGETS)
 

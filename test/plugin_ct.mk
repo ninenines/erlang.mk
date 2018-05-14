@@ -1,7 +1,6 @@
 # Common Test plugin.
 
-CT_CASES = all apps apps-only case check group logs-dir opts suite tests
-CT_TARGETS = $(addprefix ct-,$(CT_CASES))
+CT_TARGETS = $(call list_targets,ct)
 
 .PHONY: ct $(CT_TARGETS)
 

@@ -86,6 +86,12 @@ else
 	i = @echo == $@:
 endif
 
+# Automatic listing of targets from test files.
+
+define list_targets
+$(sort $(shell grep ^$1- $(lastword $(MAKEFILE_LIST)) | cut -d: -f1))
+endef
+
 # Main targets.
 
 .PHONY: all clean build

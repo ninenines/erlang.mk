@@ -2,8 +2,7 @@
 #
 # Note: autopatch functionality is covered separately.
 
-CORE_COMPAT_CASES = auto-rebar rebar rebar-deps-git rebar-deps-hex rebar-deps-pkg rebar-erlc-opts rebar-pt
-CORE_COMPAT_TARGETS = $(addprefix core-compat-,$(CORE_COMPAT_CASES))
+CORE_COMPAT_TARGETS = $(call list_targets,core-compat)
 
 REBAR_BINARY = https://github.com/rebar/rebar/releases/download/2.6.0/rebar
 REBAR3_BINARY = https://s3.amazonaws.com/rebar3/rebar3

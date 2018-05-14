@@ -1,7 +1,6 @@
 # EDoc plugin.
 
-EDOC_CASES = build docs no-overview opts src-dirs
-EDOC_TARGETS = $(addprefix edoc-,$(EDOC_CASES))
+EDOC_TARGETS = $(call list_targets,edoc)
 
 .PHONY: edoc $(EDOC_TARGETS)
 
