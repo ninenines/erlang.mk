@@ -265,8 +265,6 @@ define makedep.erl
 	halt()
 endef
 
-## TODO: Analyze if it is possible to use erlc -M instead of makedep.erl
-## e.g.: erlc -M -MG -MF $@ -I $(APPS_DIR) -I $(DEPS_DIR) -I include/ src/*
 ifeq ($(if $(NO_MAKEDEP),$(wildcard $(PROJECT).d),),)
 $(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl) $(MAKEFILE_LIST)
 	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))

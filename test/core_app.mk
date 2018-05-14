@@ -34,7 +34,7 @@ CORE_APP_CASES = appsrc-change \
    hrl-multiapps-include-lib-recursive \
    hrl-include-lib-src \
    hrl-include-lib-src-recursive \
-   hlr-deps \
+   hrl-deps \
    hrl-include-loop \
    hrl-include_lib-loop \
    hrl-include-loop-define-protected \
@@ -1980,6 +1980,7 @@ endif
 		halt()"
 
 core-app-hrl-multiapps-include-lib: build clean
+
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
@@ -2083,6 +2084,7 @@ endif
 		halt()"
 
 core-app-hrl-multiapps-include-lib-recursive: build clean
+
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
@@ -2364,7 +2366,8 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hlr-deps: build clean
+core-app-hrl-deps: build clean
+
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
@@ -2552,6 +2555,7 @@ core-app-hrl-include_lib-loop-define-protected: build clean
 	$t grep "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 
 core-app-hrl-multiapps-include-loop-define-protected: build clean
+
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
