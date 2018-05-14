@@ -675,34 +675,31 @@ core-deps-build-c-8cc: build clean
 		halt()"
 endif
 
-ifneq ($(PLATFORM),freebsd)
-core-deps-build-c-imagejs: build clean
+core-deps-build-c-lz4: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add imagejs to the list of build dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = imagejs\ndep_imagejs = git https://github.com/jklmnn/imagejs master\n"}' $(APP)/Makefile
+	$i "Add lz4 to the list of build dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = lz4_src\ndep_lz4_src = git https://github.com/lz4/lz4 v1.8.2\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
 	$i "Check that all dependencies were fetched"
-	$t test -d $(APP)/deps/imagejs
+	$t test -d $(APP)/deps/lz4_src
 
-	$i "Check that imagejs works"
-	$t $(APP)/deps/imagejs/imagejs bmp $(APP)/deps/imagejs/Makefile
-	$t test -f $(APP)/deps/imagejs/Makefile.bmp
+	$i "Check that lz4 was compiled"
+	$t test -f $(APP)/deps/lz4_src/lib/liblz4.a
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
-		false = lists:member(imagejs, Deps), \
+		false = lists:member(lz4, Deps), \
 		halt()"
-endif
 
 core-deps-build-erl: build clean
 
