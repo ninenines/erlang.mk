@@ -1,6 +1,6 @@
 # Common Test plugin.
 
-COVER_CASES = ct custom-dir eunit report-and-merge
+COVER_CASES = ct custom-dir eunit eunit-apps-only report-and-merge
 COVER_TARGETS = $(addprefix cover-,$(COVER_CASES))
 
 .PHONY: cover $(COVER_TARGETS)
@@ -114,6 +114,33 @@ cover-eunit: build clean
 	$i "Check that the generated file is removed on clean"
 	$t $(MAKE) -C $(APP) clean $v
 	$t test ! -e $(APP)/eunit.coverdata
+
+cover-eunit-apps-only: build clean
+
+	$i "Create a multi application repository with no root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t echo "include erlang.mk" > $(APP)/Makefile
+
+	$i "Create a new application named my_app"
+	$t $(MAKE) -C $(APP) new-app in=my_app $v
+
+	$i "Generate a module containing EUnit tests in my_app"
+	$t printf "%s\n" \
+		"-module(my_app)." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"ok_test() -> ok." \
+		"-endif." > $(APP)/apps/my_app/src/my_app.erl
+
+	$i "Run EUnit with code coverage enabled"
+	$t $(MAKE) -C $(APP) eunit COVER=1 $v
+
+	$i "Check that no file was generated in the top-level directory"
+	$t ! test -f $(APP)/eunit.coverdata
+
+	$i "Check that the generated file exists"
+	$t test -f $(APP)/apps/my_app/eunit.coverdata
 
 cover-report-and-merge: build clean
 
