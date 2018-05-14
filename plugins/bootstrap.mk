@@ -493,7 +493,7 @@ ifndef n
 	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME [in=APP])
 endif
 ifdef in
-	$(verbose) $(MAKE) -C $(APPS_DIR)/$(in)/ new t=$t n=$n in=
+	$(call render_template,tpl_$(t),$(APPS_DIR)/$(in)/src/$(n).erl)
 else
 	$(call render_template,tpl_$(t),src/$(n).erl)
 endif

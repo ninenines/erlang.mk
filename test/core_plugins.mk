@@ -1,6 +1,6 @@
 # Core: External plugins.
 
-CORE_PLUGINS_CASES = all early early-local local one templates test
+CORE_PLUGINS_CASES = all early early-local local one templates templates-apps-only test
 CORE_PLUGINS_TARGETS = $(addprefix core-plugins-,$(CORE_PLUGINS_CASES))
 
 .PHONY: core-plugins $(CORE_PLUGINS_TARGETS)
@@ -166,7 +166,7 @@ core-plugins-templates: build clean
 	$t $(MAKE) --no-print-directory -C $(APP) list-templates | grep -qw test_mk
 
 	$i "Create a new file using the template"
-	$t $(MAKE) --no-print-directory -C $(APP) new t=test_mk n=test_mk
+	$t $(MAKE) --no-print-directory -C $(APP) new t=test_mk n=test_mk $v
 
 	$i "Confirm the file exists"
 	$t test -f $(APP)/src/test_mk.erl
@@ -176,6 +176,48 @@ core-plugins-templates: build clean
 
 	$i "Check that the file was compiled correctly"
 	$t test -f $(APP)/ebin/test_mk.beam
+
+core-plugins-templates-apps-only: build clean
+
+	$i "Create a multi application repository with no root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t echo "include erlang.mk" > $(APP)/Makefile
+
+	$i "Create a new application my_app"
+	$t $(MAKE) -C $(APP) new-app in=my_app $v
+
+	$i "Create a local git repository with a plugin containing a template"
+	$t mkdir -p $(APP)/plugin_dep
+	$t printf "%s\n" \
+		"define tpl_test_mk" \
+		"-module(test_mk)." \
+		"endef" > $(APP)/plugin_dep/plugins.mk
+	$t cd $(APP)/plugin_dep && \
+		git init -q && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Tests"
+
+	$i "Add dependency and plugins to the Makefile"
+	$t printf "%s\n" \
+		"DEPS = plugin_dep" \
+		"dep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master" \
+		"DEP_PLUGINS = plugin_dep" \
+		"include erlang.mk" > $(APP)/Makefile
+
+	$i "Create a new file using the template in the my_app application"
+	$t $(MAKE) --no-print-directory -C $(APP) new t=test_mk n=test_mk in=my_app $v
+
+	$i "Confirm the file exists"
+	$t test -f $(APP)/apps/my_app/src/test_mk.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the file was compiled correctly"
+	$t test -f $(APP)/apps/my_app/ebin/test_mk.beam
 
 core-plugins-test: build clean
 
