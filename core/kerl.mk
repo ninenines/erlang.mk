@@ -49,7 +49,8 @@ distclean-kerl:
 # Allow users to select which version of Erlang/OTP to use for a project.
 
 ifneq ($(strip $(LATEST_ERLANG_OTP)),)
-ERLANG_OTP := $(notdir $(lastword $(sort $(wildcard $(KERL_INSTALL_DIR)/*[^-native]))))
+ERLANG_OTP := $(notdir $(lastword $(sort $(filter-out %-rc1 %-rc2 %-rc3,\
+	$(wildcard $(KERL_INSTALL_DIR)/*[^-native])))))
 endif
 
 ERLANG_OTP ?=
