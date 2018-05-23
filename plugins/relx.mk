@@ -44,13 +44,20 @@ $(RELX):
 	$(verbose) chmod +x $(RELX)
 
 relx-rel: $(RELX) rel-deps app
-	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release $(if $(filter 1,$(RELX_TAR)),tar)
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release
+	$(MAKE) relx-post-rel
+ifeq ($(RELX_TAR),1)
+	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) tar
+endif
 
 relx-relup: $(RELX) rel-deps app
 	$(verbose) $(RELX) -c $(RELX_CONFIG) $(RELX_OPTS) release relup $(if $(filter 1,$(RELX_TAR)),tar)
 
 distclean-relx-rel:
 	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)
+
+# Default hooks.
+relx-post-rel::
 
 # Run target.
 
