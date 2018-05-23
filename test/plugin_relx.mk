@@ -74,6 +74,49 @@ relx-bare-rel: build clean
 	$t test -d $(APP)/_rel/$(APP)_release/releases
 	$t test -d $(APP)/_rel/$(APP)_release/releases/1
 
+relx-post-rel: build clean
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Add relx-post-rel target to Makefile"
+	$t echo "relx-post-rel::" >> $(APP)/Makefile
+	$t echo "	echo test post rel > _rel/$(APP)_release/test_post_rel" >> $(APP)/Makefile
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that relx was downloaded"
+	$t test -f $(APP)/.erlang.mk/relx
+
+	$i "Check that the release was built"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -f $(APP)/_rel/$(APP)_release/test_post_rel
+	$t test "test post rel" = "`cat $(APP)/_rel/$(APP)_release/test_post_rel`"
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/1
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the release still exists"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/1
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that the output directory was removed entirely"
+	$t test ! -d $(APP)/_rel/
+
 relx-relup: build clean
 
 	$i "Bootstrap a new release named $(APP)"
