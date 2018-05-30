@@ -44,3 +44,7 @@ $ make shell
 
 The shell can be stopped as usual with a double Ctrl+C or the
 command `q().`.
+
+Note that the `shell` target does not build the application. To do it,
+use either the `app` target or, if you want to include also test
+modules, the `test-build` target.
