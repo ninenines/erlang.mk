@@ -28,3 +28,18 @@ shell-kjell: build clean
 
 	$i "Run the shell"
 	$t $(MAKE) -C $(APP) shell SHELL_OPTS="-eval 'halt()'" $v
+
+shell-test-dir: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate a module in TEST_DIR"
+	$t mkdir $(APP)/test
+	$t printf "%s\n" \
+		"-module(foo)." > $(APP)/test/foo.erl
+
+	$i "Check that the module is visible"
+	$t $(MAKE) -C $(APP) test-build shell SHELL_OPTS="-eval 'foo:module_info()' -eval 'halt()'" $v
