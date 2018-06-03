@@ -1,0 +1,31 @@
+[[triq]]
+== Triq
+
+https://triq.gitlab.io/[Triq] is a QuickCheck-like library for
+property-based testing. Erlang.mk automates discovery and checking of
+Triq properties.
+
+To run all tests (including Triq):
+
+[source,bash]
+$ make tests
+
+To run all tests and static checks (including Triq):
+
+[source,bash]
+$ make check
+
+You can also run Triq separately:
+
+[source,bash]
+$ make triq
+
+To check properties from a single module:
+
+[source,bash]
+$ make triq t=foo_tests
+
+To check a single property:
+
+[source,bash]
+$ make triq t=foo_tests:bar
