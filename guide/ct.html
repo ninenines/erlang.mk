@@ -33,7 +33,7 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="eunit.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="coverage.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ct"></a>Chapter 19. Common Test</h2></div></div></div><p>Common Test is Erlang’s functional testing framework.
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="eunit.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="triq.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ct"></a>Chapter 19. Common Test</h2></div></div></div><p>Common Test is Erlang’s functional testing framework.
 Erlang.mk automates the discovery and running of Common
 Test suites.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_tests_2"></a>19.1. Writing tests</h2></div></div></div><p>The <a class="ulink" href="http://www.erlang.org/doc/apps/common_test/write_test_chapter.html" target="_top">Common Test user guide</a>
 is the best place to learn how to write tests. Erlang.mk
@@ -56,9 +56,8 @@ using the variable <code class="literal">t</code>. Note that this only applies t
 suite-specific targets, like the <code class="literal">ct-http</code> example above.</p><p>To run all tests from the <code class="literal">http_compress</code> group in the
 <code class="literal">http_SUITE</code> test suite, write:</p><pre class="programlisting">$ make ct-http t=http_compress</pre><p>Similarly, to run a specific test case in that group:</p><pre class="programlisting">$ make ct-http t=http_compress:headers_dupe</pre><p>To do the same against a multi-application repository,
 you can use the <code class="literal">-C</code> option:</p><pre class="programlisting">$ make -C apps/my_app ct-http t=my_group:my_case</pre><p>Note that this also applies to dependencies. When using Cowboy
-as a dependency, you can run the following directly:</p><pre class="programlisting">$ make -C deps/cowboy ct-http t=http_compress</pre><p>Finally, <a class="link" href="coverage.html" title="Chapter 20. Code coverage">code coverage</a>
-<a class="xref" href="coverage.html" title="Chapter 20. Code coverage">Chapter 20, <em>Code coverage</em></a> is available,
-but covered in its own chapter.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="eunit.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tests.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="coverage.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+as a dependency, you can run the following directly:</p><pre class="programlisting">$ make -C deps/cowboy ct-http t=http_compress</pre><p>Finally, <a class="link" href="coverage.html" title="Chapter 21. Code coverage">code coverage</a> is available,
+but covered in its own chapter.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="eunit.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tests.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="triq.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>

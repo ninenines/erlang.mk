@@ -37,51 +37,34 @@ div.navfooter{margin-bottom:1em}
 what Erlang.mk can do for you.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_building_your_project"></a>3.1. Building your project</h2></div></div></div><p>Erlang.mk is first and foremost a build tool. It is especially
 tailored for Erlang developers and follows widely accepted
 practices in the Erlang community.</p><p>Erlang.mk will happily build all <a class="link" href="building.html" title="Chapter 6. Building">Erlang-specific files</a>
-<a class="xref" href="building.html" title="Chapter 6. Building">Chapter 6, <em>Building</em></a>
 you throw at it. Other kinds of files too, like C or C++ code
-when you are working on <a class="link" href="ports.html" title="Chapter 8. NIFs and port drivers">a NIF or a port driver</a>
-<a class="xref" href="ports.html" title="Chapter 8. NIFs and port drivers">Chapter 8, <em>NIFs and port drivers</em></a>.</p><p>Erlang.mk embraces the concept of <a class="link" href="deps.html" title="Chapter 7. Packages and dependencies">source dependencies</a>
-<a class="xref" href="deps.html" title="Chapter 7. Packages and dependencies">Chapter 7, <em>Packages and dependencies</em></a>.
+when you are working on <a class="link" href="ports.html" title="Chapter 8. NIFs and port drivers">a NIF or a port driver</a>.</p><p>Erlang.mk embraces the concept of <a class="link" href="deps.html" title="Chapter 7. Packages and dependencies">source dependencies</a>.
 It can fetch dependency source code using a variety of mechanisms,
 including fetching from Git, Mercurial or SVN.</p><p>Erlang.mk will automatically <a class="link" href="relx.html" title="Chapter 9. Releases">generate releases</a>
-<a class="xref" href="relx.html" title="Chapter 9. Releases">Chapter 9, <em>Releases</em></a>
-when applicable. It can also <a class="link" href="escript.html" title="Chapter 11. Escripts">generate escripts</a>
-<a class="xref" href="escript.html" title="Chapter 11. Escripts">Chapter 11, <em>Escripts</em></a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_exploring_the_package_index"></a>3.2. Exploring the package index</h2></div></div></div><p>Erlang.mk comes with a <a class="link" href="deps.html" title="Chapter 7. Packages and dependencies">built-in package index</a>
-<a class="xref" href="deps.html" title="Chapter 7. Packages and dependencies">Chapter 7, <em>Packages and dependencies</em></a>.
+when applicable. It can also <a class="link" href="escript.html" title="Chapter 11. Escripts">generate escripts</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_exploring_the_package_index"></a>3.2. Exploring the package index</h2></div></div></div><p>Erlang.mk comes with a <a class="link" href="deps.html" title="Chapter 7. Packages and dependencies">built-in package index</a>.
 It is built as an extension of the dependency system and is
 meant to be used for discovery purposes.</p><p>No package is ever installed, they are only used as dependencies
 and are always project-specific. They can be thought of as a
 shortcut over plain dependencies.</p><p>You can get a list of all packages known to Erlang.mk by using
 the <code class="literal">search</code> target:</p><pre class="programlisting">$ make search</pre><p>You can also use this target to search across all packages, for
-example to find all packages related to Cowboy:</p><pre class="programlisting">$ make search q=cowboy</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_documentation"></a>3.3. Generating documentation</h2></div></div></div><p>Erlang.mk supports <span class="emphasis"><em>EDoc</em></span> and <span class="emphasis"><em>Asciidoc</em></span>.</p><p><a class="link" href="edoc.html" title="Chapter 15. EDoc comments">EDoc</a>
-<a class="xref" href="edoc.html" title="Chapter 15. EDoc comments">Chapter 15, <em>EDoc comments</em></a> generates HTML documentation directly from
+example to find all packages related to Cowboy:</p><pre class="programlisting">$ make search q=cowboy</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_documentation"></a>3.3. Generating documentation</h2></div></div></div><p>Erlang.mk supports <span class="emphasis"><em>EDoc</em></span> and <span class="emphasis"><em>Asciidoc</em></span>.</p><p><a class="link" href="edoc.html" title="Chapter 15. EDoc comments">EDoc</a> generates HTML documentation directly from
 your source code.</p><p>While it is convenient, ask yourself: if all the documentation is
 inside the source code, why not just open the source code directly?
-That’s where <span class="emphasis"><em>Asciidoc</em></span> comes in.</p><p>The <a class="link" href="asciidoc.html" title="Chapter 14. AsciiDoc documentation">Asciidoc</a>
-<a class="xref" href="asciidoc.html" title="Chapter 14. AsciiDoc documentation">Chapter 14, <em>AsciiDoc documentation</em></a> plugin expects all documentation
+That’s where <span class="emphasis"><em>Asciidoc</em></span> comes in.</p><p>The <a class="link" href="asciidoc.html" title="Chapter 14. AsciiDoc documentation">Asciidoc</a> plugin expects all documentation
 to be separate from source. It will generate HTML, PDF, man pages and
 more from the documentation you write in the <span class="emphasis"><em>doc/src/</em></span> folder in
 your repository.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_tests"></a>3.4. Running tests</h2></div></div></div><p>Erlang.mk supports a lot of different testing and static
-analysis tools.</p><p>The <a class="link" href="shell.html" title="Chapter 17. Erlang shell">make shell</a>
-<a class="xref" href="shell.html" title="Chapter 17. Erlang shell">Chapter 17, <em>Erlang shell</em></a> command allows you
+analysis tools.</p><p>The <a class="link" href="shell.html" title="Chapter 17. Erlang shell">make shell</a> command allows you
 to test your project manually. You can automate these
-unit tests with <a class="link" href="eunit.html" title="Chapter 18. EUnit">EUnit</a>
-<a class="xref" href="eunit.html" title="Chapter 18. EUnit">Chapter 18, <em>EUnit</em></a> and test
-your entire system with <a class="link" href="ct.html" title="Chapter 19. Common Test">Common Test</a>
-<a class="xref" href="ct.html" title="Chapter 19. Common Test">Chapter 19, <em>Common Test</em></a>.
-<a class="link" href="coverage.html" title="Chapter 20. Code coverage">Code coverage</a>
-<a class="xref" href="coverage.html" title="Chapter 20. Code coverage">Chapter 20, <em>Code coverage</em></a> can of course
+unit tests with <a class="link" href="eunit.html" title="Chapter 18. EUnit">EUnit</a> and test
+your entire system with <a class="link" href="ct.html" title="Chapter 19. Common Test">Common Test</a>.
+<a class="link" href="coverage.html" title="Chapter 21. Code coverage">Code coverage</a> can of course
 be enabled during tests.</p><p>Erlang.mk comes with features to make your life easier when
-setting up and using <a class="link" href="ci.html" title="Chapter 21. Continuous integration">Continuous integration</a>
-<a class="xref" href="ci.html" title="Chapter 21. Continuous integration">Chapter 21, <em>Continuous integration</em></a>.</p><p>On the static analysis side of things, Erlang.mk comes with
-support for <a class="link" href="dialyzer.html" title="Chapter 22. Dialyzer">Dialyzer</a>
-<a class="xref" href="dialyzer.html" title="Chapter 22. Dialyzer">Chapter 22, <em>Dialyzer</em></a> and <a class="link" href="xref.html" title="Chapter 23. Xref">Xref</a>
-<a class="xref" href="xref.html" title="Chapter 23. Xref">Chapter 23, <em>Xref</em></a>,
+setting up and using <a class="link" href="ci.html" title="Chapter 22. Continuous integration">Continuous integration</a>.</p><p>On the static analysis side of things, Erlang.mk comes with
+support for <a class="link" href="dialyzer.html" title="Chapter 23. Dialyzer">Dialyzer</a> and <a class="link" href="xref.html" title="Chapter 24. Xref">Xref</a>,
 to perform success typing analysis and cross referencing
-of the code.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_need_more"></a>3.5. Need more?</h2></div></div></div><p>Not convinced yet? You can read about <a class="link" href="why.html" title="Chapter 26. Why Erlang.mk">why you should use Erlang.mk</a>
-<a class="xref" href="why.html" title="Chapter 26. Why Erlang.mk">Chapter 26, <em>Why Erlang.mk</em></a>
-and its <a class="link" href="history.html" title="Chapter 27. Short history">history</a>
-<a class="xref" href="history.html" title="Chapter 27. Short history">Chapter 27, <em>Short history</em></a>. And if you’re still not
+of the code.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_need_more"></a>3.5. Need more?</h2></div></div></div><p>Not convinced yet? You can read about <a class="link" href="why.html" title="Chapter 27. Why Erlang.mk">why you should use Erlang.mk</a>
+and its <a class="link" href="history.html" title="Chapter 28. Short history">history</a>. And if you’re still not
 convinced after that, it’s OK! The world would be boring if
 everyone agreed on everything all the time.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="getting_started.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="updating.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
