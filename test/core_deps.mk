@@ -297,6 +297,45 @@ core-deps-apps-dir-include-lib: build clean
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
+core-deps-apps-dir-include-lib-eunit: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Set a custom APPS_DIR"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "APPS_DIR ?= \$$(CURDIR)/deep/libs\n"}' $(APP)/Makefile
+
+	$i "Create new libraries the_app and test_helpers"
+	$t $(MAKE) -C $(APP) new-lib in=the_app $v
+	$t $(MAKE) -C $(APP) new-lib in=test_helpers $v
+
+	$i "Generate .erl file"
+	$t echo '-module(the).  -export([thing/0]).  thing() -> true.' > $(APP)/deep/libs/the_app/src/the.erl
+
+	$t mkdir -p $(APP)/deep/libs/the_app/test
+	$i "Generate test .erl file with helper include_lib()"
+	$t echo '-module(the_test).' > $(APP)/deep/libs/the_app/test/the_test.erl
+	$t echo '-include_lib("eunit/include/eunit.hrl").' >> $(APP)/deep/libs/the_app/test/the_test.erl
+	$t echo '-include_lib("test_helpers/include/test_helpers.hrl").' >> $(APP)/deep/libs/the_app/test/the_test.erl
+	$t echo 'thing_test() -> ?assertEqual(true, the:thing()).' >> $(APP)/deep/libs/the_app/test/the_test.erl
+
+	$t mkdir -p $(APP)/deep/libs/test_helpers/include
+	$t echo '%% test_helpers'  > $(APP)/deep/libs/test_helpers/include/test_helpers.hrl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Run eunit"
+	$t $(MAKE) -C $(APP) eunit $v
+
+	$i "Run eunit with -C"
+	$t $(MAKE) -C $(APP)/deep/libs/the_app eunit $v
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
 core-deps-apps-new-app: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
