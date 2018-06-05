@@ -43,6 +43,45 @@ eunit-all: build clean
 	$i "Check that EUnit errors out"
 	$t ! $(MAKE) -C $(APP) eunit $v
 
+eunit-apps-include-lib: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create new libraries the_app and test_helpers"
+	$t $(MAKE) -C $(APP) new-lib in=the_app $v
+	$t $(MAKE) -C $(APP) new-lib in=test_helpers $v
+
+	$i "Generate .erl file"
+	$t echo '-module(the).  -export([thing/0]).  thing() -> true.' > $(APP)/apps/the_app/src/the.erl
+
+	$t mkdir -p $(APP)/apps/the_app/test
+	$i "Generate test .erl file with helper include_lib()"
+	$t echo '-module(the_test).' > $(APP)/apps/the_app/test/the_test.erl
+	$t echo '-include_lib("eunit/include/eunit.hrl").' >> $(APP)/apps/the_app/test/the_test.erl
+	$t echo '-include_lib("test_helpers/include/test_helpers.hrl").' >> $(APP)/apps/the_app/test/the_test.erl
+	$t echo 'thing_test() -> ?assertEqual(true, the:thing()).' >> $(APP)/apps/the_app/test/the_test.erl
+
+	$t mkdir -p $(APP)/apps/test_helpers/include
+	$t echo '%% test_helpers'  > $(APP)/apps/test_helpers/include/test_helpers.hrl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Run eunit"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Run eunit on a subdirectory"
+	$t $(MAKE) -C $(APP)/apps/the_app eunit $v
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
 eunit-apps-only: build clean
 
 	$i "Create a multi application repository with no root application"
