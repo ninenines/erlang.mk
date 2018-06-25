@@ -84,6 +84,20 @@ up:
 	cd gh-pages && git push origin gh-pages
 	rm -rf gh-pages
 
+ifdef file
+up-relx:
+	git clone git@github.com:ninenines/erlang.mk.git gh-pages
+	cd gh-pages && git checkout gh-pages
+	cp $(file) gh-pages/res/
+	cd gh-pages && git add .
+	cd gh-pages && git commit -m "Publish new Relx version"
+	cd gh-pages && git push origin gh-pages
+	rm -rf gh-pages
+else
+up-relx:
+	@echo Missing parameter: url
+endif
+
 ifdef p
 XDG_DATA_HOME ?= $(HOME)/.local/share
 INSTALL_DIR ?= $(XDG_DATA_HOME)/erlang.mk/lib
