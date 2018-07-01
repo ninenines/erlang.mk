@@ -290,3 +290,16 @@ dialyzer-plt-ebin-only: build clean
 
 	$i "Confirm that rebar files were not included in the PLT"
 	$t ! dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q rebar
+
+dialyzer-plt-swallow-warnings: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Add LFE version referring to a missing function to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lfe\ndep_lfe_commit = 2880c8a2a7f\n"}' $(APP)/Makefile
+
+	$i "Create the PLT file"
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) plt $v
