@@ -79,3 +79,7 @@ You can also name the file differently or put it in a separate folder
 by modifying the value for `ERLANG_MK_BUILD_CONFIG`. You can also
 tell Erlang.mk to use a different temporary directory by changing
 the `ERLANG_MK_BUILD_DIR` variable.
+
+If you want to use a different repository or a specific commit for
+updating, you may use the variables `ERLANG_MK_REPO` and
+`ERLANG_MK_COMMIT`.
