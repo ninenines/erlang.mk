@@ -46,7 +46,7 @@ $(DIALYZER_PLT): deps app
 	$(eval DEPS_LOG := $(shell test -f $(ERLANG_MK_TMP)/deps.log && \
 		while read p; do test -d $$p/ebin && echo $$p/ebin; done <$(ERLANG_MK_TMP)/deps.log))
 	$(verbose) dialyzer --build_plt $(DIALYZER_PLT_OPTS) --apps \
-		erts kernel stdlib $(PLT_APPS) $(OTP_DEPS) $(LOCAL_DEPS) $(DEPS_LOG)
+		erts kernel stdlib $(PLT_APPS) $(OTP_DEPS) $(LOCAL_DEPS) $(DEPS_LOG) || test $$? -eq 2
 
 plt: $(DIALYZER_PLT)
 
