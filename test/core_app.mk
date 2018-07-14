@@ -1758,6 +1758,26 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
+core-app-yrl-normal-to-debug: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create the parser .yrl file"
+	$t echo "Nonterminals top.\nTerminals plus num.\nRootsymbol top.\ntop -> num plus num : {'$1', '$3'}." >$(APP)/src/$(APP)_parser.yrl
+
+	$i "Create the test suite"
+	$t mkdir $(APP)/test
+	$t echo "-module(test_SUITE).\n-export([all/0, test/1]).\nall() -> [test].\ntest(_) -> 0=0." >$(APP)/test/test_SUITE.erl
+
+	$i "Build the application in test mode"
+	$t $(MAKE) -C $(APP) ct $v
+
+	$i "Build the application in normal mode"
+	$t $(MAKE) -C $(APP) $v
+
 core-app-hrl-include-lib: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
