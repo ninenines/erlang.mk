@@ -66,8 +66,8 @@ endef
 asciidoc-manual:: doc-deps
 
 asciidoc-manual:: $(ASCIIDOC_MANUAL_FILES)
-	$(call erlang,$(call asciidoc2man.erl,$?))
-	$(foreach s,$(MAN_SECTIONS),mkdir -p doc/man$s/ && mv doc/src/manual/*.$s.gz doc/man$s/;)
+	$(gen_verbose) $(call erlang,$(call asciidoc2man.erl,$?))
+	$(verbose) $(foreach s,$(MAN_SECTIONS),mkdir -p doc/man$s/ && mv doc/src/manual/*.$s.gz doc/man$s/;)
 
 install-docs:: install-asciidoc
 
