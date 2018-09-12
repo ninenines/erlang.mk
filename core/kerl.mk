@@ -9,6 +9,8 @@ ifeq ($(strip $(KERL)),)
 KERL := $(ERLANG_MK_TMP)/kerl/kerl
 endif
 
+KERL_DIR = $(ERLANG_MK_TMP)/kerl
+
 export KERL
 
 KERL_GIT ?= https://github.com/kerl/kerl
@@ -35,7 +37,9 @@ $(KERL_INSTALL_DIR)/$1-native: $(KERL)
 endif
 endef
 
-$(KERL):
+$(KERL): $(KERL_DIR)
+
+$(KERL_DIR):
 	$(verbose) mkdir -p $(ERLANG_MK_TMP)
 	$(gen_verbose) git clone --depth 1 $(KERL_GIT) $(ERLANG_MK_TMP)/kerl
 	$(verbose) cd $(ERLANG_MK_TMP)/kerl && git checkout $(KERL_COMMIT)
@@ -44,7 +48,7 @@ $(KERL):
 distclean:: distclean-kerl
 
 distclean-kerl:
-	$(gen_verbose) rm -rf $(KERL)
+	$(gen_verbose) rm -rf $(KERL_DIR)
 
 # Allow users to select which version of Erlang/OTP to use for a project.
 
