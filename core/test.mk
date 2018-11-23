@@ -25,8 +25,8 @@ endif
 
 ifneq ($(wildcard $(TEST_DIR)),)
 test-dir:
-	$(gen_verbose) erlc -v $(TEST_ERLC_OPTS) -I include/ -o $(TEST_DIR) \
-		$(call core_find,$(TEST_DIR)/,*.erl) -pa ebin/
+	$(gen_verbose) erlc -v $(TEST_ERLC_OPTS) -o $(TEST_DIR) \
+		-pa ebin/ -I include/ $(call core_find,$(TEST_DIR)/,*.erl)
 endif
 
 ifeq ($(wildcard src),)
