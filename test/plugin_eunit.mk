@@ -82,6 +82,38 @@ eunit-apps-include-lib: build clean
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
+eunit-apps-one-app-tested: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a new application named my_app"
+	$t $(MAKE) -C $(APP) new-app in=my_app $v
+
+	$i "Create a new library named my_lib"
+	$t $(MAKE) -C $(APP) new-lib in=my_lib $v
+
+	$i "Generate a module containing EUnit tests in my_app"
+	$t printf "%s\n" \
+		"-module(my_app)." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"ok_test() -> ok." \
+		"-endif." > $(APP)/apps/my_app/src/my_app.erl
+
+	$i "Generate a module containing EUnit tests in my_lib"
+	$t printf "%s\n" \
+		"-module(my_lib)." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"ok_test() -> ok." \
+		"-endif." > $(APP)/apps/my_lib/src/my_lib.erl
+
+	$i "Run EUnit on my_app only"
+	$t $(MAKE) -C $(APP)/apps/my_app eunit | grep "Test passed." | wc -l | grep -q "1"
+
 eunit-apps-only: build clean
 
 	$i "Create a multi application repository with no root application"

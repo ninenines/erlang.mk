@@ -47,8 +47,16 @@ dep_repo = $(patsubst git://github.com/%,https://github.com/%, \
 dep_commit = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 3,$(dep_$(1))),$(pkg_$(1)_commit)))
 
 LOCAL_DEPS_DIRS = $(foreach a,$(LOCAL_DEPS),$(if $(wildcard $(APPS_DIR)/$(a)),$(APPS_DIR)/$(a)))
-ALL_APPS_DIRS = $(if $(wildcard $(APPS_DIR)/),$(filter-out $(APPS_DIR),$(shell find $(APPS_DIR) -maxdepth 1 -type d)))
 ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(foreach dep,$(filter-out $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)),$(call dep_name,$(dep))))
+
+# When we are calling an app directly we don't want to include it here
+# otherwise it'll be treated both as an apps and a top-level project.
+ALL_APPS_DIRS = $(if $(wildcard $(APPS_DIR)/),$(filter-out $(APPS_DIR),$(shell find $(APPS_DIR) -maxdepth 1 -type d)))
+ifdef ROOT_DIR
+ifndef IS_APP
+ALL_APPS_DIRS := $(filter-out $(APPS_DIR)/$(notdir $(CURDIR)),$(ALL_APPS_DIRS))
+endif
+endif
 
 ifeq ($(filter $(APPS_DIR) $(DEPS_DIR),$(subst :, ,$(ERL_LIBS))),)
 ifeq ($(ERL_LIBS),)
@@ -82,9 +90,9 @@ ifndef IS_APP
 		mkdir -p $$dep/ebin; \
 	done
 endif
-# at the toplevel: if LOCAL_DEPS is defined with at least one local app, only
-# compile that list of apps. otherwise, compile everything.
-# within an app: compile all LOCAL_DEPS that are (uncompiled) local apps
+# At the toplevel: if LOCAL_DEPS is defined with at least one local app, only
+# compile that list of apps. Otherwise, compile everything.
+# Within an app: compile all LOCAL_DEPS that are (uncompiled) local apps.
 	$(verbose) set -e; for dep in $(if $(LOCAL_DEPS_DIRS)$(IS_APP),$(LOCAL_DEPS_DIRS),$(ALL_APPS_DIRS)) ; do \
 		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/apps.log; then \
 			:; \
