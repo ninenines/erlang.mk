@@ -76,9 +76,9 @@ PROJECT_DESCRIPTION = New project
 PROJECT_VERSION = 0.1.0
 
 # Make sure we know where the applications are located.
-ROOT_DIR := $(call core_relpath,$(dir $(ERLANG_MK_FILENAME)),$(APPS_DIR)/app)
-APPS_DIR := ..
-DEPS_DIR := $(call core_relpath,$(DEPS_DIR),$(APPS_DIR)/app)
+ROOT_DIR ?= $(call core_relpath,$(dir $(ERLANG_MK_FILENAME)),$(APPS_DIR)/app)
+APPS_DIR ?= ..
+DEPS_DIR ?= $(call core_relpath,$(DEPS_DIR),$(APPS_DIR)/app)
 
 include $$(ROOT_DIR)/erlang.mk
 endef
