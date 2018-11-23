@@ -78,8 +78,6 @@ eunit-apps-only: build clean
 	$i "Check that EUnit runs tests"
 	$t $(MAKE) -C $(APP) eunit | grep -q "Test passed."
 
-	$i "Check that EUnit runs tests"
-
 eunit-apps-only-error: build clean
 
 	$i "Create a multi application repository with no root application"
