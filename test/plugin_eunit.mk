@@ -14,7 +14,7 @@ eunit-all: build clean
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
 	$i "Check that EUnit detects no tests"
-	$t $(MAKE) -C $(APP) eunit | grep -q "There were no tests to run."
+	$t $(MAKE) -C $(APP) eunit | grep -c "There were no tests to run." | grep -q 1
 
 	$i "Generate a module containing EUnit tests"
 	$t printf "%s\n" \
@@ -32,7 +32,7 @@ eunit-all: build clean
 	$t $(ERL) -pa $(APP)/ebin -eval 'code:load_file($(APP)), false = erlang:function_exported($(APP), ok_test, 0), halt()'
 
 	$i "Check that EUnit runs tests"
-	$t $(MAKE) -C $(APP) eunit | grep -q "Test passed."
+	$t $(MAKE) -C $(APP) eunit | grep -c "Test passed." | grep -q 1
 
 	$i "Add a failing test to the module"
 	$t printf "%s\n" \
@@ -112,7 +112,7 @@ eunit-apps-one-app-tested: build clean
 		"-endif." > $(APP)/apps/my_lib/src/my_lib.erl
 
 	$i "Run EUnit on my_app only"
-	$t $(MAKE) -C $(APP)/apps/my_app eunit | grep "Test passed." | wc -l | grep -q "1"
+	$t $(MAKE) -C $(APP)/apps/my_app eunit | grep -c "Test passed." | grep -q 1
 
 eunit-apps-only: build clean
 
@@ -128,7 +128,7 @@ eunit-apps-only: build clean
 	$t $(MAKE) -C $(APP) new-lib in=my_lib $v
 
 	$i "Check that EUnit detects no tests"
-	$t $(MAKE) -C $(APP) eunit | grep -q "There were no tests to run."
+	$t $(MAKE) -C $(APP) eunit | grep -c "There were no tests to run." | grep -q 2
 
 	$i "Generate a module containing EUnit tests in my_app"
 	$t printf "%s\n" \
@@ -147,7 +147,7 @@ eunit-apps-only: build clean
 		"-endif." > $(APP)/apps/my_lib/src/my_lib.erl
 
 	$i "Check that EUnit runs tests"
-	$t $(MAKE) -C $(APP) eunit | grep -q "Test passed."
+	$t $(MAKE) -C $(APP) eunit | grep -c "Test passed." | grep -q 2
 
 eunit-apps-only-error: build clean
 
@@ -166,7 +166,7 @@ eunit-apps-only-error: build clean
 	$t $(MAKE) -C $(APP) new-lib in=my_lib $v
 
 	$i "Check that EUnit detects no tests"
-	$t $(MAKE) -C $(APP) eunit | grep -q "There were no tests to run."
+	$t $(MAKE) -C $(APP) eunit | grep -c "There were no tests to run." | grep -q 3
 
 	$i "Generate a module containing broken EUnit tests in my_app1"
 	$t printf "%s\n" \
@@ -214,7 +214,7 @@ eunit-check: build clean
 		"-endif." > $(APP)/src/$(APP).erl
 
 	$i "Check that EUnit runs on 'make check'"
-	$t $(MAKE) -C $(APP) check | grep -q "Test passed."
+	$t $(MAKE) -C $(APP) check | grep -c "Test passed." | grep -q 1
 
 eunit-erl-opts: build clean
 
@@ -235,7 +235,7 @@ eunit-erl-opts: build clean
 		"-endif." > $(APP)/src/$(APP).erl
 
 	$i "Check that EUnit uses EUNIT_ERL_OPTS"
-	$t $(MAKE) -C $(APP) eunit | grep -q "hello"
+	$t $(MAKE) -C $(APP) eunit | grep -c "hello" | grep -q 1
 
 eunit-fun: build clean
 
@@ -298,7 +298,7 @@ eunit-priv: build clean
 		"-endif." > $(APP)/src/$(APP).erl
 
 	$i "Check that EUnit can resolve the priv_dir"
-	$t $(MAKE) -C $(APP) tests | grep -q "Test passed."
+	$t $(MAKE) -C $(APP) tests | grep -c "Test passed." | grep -q 1
 
 eunit-test-dir: build clean
 
@@ -323,7 +323,7 @@ eunit-test-dir: build clean
 		"log_test() -> os:cmd(\"echo $(APP)_tests >> eunit.log\")." > $(APP)/test/$(APP)_tests.erl
 
 	$i "Check that EUnit runs both tests"
-	$t $(MAKE) -C $(APP) eunit | grep -q "2 tests passed."
+	$t $(MAKE) -C $(APP) eunit | grep -c "2 tests passed." | grep -q 1
 
 	$i "Check that tests were both run only once"
 	$t printf "%s\n" $(APP) $(APP)_tests | cmp $(APP)/eunit.log -
@@ -344,4 +344,4 @@ eunit-tests: build clean
 		"-endif." > $(APP)/src/$(APP).erl
 
 	$i "Check that EUnit runs on 'make tests'"
-	$t $(MAKE) -C $(APP) tests | grep -q "Test passed."
+	$t $(MAKE) -C $(APP) tests | grep -c "Test passed." | grep -q 1

@@ -14,7 +14,7 @@ ct-all: build clean
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
 	$i "Check that Common Test detects no tests"
-	$t $(MAKE) -C $(APP) ct | grep -q "Nothing to be done for 'ct'."
+	$t $(MAKE) -C $(APP) ct | grep -c "Nothing to be done for 'ct'." | grep -q 1
 
 	$i "Generate a Common Test suite"
 	$t mkdir $(APP)/test
@@ -100,7 +100,7 @@ ct-apps-only: build clean
 		"random_int() -> 4." > $(APP)/apps/my_lib/src/my_lib.erl
 
 	$i "Check that Common Test detects no tests"
-	$t $(MAKE) -C $(APP) ct | grep -q "Nothing to be done for 'ct'."
+	$t $(MAKE) -C $(APP) ct | grep -c "Nothing to be done for 'ct'." | grep -q 2
 
 	$i "Generate a Common Test suite in my_app"
 	$t mkdir $(APP)/apps/my_app/test

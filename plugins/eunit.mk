@@ -64,7 +64,9 @@ EUNIT_MODS = $(foreach mod,$(EUNIT_EBIN_MODS) $(filter-out \
 	$(patsubst %,%_tests,$(EUNIT_EBIN_MODS)),$(EUNIT_TEST_MODS)),'$(mod)')
 
 eunit: test-build $(if $(IS_APP)$(ROOT_DIR),,apps-eunit) cover-data-dir
+ifneq ($(wildcard src/ $(TEST_DIR)),)
 	$(gen_verbose) $(call erlang,$(call eunit.erl,[$(call comma_list,$(EUNIT_MODS))]),$(EUNIT_ERL_OPTS))
+endif
 
 ifneq ($(ALL_APPS_DIRS),)
 apps-eunit:
