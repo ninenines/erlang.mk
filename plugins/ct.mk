@@ -19,7 +19,9 @@ CT_LOGS_DIR ?= $(CURDIR)/logs
 
 tests:: ct
 
+ifndef KEEP_LOGS
 distclean:: distclean-ct
+endif
 
 help::
 	$(verbose) printf "%s\n" "" \
