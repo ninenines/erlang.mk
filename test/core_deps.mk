@@ -297,6 +297,21 @@ core-deps-apps-dir-include-lib: build clean
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
+	$i "Build in a subdirectory"
+	$t $(MAKE) -C $(APP)/deep/libs/boy_app $v
+
+	$i "Check that all compiled files exist (excluding the top-level app)"
+	$t ! test -f $(APP)/$(APP).d
+	$t ! test -f $(APP)/ebin/$(APP).app
+
+	$t test -f $(APP)/deep/libs/boy_app/boy_app.d
+	$t test -f $(APP)/deep/libs/boy_app/ebin/boy_app.app
+	$t test -f $(APP)/deep/libs/boy_app/ebin/boy.beam
+
+	$t test -f $(APP)/deep/libs/girl_app/girl_app.d
+	$t test -f $(APP)/deep/libs/girl_app/ebin/girl_app.app
+	$t test -f $(APP)/deep/libs/girl_app/ebin/girl.beam
+
 core-deps-apps-new-app: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
