@@ -46,3 +46,16 @@ the following to your Makefile:
 ----
 docs:: edoc
 ----
+
+=== Running EDoc on all applications
+
+In a multi-application project you may want to run EDoc
+against all applications at the same time, instead of
+against each applications independently. To do so, you
+need to configure the `EDOC_SRC_DIRS` at the end of
+your Makefile, after including 'erlang.mk':
+
+[source,make]
+----
+EDOC_SRC_DIRS = $(ALL_APPS_DIRS)
+----
