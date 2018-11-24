@@ -86,3 +86,13 @@ endif
 
 	$i "Check that all files were removed"
 	$t test ! -e $(APP)/c_src/env.mk
+
+c-src-nif-missing-name: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Try to generate a NIF without giving it a name"
+	$t ! $(MAKE) -C $(APP) new-nif $v

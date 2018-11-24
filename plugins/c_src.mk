@@ -226,6 +226,9 @@ endif
 ifneq ($(wildcard src/$n.erl),)
 	$(error Error: src/$n.erl already exists)
 endif
+ifndef n
+	$(error Usage: $(MAKE) new-nif n=NAME [in=APP])
+endif
 ifdef in
 	$(verbose) $(MAKE) -C $(APPS_DIR)/$(in)/ new-nif n=$n in=
 else
