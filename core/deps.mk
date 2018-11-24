@@ -544,6 +544,16 @@ define dep_fetch_git
 	cd $(DEPS_DIR)/$(call dep_name,$(1)) && git checkout -q $(call dep_commit,$(1));
 endef
 
+define dep_fetch_git-subfolder
+	mkdir -p $(ERLANG_MK_TMP)/git-subfolder; \
+	git clone -q -n -- $(call dep_repo,$1) \
+		$(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1); \
+	cd $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1) \
+		&& git checkout -q $(call dep_commit,$1); \
+	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)/$(word 4,$(dep_$(1))) \
+		$(DEPS_DIR)/$(call dep_name,$1);
+endef
+
 define dep_fetch_git-submodule
 	git submodule update --init -- $(DEPS_DIR)/$1;
 endef

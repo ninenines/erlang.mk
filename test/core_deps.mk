@@ -342,6 +342,47 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
 		halt()"
 
+core-deps-fetch-git-subfolder: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap a new OTP library named my_dep as a subfolder inside $(APP)"
+	$t mkdir -p $(APP)/git_repo/my_dep
+	$t cp ../erlang.mk $(APP)/git_repo/my_dep/
+	$t $(MAKE) -C $(APP)/git_repo/my_dep/ -f erlang.mk bootstrap-lib $v
+# Create an empty file so src/ gets committed.
+	$t touch $(APP)/git_repo/my_dep/src/README
+	$t cd $(APP)/git_repo && \
+		git init -q && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Tests"
+
+	$i "Add my_dep to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git-subfolder file://$(abspath $(APP)/git_repo) master my_dep\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add my_dep to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tmy_dep,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the dependency was fetched"
+	$t test -d $(APP)/deps/my_dep
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
+		[ok = application:load(App) || App <- [$(APP), my_dep]], \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(my_dep, Deps), \
+		halt()"
+
 core-deps-fetch-git-submodule: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
