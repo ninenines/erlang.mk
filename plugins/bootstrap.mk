@@ -421,7 +421,8 @@ ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif
 	$(eval p := $(PROJECT))
-	$(if $(findstring -,$p),$(error Error: The dash cannot be used in application names))
+	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
+		$(error Error: Invalid characters in the application name))
 	$(eval n := $(PROJECT)_sup)
 	$(call render_template,bs_Makefile,Makefile)
 	$(verbose) echo "include erlang.mk" >> Makefile
@@ -437,7 +438,8 @@ ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif
 	$(eval p := $(PROJECT))
-	$(if $(findstring -,$p),$(error Error: The dash cannot be used in application names))
+	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
+		$(error Error: Invalid characters in the application name))
 	$(call render_template,bs_Makefile,Makefile)
 	$(verbose) echo "include erlang.mk" >> Makefile
 	$(verbose) mkdir src/
@@ -466,7 +468,8 @@ ifneq ($(wildcard $(APPS_DIR)/$in),)
 	$(error Error: Application $in already exists)
 endif
 	$(eval p := $(in))
-	$(if $(findstring -,$p),$(error Error: The dash cannot be used in application names))
+	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
+		$(error Error: Invalid characters in the application name))
 	$(eval n := $(in)_sup)
 	$(verbose) mkdir -p $(APPS_DIR)/$p/src/
 	$(call render_template,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
@@ -484,7 +487,8 @@ ifneq ($(wildcard $(APPS_DIR)/$in),)
 	$(error Error: Application $in already exists)
 endif
 	$(eval p := $(in))
-	$(if $(findstring -,$p),$(error Error: The dash cannot be used in application names))
+	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
+		$(error Error: Invalid characters in the application name))
 	$(verbose) mkdir -p $(APPS_DIR)/$p/src/
 	$(call render_template,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
 ifdef LEGACY
