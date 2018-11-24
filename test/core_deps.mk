@@ -565,32 +565,32 @@ endif
 	$t test -d $(APP)/deps/ranch
 
 define add_dep_and_subdep
-	$i "Bootstrap a new OTP library named $(APP)-$(1)subdep"
-	$t mkdir $(APP)-$(1)subdep/
-	$t cp ../erlang.mk $(APP)-$(1)subdep/
-	$t $(MAKE) -C $(APP)-$(1)subdep --no-print-directory -f erlang.mk bootstrap-lib $$v
+	$i "Bootstrap a new OTP library named $(APP)_$(1)subdep"
+	$t mkdir $(APP)_$(1)subdep/
+	$t cp ../erlang.mk $(APP)_$(1)subdep/
+	$t $(MAKE) -C $(APP)_$(1)subdep --no-print-directory -f erlang.mk bootstrap-lib $$v
 
-	$i "Create a Git repository for $(APP)-$(1)subdep"
-	$t (cd $(APP)-$(1)subdep && \
+	$i "Create a Git repository for $(APP)_$(1)subdep"
+	$t (cd $(APP)_$(1)subdep && \
 		git init -q && \
 		git config user.name "Testsuite" && \
 		git config user.email "testsuite@erlang.mk" && \
 		git add . && \
 		git commit -q --no-gpg-sign -m "Initial commit")
 
-	$i "Bootstrap a new OTP library named $(APP)-$(1)dep"
-	$t mkdir $(APP)-$(1)dep/
-	$t cp ../erlang.mk $(APP)-$(1)dep/
-	$t $(MAKE) -C $(APP)-$(1)dep --no-print-directory -f erlang.mk bootstrap-lib $$v
+	$i "Bootstrap a new OTP library named $(APP)_$(1)dep"
+	$t mkdir $(APP)_$(1)dep/
+	$t cp ../erlang.mk $(APP)_$(1)dep/
+	$t $(MAKE) -C $(APP)_$(1)dep --no-print-directory -f erlang.mk bootstrap-lib $$v
 
-	$i "Add $(APP)-$(1)subdep as a dependency"
+	$i "Add $(APP)_$(1)subdep as a dependency"
 	$t perl -ni.bak -e \
-		'print;if ($$.==1) {print "DEPS = $(1)subdep\ndep_$(1)subdep = git file://$(abspath $(APP)-$(1)subdep) master\n"}' \
-		$(APP)-$(1)dep/Makefile
-	$t rm $(APP)-$(1)dep/Makefile.bak
+		'print;if ($$.==1) {print "DEPS = $(1)subdep\ndep_$(1)subdep = git file://$(abspath $(APP)_$(1)subdep) master\n"}' \
+		$(APP)_$(1)dep/Makefile
+	$t rm $(APP)_$(1)dep/Makefile.bak
 
-	$i "Create a Git repository for $(APP)-$(1)dep"
-	$t (cd $(APP)-$(1)dep && \
+	$i "Create a Git repository for $(APP)_$(1)dep"
+	$t (cd $(APP)_$(1)dep && \
 		git init -q && \
 		git config user.name "Testsuite" && \
 		git config user.email "testsuite@erlang.mk" && \
@@ -618,11 +618,11 @@ DOC_DEPS = docdep\
 REL_DEPS = reldep\
 TEST_DEPS = testdep\
 SHELL_DEPS = shelldep\
-dep_dep = git file://$(abspath $(APP)-dep) master\
-dep_docdep = git file://$(abspath $(APP)-docdep) master\
-dep_reldep = git file://$(abspath $(APP)-reldep) master\
-dep_testdep = git file://$(abspath $(APP)-testdep) master\
-dep_shelldep = git file://$(abspath $(APP)-shelldep) master\
+dep_dep = git file://$(abspath $(APP)_dep) master\
+dep_docdep = git file://$(abspath $(APP)_docdep) master\
+dep_reldep = git file://$(abspath $(APP)_reldep) master\
+dep_testdep = git file://$(abspath $(APP)_testdep) master\
+dep_shelldep = git file://$(abspath $(APP)_shelldep) master\
 ' $(APP)/Makefile
 	$t rm $(APP)/Makefile.bak
 
