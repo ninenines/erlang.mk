@@ -115,3 +115,7 @@ else
 install:
 	@echo "Usage: $(MAKE) install p=<package name>"
 endif
+
+ifneq ($(strip $(LATEST_ERLANG_OTP)),)
+include core/kerl.mk
+endif
