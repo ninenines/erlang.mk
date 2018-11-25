@@ -69,7 +69,7 @@ ifneq ($(wildcard src/ $(TEST_DIR)),)
 endif
 
 ifneq ($(ALL_APPS_DIRS),)
-apps-eunit:
+apps-eunit: test-build
 	$(verbose) eunit_retcode=0 ; for app in $(ALL_APPS_DIRS); do $(MAKE) -C $$app eunit IS_APP=1; \
 		[ $$? -ne 0 ] && eunit_retcode=1 ; done ; \
 		exit $$eunit_retcode

@@ -98,7 +98,7 @@ endif
 			:; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/apps.log; \
-			$(MAKE) -C $$dep IS_APP=1; \
+			$(MAKE) -C $$dep $(if $(IS_TEST),test-build-app) IS_APP=1; \
 		fi \
 	done
 

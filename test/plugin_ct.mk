@@ -87,46 +87,46 @@ ct-apps-only: build clean
 	$t cp ../erlang.mk $(APP)/
 	$t echo "include erlang.mk" > $(APP)/Makefile
 
-	$i "Create a new application named my_app"
-	$t $(MAKE) -C $(APP) new-app in=my_app $v
+	$i "Create a new application named my_app_only"
+	$t $(MAKE) -C $(APP) new-app in=my_app_only $v
 
-	$i "Create a new library named my_lib"
-	$t $(MAKE) -C $(APP) new-lib in=my_lib $v
+	$i "Create a new library named my_lib_only"
+	$t $(MAKE) -C $(APP) new-lib in=my_lib_only $v
 
-	$i "Populate my_lib"
+	$i "Populate my_lib_only"
 	$t printf "%s\n" \
-		"-module(my_lib)." \
+		"-module(my_lib_only)." \
 		"-export([random_int/0])." \
-		"random_int() -> 4." > $(APP)/apps/my_lib/src/my_lib.erl
+		"random_int() -> 4." > $(APP)/apps/my_lib_only/src/my_lib_only.erl
 
 	$i "Check that Common Test detects no tests"
 	$t $(MAKE) -C $(APP) ct | grep -c "Nothing to be done for 'ct'." | grep -q 2
 
-	$i "Generate a Common Test suite in my_app"
-	$t mkdir $(APP)/apps/my_app/test
+	$i "Generate a Common Test suite in my_app_only"
+	$t mkdir $(APP)/apps/my_app_only/test
 	$t printf "%s\n" \
-		"-module(my_app_SUITE)." \
-		"-export([all/0, ok/1, call_my_lib/1])." \
-		"all() -> [ok, call_my_lib]." \
+		"-module(my_app_only_SUITE)." \
+		"-export([all/0, ok/1, call_my_lib_only/1])." \
+		"all() -> [ok, call_my_lib_only]." \
 		"ok(_) -> ok." \
-		"call_my_lib(_) -> 4 = my_lib:random_int()." > $(APP)/apps/my_app/test/my_app_SUITE.erl
+		"call_my_lib_only(_) -> 4 = my_lib_only:random_int()." > $(APP)/apps/my_app_only/test/my_app_only_SUITE.erl
 
-	$i "Generate a Common Test suite in my_lib"
-	$t mkdir $(APP)/apps/my_lib/test
+	$i "Generate a Common Test suite in my_lib_only"
+	$t mkdir $(APP)/apps/my_lib_only/test
 	$t printf "%s\n" \
-		"-module(my_lib_SUITE)." \
+		"-module(my_lib_only_SUITE)." \
 		"-export([all/0, ok/1])." \
 		"all() -> [ok]." \
-		"ok(_) -> ok." > $(APP)/apps/my_lib/test/my_lib_SUITE.erl
+		"ok(_) -> ok." > $(APP)/apps/my_lib_only/test/my_lib_only_SUITE.erl
 
 	$i "Check that Common Test runs tests"
 # We can't pipe CT's output without it crashing, so let's check that
 # the command succeeds and log files are created instead.
-	$t test ! -e $(APP)/apps/my_app/logs/index.html
-	$t test ! -e $(APP)/apps/my_lib/logs/index.html
+	$t test ! -e $(APP)/apps/my_app_only/logs/index.html
+	$t test ! -e $(APP)/apps/my_lib_only/logs/index.html
 	$t $(MAKE) -C $(APP) ct $v
-	$t test -f $(APP)/apps/my_app/logs/index.html
-	$t test -f $(APP)/apps/my_lib/logs/index.html
+	$t test -f $(APP)/apps/my_app_only/logs/index.html
+	$t test -f $(APP)/apps/my_lib_only/logs/index.html
 
 ct-case: build clean
 
