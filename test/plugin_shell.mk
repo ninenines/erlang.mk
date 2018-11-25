@@ -41,5 +41,8 @@ shell-test-dir: build clean
 	$t printf "%s\n" \
 		"-module(foo)." > $(APP)/test/foo.erl
 
+	$i "Build the test files"
+	$t $(MAKE) -C $(APP) test-build $v
+
 	$i "Check that the module is visible"
-	$t $(MAKE) -C $(APP) test-build shell SHELL_OPTS="-eval 'foo:module_info()' -eval 'halt()'" $v
+	$t $(MAKE) -C $(APP) shell SHELL_OPTS="-eval 'foo:module_info()' -eval 'halt()'" $v
