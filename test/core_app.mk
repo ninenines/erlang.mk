@@ -2042,8 +2042,8 @@ core-app-hrl-multiapps-include-lib: build clean
 	$t test -f $(APP)/apps/my_app/src/use_blue.erl
 	$t test -f $(APP)/apps/my_app/src/use_red.erl
 ifdef LEGACY
-	$t test -f $(APP)/apps/my_lib.app.src
-	$t test -f $(APP)/apps/my_app.app.src
+	$t test -f $(APP)/apps/my_lib/src/my_lib.app.src
+	$t test -f $(APP)/apps/my_app/src/my_app.app.src
 endif
 
 	$i "Check that all build artifacts are removed"
@@ -2147,8 +2147,8 @@ core-app-hrl-multiapps-include-lib-recursive: build clean
 	$t test -f $(APP)/apps/my_app/src/use_blue.erl
 	$t test -f $(APP)/apps/my_app/src/use_red.erl
 ifdef LEGACY
-	$t test -f $(APP)/apps/my_lib.app.src
-	$t test -f $(APP)/apps/my_app.app.src
+	$t test -f $(APP)/apps/my_lib/src/my_lib.app.src
+	$t test -f $(APP)/apps/my_app/src/my_app.app.src
 endif
 
 	$i "Check that all build artifacts are removed"
@@ -2376,16 +2376,16 @@ core-app-hrl-deps: build clean
 	$t test -f $(APP)/apps/my_app/ebin/girl.beam
 	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
 
-# Applications in apps are compiled automatically but not added
-# to the application resource file unless they are listed in LOCAL_DEPS.
+ifndef LEGACY
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/apps/*/ebin/ -eval " \
 		ok = application:load(my_app), \
 		{ok, MyAppDeps} = application:get_key(my_app, applications), \
 		true = lists:member(cowlib, MyAppDeps), \
 		halt()"
+endif
 
-$i "Touch cowlib .hrl file; check that only required files are rebuilt"
+	$i "Touch cowlib .hrl file; check that only required files are rebuilt"
 	$t printf "%s\n" \
 		$(APP)/apps/my_app/my_app.d \
 		$(APP)/apps/my_app/ebin/my_app.app \
@@ -2438,12 +2438,14 @@ $i "Touch cowlib .hrl file; check that only required files are rebuilt"
 	$t test -f $(APP)/apps/my_app/ebin/girl.beam
 	$t test -d $(APP)/deps/cowlib
 
+ifndef LEGACY
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/apps/*/ebin/ -eval " \
 		ok = application:load(my_app), \
 		{ok, MyAppDeps} = application:get_key(my_app, applications), \
 		true = lists:member(cowlib, MyAppDeps), \
 		halt()"
+endif
 
 core-app-hrl-include-loop: build clean
 
@@ -2616,8 +2618,8 @@ core-app-hrl-multiapps-include-loop-define-protected: build clean
 	$t test -f $(APP)/apps/my_app/src/use_blue.erl
 	$t test -f $(APP)/apps/my_app/src/use_red.erl
 ifdef LEGACY
-	$t test -f $(APP)/apps/my_lib.app.src
-	$t test -f $(APP)/apps/my_app.app.src
+	$t test -f $(APP)/apps/my_lib/src/my_lib.app.src
+	$t test -f $(APP)/apps/my_app/src/my_app.app.src
 endif
 
 	$i "Check that all build artifacts are removed"
