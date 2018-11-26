@@ -28,8 +28,5 @@ $(call comma_list,$(foreach d,$(DEPS),\
 {erl_opts, $(call compat_erlc_opts_to_list,$(ERLC_OPTS))}.
 endef
 
-$(eval _compat_rebar_config = $$(compat_rebar_config))
-$(eval export _compat_rebar_config)
-
 rebar.config:
-	$(gen_verbose) echo "$${_compat_rebar_config}" > rebar.config
+	$(gen_verbose) $(call core_render,compat_rebar_config,rebar.config)

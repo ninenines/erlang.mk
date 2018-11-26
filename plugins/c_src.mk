@@ -233,6 +233,6 @@ ifdef in
 	$(verbose) $(MAKE) -C $(APPS_DIR)/$(in)/ new-nif n=$n in=
 else
 	$(verbose) mkdir -p $(C_SRC_DIR) src/
-	$(call render_template,bs_c_nif,$(C_SRC_DIR)/$n.c)
-	$(call render_template,bs_erl_nif,src/$n.erl)
+	$(verbose) $(call core_render,bs_c_nif,$(C_SRC_DIR)/$n.c)
+	$(verbose) $(call core_render,bs_erl_nif,src/$n.erl)
 endif

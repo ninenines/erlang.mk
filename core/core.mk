@@ -182,6 +182,10 @@ core_ls = $(filter-out $(1),$(shell echo $(1)))
 # @todo Use a solution that does not require using perl.
 core_relpath = $(shell perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"' $1 $2)
 
+define core_render
+	printf -- '$(subst $(newline),\n,$(subst %,%%,$(subst ','\'',$(subst $(tab),$(WS),$(call $(1))))))\n' > $(2)
+endef
+
 # Automated update.
 
 ERLANG_MK_REPO ?= https://github.com/ninenines/erlang.mk

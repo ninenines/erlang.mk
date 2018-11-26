@@ -38,7 +38,7 @@ __ARCHIVE_BELOW__
 endef
 
 sfx:
-	$(call render_template,sfx_stub,$(SFX_OUTPUT_FILE))
+	$(verbose) $(call core_render,sfx_stub,$(SFX_OUTPUT_FILE))
 	$(gen_verbose) cat $(SFX_ARCHIVE) >> $(SFX_OUTPUT_FILE)
 	$(verbose) chmod +x $(SFX_OUTPUT_FILE)
 

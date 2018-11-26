@@ -398,10 +398,6 @@ endef
 
 # Plugin-specific targets.
 
-define render_template
-	$(verbose) printf -- '$(subst $(newline),\n,$(subst %,%%,$(subst ','\'',$(subst $(tab),$(WS),$(call $(1))))))\n' > $(2)
-endef
-
 ifndef WS
 ifdef SP
 WS = $(subst a,,a $(wordlist 1,$(SP),a a a a a a a a a a a a a a a a a a a a))
@@ -418,14 +414,14 @@ endif
 	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
 		$(error Error: Invalid characters in the application name))
 	$(eval n := $(PROJECT)_sup)
-	$(call render_template,bs_Makefile,Makefile)
+	$(verbose) $(call core_render,bs_Makefile,Makefile)
 	$(verbose) echo "include erlang.mk" >> Makefile
 	$(verbose) mkdir src/
 ifdef LEGACY
-	$(call render_template,bs_appsrc,src/$(PROJECT).app.src)
+	$(verbose) $(call core_render,bs_appsrc,src/$(PROJECT).app.src)
 endif
-	$(call render_template,bs_app,src/$(PROJECT)_app.erl)
-	$(call render_template,tpl_supervisor,src/$(PROJECT)_sup.erl)
+	$(verbose) $(call core_render,bs_app,src/$(PROJECT)_app.erl)
+	$(verbose) $(call core_render,tpl_supervisor,src/$(PROJECT)_sup.erl)
 
 bootstrap-lib:
 ifneq ($(wildcard src/),)
@@ -434,11 +430,11 @@ endif
 	$(eval p := $(PROJECT))
 	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
 		$(error Error: Invalid characters in the application name))
-	$(call render_template,bs_Makefile,Makefile)
+	$(verbose) $(call core_render,bs_Makefile,Makefile)
 	$(verbose) echo "include erlang.mk" >> Makefile
 	$(verbose) mkdir src/
 ifdef LEGACY
-	$(call render_template,bs_appsrc_lib,src/$(PROJECT).app.src)
+	$(verbose) $(call core_render,bs_appsrc_lib,src/$(PROJECT).app.src)
 endif
 
 bootstrap-rel:
@@ -449,10 +445,10 @@ ifneq ($(wildcard rel/),)
 	$(error Error: rel/ directory already exists)
 endif
 	$(eval p := $(PROJECT))
-	$(call render_template,bs_relx_config,relx.config)
+	$(verbose) $(call core_render,bs_relx_config,relx.config)
 	$(verbose) mkdir rel/
-	$(call render_template,bs_sys_config,rel/sys.config)
-	$(call render_template,bs_vm_args,rel/vm.args)
+	$(verbose) $(call core_render,bs_sys_config,rel/sys.config)
+	$(verbose) $(call core_render,bs_vm_args,rel/vm.args)
 
 new-app:
 ifndef in
@@ -466,12 +462,12 @@ endif
 		$(error Error: Invalid characters in the application name))
 	$(eval n := $(in)_sup)
 	$(verbose) mkdir -p $(APPS_DIR)/$p/src/
-	$(call render_template,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
+	$(verbose) $(call core_render,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
 ifdef LEGACY
-	$(call render_template,bs_appsrc,$(APPS_DIR)/$p/src/$p.app.src)
+	$(verbose) $(call core_render,bs_appsrc,$(APPS_DIR)/$p/src/$p.app.src)
 endif
-	$(call render_template,bs_app,$(APPS_DIR)/$p/src/$p_app.erl)
-	$(call render_template,tpl_supervisor,$(APPS_DIR)/$p/src/$p_sup.erl)
+	$(verbose) $(call core_render,bs_app,$(APPS_DIR)/$p/src/$p_app.erl)
+	$(verbose) $(call core_render,tpl_supervisor,$(APPS_DIR)/$p/src/$p_sup.erl)
 
 new-lib:
 ifndef in
@@ -484,9 +480,9 @@ endif
 	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
 		$(error Error: Invalid characters in the application name))
 	$(verbose) mkdir -p $(APPS_DIR)/$p/src/
-	$(call render_template,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
+	$(verbose) $(call core_render,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
 ifdef LEGACY
-	$(call render_template,bs_appsrc_lib,$(APPS_DIR)/$p/src/$p.app.src)
+	$(verbose) $(call core_render,bs_appsrc_lib,$(APPS_DIR)/$p/src/$p.app.src)
 endif
 
 new:
@@ -500,9 +496,9 @@ ifndef n
 	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME [in=APP])
 endif
 ifdef in
-	$(call render_template,tpl_$(t),$(APPS_DIR)/$(in)/src/$(n).erl)
+	$(verbose) $(call core_render,tpl_$(t),$(APPS_DIR)/$(in)/src/$(n).erl)
 else
-	$(call render_template,tpl_$(t),src/$(n).erl)
+	$(verbose) $(call core_render,tpl_$(t),src/$(n).erl)
 endif
 
 list-templates:
