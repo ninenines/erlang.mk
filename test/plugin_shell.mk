@@ -6,6 +6,25 @@ SHELL_TARGETS = $(call list_targets,shell)
 
 shell: $(SHELL_TARGETS)
 
+shell-compile: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Ensure our application is recompiled before the shell runs"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "shell:: app\n"}' $(APP)/Makefile
+
+	$i "Run the shell"
+	$t $(MAKE) -C $(APP) shell SHELL_OPTS="-eval 'halt()'" $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/$(APP)_app.beam
+	$t test -f $(APP)/ebin/$(APP)_sup.beam
+
 shell-default: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
