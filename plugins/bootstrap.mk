@@ -51,30 +51,24 @@ endef
 
 # To prevent autocompletion issues with ZSH, we add "include erlang.mk"
 # separately during the actual bootstrap.
-ifdef SP
 define bs_Makefile
 PROJECT = $p
 PROJECT_DESCRIPTION = New project
 PROJECT_VERSION = 0.1.0
-
+$(if $(SP),
 # Whitespace to be used when creating files from templates.
 SP = $(SP)
-
+)
 endef
-else
-define bs_Makefile
-PROJECT = $p
-PROJECT_DESCRIPTION = New project
-PROJECT_VERSION = 0.1.0
-
-endef
-endif
 
 define bs_apps_Makefile
 PROJECT = $p
 PROJECT_DESCRIPTION = New project
 PROJECT_VERSION = 0.1.0
-
+$(if $(SP),
+# Whitespace to be used when creating files from templates.
+SP = $(SP)
+)
 # Make sure we know where the applications are located.
 ROOT_DIR ?= $(call core_relpath,$(dir $(ERLANG_MK_FILENAME)),$(APPS_DIR)/app)
 APPS_DIR ?= ..

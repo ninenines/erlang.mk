@@ -130,6 +130,70 @@ endif
 		{ok, []} = application:get_key($(APP), modules), \
 		halt()"
 
+bootstrap-new-app-sp: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap SP=2 $v
+
+	$i "Create a new application my_app"
+	$t $(MAKE) -C $(APP) new-app in=my_app $v
+
+	$i "Check that SP is included in the new Makefile"
+	$t grep -q "SP = 2" $(APP)/apps/my_app/Makefile
+
+	$i "Check that bootstrapped files have no tabs"
+ifdef LEGACY
+	$t test -z "`awk -F "\t" 'NF > 1' $(APP)/apps/my_app/src/my_app.app.src`"
+endif
+	$t test -z "`awk -F "\t" 'NF > 1' $(APP)/apps/my_app/src/my_app_app.erl`"
+	$t test -z "`awk -F "\t" 'NF > 1' $(APP)/apps/my_app/src/my_app_sup.erl`"
+
+# Everything looks OK, but let's compile the application to make sure.
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/$(APP)_app.beam
+	$t test -f $(APP)/ebin/$(APP)_sup.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/my_app_app.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_app_sup.beam
+
+bootstrap-new-app-sp-override: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap SP=2 $v
+
+	$i "Create a new application my_app"
+	$t $(MAKE) -C $(APP) new-app in=my_app SP=8 $v
+
+	$i "Check that the SP we provided is included in the new Makefile"
+	$t grep -q "SP = 8" $(APP)/apps/my_app/Makefile
+
+	$i "Check that bootstrapped files have no tabs"
+ifdef LEGACY
+	$t test -z "`awk -F "\t" 'NF > 1' $(APP)/apps/my_app/src/my_app.app.src`"
+endif
+	$t test -z "`awk -F "\t" 'NF > 1' $(APP)/apps/my_app/src/my_app_app.erl`"
+	$t test -z "`awk -F "\t" 'NF > 1' $(APP)/apps/my_app/src/my_app_sup.erl`"
+
+# Everything looks OK, but let's compile the application to make sure.
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/$(APP)_app.beam
+	$t test -f $(APP)/ebin/$(APP)_sup.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/my_app_app.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_app_sup.beam
+
 bootstrap-rel: build clean
 
 	$i "Bootstrap a new release-enabled OTP application named $(APP)"
