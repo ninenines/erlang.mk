@@ -515,6 +515,28 @@ projects using the `NO_AUTOPATCH` variable:
 [source,make]
 NO_AUTOPATCH = cowboy ranch cowlib
 
+=== Dealing with duplicate modules
+
+When there are duplicate modules found in both applications
+and their dependencies, some tasks may fail. Erlang expects
+modules to be unique in general.
+
+When the duplicates are found in dependencies, you will need
+to remove one of the duplicates at fetch time. To do so, you
+can add a rule similar to this to your Makefile before including
+'erlang.mk':
+
+[source,make]
+----
+DEPS_DIR = $(CURDIR)/deps
+
+deps:: $(DEPS_DIR)/cowlib
+	$(verbose) rm -f $(DEPS_DIR)/cowlib/src/cow_ws.erl
+----
+
+This must be done from the application that has this dependency.
+Only define the `DEPS_DIR` variable if necessary.
+
 === Skipping deps
 
 It is possible to temporarily skip all dependency operations.
