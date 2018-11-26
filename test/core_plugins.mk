@@ -47,7 +47,7 @@ core-plugins-early: build clean
 
 	$i "Write external plugin adddep_plugin"
 	$t mkdir $(APP)/adddep_plugin
-	$t echo -e "DEPS += cowlib" >> $(APP)/adddep_plugin/early-plugins.mk
+	$t echo "DEPS += cowlib" >> $(APP)/adddep_plugin/early-plugins.mk
 
 	$i "Inject external plugin dependencies into $(APP)"
 	$t echo 'DEPS = ranch' >> $(APP)/Makefile.tmp
@@ -227,11 +227,13 @@ core-plugins-test: build clean
 
 	$i "Write external plugin touch_plugin"
 	$t mkdir $(APP)/touch_plugin
-	$t echo -e "app::" >> $(APP)/touch_plugin/plugins.mk
-	$t echo -e "\ttouch markerfile" >> $(APP)/touch_plugin/plugins.mk
-	$t echo -e "test-build:: app" >> $(APP)/touch_plugin/plugins.mk
-	$t echo -e "clean::" >> $(APP)/touch_plugin/plugins.mk
-	$t echo -e "\trm -f markerfile" >> $(APP)/touch_plugin/plugins.mk
+	$t printf "%s\n" \
+		"app::" \
+		"	touch markerfile" \
+		"test-build:: app" \
+		"clean::" \
+		"	rm -f markerfile" \
+		> $(APP)/touch_plugin/plugins.mk
 
 	$i "Inject external plugin dependencies into $(APP)"
 	$t echo 'BUILD_DEPS = touch_plugin' >> $(APP)/Makefile.tmp
