@@ -28,6 +28,9 @@ Alpine Linux and other distributions based on BusyBox come
 with an incompatible `awk` program. Installing the GNU Awk
 (`gawk` on Alpine) solves this issue.
 
+Parallel builds may require the program `flock` that can
+be found in the package `util-linux`.
+
 ==== FreeBSD
 
 FreeBSD comes with binary and source packages:
@@ -55,6 +58,11 @@ is the one provided by Apple.
 .MacPorts
 [source,bash]
 $ sudo port install erlang git gmake
+
+Parallel builds may require the program `flock` which can
+be installed via Homebrew or manually. The instructions
+to install are available from its repository:
+https://github.com/discoteq/flock
 
 === On Windows
 
