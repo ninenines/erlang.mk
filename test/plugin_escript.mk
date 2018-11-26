@@ -34,6 +34,37 @@ escript-build: build clean
 	$i "Check that the escript was removed"
 	$t test ! -e $(APP)/$(APP)
 
+escript-build-deps: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Ranch to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = ranch\n"}' $(APP)/Makefile
+
+	$i "Add lfe.mk to the list of build dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = lfe.mk\ndep_lfe.mk = git https://github.com/ninenines/lfe.mk master\n"}' $(APP)/Makefile
+
+	$i "Generate a module containing a function main/1"
+	$t printf "%s\n" \
+		"-module($(APP))." \
+		"-export([main/1])." \
+		'main(_) -> io:format("good~n").' > $(APP)/src/$(APP).erl
+
+	$i "Build the escript"
+	$t $(MAKE) -C $(APP) escript $v
+
+	$i "Check that the build dependency was fetched"
+	$t test -d $(APP)/deps/lfe.mk
+
+	$i "Check that the escript runs"
+	$t $(APP)/$(APP) | grep -q good
+
+	$i "Check that the escript does not contain the build dependency"
+	$t ! zipinfo $(APP)/$(APP) 2> /dev/null | grep -q lfe
+
 escript-deps: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
