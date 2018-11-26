@@ -26,6 +26,20 @@ ifneq ($(PLATFORM),msys2)
 	$t test -f $(APP)/deps/erlsha2/priv/erlsha2_nif.so
 endif
 
+# This test is expected to fail when run in parallel and flock/lockf is not available.
+core-deps-autopatch-two-rebar: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add two Rebar projects to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = epgsql mochiweb\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
 ifneq ($(PLATFORM),msys2)
 core-deps-build-c-8cc: build clean
 
