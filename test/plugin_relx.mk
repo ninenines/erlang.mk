@@ -299,7 +299,7 @@ relx-vsn: build clean
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
 	$i "Replace the vsn"
-	$t sed -i.bak s/"\"1\""/"{cmd, \"echo -n 2\"}"/ $(APP)/relx.config
+	$t sed -i.bak s/"\"1\""/"{cmd, \"printf 2\"}"/ $(APP)/relx.config
 
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) $v
