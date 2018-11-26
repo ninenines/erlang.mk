@@ -198,8 +198,19 @@ define dep_autopatch_gen
 		"include ../../erlang.mk" > $(DEPS_DIR)/$(1)/Makefile
 endef
 
+# We use flock/lockf when available to avoid concurrency issues.
 define dep_autopatch_fetch_rebar
 	mkdir -p $(ERLANG_MK_TMP); \
+	if command -v flock >/dev/null; then \
+		flock $(ERLANG_MK_TMP)/rebar.lock -c "$(call dep_autopatch_fetch_rebar2)"; \
+	elif command -v lockf >/dev/null; then \
+		lockf $(ERLANG_MK_TMP)/rebar.lock sh -c "$(call dep_autopatch_fetch_rebar2)"; \
+	else \
+		$(call dep_autopatch_fetch_rebar2); \
+	fi
+endef
+
+define dep_autopatch_fetch_rebar2
 	if [ ! -d $(ERLANG_MK_TMP)/rebar ]; then \
 		git clone -q -n -- https://github.com/rebar/rebar $(ERLANG_MK_TMP)/rebar; \
 		cd $(ERLANG_MK_TMP)/rebar; \
