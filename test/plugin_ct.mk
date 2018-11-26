@@ -78,6 +78,9 @@ ct-apps: build clean
 	$t $(MAKE) -C $(APP) ct $v
 
 	$i "Check that Common Test runs tests from a specific test suite"
+	$t $(MAKE) -C $(APP) ct-my_root $v
+
+	$i "Check that Common Test runs tests from a specific test suite using CT_SUITES"
 	$t $(MAKE) -C $(APP) ct CT_SUITES=my_root $v
 
 ct-apps-only: build clean

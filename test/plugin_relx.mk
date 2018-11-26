@@ -53,6 +53,40 @@ relx-rel: build clean
 	$i "Check that the output directory was removed entirely"
 	$t test ! -d $(APP)/_rel/
 
+relx-apps-with-deps: build clean
+
+	$i "Bootstrap a new release as a multi application repository"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib bootstrap-rel $v
+
+	$i "Create a new application my_app"
+	$t $(MAKE) -C $(APP) new-app in=my_app $v
+
+	$i "Include my_app in the release"
+	$t perl -pi.bak -e 's/$(APP),/$(APP), my_app,/' $(APP)/relx.config
+
+	$i "Add Cowlib to the list of dependencies for my_app"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/apps/my_app/Makefile
+
+ifdef LEGACY
+	$i "Add Cowlib to the applications key in the my_app.app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/apps/my_app/src/my_app.app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/apps/my_app/my_app.d
+	$t test -f $(APP)/apps/my_app/ebin/my_app.app
+	$t test -f $(APP)/apps/my_app/ebin/my_app_app.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_app_sup.beam
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
+
+	$i "Check that Cowlib was included in the release"
+	$t test -d $(APP)/_rel/test_relx_apps_with_deps_release/lib/cowlib-1.0.2
+
 relx-bare-rel: build clean
 
 	$i "Bootstrap a new release named $(APP)"
@@ -84,6 +118,7 @@ relx-post-rel: build clean
 	$i "Add relx-post-rel target to Makefile"
 	$t echo "relx-post-rel::" >> $(APP)/Makefile
 	$t echo "	echo test post rel > _rel/$(APP)_release/test_post_rel" >> $(APP)/Makefile
+
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) $v
 
@@ -93,12 +128,12 @@ relx-post-rel: build clean
 	$i "Check that the release was built"
 	$t test -d $(APP)/_rel
 	$t test -d $(APP)/_rel/$(APP)_release
-	$t test -f $(APP)/_rel/$(APP)_release/test_post_rel
-	$t test "test post rel" = "`cat $(APP)/_rel/$(APP)_release/test_post_rel`"
 	$t test -d $(APP)/_rel/$(APP)_release/bin
 	$t test -d $(APP)/_rel/$(APP)_release/lib
 	$t test -d $(APP)/_rel/$(APP)_release/releases
 	$t test -d $(APP)/_rel/$(APP)_release/releases/1
+	$t test -f $(APP)/_rel/$(APP)_release/test_post_rel
+	$t test "test post rel" = "`cat $(APP)/_rel/$(APP)_release/test_post_rel`"
 
 	$i "Clean the application"
 	$t $(MAKE) -C $(APP) clean $v
@@ -110,6 +145,8 @@ relx-post-rel: build clean
 	$t test -d $(APP)/_rel/$(APP)_release/lib
 	$t test -d $(APP)/_rel/$(APP)_release/releases
 	$t test -d $(APP)/_rel/$(APP)_release/releases/1
+	$t test -f $(APP)/_rel/$(APP)_release/test_post_rel
+	$t test "test post rel" = "`cat $(APP)/_rel/$(APP)_release/test_post_rel`"
 
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
