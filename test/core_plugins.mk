@@ -50,11 +50,11 @@ core-plugins-early: build clean
 	$t echo -e "DEPS += cowlib" >> $(APP)/adddep_plugin/early-plugins.mk
 
 	$i "Inject external plugin dependencies into $(APP)"
-	$t echo 'DEPS = ranch' >>$(APP)/Makefile.tmp
-	$t echo 'BUILD_DEPS = adddep_plugin' >>$(APP)/Makefile.tmp
-	$t echo 'DEP_EARLY_PLUGINS = adddep_plugin' >>$(APP)/Makefile.tmp
-	$t echo 'dep_adddep_plugin = cp adddep_plugin' >>$(APP)/Makefile.tmp
-	$t cat $(APP)/Makefile >>$(APP)/Makefile.tmp
+	$t echo 'DEPS = ranch' >> $(APP)/Makefile.tmp
+	$t echo 'BUILD_DEPS = adddep_plugin' >> $(APP)/Makefile.tmp
+	$t echo 'DEP_EARLY_PLUGINS = adddep_plugin' >> $(APP)/Makefile.tmp
+	$t echo 'dep_adddep_plugin = cp adddep_plugin' >> $(APP)/Makefile.tmp
+	$t cat $(APP)/Makefile >> $(APP)/Makefile.tmp
 	$t mv $(APP)/Makefile.tmp $(APP)/Makefile
 
 	$i "Build the application"
@@ -234,10 +234,10 @@ core-plugins-test: build clean
 	$t echo -e "\trm -f markerfile" >> $(APP)/touch_plugin/plugins.mk
 
 	$i "Inject external plugin dependencies into $(APP)"
-	$t echo 'BUILD_DEPS = touch_plugin' >>$(APP)/Makefile.tmp
-	$t echo 'DEP_PLUGINS = touch_plugin' >>$(APP)/Makefile.tmp
-	$t echo 'dep_touch_plugin = cp touch_plugin' >>$(APP)/Makefile.tmp
-	$t cat $(APP)/Makefile >>$(APP)/Makefile.tmp
+	$t echo 'BUILD_DEPS = touch_plugin' >> $(APP)/Makefile.tmp
+	$t echo 'DEP_PLUGINS = touch_plugin' >> $(APP)/Makefile.tmp
+	$t echo 'dep_touch_plugin = cp touch_plugin' >> $(APP)/Makefile.tmp
+	$t cat $(APP)/Makefile >> $(APP)/Makefile.tmp
 	$t mv $(APP)/Makefile.tmp $(APP)/Makefile
 
 	$i "Build the application"

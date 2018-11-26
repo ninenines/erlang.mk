@@ -479,11 +479,11 @@ core-apps-local-deps: build clean
 	$i "Test after swapping my_app_1 and my_app_2 to make sure lexical ordering didnt incidentally build the correct app first"
 
 	$i "Add my_app_2 to the list of local dependencies of my_app_1, don't add lager, but add the lager parse_transform (this will fail unless my_app_2 was indeed built first)"
-	$t mv $(APP)/apps/my_app_1/Makefile{.bak,}
+	$t mv $(APP)/apps/my_app_1/Makefile.bak $(APP)/apps/my_app_1/Makefile
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "LOCAL_DEPS = my_app_2\nERLC_OPTS+=+{parse_transform,lager_transform}\n"}' $(APP)/apps/my_app_1/Makefile
 
 	$i "Add Lager to the list of dependencies of my_app_2, and add the lager parse_transform"
-	$t mv $(APP)/apps/my_app_2/Makefile{.bak,}
+	$t mv $(APP)/apps/my_app_2/Makefile.bak $(APP)/apps/my_app_2/Makefile
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\nERLC_OPTS+=+{parse_transform,lager_transform}\n"}' $(APP)/apps/my_app_2/Makefile
 
 	$i "Build the application"
