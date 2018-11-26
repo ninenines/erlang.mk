@@ -1,6 +1,11 @@
 # Sphinx plugin.
 
+# Disable this test suite when sphinx is not installed.
+ifeq ($(shell which sphinx-build),)
+SPHINX_TARGETS =
+else
 SPHINX_TARGETS = $(call list_targets,sphinx)
+endif
 
 .PHONY: sphinx $(SPHINX_TARGETS)
 
@@ -131,7 +136,6 @@ sphinx-format-opts: build clean
 	$i "Check that the 'today' macro was defined correctly"
 	$t grep -q erlang_mk_sphinx_html_today $(APP)/html/manpage.html
 	$t grep -q erlang_mk_sphinx_man_today $(APP)/man/sphinx_$(APP).1
-
 
 define sphinx-generate-doc-skeleton
 $t mkdir $(APP)/$(if $1,$1,doc)/
