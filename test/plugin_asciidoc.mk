@@ -6,6 +6,9 @@ ASCIIDOC_TARGETS = $(call list_targets,asciidoc)
 
 asciidoc: $(ASCIIDOC_TARGETS)
 
+# Disable the Asciidoc tests requiring the DocBook toolchain
+# when Asciidoc is not installed. The toolchain is too heavy for CI.
+ifneq ($(shell which a2x),)
 asciidoc-build: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
@@ -117,6 +120,7 @@ asciidoc-guide: build clean
 	$t test -f $(APP)/doc/guide.pdf
 	$t test -d $(APP)/doc/html/
 	$t test ! -e $(APP)/doc/man3/
+endif
 
 asciidoc-install: build clean
 
