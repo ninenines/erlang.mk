@@ -47,7 +47,7 @@ check:
 else
 ifdef c
 check:
-	$(MAKE) -C test $c
+	$(MAKE) -C test $c c=
 else
 check:
 	$(MAKE) -C test

@@ -151,6 +151,25 @@ ct-case: build clean
 	$i "Check that we can run Common Test on a specific test case"
 	$t $(MAKE) -C $(APP) ct-$(APP) t=mygroup:ok $v
 
+ct-case-without-group: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Generate a Common Test suite with two cases that are not part of any group"
+	$t mkdir $(APP)/test
+	$t printf "%s\n" \
+		"-module($(APP)_SUITE)." \
+		"-export([all/0, ok/1, bad/1])." \
+		"all() -> [ok, bad]." \
+		"ok(_) -> ok." \
+		"bad(_) -> throw(fail)." > $(APP)/test/$(APP)_SUITE.erl
+
+	$i "Check that we can run Common Test on a specific test case"
+	$t $(MAKE) -C $(APP) ct-$(APP) c=ok $v
+
 ct-check: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"

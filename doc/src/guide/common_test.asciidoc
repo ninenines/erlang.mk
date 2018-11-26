@@ -93,5 +93,11 @@ as a dependency, you can run the following directly:
 [source,bash]
 $ make -C deps/cowboy ct-http t=http_compress
 
+The variable `c` can be used to run a specific test when
+the test suite does not group test cases:
+
+[source,bash]
+$ make ct-http c=headers_dupe
+
 Finally, xref:coverage[code coverage] is available,
 but covered in its own chapter.

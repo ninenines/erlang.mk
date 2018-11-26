@@ -62,14 +62,18 @@ $(foreach app,$(ALL_APPS_DIRS),$(eval $(call ct_app_target,$(app))))
 apps-ct: $(addprefix apps-ct-,$(ALL_APPS_DIRS))
 endif
 
-ifndef t
-CT_EXTRA =
-else
+ifdef t
 ifeq (,$(findstring :,$t))
 CT_EXTRA = -group $t
 else
 t_words = $(subst :, ,$t)
 CT_EXTRA = -group $(firstword $(t_words)) -case $(lastword $(t_words))
+endif
+else
+ifdef c
+CT_EXTRA = -case $c
+else
+CT_EXTRA =
 endif
 endif
 
