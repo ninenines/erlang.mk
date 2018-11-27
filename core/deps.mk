@@ -202,7 +202,7 @@ endef
 define dep_autopatch_fetch_rebar
 	mkdir -p $(ERLANG_MK_TMP); \
 	if command -v flock >/dev/null; then \
-		flock $(ERLANG_MK_TMP)/rebar.lock -c "$(call dep_autopatch_fetch_rebar2)"; \
+		flock $(ERLANG_MK_TMP)/rebar.lock sh -c "$(call dep_autopatch_fetch_rebar2)"; \
 	elif command -v lockf >/dev/null; then \
 		lockf $(ERLANG_MK_TMP)/rebar.lock sh -c "$(call dep_autopatch_fetch_rebar2)"; \
 	else \
