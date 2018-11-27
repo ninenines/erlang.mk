@@ -36,7 +36,7 @@ help::
 CT_RUN = ct_run \
 	-no_auto_compile \
 	-noinput \
-	-pa $(CURDIR)/ebin $(DEPS_DIR)/*/ebin $(APPS_DIR)/*/ebin $(TEST_DIR) \
+	-pa $(CURDIR)/ebin $(TEST_DIR) \
 	-dir $(TEST_DIR) \
 	-logdir $(CT_LOGS_DIR)
 

@@ -46,7 +46,7 @@ define eunit.erl
 	halt()
 endef
 
-EUNIT_ERL_OPTS += -pa $(TEST_DIR) $(DEPS_DIR)/*/ebin $(APPS_DIR)/*/ebin $(CURDIR)/ebin
+EUNIT_ERL_OPTS += -pa $(TEST_DIR) $(CURDIR)/ebin
 
 ifdef t
 ifeq (,$(findstring :,$(t)))
