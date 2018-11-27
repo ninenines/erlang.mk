@@ -215,7 +215,7 @@ define dep_autopatch_fetch_rebar2
 		git clone -q -n -- https://github.com/rebar/rebar $(ERLANG_MK_TMP)/rebar; \
 		cd $(ERLANG_MK_TMP)/rebar; \
 		git checkout -q 576e12171ab8d69b048b827b92aa65d067deea01; \
-		$(MAKE); \
+		./bootstrap; \
 		cd -; \
 	fi
 endef

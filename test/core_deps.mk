@@ -623,7 +623,7 @@ define add_dep_and_subdep
 	$i "Bootstrap a new OTP library named $(APP)_$(1)subdep"
 	$t mkdir $(APP)_$(1)subdep/
 	$t cp ../erlang.mk $(APP)_$(1)subdep/
-	$t $(MAKE) -C $(APP)_$(1)subdep --no-print-directory -f erlang.mk bootstrap-lib $$v
+	$t $2 -C $(APP)_$(1)subdep --no-print-directory -f erlang.mk bootstrap-lib $$v
 
 	$i "Create a Git repository for $(APP)_$(1)subdep"
 	$t (cd $(APP)_$(1)subdep && \
@@ -636,7 +636,7 @@ define add_dep_and_subdep
 	$i "Bootstrap a new OTP library named $(APP)_$(1)dep"
 	$t mkdir $(APP)_$(1)dep/
 	$t cp ../erlang.mk $(APP)_$(1)dep/
-	$t $(MAKE) -C $(APP)_$(1)dep --no-print-directory -f erlang.mk bootstrap-lib $$v
+	$t $2 -C $(APP)_$(1)dep --no-print-directory -f erlang.mk bootstrap-lib $$v
 
 	$i "Add $(APP)_$(1)subdep as a dependency"
 	$t perl -ni.bak -e \
@@ -655,11 +655,13 @@ endef
 
 core-deps-list-deps: build clean
 
-	$(call add_dep_and_subdep,)
-	$(call add_dep_and_subdep,doc)
-	$(call add_dep_and_subdep,rel)
-	$(call add_dep_and_subdep,test)
-	$(call add_dep_and_subdep,shell)
+# We pass $(MAKE) directly so that GNU Make can pass its context forward.
+# If we didn't then $(MAKE) would be expanded in the call without context.
+	$(call add_dep_and_subdep,,$(MAKE))
+	$(call add_dep_and_subdep,doc,$(MAKE))
+	$(call add_dep_and_subdep,rel,$(MAKE))
+	$(call add_dep_and_subdep,test,$(MAKE))
+	$(call add_dep_and_subdep,shell,$(MAKE))
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
