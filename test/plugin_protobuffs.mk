@@ -40,6 +40,38 @@ protobuffs-compile: build clean
 		{ok, [empty_pb, simple_pb]} = application:get_key($(APP), modules), \
 		halt()"
 
+protobuffs-compile-with-gpb: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add gpb to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = gpb\n"}' $(APP)/Makefile
+
+	$i "Download two proto files"
+	$t mkdir $(APP)/src/proto/
+	$t curl -s -o $(APP)/src/proto/empty.proto $(PROTOBUFFS_URL)/proto/empty.proto
+	$t curl -s -o $(APP)/src/proto/simple.proto $(PROTOBUFFS_URL)/proto/simple.proto
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that an Erlang module was generated and compiled"
+	$t test -f $(APP)/src/empty_pb.erl
+	$t test -f $(APP)/src/simple_pb.erl
+	$t test -f $(APP)/include/empty_pb.hrl
+	$t test -f $(APP)/include/simple_pb.hrl
+	$t test -f $(APP)/ebin/empty_pb.beam
+	$t test -f $(APP)/ebin/simple_pb.beam
+
+	$i "Check that the generated modules are included in .app file"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, [empty_pb, simple_pb]} = application:get_key($(APP), modules), \
+		halt()"
+
 protobuffs-makefile-change: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"

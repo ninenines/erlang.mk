@@ -28,14 +28,27 @@ $(ERLANG_MK_TMP)/last-makefile-change-protobuffs: $(filter-out $(PROJECT).d,$(MA
 $(PROJECT).d:: $(ERLANG_MK_TMP)/last-makefile-change-protobuffs
 endif
 
+ifeq ($(filter gpb,$(BUILD_DEPS) $(DEPS)),)
 define compile_proto.erl
 	[begin
-		protobuffs_compile:generate_source(F,
-			[{output_include_dir, "./include"},
-				{output_src_dir, "./src"}])
+		protobuffs_compile:generate_source(F, [
+			{output_include_dir, "./include"},
+			{output_src_dir, "./src"}])
 	end || F <- string:tokens("$1", " ")],
 	halt().
 endef
+else
+define compile_proto.erl
+	[begin
+		gpb_compile:file(F, [
+			{include_as_lib, true},
+			{module_name_suffix, "_pb"},
+			{o_hrl, "./include"},
+			{o_erl, "./src"}])
+	end || F <- string:tokens("$1", " ")],
+	halt().
+endef
+endif
 
 $(PROJECT).d:: $(PROTO_FILES)
 	$(verbose) mkdir -p ebin/ include/
