@@ -198,6 +198,31 @@ erlydtl-path-full-path-suffix: build clean
 		{ok, [one_suffix, two_three_suffix]} = application:get_key($(APP), modules), \
 		halt()"
 
+erlydtl-prefix: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate ErlyDTL templates"
+	$t mkdir $(APP)/templates/
+	$t touch $(APP)/templates/one.dtl
+	$t touch $(APP)/templates/two.dtl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) DEPS=erlydtl DTL_PREFIX=number_ $v
+
+	$i "Check that ErlyDTL templates are compiled"
+	$t test -f $(APP)/ebin/number_one_dtl.beam
+	$t test -f $(APP)/ebin/number_two_dtl.beam
+
+	$i "Check that ErlyDTL generated modules are included in .app file"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, [number_one_dtl, number_two_dtl]} = application:get_key($(APP), modules), \
+		halt()"
+
 erlydtl-suffix: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
