@@ -204,8 +204,8 @@ bootstrap-rel: build clean
 	$i "Check that all bootstrapped files exist"
 	$t test -f $(APP)/Makefile
 	$t test -f $(APP)/relx.config
-	$t test -f $(APP)/rel/sys.config
-	$t test -f $(APP)/rel/vm.args
+	$t test -f $(APP)/config/sys.config
+	$t test -f $(APP)/config/vm.args
 ifdef LEGACY
 	$t test -f $(APP)/src/$(APP).app.src
 endif

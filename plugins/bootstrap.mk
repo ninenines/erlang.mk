@@ -94,8 +94,8 @@ endef
 define bs_relx_config
 {release, {$p_release, "1"}, [$p, sasl, runtime_tools]}.
 {extended_start_script, true}.
-{sys_config, "rel/sys.config"}.
-{vm_args, "rel/vm.args"}.
+{sys_config, "config/sys.config"}.
+{vm_args, "config/vm.args"}.
 endef
 
 define bs_sys_config
@@ -441,14 +441,14 @@ bootstrap-rel:
 ifneq ($(wildcard relx.config),)
 	$(error Error: relx.config already exists)
 endif
-ifneq ($(wildcard rel/),)
-	$(error Error: rel/ directory already exists)
+ifneq ($(wildcard config/),)
+	$(error Error: config/ directory already exists)
 endif
 	$(eval p := $(PROJECT))
 	$(verbose) $(call core_render,bs_relx_config,relx.config)
-	$(verbose) mkdir rel/
-	$(verbose) $(call core_render,bs_sys_config,rel/sys.config)
-	$(verbose) $(call core_render,bs_vm_args,rel/vm.args)
+	$(verbose) mkdir config/
+	$(verbose) $(call core_render,bs_sys_config,config/sys.config)
+	$(verbose) $(call core_render,bs_vm_args,config/vm.args)
 
 new-app:
 ifndef in

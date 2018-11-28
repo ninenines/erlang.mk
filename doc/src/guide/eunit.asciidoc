@@ -65,7 +65,7 @@ to be passed to `erl` when running EUnit tests. For example,
 you can load the 'vm.args' and 'sys.config' files:
 
 [source,make]
-EUNIT_ERL_OPTS = -args_file rel/vm.args -config rel/sys.config
+EUNIT_ERL_OPTS = -args_file config/vm.args -config config/sys.config
 
 === Usage
 
