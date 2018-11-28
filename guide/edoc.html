@@ -43,7 +43,11 @@ EDOC_OPTS = {doclet, edown_doclet}</pre></div><div class="section"><div class="t
 automatically if the <span class="emphasis"><em>doc/overview.edoc</em></span> file exists. If you
 do not want that file and still want to generate doc comments,
 two solutions are available.</p><p>You can generate EDoc documentation directly:</p><pre class="programlisting">$ make edoc</pre><p>You can enable automatic generation on <code class="literal">make docs</code> by adding
-the following to your Makefile:</p><pre class="programlisting">docs:: edoc</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="asciidoc.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="docs.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="sphinx.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+the following to your Makefile:</p><pre class="programlisting">docs:: edoc</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_edoc_on_all_applications"></a>15.4. Running EDoc on all applications</h2></div></div></div><p>In a multi-application project you may want to run EDoc
+against all applications at the same time, instead of
+against each applications independently. To do so, you
+need to configure the <code class="literal">EDOC_SRC_DIRS</code> at the end of
+your Makefile, after including <span class="emphasis"><em>erlang.mk</em></span>:</p><pre class="programlisting">EDOC_SRC_DIRS = $(ALL_APPS_DIRS)</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="asciidoc.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="docs.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="sphinx.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>

@@ -42,7 +42,11 @@ Erlang.mk also automatically downloads and compiles the
 dependencies for your project.</p><p>All this is possible thanks to a combination of configuration
 and conventions. Most of the conventions come from Erlang/OTP
 itself so any seasoned Erlang developers should feel right at
-home.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_what_to_build"></a>6.2. What to build</h2></div></div></div><p>Erlang.mk gives you control over three steps of the build
+home.</p><p>Erlang.mk supports multi-threaded building. Parallel execution
+is supported for all targets. To execute Erlang.mk in parallel
+the <code class="literal">-j</code> option must be used:</p><pre class="programlisting">$ make -j8</pre><p>The <code class="literal">MAKEFLAGS</code> variable can be used to enable parallel
+building permanently on your system. It can be set in
+your <code class="literal">.zshrc</code>, <code class="literal">.bashrc</code> or equivalent file.</p><pre class="programlisting">MAKEFLAGS="-j8"</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_what_to_build"></a>6.2. What to build</h2></div></div></div><p>Erlang.mk gives you control over three steps of the build
 process, allowing you to do a partial build if needed.</p><p>A build has three phases: first any dependency is fetched
 and built, then the project itself is built and finally a
 release may be generated when applicable. A release is only
