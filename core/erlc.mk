@@ -247,8 +247,10 @@ define makedep.erl
 	end,
 	[begin
 		Mod = list_to_atom(filename:basename(F, ".erl")),
-		{ok, Fd} = file:open(F, [read]),
-		MakeDepend(MakeDepend, Fd, Mod,0)
+		case file:open(F, [read]) of
+			{ok, Fd} -> MakeDepend(MakeDepend, Fd, Mod,0);
+			{error, enoent} -> ok
+		end
 	end || F <- ErlFiles],
 	Depend = sofs:to_external(sofs:relation_to_family(sofs:relation(ets:tab2list(E)))),
 	CompileFirst = [X || X <- lists:reverse(digraph_utils:topsort(G)), [] =/= digraph:in_neighbours(G, X)],

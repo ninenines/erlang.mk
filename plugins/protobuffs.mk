@@ -8,23 +8,36 @@ proto_verbose = $(proto_verbose_$(V))
 
 # Core targets.
 
-define compile_proto
-	$(verbose) mkdir -p ebin/ include/
-	$(proto_verbose) $(call erlang,$(call compile_proto.erl,$(1)))
-	$(proto_verbose) erlc +debug_info -o ebin/ ebin/*.erl
-	$(verbose) rm ebin/*.erl
-endef
+ifneq ($(wildcard src/),)
+PROTO_FILES := $(filter %.proto,$(ALL_SRC_FILES))
+ERL_FILES += $(addprefix src/,$(patsubst %.proto,%_pb.erl,$(notdir $(PROTO_FILES))))
+
+ifeq ($(words $(PROTO_FILES)),0)
+$(ERLANG_MK_TMP)/last-makefile-change-protobuffs:
+	$(verbose) :
+else
+# Rebuild proto files when the Makefile changes.
+# We exclude $(PROJECT).d to avoid a circular dependency.
+$(ERLANG_MK_TMP)/last-makefile-change-protobuffs: $(filter-out $(PROJECT).d,$(MAKEFILE_LIST))
+	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+	$(verbose) if test -f $@; then \
+		touch $(PROTO_FILES); \
+	fi
+	$(verbose) touch $@
+
+$(PROJECT).d:: $(ERLANG_MK_TMP)/last-makefile-change-protobuffs
+endif
 
 define compile_proto.erl
 	[begin
 		protobuffs_compile:generate_source(F,
 			[{output_include_dir, "./include"},
-				{output_src_dir, "./ebin"}])
-	end || F <- string:tokens("$(1)", " ")],
+				{output_src_dir, "./src"}])
+	end || F <- string:tokens("$1", " ")],
 	halt().
 endef
 
-ifneq ($(wildcard src/),)
-ebin/$(PROJECT).app:: $(sort $(call core_find,src/,*.proto))
-	$(if $(strip $?),$(call compile_proto,$?))
+$(PROJECT).d:: $(PROTO_FILES)
+	$(verbose) mkdir -p ebin/ include/
+	$(if $(strip $?),$(proto_verbose) $(call erlang,$(call compile_proto.erl,$?)))
 endif
