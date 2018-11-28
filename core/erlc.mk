@@ -110,7 +110,7 @@ define compile_asn1
 	$(verbose) mkdir -p include/
 	$(asn1_verbose) erlc -v -I include/ -o asn1/ +noobj $(ERLC_ASN1_OPTS) $(1)
 	$(verbose) mv asn1/*.erl src/
-	$(verbose) mv asn1/*.hrl include/
+	-$(verbose) mv asn1/*.hrl include/
 	$(verbose) mv asn1/*.asn1db include/
 endef
 

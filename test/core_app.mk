@@ -163,6 +163,44 @@ endif
 		true = lists:member({record_name_prefix, \"FOO-\"}, Opts), \
 		halt()"
 
+core-app-asn1-maps: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Set ERLC_ASN1_OPTS = +maps in the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ERLC_ASN1_OPTS = +maps\n"}' $(APP)/Makefile
+
+	$i "Download .asn1 files from Erlang/OTP"
+	$t mkdir $(APP)/asn1/
+	$t curl -s -o $(APP)/asn1/CAP.asn1 $(OTP_MASTER)/lib/asn1/test/asn1_SUITE_data/CAP.asn1
+	$t curl -s -o $(APP)/asn1/Def.asn1 $(OTP_MASTER)/lib/asn1/test/asn1_SUITE_data/Def.asn1
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/CAP.beam
+	$t test -f $(APP)/ebin/Def.beam
+	$t test -f $(APP)/include/CAP.asn1db
+	$t ! test -e $(APP)/include/CAP.hrl
+	$t test -f $(APP)/include/Def.asn1db
+	$t ! test -e $(APP)/include/Def.hrl
+	$t test -f $(APP)/src/CAP.erl
+	$t test -f $(APP)/src/Def.erl
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = ['CAP', 'Def']} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
 core-app-auto-git-id: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
