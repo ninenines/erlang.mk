@@ -4,54 +4,6 @@ Old Erlang.mk documentation
 This documentation reminds here until it gets moved to the
 official documentation on http://erlang.mk/guide/.
 
-Extending Erlang.mk
--------------------
-
-You may add additional operations to them by using the double
-colons. Make will run all targets sharing the same name when
-invoked.
-
-``` Makefile
-clean::
-	@rm anotherfile
-```
-
-You can enable verbose mode by calling Make with the variable
-`V` set to 1.
-
-``` bash
-$ make V=1
-```
-
-Parallel execution
-------------------
-
-*Parallel execution is currently enabled (experimental).*
-
-Parallel execution can be enabled through the use of the
-`-j` option. The following output showcases concurrent
-downloading of dependencies.
-
-``` bash
-$ make -j32
-Cloning into '/home/essen/ninenines/cowboy/deps/ranch'...
-Cloning into '/home/essen/ninenines/cowboy/deps/cowlib'...
-```
-
-The `-O` option will ensure that output from different
-targets is grouped, which is particularly useful when
-running tests with different frameworks at the same time.
-The disadvantage of this option however is that there is
-no output until the target is completed.
-
-The``MAKEFLAGS` variable can be used to set it permanently
-on your system. It can be set in your `.zshrc`, `.bashrc`
-or equivalent file.
-
-``` bash
-MAKEFLAGS="-j32 -O"
-```
-
 ErlyDTL plugin
 --------------
 

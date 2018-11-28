@@ -25,6 +25,20 @@ and conventions. Most of the conventions come from Erlang/OTP
 itself so any seasoned Erlang developers should feel right at
 home.
 
+Erlang.mk supports multi-threaded building. Parallel execution
+is supported for all targets. To execute Erlang.mk in parallel
+the `-j` option must be used:
+
+[source,bash]
+$ make -j8
+
+The `MAKEFLAGS` variable can be used to enable parallel
+building permanently on your system. It can be set in
+your `.zshrc`, `.bashrc` or equivalent file.
+
+[source,bash]
+MAKEFLAGS="-j8"
+
 === What to build
 
 Erlang.mk gives you control over three steps of the build
