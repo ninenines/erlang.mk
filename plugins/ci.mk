@@ -32,7 +32,7 @@ ci_verbose = $(ci_verbose_$(V))
 
 define ci_target
 ci-$1: $(KERL_INSTALL_DIR)/$2
-	$(verbose) $(MAKE) --no-print-directory clean distclean-c_src-env
+	$(verbose) $(MAKE) --no-print-directory clean
 	$(ci_verbose) \
 		PATH="$(KERL_INSTALL_DIR)/$2/bin:$(PATH)" \
 		CI_OTP_RELEASE="$1" \
