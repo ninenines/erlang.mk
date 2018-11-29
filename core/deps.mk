@@ -481,7 +481,8 @@ define dep_autopatch_rebar.erl
 	fun() ->
 		case lists:keyfind(plugins, 1, Conf) of
 			false -> ok;
-			{_, Plugins} ->
+			{_, Plugins0} ->
+				Plugins = [P || P <- Plugins0, is_atom(P)],
 				[begin
 					case lists:keyfind(deps, 1, Conf) of
 						false -> ok;
