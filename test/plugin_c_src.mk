@@ -7,6 +7,40 @@ C_SRC_TARGETS = $(call list_targets,c-src)
 c-src: $(C_SRC_TARGETS)
 c_src: c-src
 
+ifeq ($(PLATFORM),msys2)
+C_SRC_OUTPUT_EXECUTABLE_EXTENSION = .dll
+else
+C_SRC_OUTPUT_EXECUTABLE_EXTENSION = .so
+endif
+
+c-src-makefile-change: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate a NIF from templates"
+	$t $(MAKE) -C $(APP) new-nif n=$(APP) $v
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Touch the Makefile; check that all files get rebuilt"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/c_src/$(APP).o \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/$(APP).beam \
+		$(APP)/priv/$(APP)$(C_SRC_OUTPUT_EXECUTABLE_EXTENSION) \
+		$(APP)/src/$(APP).erl | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/Makefile
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/Makefile -not -path "$(APP)/.erlang.mk/*" | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
 c-src-nif: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -26,11 +60,7 @@ c-src-nif: build clean
 	$t test -f $(APP)/c_src/env.mk
 	$t test -f $(APP)/ebin/$(APP).app
 	$t test -f $(APP)/ebin/$(APP).beam
-ifeq ($(PLATFORM),msys2)
-	$t test -f $(APP)/priv/$(APP).dll
-else
-	$t test -f $(APP)/priv/$(APP).so
-endif
+	$t test -f $(APP)/priv/$(APP)$(C_SRC_OUTPUT_EXECUTABLE_EXTENSION)
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
@@ -51,11 +81,7 @@ endif
 	$t test -f $(APP)/c_src/env.mk
 	$t test -f $(APP)/ebin/$(APP).app
 	$t test -f $(APP)/ebin/$(APP).beam
-ifeq ($(PLATFORM),msys2)
-	$t test -f $(APP)/priv/$(APP).dll
-else
-	$t test -f $(APP)/priv/$(APP).so
-endif
+	$t test -f $(APP)/priv/$(APP)$(C_SRC_OUTPUT_EXECUTABLE_EXTENSION)
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
@@ -75,11 +101,7 @@ endif
 	$t test ! -e $(APP)/c_src/$(APP).o
 	$t test ! -e $(APP)/ebin/$(APP).app
 	$t test ! -e $(APP)/ebin/$(APP).beam
-ifeq ($(PLATFORM),msys2)
-	$t test ! -e $(APP)/priv/$(APP).dll
-else
-	$t test ! -e $(APP)/priv/$(APP).so
-endif
+	$t test ! -e $(APP)/priv/$(APP)$(C_SRC_OUTPUT_EXECUTABLE_EXTENSION)
 
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v

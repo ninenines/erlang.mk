@@ -103,6 +103,8 @@ $(C_SRC_OUTPUT_FILE): $(OBJECTS)
 		$(LDFLAGS) $(if $(filter $(C_SRC_TYPE),shared),-shared) $(LDLIBS) \
 		-o $(C_SRC_OUTPUT_FILE)
 
+$(OBJECTS): $(MAKEFILE_LIST)
+
 %.o: %.c
 	$(COMPILE_C) $(OUTPUT_OPTION) $<
 
