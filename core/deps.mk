@@ -467,6 +467,17 @@ define dep_autopatch_rebar.erl
 			end,
 			[PortSpec(S) || S <- PortSpecs]
 	end,
+	fun() ->
+		case lists:keyfind(plugins, 1, Conf) of
+			false -> ok;
+			{_, Plugins0} ->
+				Plugins = [P || P <- Plugins0, is_tuple(P)],
+				case lists:keyfind('lfe-compile', 1, Plugins) of
+					false -> ok;
+					_ -> Write("\nBUILD_DEPS = lfe lfe.mk\ndep_lfe.mk = git https://github.com/ninenines/lfe.mk master\nDEP_PLUGINS = lfe.mk\n")
+				end
+		end
+	end(),
 	Write("\ninclude $$\(if $$\(ERLANG_MK_FILENAME),$$\(ERLANG_MK_FILENAME),erlang.mk)"),
 	RunPlugin = fun(Plugin, Step) ->
 		case erlang:function_exported(Plugin, Step, 2) of
