@@ -85,6 +85,30 @@ core-plugins-early-local: build clean
 	$i "Run 'make plugin2' and check that it prints plugin2"
 	$t $(MAKE) --no-print-directory -C $(APP) plugin2 | grep -qw plugin2
 
+core-plugins-early-help: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Write external plugin helpful_plugin"
+	$t mkdir $(APP)/helpful_plugin
+	$t echo "help-plugins:: ; @echo WORKING" >> $(APP)/helpful_plugin/early-plugins.mk
+
+	$i "Inject external plugin dependencies into $(APP)"
+	$t echo 'BUILD_DEPS = helpful_plugin' >> $(APP)/Makefile.tmp
+	$t echo 'DEP_EARLY_PLUGINS = helpful_plugin' >> $(APP)/Makefile.tmp
+	$t echo 'dep_helpful_plugin = cp helpful_plugin' >> $(APP)/Makefile.tmp
+	$t cat $(APP)/Makefile >> $(APP)/Makefile.tmp
+	$t mv $(APP)/Makefile.tmp $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Run 'make help' and check that it prints external plugins help"
+	$t test -n "`$(MAKE) -C $(APP) help` | grep WORKING"
+
 core-plugins-local: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"

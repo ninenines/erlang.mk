@@ -9,3 +9,8 @@ $(foreach p,$(DEP_PLUGINS),\
 	$(eval $(if $(findstring /,$p),\
 		$(call core_dep_plugin,$p,$(firstword $(subst /, ,$p))),\
 		$(call core_dep_plugin,$p/plugins.mk,$p))))
+
+help:: help-plugins
+
+help-plugins::
+	$(verbose) :

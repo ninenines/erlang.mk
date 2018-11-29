@@ -76,6 +76,15 @@ This allows users to not only be able to select individual
 plugins, but also select all plugins from the dependency
 in one go if they wish to do so.
 
+Plugins can include some help text by extending the target
+`help-plugins`:
+
+[source,make]
+----
+help-plugins::
+	$(verbose) printf "%s\n" "" "Run benchmark: $(MAKE) perfs"
+----
+
 === Early-stage plugins
 
 Plugins declared in `DEP_PLUGINS` are loaded near the end of Erlang.mk.
