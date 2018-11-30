@@ -665,6 +665,8 @@ ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 			echo " PATCH  Downloading rabbitmq-codegen"; \
 			git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \
 		fi \
+	elif [ "$1" = "elixir" -a "$(ELIXIR_PATCH)" ]; then \
+		ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/; \
 	else \
 		$$(call dep_autopatch,$(DEP_NAME)) \
 	fi
