@@ -281,6 +281,19 @@ core-app-env: build clean
 		{ok, \"\\\"test_\\tvalue\\\"\"} = application:get_env($(APP), test_key), \
 		{ok, '\\\$$test'} = application:get_env($(APP), test_atom), \
 		halt()"
+
+core-app-env-invalid: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Define an invalid PROJECT_ENV"
+	$t echo "PROJECT_ENV = [{test_key, test_value" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t ! $(MAKE) -C $(APP) $v
 endif
 
 core-app-erlc-exclude: build clean
