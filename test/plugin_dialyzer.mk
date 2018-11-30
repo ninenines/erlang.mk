@@ -303,3 +303,26 @@ dialyzer-plt-swallow-warnings: build clean
 
 	$i "Create the PLT file"
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) plt $v
+
+dialyzer-pt: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate a parse_transform module"
+	$t printf "%s\n" \
+		"-module(my_pt)." \
+		"-export([parse_transform/2])." \
+		"parse_transform(Forms, _) ->" \
+		"	io:format(\"# Running my_pt parse_transform.~n\")," \
+		"	Forms." > $(APP)/src/my_pt.erl
+
+	$i "Generate a .erl file that uses the my_pt parse_transform"
+	$t printf "%s\n" \
+		"-module(my_user)." \
+		"-compile({parse_transform, my_pt})." > $(APP)/src/my_user.erl
+
+	$i "Run Dialyzer"
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v

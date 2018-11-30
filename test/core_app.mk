@@ -1198,9 +1198,6 @@ core-app-pt: build clean
 		"-module(my_user)." \
 		"-compile({parse_transform, my_pt})." > $(APP)/src/my_user.erl
 
-	$i "Compile my_pt first"
-	$t echo "COMPILE_FIRST += my_pt" >> $(APP)/Makefile
-
 	$i "Build the application; confirm the parse_transform is used"
 	$t $(MAKE) -C $(APP) | grep "Running my_pt parse_transform."
 
