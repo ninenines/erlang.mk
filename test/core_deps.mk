@@ -26,6 +26,43 @@ ifneq ($(PLATFORM),msys2)
 	$t test -f $(APP)/deps/erlsha2/priv/erlsha2_nif.so
 endif
 
+core-deps-autopatch-port_env: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap a new NIF named my_dep inside $(APP) that uses rebar"
+	$t mkdir $(APP)/my_dep
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
+	$t $(MAKE) -C $(APP)/my_dep/ new-nif n=my_dep $v
+	$t rm $(APP)/my_dep/erlang.mk $(APP)/my_dep/Makefile
+
+	$i "Add a rebar.config file with port_env to my_dep"
+	$t echo "{port_env, [" >> $(APP)/my_dep/rebar.config
+	$t echo "{\"CFLAGS\", \"\$$CFLAGS \$$(pkg-config --cflags domain-classifier 2>/dev/null)\"}," >> $(APP)/my_dep/rebar.config
+	$t echo "{\"LDFLAGS\", \"\$$LDFLAGS \$$(pkg-config --libs domain-classifier 2>/dev/null)\"}" >> $(APP)/my_dep/rebar.config
+	$t echo "]}." >> $(APP)/my_dep/rebar.config
+
+	$i "Add my_dep to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = cp $(CURDIR)/$(APP)/my_dep/\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add my_dep to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tmy_dep,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all dependencies were fetched"
+	$t test -d $(APP)/deps/my_dep
+
+	$i "Confirm that the port_env configuration was expanded properly"
+	$t grep -q "shell pkg-config" $(APP)/deps/my_dep/c_src/Makefile.erlang.mk
+
 # This test is expected to fail when run in parallel and flock/lockf is not available.
 core-deps-autopatch-two-rebar: build clean
 

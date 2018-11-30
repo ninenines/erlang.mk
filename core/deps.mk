@@ -379,9 +379,10 @@ define dep_autopatch_rebar.erl
 				end || H <- Hooks]
 		end
 	end(),
-	ShellToMk = fun(V) ->
-		re:replace(re:replace(V, "(\\\\$$)(\\\\w*)", "\\\\1(\\\\2)", [global]),
-			"-Werror\\\\b", "", [{return, list}, global])
+	ShellToMk = fun(V0) ->
+		V1 = re:replace(V0, "[$$][(]", "$$\(shell ", [global]),
+		V = re:replace(V1, "(\\\\$$$$)(?![(])(\\\\w*)", "\\\\1(\\\\2)", [global]),
+		re:replace(V, "-Werror\\\\b", "", [{return, list}, global])
 	end,
 	PortSpecs = fun() ->
 		case lists:keyfind(port_specs, 1, Conf) of
