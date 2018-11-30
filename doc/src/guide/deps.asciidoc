@@ -115,6 +115,14 @@ SHELL_DEPS = tddreloader
 All these will be documented in more details in their respective
 chapters.
 
+Note that these additional types of dependencies will only
+be fetched after normal dependencies by default. You can
+force a dependency to be downloaded first by extending the
+target `deps::` before including 'erlang.mk', for example:
+
+[source,make]
+deps:: $(CURDIR)/deps/triq
+
 ==== Modifying the dependency source or version
 
 By default, Erlang.mk will look into its package index to
