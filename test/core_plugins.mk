@@ -109,6 +109,27 @@ core-plugins-early-help: build clean
 	$i "Run 'make help' and check that it prints external plugins help"
 	$t test -n "`$(MAKE) -C $(APP) help` | grep WORKING"
 
+core-plugins-early-rebar: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Write external plugin rebar_plugin"
+	$t mkdir $(APP)/rebar_plugin
+	$t echo "rebar:: ; touch rebar.config" >> $(APP)/rebar_plugin/early-plugins.mk
+
+	$i "Inject external plugin dependencies into $(APP)"
+	$t echo 'BUILD_DEPS = rebar_plugin' >> $(APP)/Makefile.tmp
+	$t echo 'DEP_EARLY_PLUGINS = rebar_plugin' >> $(APP)/Makefile.tmp
+	$t echo 'dep_rebar_plugin = cp rebar_plugin' >> $(APP)/Makefile.tmp
+	$t cat $(APP)/Makefile >> $(APP)/Makefile.tmp
+	$t mv $(APP)/Makefile.tmp $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
 core-plugins-local: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
