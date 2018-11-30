@@ -15,6 +15,20 @@ the variable before including Erlang.mk:
 [source,make]
 RELX_CONFIG = $(CURDIR)/webchat.config
 
+It is also possible to have multiple 'relx.config' files.
+For example you might have one for development and one for
+production. You can use conditionals to decide which one
+should be used:
+
+[source,make]
+----
+ifdef PROD
+RELX_CONFIG = $(CURDIR)/relx.prod.config
+else
+RELX_CONFIG = $(CURDIR)/relx.dev.config
+endif
+----
+
 Relx does not need to be installed. Erlang.mk will download
 and build it automatically.
 
