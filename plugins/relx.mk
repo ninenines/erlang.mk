@@ -76,20 +76,25 @@ define get_relx_release.erl
 		{semver, _} -> "";
 		VsnStr -> Vsn0
 	end,
-	io:format("~s ~s", [Name, Vsn]),
+	Extended = case lists:keyfind(extended_start_script, 1, Config) of
+		{_, true} -> "1";
+		_ -> ""
+	end,
+	io:format("~s ~s ~s", [Name, Vsn, Extended]),
 	halt(0).
 endef
 
 RELX_REL := $(shell $(call erlang,$(get_relx_release.erl)))
 RELX_REL_NAME := $(word 1,$(RELX_REL))
 RELX_REL_VSN := $(word 2,$(RELX_REL))
+RELX_REL_CMD := $(if $(word 3,$(RELX_REL)),console)
 
 ifeq ($(PLATFORM),msys2)
 RELX_REL_EXT := .cmd
 endif
 
 run:: all
-	$(verbose) $(RELX_OUTPUT_DIR)/$(RELX_REL_NAME)/bin/$(RELX_REL_NAME)$(RELX_REL_EXT) console
+	$(verbose) $(RELX_OUTPUT_DIR)/$(RELX_REL_NAME)/bin/$(RELX_REL_NAME)$(RELX_REL_EXT) $(RELX_REL_CMD)
 
 ifdef RELOAD
 rel::
