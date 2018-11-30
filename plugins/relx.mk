@@ -45,7 +45,7 @@ $(RELX):
 
 relx-rel: $(RELX) rel-deps app
 	$(verbose) $(RELX) $(if $(filter 1,$V),-V 3) -c $(RELX_CONFIG) $(RELX_OPTS) release
-	$(MAKE) relx-post-rel
+	$(verbose) $(MAKE) relx-post-rel
 ifeq ($(RELX_TAR),1)
 	$(verbose) $(RELX) $(if $(filter 1,$V),-V 3) -c $(RELX_CONFIG) $(RELX_OPTS) tar
 endif
@@ -60,6 +60,7 @@ distclean-relx-rel:
 
 # Default hooks.
 relx-post-rel::
+	$(verbose) :
 
 # Run target.
 
