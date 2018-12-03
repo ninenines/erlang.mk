@@ -61,3 +61,6 @@ A https://github.com/bullno1/reload.mk[live reload plugin] for Erlang.mk.
 
 A https://github.com/goertzenator/rust.mk[plugin] to build https://www.rust-lang.org/[Rust] crates and install binaries into `priv/`.  
 
+=== version.mk
+
+A https://github.com/manifest/version.mk[plugin] to apply a semantic version automatically to Erlang.mk projects.
