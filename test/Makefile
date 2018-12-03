@@ -190,7 +190,7 @@ pkg-$1: build clean
 	fi
 
 	$i "Recompile package $1"
-	$t if ! ( cd packages/$1_pkg/ && $(MAKE) $(PATCHES) $v ); then \
+	$t if ! ( cd packages/$1_pkg/ && $(MAKE) $(PATCHES) FULL=1 $v ); then \
 		echo "$(1): recompile error" >> packages/errors.log; \
 		false; \
 	fi

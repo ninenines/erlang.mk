@@ -75,6 +75,12 @@ dep_verbose_0 = @echo " DEP    $1 ($(call dep_commit,$1))";
 dep_verbose_2 = set -x;
 dep_verbose = $(dep_verbose_$(V))
 
+# Optimization: don't recompile deps unless truly necessary.
+
+ifndef IS_DEP
+$(shell rm -f ebin/dep_built)
+endif
+
 # Core targets.
 
 apps:: $(ALL_APPS_DIRS) clean-tmp-deps.log
@@ -117,8 +123,11 @@ deps:: $(ALL_DEPS_DIRS) apps clean-tmp-deps.log
 			:; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/deps.log; \
-			if [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
+			if [ -z "$(strip $(FULL))" ] && [ ! -L $$dep ] && [ -f $$dep/ebin/dep_built ]; then \
+				:; \
+			elif [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
 				$(MAKE) -C $$dep IS_DEP=1; \
+				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
 			else \
 				echo "Error: No Makefile to build dependency $$dep." >&2; \
 				exit 2; \

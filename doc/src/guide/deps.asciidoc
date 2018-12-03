@@ -296,6 +296,24 @@ different version of D, it will always be A's version
 that wins, because we fetch all dependencies of A before
 fetching those from B or C.
 
+Once a dependency is built, it will not be built again by
+default. Typically dependencies do not need to be recompiled
+and this speeds up building immensely. There are a few ways
+to force recompiling a dependency however:
+
+* The dependency directory is a symbolic link; the dependency
+  will always be recompiled.
+
+* The dependency is built directly, for example with a command
+  like `make -C deps/cowlib`, or `make` in the dependency's
+  directory.
+
+* The variable `FULL` is set, for example `make FULL=1`. This
+  will force building of all dependencies. This can be added
+  to your Makefile before including 'erlang.mk'.
+
+* The file `ebin/dep_built` in the dependency is removed.
+
 === Fetching and listing dependencies only
 
 You can fetch all dependencies recursively without building anything,
