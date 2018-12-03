@@ -30,7 +30,12 @@ ERLANG_MK_VERSION = $(shell git describe --dirty --tags --always)
 .PHONY: all check
 
 all:
-	export LC_COLLATE=C; \
+# Temporarily force the printing of the CHANGELOG.
+# The required variable hadn't been introduced yet.
+#ifdef UPGRADE
+	@cat CHANGELOG.asciidoc
+#endif
+	@export LC_COLLATE=C; \
 	awk 'FNR==1 && NR!=1{print ""}1' $(patsubst %,%.mk,$(BUILD_CONFIG)) \
 		| sed 's/^ERLANG_MK_VERSION =.*/ERLANG_MK_VERSION = $(ERLANG_MK_VERSION)/' \
 		| sed 's:^ERLANG_MK_WITHOUT =.*:ERLANG_MK_WITHOUT = $(WITHOUT):' > $(ERLANG_MK)

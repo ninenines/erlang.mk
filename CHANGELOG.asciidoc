@@ -1,0 +1,9 @@
+2018/12/03: Changelog introduced.
+
+2018/12/03: Relx has been updated to v3.27.0.
+
+2018/12/03: Dependencies are no longer always rebuilt by
+            default. Please check the documentation for
+            information. A quick fix if this causes an
+            issue is to add `FULL = 1` at the top of your
+            Makefile.

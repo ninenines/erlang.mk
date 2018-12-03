@@ -196,15 +196,15 @@ ERLANG_MK_BUILD_DIR ?= .erlang.mk.build
 erlang-mk: WITHOUT ?= $(ERLANG_MK_WITHOUT)
 erlang-mk:
 ifdef ERLANG_MK_COMMIT
-	git clone $(ERLANG_MK_REPO) $(ERLANG_MK_BUILD_DIR)
-	cd $(ERLANG_MK_BUILD_DIR) && git checkout $(ERLANG_MK_COMMIT)
+	$(verbose) git clone $(ERLANG_MK_REPO) $(ERLANG_MK_BUILD_DIR)
+	$(verbose) cd $(ERLANG_MK_BUILD_DIR) && git checkout $(ERLANG_MK_COMMIT)
 else
-	git clone --depth 1 $(ERLANG_MK_REPO) $(ERLANG_MK_BUILD_DIR)
+	$(verbose) git clone --depth 1 $(ERLANG_MK_REPO) $(ERLANG_MK_BUILD_DIR)
 endif
-	if [ -f $(ERLANG_MK_BUILD_CONFIG) ]; then cp $(ERLANG_MK_BUILD_CONFIG) $(ERLANG_MK_BUILD_DIR)/build.config; fi
-	$(MAKE) -C $(ERLANG_MK_BUILD_DIR) WITHOUT='$(strip $(WITHOUT))'
-	cp $(ERLANG_MK_BUILD_DIR)/erlang.mk ./erlang.mk
-	rm -rf $(ERLANG_MK_BUILD_DIR)
+	$(verbose) if [ -f $(ERLANG_MK_BUILD_CONFIG) ]; then cp $(ERLANG_MK_BUILD_CONFIG) $(ERLANG_MK_BUILD_DIR)/build.config; fi
+	$(gen_verbose) $(MAKE) --no-print-directory -C $(ERLANG_MK_BUILD_DIR) WITHOUT='$(strip $(WITHOUT))' UPGRADE=1
+	$(verbose) cp $(ERLANG_MK_BUILD_DIR)/erlang.mk ./erlang.mk
+	$(verbose) rm -rf $(ERLANG_MK_BUILD_DIR)
 
 # The erlang.mk package index is bundled in the default erlang.mk build.
 # Search for the string "copyright" to skip to the rest of the code.

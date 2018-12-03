@@ -6,6 +6,30 @@ CORE_UPGRADE_TARGETS = $(call list_targets,core-upgrade)
 
 core-upgrade: $(CORE_UPGRADE_TARGETS)
 
+core-upgrade-changelog: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Fork erlang.mk locally and set a test CHANGELOG.asciidoc"
+	$t git clone -q https://github.com/ninenines/erlang.mk $(APP)/alt-erlangmk-repo
+	$t echo "$(APP)$(APP)" > $(APP)/alt-erlangmk-repo/CHANGELOG.asciidoc
+# Since part of this functionality needs the main Makefile, copy it.
+	$t cp ../Makefile $(APP)/alt-erlangmk-repo/
+	$t (cd $(APP)/alt-erlangmk-repo && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add CHANGELOG.asciidoc Makefile && \
+		git commit -q --no-gpg-sign -a -m 'Add test changelog')
+
+	$i "Point application to an alternate erlang.mk repository"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ERLANG_MK_REPO = file://$(abspath $(APP)/alt-erlangmk-repo)\n"}' $(APP)/Makefile
+
+	$i "Update erlang.mk; CHANGELOG.asciidoc should be printed"
+	$t $(MAKE) -C $(APP) erlang-mk | grep -c "$(APP)$(APP)" | grep -q 1
+
 core-upgrade-conflicting-configs: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
