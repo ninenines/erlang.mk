@@ -65,7 +65,9 @@ file:</p><pre class="programlisting">THIS := $(dir $(realpath $(lastword $(MAKEF
 include $(THIS)/mk/dist.mk
 include $(THIS)/mk/templates.mk</pre><p>The <code class="literal">THIS</code> variable is required to relatively include files.</p><p>This allows users to not only be able to select individual
 plugins, but also select all plugins from the dependency
-in one go if they wish to do so.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_early_stage_plugins"></a>25.4. Early-stage plugins</h2></div></div></div><p>Plugins declared in <code class="literal">DEP_PLUGINS</code> are loaded near the end of Erlang.mk.
+in one go if they wish to do so.</p><p>Plugins can include some help text by extending the target
+<code class="literal">help-plugins</code>:</p><pre class="programlisting">help-plugins::
+    $(verbose) printf "%s\n" "" "Run benchmark: $(MAKE) perfs"</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_early_stage_plugins"></a>25.4. Early-stage plugins</h2></div></div></div><p>Plugins declared in <code class="literal">DEP_PLUGINS</code> are loaded near the end of Erlang.mk.
 That’s why you have access to all previously initialized variables.
 However, if you want your plugin to add common dependencies to
 your applications, a regular is loaded too late in the process.

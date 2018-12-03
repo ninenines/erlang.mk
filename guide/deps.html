@@ -70,7 +70,14 @@ It has <code class="literal">TEST_DEPS</code> for dependencies used only for tes
 dep_ct_helper = git https://github.com/ninenines/ct_helper master</pre><p><code class="literal">DOC_DEPS</code> for dependencies used only when building documentation:</p><pre class="programlisting">DOC_DEPS = edown</pre><p><code class="literal">REL_DEPS</code> for dependencies required to build the release,
 or to include extra applications in the release:</p><pre class="programlisting">REL_DEPS = recon</pre><p>And <code class="literal">SHELL_DEPS</code> for dependencies to make available when running
 the <code class="literal">make shell</code> command:</p><pre class="programlisting">SHELL_DEPS = tddreloader</pre><p>All these will be documented in more details in their respective
-chapters.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_modifying_the_dependency_source_or_version"></a>7.2.1. Modifying the dependency source or version</h3></div></div></div><p>By default, Erlang.mk will look into its package index to
+chapters.</p><p>Note that these additional types of dependencies will only
+be fetched after normal dependencies by default. You can
+force a dependency to be downloaded first by extending the
+target <code class="literal">deps::</code> before including <span class="emphasis"><em>erlang.mk</em></span>, for example:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+deps
+</span></dt><dd>
+$(CURDIR)/deps/triq
+</dd></dl></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_modifying_the_dependency_source_or_version"></a>7.2.1. Modifying the dependency source or version</h3></div></div></div><p>By default, Erlang.mk will look into its package index to
 find the project you are looking for, if you only provide
 its name. This is this case:</p><pre class="programlisting">DEPS = cowboy</pre><p>If you need a different version, you need to define another
 variable. There are two ways to do this, each being useful
@@ -134,7 +141,23 @@ those from C.</p><p>Similarly, if project A depends on projects B, C and D,
 regardless of the order, and A, B and C depend on a
 different version of D, it will always be A’s version
 that wins, because we fetch all dependencies of A before
-fetching those from B or C.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_fetching_and_listing_dependencies_only"></a>7.4. Fetching and listing dependencies only</h2></div></div></div><p>You can fetch all dependencies recursively without building anything,
+fetching those from B or C.</p><p>Once a dependency is built, it will not be built again by
+default. Typically dependencies do not need to be recompiled
+and this speeds up building immensely. There are a few ways
+to force recompiling a dependency however:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+The dependency directory is a symbolic link; the dependency
+  will always be recompiled.
+</li><li class="listitem">
+The dependency is built directly, for example with a command
+  like <code class="literal">make -C deps/cowlib</code>, or <code class="literal">make</code> in the dependency’s
+  directory.
+</li><li class="listitem">
+The variable <code class="literal">FULL</code> is set, for example <code class="literal">make FULL=1</code>. This
+  will force building of all dependencies. This can be added
+  to your Makefile before including <span class="emphasis"><em>erlang.mk</em></span>.
+</li><li class="listitem">
+The file <code class="literal">ebin/dep_built</code> in the dependency is removed.
+</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_fetching_and_listing_dependencies_only"></a>7.4. Fetching and listing dependencies only</h2></div></div></div><p>You can fetch all dependencies recursively without building anything,
 with the <code class="literal">make fetch-deps</code> command. It follows the same rules described
 in the section above.</p><p>You can list all dependencies recursively, again without building
 anything, with the <code class="literal">make list-deps</code> command. It will obviously need

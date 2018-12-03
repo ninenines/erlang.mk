@@ -38,7 +38,14 @@ chapter covers the Erlang.mk-specific bits. Consult the
 <a class="ulink" href="https://erlware.github.io/relx/" target="_top">Relx website</a> for more information.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_setup"></a>9.1. Setup</h2></div></div></div><p>Erlang.mk will create a release if it detects a Relx configuration
 file in the <span class="emphasis"><em>$(RELX_CONFIG)</em></span> location. This defaults to
 <span class="emphasis"><em>$(CURDIR)/relx.config</em></span>. You can override it by defining
-the variable before including Erlang.mk:</p><pre class="programlisting">RELX_CONFIG = $(CURDIR)/webchat.config</pre><p>Relx does not need to be installed. Erlang.mk will download
+the variable before including Erlang.mk:</p><pre class="programlisting">RELX_CONFIG = $(CURDIR)/webchat.config</pre><p>It is also possible to have multiple <span class="emphasis"><em>relx.config</em></span> files.
+For example you might have one for development and one for
+production. You can use conditionals to decide which one
+should be used:</p><pre class="programlisting">ifdef PROD
+RELX_CONFIG = $(CURDIR)/relx.prod.config
+else
+RELX_CONFIG = $(CURDIR)/relx.dev.config
+endif</pre><p>Relx does not need to be installed. Erlang.mk will download
 and build it automatically.</p><p>The Relx executable will be saved in the <span class="emphasis"><em>$(RELX)</em></span> file. This
 location defaults to <span class="emphasis"><em>$(CURDIR)/relx</em></span> and can be overriden.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration"></a>9.2. Configuration</h2></div></div></div><p>You can specify additional Relx options using the <code class="literal">RELX_OPTS</code>
 variable. For example, to enable <code class="literal">dev_mode</code>:</p><pre class="programlisting">RELX_OPTS = -d true</pre><p>While you can specify the output directory for the release
