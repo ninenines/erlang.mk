@@ -47,6 +47,10 @@ verbose_0 = @
 verbose_2 = set -x;
 verbose = $(verbose_$(V))
 
+ifeq ($(V),3)
+SHELL := $(SHELL) -x
+endif
+
 gen_verbose_0 = @echo " GEN   " $@;
 gen_verbose_2 = set -x;
 gen_verbose = $(gen_verbose_$(V))
