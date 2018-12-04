@@ -4,6 +4,12 @@
 This is a non-exhaustive list of Erlang.mk plugins, sorted
 alphabetically.
 
+=== ci.erlang.mk
+
+A https://github.com/ninenines/ci.erlang.mk[plugin] that keeps
+track of released OTP versions to always run CI builds on the
+most recent patch(es).
+
 === efene.mk
 
 An https://github.com/ninenines/efene.mk[Efene plugin] for Erlang.mk.
