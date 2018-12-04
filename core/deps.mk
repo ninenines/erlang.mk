@@ -642,7 +642,7 @@ endef
 define dep_target
 $(DEPS_DIR)/$(call dep_name,$1):
 	$(eval DEP_NAME := $(call dep_name,$1))
-	$(eval DEP_STR := $(if $(filter-out $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
+	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
 		echo "Error: Dependency" $(DEP_STR) "conflicts with application found in $(APPS_DIR)/$(DEP_NAME)." >&2; \
 		exit 17; \
@@ -651,7 +651,7 @@ $(DEPS_DIR)/$(call dep_name,$1):
 	$(dep_verbose) $(call dep_fetch_$(strip $(call dep_fetch,$(1))),$(1))
 	$(verbose) if [ -f $(DEPS_DIR)/$(1)/configure.ac -o -f $(DEPS_DIR)/$(1)/configure.in ] \
 			&& [ ! -f $(DEPS_DIR)/$(1)/configure ]; then \
-		echo " AUTO  " $(1); \
+		echo " AUTO  " $(DEP_STR); \
 		cd $(DEPS_DIR)/$(1) && autoreconf -Wall -vif -I m4; \
 	fi
 	- $(verbose) if [ -f $(DEPS_DIR)/$(DEP_NAME)/configure ]; then \
