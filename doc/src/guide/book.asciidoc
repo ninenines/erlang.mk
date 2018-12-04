@@ -32,6 +32,8 @@ include::escripts.asciidoc[Escripts]
 
 include::kerl.asciidoc[OTP version management]
 
+include::cross_compiling.asciidoc[Cross compiling]
+
 include::compat.asciidoc[Compatibility with other build tools]
 
 [[docs]]

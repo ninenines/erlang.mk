@@ -1,0 +1,94 @@
+[[cross_compiling]]
+== Cross compiling
+
+Erlang.mk supports cross-compiling. While the compiled
+Erlang code is portable as-is, the C code is not and
+releases need to use the correct runtime system for the
+target environment.
+
+There are therefore two steps that might require some
+intervention: compiling and building the release. If
+you do not have any C code you can just compile as you
+would normally, however.
+
+=== Compiling
+
+To cross-compile the C code you need a cross compiler. If you
+were to target Windows from an Arch Linux machine you would
+install the https://aur.archlinux.org/packages/mingw-w64-gcc/[mingw-w64-gcc]
+package. You would then need to define the `CC` environment
+variable to point to this compiler instead of the default:
+
+[source,bash]
+CC=/usr/bin/x86_64-w64-mingw32-gcc
+
+Additionally, on Windows the shared libraries use a different
+extension than on Linux, so it needs to be specified as well:
+
+[source,bash]
+C_SRC_OUTPUT_SHARED_EXTENSION=.dll
+
+These values can be added to the Makefile or given from the
+command line, for example:
+
+[source,bash]
+----
+$ CC=/usr/bin/x86_64-w64-mingw32-gcc C_SRC_OUTPUT_SHARED_EXTENSION=.dll make
+ DEPEND my_nif.d
+ ERLC   my_nif.erl
+ APP    my_nif
+ C      my_nif.c
+ LD     my_nif.dll
+$ file priv/my_nif.dll                                              
+priv/my_nif.dll: PE32+ executable (DLL) (console) x86-64, for MS Windows
+----
+
+You could also add this configuration to your Makefile hidden
+behind a flag:
+
+[source,make]
+----
+ifdef WINDOWS_BUILD
+CC = /usr/bin/x86_64-w64-mingw32-gcc
+C_SRC_OUTPUT_SHARED_EXTENSION = .dll
+endif
+----
+
+And then just compile like this:
+
+[source,bash]
+$ make WINDOWS_BUILD=1
+
+=== Building the release
+
+For the release there are two options. You can either include
+the correct runtime system directly in the release; or you
+can not include the runtime system in the release and instead
+let it use the one installed in the target environment.
+
+To include the target runtime system, add the `include_erts`
+tuple to your 'relx.config' file:
+
+[source,erlang]
+{include_erts, "/path/to/alternate/erlang"}.
+
+If you were to target Windows for example, you could copy
+the Erlang installation from the 'Program Files' directory
+and then configure 'relx.config' like this:
+
+[source,erlang]
+{include_erts, "/path/to/erl10.1"}.
+
+You need to make sure that the runtime system version you
+will use is capable of running the compiled Erlang code
+you used to build your project, otherwise it will fail
+to run.
+
+If you choose to not include the runtime system at all,
+configure 'relx.config' as follow:
+
+[source,erlang]
+{include_erts, false}.
+
+In that case the runtime system needs to be available
+in the `$PATH` of the target environment.
