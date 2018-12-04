@@ -71,3 +71,16 @@ it doesn't exist. This is normally not necessary as
 Dialyzer creates it automatically.
 
 The PLT file will be removed when you run `make distclean`.
+
+=== Dialyzing beam files
+
+By default Erlang.mk will run Dialyzer against the source
+code. It is possible to configure Erlang.mk to use the
+compiled source files instead. This is done using the
+`DIALYZER_DIRS` variable:
+
+[source,make]
+DIALYZER_DIRS = -r ebin
+
+This value must be set before including Erlang.mk to
+function properly.

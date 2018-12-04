@@ -6,7 +6,7 @@ ifneq ($(shell which sem 2>/dev/null),)
 	DIALYZER_MUTEX = sem --fg --id dialyzer
 endif
 
-.PHONY: dialyzer $(C_SRC_TARGETS)
+.PHONY: dialyzer $(DIALYZER_TARGETS)
 
 dialyzer: $(DIALYZER_TARGETS)
 
@@ -109,7 +109,7 @@ dialyzer-beam: build clean
 	$t echo "ERLC_OPTS += +'{parse_transform, lager_transform}'" >> $(APP)/Makefile
 
 	$i "Make Dialyzer use the beam files"
-	$t echo "DIALYZER_DIRS = -r ebin" >> $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DIALYZER_DIRS = -r ebin\n"}' $(APP)/Makefile
 
 	$i "Create a module that calls lager"
 	$t printf "%s\n" \
@@ -118,6 +118,12 @@ dialyzer-beam: build clean
 		"doit() -> lager:error(\"Some message\")." > $(APP)/src/use_lager.erl
 
 	$i "Run Dialyzer"
+	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Run Dialyzer again using the produced PLT file"
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
 dialyzer-check: build clean

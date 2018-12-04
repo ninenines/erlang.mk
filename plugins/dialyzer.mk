@@ -54,7 +54,7 @@ distclean-plt:
 	$(gen_verbose) rm -f $(DIALYZER_PLT)
 
 ifneq ($(wildcard $(DIALYZER_PLT)),)
-dialyze:
+dialyze: $(if $(filter --src,$(DIALYZER_DIRS)),,deps app)
 else
 dialyze: $(DIALYZER_PLT)
 endif
