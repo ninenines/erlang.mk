@@ -209,6 +209,7 @@ endif
 	$(gen_verbose) $(MAKE) --no-print-directory -C $(ERLANG_MK_BUILD_DIR) WITHOUT='$(strip $(WITHOUT))' UPGRADE=1
 	$(verbose) cp $(ERLANG_MK_BUILD_DIR)/erlang.mk ./erlang.mk
 	$(verbose) rm -rf $(ERLANG_MK_BUILD_DIR)
+	$(verbose) rm -rf $(ERLANG_MK_TMP)
 
 # The erlang.mk package index is bundled in the default erlang.mk build.
 # Search for the string "copyright" to skip to the rest of the code.

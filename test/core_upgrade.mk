@@ -127,6 +127,25 @@ core-upgrade-custom-repo: build clean
 	$i "Check our modification is there"
 	$t grep -q "# Copyright (c) erlang.mk Testsuite!" $(APP)/erlang.mk
 
+core-upgrade-delete-tmp-dir: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the .erlang.mk directory exists"
+	$t test -e $(APP)/.erlang.mk/
+
+	$i "Upgrade Erlang.mk"
+	$t $(MAKE) -C $(APP) erlang-mk $v
+
+	$i "Check that the .erlang.mk directory was removed"
+	$t ! test -e $(APP)/.erlang.mk/
+
 core-upgrade-no-config: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
