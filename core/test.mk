@@ -20,7 +20,14 @@ ifneq ($(SKIP_DEPS),)
 test-deps:
 else
 test-deps: $(ALL_TEST_DEPS_DIRS)
-	$(verbose) set -e; for dep in $(ALL_TEST_DEPS_DIRS) ; do $(MAKE) -C $$dep IS_DEP=1; done
+	$(verbose) set -e; for dep in $(ALL_TEST_DEPS_DIRS) ; do \
+		if [ -z "$(strip $(FULL))" ] && [ ! -L $$dep ] && [ -f $$dep/ebin/dep_built ]; then \
+			:; \
+		else \
+			$(MAKE) -C $$dep IS_DEP=1; \
+			if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
+		fi \
+	done
 endif
 
 ifneq ($(wildcard $(TEST_DIR)),)
