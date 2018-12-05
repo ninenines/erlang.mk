@@ -6,6 +6,45 @@ CORE_AUTOPATCH_TARGETS = $(call list_targets,core-autopatch)
 
 core-autopatch: $(CORE_AUTOPATCH_TARGETS)
 
+core-autopatch-extended: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Ranch to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = ranch\n"}' $(APP)/Makefile
+
+	$i "Extend autopatch-ranch to create an additional module"
+	$t echo "autopatch-ranch:: ; rm -f \$$(DEPS_DIR)/ranch/src/ranch_protocol.erl" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the module was removed"
+	$t ! test -e $(APP)/deps/ranch/src/ranch_protocol.erl
+	$t ! test -e $(APP)/deps/ranch/ebin/ranch_protocol.beam
+
+core-autopatch-extended-erlc-opts: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add couchbeam to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = couchbeam\n"}' $(APP)/Makefile
+
+	$i "Extend autopatch-couchbeam to add options to its ERLC_OPTS"
+	$t echo "autopatch-couchbeam:: ; printf '\nERLC_OPTS += -DWITH_JIFFY\n' >> \$$(DEPS_DIR)/couchbeam/Makefile" >> $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that couchbeam_ejson was compiled with the added option"
+	$t $(ERL) -pa $(APP)/deps/couchbeam/ebin -eval 'c:m(couchbeam_ejson), halt()' | grep -c "WITH_JIFFY" | grep -q 1
+
 core-autopatch-no-autopatch: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"

@@ -659,6 +659,12 @@ $(DEPS_DIR)/$(call dep_name,$1):
 		cd $(DEPS_DIR)/$(DEP_NAME) && ./configure; \
 	fi
 ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
+	$(verbose) $$(MAKE) --no-print-directory autopatch-$(DEP_NAME)
+endif
+
+.PHONY: autopatch-$(call dep_name,$1)
+
+autopatch-$(call dep_name,$1)::
 	$(verbose) if [ "$(1)" = "amqp_client" -a "$(RABBITMQ_CLIENT_PATCH)" ]; then \
 		if [ ! -d $(DEPS_DIR)/rabbitmq-codegen ]; then \
 			echo " PATCH  Downloading rabbitmq-codegen"; \
@@ -677,9 +683,8 @@ ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 	elif [ "$1" = "elixir" -a "$(ELIXIR_PATCH)" ]; then \
 		ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/; \
 	else \
-		$$(call dep_autopatch,$(DEP_NAME)) \
+		$$(call dep_autopatch,$(call dep_name,$1)) \
 	fi
-endif
 endef
 
 $(foreach dep,$(BUILD_DEPS) $(DEPS),$(eval $(call dep_target,$(dep))))
