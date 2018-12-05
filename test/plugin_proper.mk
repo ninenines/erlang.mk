@@ -32,7 +32,7 @@ proper-test-dir: build clean
 		"prop_bar() -> ?FORALL(_, any(), true)." > $(APP)/test/$(APP)_tests.erl
 
 	$i "Run the PropEr plugin"
-	$t $(MAKE) -C $(APP) proper > $(APP)/proper.log
+	$t $(MAKE) -C $(APP) proper $v > $(APP)/proper.log
 
 	$i "Check that both properties were checked"
 	$t grep -q prop_foo $(APP)/proper.log

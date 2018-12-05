@@ -32,7 +32,7 @@ triq-test-dir: build clean
 		"prop_bar() -> ?FORALL(_, any(), true)." > $(APP)/test/$(APP)_tests.erl
 
 	$i "Run the Triq plugin"
-	$t $(MAKE) -C $(APP) triq > $(APP)/triq.log
+	$t $(MAKE) -C $(APP) triq $v > $(APP)/triq.log
 
 	$i "Check that both properties were checked"
 	$t grep -q prop_foo $(APP)/triq.log
