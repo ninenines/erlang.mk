@@ -46,8 +46,8 @@ $(foreach otp,$(CI_OTP),$(eval $(call ci_target,$(otp),$(otp),otp)))
 $(foreach otp,$(CI_HIPE),$(eval $(call ci_target,$(otp)-native,$(otp)-native,native)))
 $(foreach otp,$(CI_ERLLVM),$(eval $(call ci_target,$(otp)-erllvm,$(otp)-native,erllvm)))
 
-$(foreach otp,$(CI_OTP),$(eval $(call kerl_otp_target,$(otp))))
-$(foreach otp,$(sort $(CI_HIPE) $(CI_ERLLLVM)),$(eval $(call kerl_hipe_target,$(otp))))
+$(foreach otp,$(filter-out $(ERLANG_OTP),$(CI_OTP)),$(eval $(call kerl_otp_target,$(otp))))
+$(foreach otp,$(filter-out $(ERLANG_HIPE),$(sort $(CI_HIPE) $(CI_ERLLLVM))),$(eval $(call kerl_hipe_target,$(otp))))
 
 help::
 	$(verbose) printf "%s\n" "" \
