@@ -16,7 +16,7 @@ proper-test-dir: build clean
 	$i "Add PropEr to the list of dependencies"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = proper\n"}' $(APP)/Makefile
 
-	$i "Generate a module containing Proper properties"
+	$i "Generate a module containing PropEr properties"
 	$t printf "%s\n" \
 		"-module($(APP))." \
 		"-ifdef(TEST)." \

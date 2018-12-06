@@ -21,28 +21,13 @@ help::
 # Plugin-specific targets.
 
 define eunit.erl
-	Enabled = case "$(COVER)" of
-		"" -> false;
-		_ ->
-			case filelib:is_dir("ebin") of
-				false -> false;
-				true ->
-					case cover:compile_beam_directory("ebin") of
-						{error, _} -> halt(1);
-						_ -> true
-					end
-			end
-	end,
+	$(call cover.erl)
+	CoverSetup(),
 	case eunit:test($1, [$(EUNIT_OPTS)]) of
 		ok -> ok;
 		error -> halt(2)
 	end,
-	case {Enabled, "$(COVER)"} of
-		{false, _} -> ok;
-		{_, ""} -> ok;
-		_ ->
-			cover:export("$(COVER_DATA_DIR)/eunit.coverdata")
-	end,
+	CoverExport("$(COVER_DATA_DIR)/eunit.coverdata"),
 	halt()
 endef
 

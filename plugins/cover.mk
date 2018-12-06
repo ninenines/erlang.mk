@@ -5,7 +5,7 @@
 COVER_REPORT_DIR ?= cover
 COVER_DATA_DIR ?= $(COVER_REPORT_DIR)
 
-# Hook in coverage to ct
+# Code coverage for Common Test.
 
 ifdef COVER
 ifdef CT_RUN
@@ -20,6 +20,29 @@ $(TEST_DIR)/ct.cover.spec: cover-data-dir
 CT_RUN += -cover $(TEST_DIR)/ct.cover.spec
 endif
 endif
+endif
+
+# Code coverage for other tools.
+
+ifdef COVER
+define cover.erl
+	CoverSetup = fun() ->
+		case filelib:is_dir("ebin") of
+			false -> false;
+			true ->
+				case cover:compile_beam_directory("ebin") of
+					{error, _} -> halt(1);
+					_ -> true
+				end
+		end
+	end,
+	CoverExport = fun(Filename) -> cover:export(Filename) end,
+endef
+else
+define cover.erl
+	CoverSetup = fun() -> ok end,
+	CoverExport = fun(_) -> ok end,
+endef
 endif
 
 # Core targets

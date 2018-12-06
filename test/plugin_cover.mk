@@ -141,6 +141,34 @@ cover-eunit-apps-only: build clean
 	$i "Check that the generated file exists"
 	$t test -f $(APP)/apps/my_app/cover/eunit.coverdata
 
+cover-proper: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add PropEr to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = proper\n"}' $(APP)/Makefile
+
+	$i "Generate a module containing Proper properties"
+	$t printf "%s\n" \
+		"-module($(APP))." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"proper/include/proper.hrl\")." \
+		"prop_foo() -> ?FORALL(_, any(), true)." \
+		"-endif." > $(APP)/src/$(APP).erl
+
+	$i "Run PropEr with code coverage enabled"
+	$t $(MAKE) -C $(APP) proper COVER=1 $v
+
+	$i "Check that the generated file exists"
+	$t test -f $(APP)/cover/proper.coverdata
+
+	$i "Check that the generated file is removed on clean"
+	$t $(MAKE) -C $(APP) clean $v
+	$t test ! -e $(APP)/cover/proper.coverdata
+
 cover-report-and-merge: build clean
 
 	$i "Bootstrap a new OTP application named $(APP)"
@@ -188,3 +216,31 @@ cover-report-and-merge: build clean
 	$i "Check that the cover report is removed on distclean"
 	$t $(MAKE) -C $(APP) distclean $v
 	$t test ! -e $(APP)/cover/
+
+cover-triq: build clean
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Triq to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = triq\n"}' $(APP)/Makefile
+
+	$i "Generate a module containing Triq properties"
+	$t printf "%s\n" \
+		"-module($(APP))." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"triq/include/triq.hrl\")." \
+		"prop_foo() -> ?FORALL(_, any(), true)." \
+		"-endif." > $(APP)/src/$(APP).erl
+
+	$i "Run Triq with code coverage enabled"
+	$t $(MAKE) -C $(APP) triq COVER=1 $v
+
+	$i "Check that the generated file exists"
+	$t test -f $(APP)/cover/triq.coverdata
+
+	$i "Check that the generated file is removed on clean"
+	$t $(MAKE) -C $(APP) clean $v
+	$t test ! -e $(APP)/cover/triq.coverdata
