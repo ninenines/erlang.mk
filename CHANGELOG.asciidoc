@@ -7,3 +7,6 @@
             information. A quick fix if this causes an
             issue is to add `FULL = 1` at the top of your
             Makefile.
+
+2018/12/06: Change the default COVER_DATA_DIR to be the
+            same as COVER_REPORT_DIR.

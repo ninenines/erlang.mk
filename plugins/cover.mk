@@ -3,7 +3,7 @@
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 COVER_REPORT_DIR ?= cover
-COVER_DATA_DIR ?= $(CURDIR)
+COVER_DATA_DIR ?= $(COVER_REPORT_DIR)
 
 # Hook in coverage to ct
 

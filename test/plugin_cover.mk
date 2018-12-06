@@ -25,12 +25,12 @@ cover-ct: build clean
 	$t $(MAKE) -C $(APP) ct COVER=1 $v
 
 	$i "Check that the generated files exist"
-	$t test -f $(APP)/ct.coverdata
+	$t test -f $(APP)/cover/ct.coverdata
 	$t test -f $(APP)/test/ct.cover.spec
 
 	$i "Check that the generated files are removed on clean"
 	$t $(MAKE) -C $(APP) clean $v
-	$t test ! -e $(APP)/ct.coverdata
+	$t test ! -e $(APP)/cover/ct.coverdata
 	$t test ! -e $(APP)/test/ct.cover.spec
 
 cover-custom-dir: build clean
@@ -108,11 +108,11 @@ cover-eunit: build clean
 	$t $(MAKE) -C $(APP) eunit COVER=1 $v
 
 	$i "Check that the generated file exists"
-	$t test -f $(APP)/eunit.coverdata
+	$t test -f $(APP)/cover/eunit.coverdata
 
 	$i "Check that the generated file is removed on clean"
 	$t $(MAKE) -C $(APP) clean $v
-	$t test ! -e $(APP)/eunit.coverdata
+	$t test ! -e $(APP)/cover/eunit.coverdata
 
 cover-eunit-apps-only: build clean
 
@@ -136,10 +136,10 @@ cover-eunit-apps-only: build clean
 	$t $(MAKE) -C $(APP) eunit COVER=1 $v
 
 	$i "Check that no file was generated in the top-level directory"
-	$t ! test -f $(APP)/eunit.coverdata
+	$t ! test -f $(APP)/cover/eunit.coverdata
 
 	$i "Check that the generated file exists"
-	$t test -f $(APP)/apps/my_app/eunit.coverdata
+	$t test -f $(APP)/apps/my_app/cover/eunit.coverdata
 
 cover-report-and-merge: build clean
 
@@ -170,19 +170,19 @@ cover-report-and-merge: build clean
 	$i "Check that the generated files exist"
 	$t test -f $(APP)/cover/$(APP).COVER.html
 	$t test -f $(APP)/cover/index.html
-	$t test -f $(APP)/ct.coverdata
-	$t test -f $(APP)/eunit.coverdata
+	$t test -f $(APP)/cover/ct.coverdata
+	$t test -f $(APP)/cover/eunit.coverdata
 	$t test -f $(APP)/test/ct.cover.spec
 
 	$i "Merge coverdata files into all.coverdata"
 	$t $(MAKE) -C $(APP) all.coverdata $v
-	$t test -f $(APP)/all.coverdata
+	$t test -f $(APP)/cover/all.coverdata
 
 	$i "Check that the generated files are removed on clean"
 	$t $(MAKE) -C $(APP) clean $v
-	$t test ! -e $(APP)/all.coverdata
-	$t test ! -e $(APP)/ct.coverdata
-	$t test ! -e $(APP)/eunit.coverdata
+	$t test ! -e $(APP)/cover/all.coverdata
+	$t test ! -e $(APP)/cover/ct.coverdata
+	$t test ! -e $(APP)/cover/eunit.coverdata
 	$t test ! -e $(APP)/test/ct.cover.spec
 
 	$i "Check that the cover report is removed on distclean"
