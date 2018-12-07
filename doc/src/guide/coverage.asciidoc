@@ -1,6 +1,62 @@
 [[coverage]]
 == Code coverage
 
-// @todo Write it.
+Erlang.mk provides support for code coverage via the tool
+`cover` that comes with Erlang/OTP. Code coverage lets you
+see what parts of your code are covered by the tests.
 
-Placeholder chapter.
+=== Enabling cover when running tests
+
+To run tests with code coverage enabled, simply define
+`COVER=1` either on the command line or in your Makefile:
+
+[source,bash]
+$ make tests COVER=1
+
+When running the targets `tests` or `check` the code
+coverage report will be built automatically. This is
+not the case for test framework specific targets,
+however. In those cases you can generate the reports
+manually:
+
+[source,bash]
+$ make eunit proper COVER=1
+$ make cover-report
+
+Note that Common Test has some support for `cover`
+built-in and that it will generate code coverage
+reports in the Common Test logs regardless. The
+report that Erlang.mk generates is however common
+to all test frameworks and might be more useful.
+
+=== Adding applications to the cover report
+
+By default Erlang.mk will include all the applications
+in the code coverage report, except external dependencies.
+
+To include some dependencies in the report, you can
+define the `COVER_DEPS` variable:
+
+[source,make]
+COVER_DEPS = cowlib
+
+When using multi application repositories you can exclude
+some applications by defining the `COVER_APPS` variable:
+
+[source,make]
+COVER_APPS = presence backend
+
+=== Configuring paths
+
+By default Erlang.mk will store 'coverdata' files and
+code coverage reports under the 'cover/' directory. The
+variables `COVER_DATA_DIR` and `COVER_REPORT_DIR` can be
+set to use a different location.
+
+=== Merging coverdata files
+
+The target `all.coverdata` will take all existing
+'coverdata' files and merge them into one:
+
+[source,bash]
+$ make all.coverdata
