@@ -351,6 +351,8 @@ define dep_autopatch_rebar.erl
 			{_, Files} ->
 				Names = [[" ", case lists:reverse(F) of
 					"lre." ++ Elif -> lists:reverse(Elif);
+					"lrx." ++ Elif -> lists:reverse(Elif);
+					"lry." ++ Elif -> lists:reverse(Elif);
 					Elif -> lists:reverse(Elif)
 				end] || "src/" ++ F <- Files],
 				Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
