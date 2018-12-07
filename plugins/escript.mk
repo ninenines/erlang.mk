@@ -27,6 +27,7 @@ help::
 
 # Plugin-specific targets.
 
+escript-zip:: FULL=1
 escript-zip:: deps app
 	$(verbose) mkdir -p $(dir $(ESCRIPT_ZIP))
 	$(verbose) rm -f $(ESCRIPT_ZIP_FILE)

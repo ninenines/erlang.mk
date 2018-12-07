@@ -90,6 +90,36 @@ escript-deps: build clean
 	$i "Check that the escript contains the dependency"
 	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q ranch
 
+escript-deps-with-deps: build clean
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy 1.0.0 to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy_commit = 1.0.0\n"}' $(APP)/Makefile
+
+	$i "Generate a module containing a function main/1"
+	$t printf "%s\n" \
+		"-module($(APP))." \
+		"-export([main/1])." \
+		'main(_) -> io:format("good~n").' > $(APP)/src/$(APP).erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Build the escript"
+	$t $(MAKE) -C $(APP) escript $v
+
+	$i "Check that the escript runs"
+	$t $(APP)/$(APP) | grep -q good
+
+	$i "Check that the escript contains the dependencies"
+	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q cowboy
+	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q cowlib
+	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q ranch
+
 escript-distclean: build clean
 
 	$i "Bootstrap a new OTP library named $(APP)"
