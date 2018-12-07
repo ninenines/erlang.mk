@@ -33,11 +33,11 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="coverage.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="dialyzer.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ci"></a>Chapter 23. Continuous integration</h2></div></div></div><p>Erlang.mk comes with some support for continuous integration,
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="coverage.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="dialyzer.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ci"></a>Chapter 24. Continuous integration</h2></div></div></div><p>Erlang.mk comes with some support for continuous integration,
 aimed at open source projects that need to support more than
 one specific Erlang/OTP release. (If you target one specific
 release, check the <a class="link" href="kerl.html#otp_version_pinning" title="12.2. OTP version pinning">OTP version pinning</a>
-section of the <a class="link" href="kerl.html" title="Chapter 12. OTP version management">OTP version management</a> chapter.)</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuring_erlang_otp_versions_to_test"></a>23.1. Configuring Erlang/OTP versions to test</h2></div></div></div><p>To use the CI plugin you must first configure which versions
+section of the <a class="link" href="kerl.html" title="Chapter 12. OTP version management">OTP version management</a> chapter.)</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuring_erlang_otp_versions_to_test"></a>24.1. Configuring Erlang/OTP versions to test</h2></div></div></div><p>To use the CI plugin you must first configure which versions
 of Erlang/OTP will be used. Erlang.mk provides three separate
 configuration variables depending on whether you need a normal
 OTP release, a HiPE-enabled release or an ErLLVM-enabled release.</p><p>At the time of writing, this is how you would test against all
@@ -45,9 +45,9 @@ the most recent patch releases of Erlang/OTP 19 and above:</p><pre class="progra
 latest version of Erlang/OTP, the following could work:</p><pre class="programlisting">CI_HIPE = $(lastword $(CI_OTP))
 CI_ERLLVM = $(CI_HIPE)</pre><p>Consult the <a class="link" href="kerl.html" title="Chapter 12. OTP version management">OTP version management</a> chapter for more
 information about Erlang/OTP versions and customization of the
-Erlang/OTP builds.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_tests_across_all_configured_versions"></a>23.2. Running tests across all configured versions</h2></div></div></div><p>The recommended way to run the <code class="literal">ci</code> target is with the option
+Erlang/OTP builds.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_tests_across_all_configured_versions"></a>24.2. Running tests across all configured versions</h2></div></div></div><p>The recommended way to run the <code class="literal">ci</code> target is with the option
 <code class="literal">-k</code>. It will ensure that tests are run for all configured
-Erlang/OTP versions, even if there are errors:</p><pre class="programlisting">$ make ci -k</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_extending_the_ci_targets"></a>23.3. Extending the CI targets</h2></div></div></div><p>The <code class="literal">ci</code> target can be extended. For example to run Dialyzer
+Erlang/OTP versions, even if there are errors:</p><pre class="programlisting">$ make ci -k</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_extending_the_ci_targets"></a>24.3. Extending the CI targets</h2></div></div></div><p>The <code class="literal">ci</code> target can be extended. For example to run Dialyzer
 at the end of CI:</p><pre class="programlisting">ci:: dialyze</pre><p>Additional setup can be done by extending the <code class="literal">ci-setup</code>
 target. This target is ran before testing each individual
 Erlang/OTP version.</p><p>For example, to ensure dependencies are re-fetched/built

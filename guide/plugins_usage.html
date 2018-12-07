@@ -33,7 +33,7 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="plugins.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="plugins_list.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="plugins_usage"></a>Chapter 26. External plugins</h2></div></div></div><p>It is often convenient to be able to keep the build files
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="plugins.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="plugins_list.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="plugins_usage"></a>Chapter 27. External plugins</h2></div></div></div><p>It is often convenient to be able to keep the build files
 used by all your projects in one place. Those files could
 be Makefiles, configuration files, templates and more.</p><p>Erlang.mk allows you to automatically load plugins from
 dependencies. Plugins can do anything, including defining
@@ -42,19 +42,19 @@ inside the normal Erlang.mk processing or even adding new
 rules.</p><p>You can load plugins using one of two methods. You can
 either load all plugins from a dependency, or just one.
 We will also cover conventions about writing external
-plugins.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_loading_all_plugins_from_a_dependency"></a>26.1. Loading all plugins from a dependency</h2></div></div></div><p>To load plugins from a dependency, all you need to do is add
+plugins.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_loading_all_plugins_from_a_dependency"></a>27.1. Loading all plugins from a dependency</h2></div></div></div><p>To load plugins from a dependency, all you need to do is add
 the dependency name to <code class="literal">DEP_PLUGINS</code> in addition to the list
 of dependencies.</p><p>For example, if you have <code class="literal">cowboy</code> in <code class="literal">DEPS</code>, add <code class="literal">cowboy</code> in
 <code class="literal">DEP_PLUGINS</code> also:</p><pre class="programlisting">DEPS = cowboy
 DEP_PLUGINS = cowboy</pre><p>This will load the file <span class="emphasis"><em>plugins.mk</em></span> in the root folder of
-the Cowboy repository.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_loading_one_plugin_from_a_dependency"></a>26.2. Loading one plugin from a dependency</h2></div></div></div><p>Now that we know how to load all plugins, let’s take a look
+the Cowboy repository.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_loading_one_plugin_from_a_dependency"></a>27.2. Loading one plugin from a dependency</h2></div></div></div><p>Now that we know how to load all plugins, let’s take a look
 at how to load one specific plugin from a dependency.</p><p>To do this, instead of writing only the name of the dependency,
 we will write its name and the path to the plugin file. This
 means that writing <code class="literal">DEP_PLUGINS = cowboy</code> is equivalent to
 writing <code class="literal">DEP_PLUGINS = cowboy/plugins.mk</code>.</p><p>Knowing this, if we were to load the plugin <span class="emphasis"><em>mk/dist.mk</em></span>
 from Cowboy and no other, we would write the following in
 our Makefile:</p><pre class="programlisting">DEPS = cowboy
-DEP_PLUGINS = cowboy/mk/dist.mk</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_external_plugins"></a>26.3. Writing external plugins</h2></div></div></div><p>The <span class="emphasis"><em>plugins.mk</em></span> file is a convention. It is meant to load
+DEP_PLUGINS = cowboy/mk/dist.mk</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_external_plugins"></a>27.3. Writing external plugins</h2></div></div></div><p>The <span class="emphasis"><em>plugins.mk</em></span> file is a convention. It is meant to load
 all the plugins from the dependency. The code for the plugin
 can be written directly in <span class="emphasis"><em>plugins.mk</em></span> or be separate.</p><p>If you are providing more than one plugin with your repository,
 the recommended way is to create one file per plugin in the
@@ -67,7 +67,7 @@ include $(THIS)/mk/templates.mk</pre><p>The <code class="literal">THIS</code> va
 plugins, but also select all plugins from the dependency
 in one go if they wish to do so.</p><p>Plugins can include some help text by extending the target
 <code class="literal">help-plugins</code>:</p><pre class="programlisting">help-plugins::
-    $(verbose) printf "%s\n" "" "Run benchmark: $(MAKE) perfs"</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_early_stage_plugins"></a>26.4. Early-stage plugins</h2></div></div></div><p>Plugins declared in <code class="literal">DEP_PLUGINS</code> are loaded near the end of Erlang.mk.
+    $(verbose) printf "%s\n" "" "Run benchmark: $(MAKE) perfs"</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_early_stage_plugins"></a>27.4. Early-stage plugins</h2></div></div></div><p>Plugins declared in <code class="literal">DEP_PLUGINS</code> are loaded near the end of Erlang.mk.
 That’s why you have access to all previously initialized variables.
 However, if you want your plugin to add common dependencies to
 your applications, a regular is loaded too late in the process.
@@ -81,7 +81,7 @@ BUILD_DEPS = common_deps
 DEP_EARLY_PLUGINS = common_deps</pre><pre class="programlisting"># In the plugin's early-plugins.mk
 DEPS += cowboy
 TEST_DEPS = ct_helper
-dep_ct_helper = git https://github.com/ninenines/ct_helper master</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_loading_plugins_local_to_the_application"></a>26.5. Loading  plugins local to the application</h2></div></div></div><p>If the Erlang.mk plugin lives in the same directory or repository as your
+dep_ct_helper = git https://github.com/ninenines/ct_helper master</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_loading_plugins_local_to_the_application"></a>27.5. Loading  plugins local to the application</h2></div></div></div><p>If the Erlang.mk plugin lives in the same directory or repository as your
 application or library, then you can load it exactly like an external
 plugin: the dependency name is simply the name of your application or
 library.</p><p>For example, the following Makefile loads a plugin in the <span class="emphasis"><em>mk</em></span>
