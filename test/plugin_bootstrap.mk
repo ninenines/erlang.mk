@@ -6,7 +6,7 @@ BOOTSTRAP_TARGETS = $(call list_targets,bootstrap)
 
 bootstrap: $(BOOTSTRAP_TARGETS)
 
-bootstrap-app: build clean
+bootstrap-app: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -37,35 +37,35 @@ endif
 		{module, $(APP)_sup} = code:load_file($(APP)_sup), \
 		halt()"
 
-bootstrap-invalid-app-name-dash: build clean
+bootstrap-invalid-app-name-dash: init
 
 	$i "Try to bootstrap a new OTP application named test_$@"
 	$t mkdir test_$@/
 	$t cp ../erlang.mk test_$@/
 	$t ! $(MAKE) -C test_$@ -f erlang.mk bootstrap $v
 
-bootstrap-invalid-app-name-uppercase: build clean
+bootstrap-invalid-app-name-uppercase: init
 
 	$i "Try to bootstrap a new OTP application named $(APP)_HELLO"
 	$t mkdir $(APP)_HELLO/
 	$t cp ../erlang.mk $(APP)_HELLO/
 	$t ! $(MAKE) -C $(APP)_HELLO -f erlang.mk bootstrap $v
 
-bootstrap-invalid-lib-name-dash: build clean
+bootstrap-invalid-lib-name-dash: init
 
 	$i "Try to bootstrap a new OTP library named test_$@"
 	$t mkdir test_$@/
 	$t cp ../erlang.mk test_$@/
 	$t ! $(MAKE) -C test_$@ -f erlang.mk bootstrap-lib $v
 
-bootstrap-invalid-lib-name-uppercase: build clean
+bootstrap-invalid-lib-name-uppercase: init
 
 	$i "Try to bootstrap a new OTP library named $(APP)_HELLO"
 	$t mkdir $(APP)_HELLO/
 	$t cp ../erlang.mk $(APP)_HELLO/
 	$t ! $(MAKE) -C $(APP)_HELLO -f erlang.mk bootstrap-lib $v
 
-bootstrap-invalid-new-app-name-dash: build clean
+bootstrap-invalid-new-app-name-dash: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -75,7 +75,7 @@ bootstrap-invalid-new-app-name-dash: build clean
 	$i "Try to create a new application my-app"
 	$t ! $(MAKE) -C $(APP) new-app in=my-app $v
 
-bootstrap-invalid-new-app-name-uppercase: build clean
+bootstrap-invalid-new-app-name-uppercase: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -85,7 +85,7 @@ bootstrap-invalid-new-app-name-uppercase: build clean
 	$i "Try to create a new application My_app"
 	$t ! $(MAKE) -C $(APP) new-app in=My_app $v
 
-bootstrap-invalid-new-lib-name-dash: build clean
+bootstrap-invalid-new-lib-name-dash: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -95,7 +95,7 @@ bootstrap-invalid-new-lib-name-dash: build clean
 	$i "Try to create a new library my-lib"
 	$t ! $(MAKE) -C $(APP) new-lib in=my-lib $v
 
-bootstrap-invalid-new-lib-name-uppercase: build clean
+bootstrap-invalid-new-lib-name-uppercase: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -105,7 +105,7 @@ bootstrap-invalid-new-lib-name-uppercase: build clean
 	$i "Try to create a new library My_lib"
 	$t ! $(MAKE) -C $(APP) new-lib in=My_lib $v
 
-bootstrap-lib: build clean
+bootstrap-lib: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -130,7 +130,7 @@ endif
 		{ok, []} = application:get_key($(APP), modules), \
 		halt()"
 
-bootstrap-new-app-sp: build clean
+bootstrap-new-app-sp: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -162,7 +162,7 @@ endif
 	$t test -f $(APP)/apps/my_app/ebin/my_app_app.beam
 	$t test -f $(APP)/apps/my_app/ebin/my_app_sup.beam
 
-bootstrap-new-app-sp-override: build clean
+bootstrap-new-app-sp-override: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -194,7 +194,7 @@ endif
 	$t test -f $(APP)/apps/my_app/ebin/my_app_app.beam
 	$t test -f $(APP)/apps/my_app/ebin/my_app_sup.beam
 
-bootstrap-rel: build clean
+bootstrap-rel: init
 
 	$i "Bootstrap a new release-enabled OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -243,7 +243,7 @@ endif
 	$i "Check that there's no erl_crash.dump file"
 	$t test ! -f $(APP)/_rel/$(APP)_release/erl_crash.dump
 
-bootstrap-sp: build clean
+bootstrap-sp: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -282,7 +282,7 @@ endif
 		{module, $(APP)_sup} = code:load_file($(APP)_sup), \
 		halt()"
 
-bootstrap-tab: build clean
+bootstrap-tab: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -304,7 +304,7 @@ endif
 	$t test "`awk -F "\t" 'NF > 1' $(APP)/src/$(APP)_app.erl`"
 	$t test "`awk -F "\t" 'NF > 1' $(APP)/src/$(APP)_sup.erl`"
 
-bootstrap-templates: build clean
+bootstrap-templates: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

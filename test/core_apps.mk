@@ -6,7 +6,7 @@ CORE_APPS_TARGETS = $(call list_targets,core-apps)
 
 core-apps: $(CORE_APPS_TARGETS)
 
-core-apps-build: build clean
+core-apps-build: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -112,7 +112,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-apps-build-count: build clean
+core-apps-build-count: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -148,7 +148,7 @@ core-apps-build-count: build clean
 	$t test "`wc -c $(APP)/apps/app_one/count | awk '{printf $$1}'`" -eq 1
 	$t test "`wc -c $(APP)/apps/app_two/count | awk '{printf $$1}'`" -eq 1
 
-core-apps-conflict: build clean
+core-apps-conflict: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -167,7 +167,7 @@ core-apps-conflict: build clean
 	$i "Check that Cowlib wasn't fetched"
 	$t test ! -e $(APP)/deps/cowlib
 
-core-apps-deep-conflict: build clean
+core-apps-deep-conflict: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -186,7 +186,7 @@ core-apps-deep-conflict: build clean
 	$i "Check that Cowlib wasn't fetched"
 	$t test ! -e $(APP)/deps/cowlib
 
-core-apps-dir: build clean
+core-apps-dir: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -257,7 +257,7 @@ endif
 	$i "Check that all relevant files were removed"
 	$t test ! -e $(APP)/deps
 
-core-apps-dir-include-lib: build clean
+core-apps-dir-include-lib: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -316,7 +316,7 @@ core-apps-dir-include-lib: build clean
 	$t test -f $(APP)/deep/libs/girl_app/ebin/girl_app.app
 	$t test -f $(APP)/deep/libs/girl_app/ebin/girl.beam
 
-core-apps-new-app: build clean
+core-apps-new-app: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -361,7 +361,7 @@ endif
 		{module, my_server} = code:load_file(my_server), \
 		halt()"
 
-core-apps-new-lib: build clean
+core-apps-new-lib: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -400,7 +400,7 @@ endif
 		{module, my_server} = code:load_file(my_server), \
 		halt()"
 
-core-apps-new-tpl: build clean
+core-apps-new-tpl: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -432,7 +432,7 @@ core-apps-new-tpl: build clean
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-apps-local-deps: build clean
+core-apps-local-deps: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -502,7 +502,7 @@ core-apps-local-deps: build clean
 	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_sup.beam
 	$t test -f $(APP)/deps/lager/ebin/lager.app
 
-core-apps-local-deps-circular: build clean
+core-apps-local-deps-circular: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -536,7 +536,7 @@ core-apps-local-deps-circular: build clean
 	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_app.beam
 	$t test -f $(APP)/apps/my_app_2/ebin/my_app_2_sup.beam
 
-core-apps-only: build clean
+core-apps-only: init
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -601,7 +601,7 @@ core-apps-only: build clean
 	$i "Check that all relevant files were removed"
 	$t test ! -e $(APP)/deps
 
-core-apps-toplevel-local-deps: build clean
+core-apps-toplevel-local-deps: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

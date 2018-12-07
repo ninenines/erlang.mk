@@ -7,7 +7,7 @@ CORE_DEPS_TARGETS = $(call list_targets,core-deps)
 core-deps: $(CORE_DEPS_TARGETS)
 
 ifneq ($(PLATFORM),msys2)
-core-deps-build-c-8cc: build clean
+core-deps-build-c-8cc: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -34,7 +34,7 @@ core-deps-build-c-8cc: build clean
 		halt()"
 endif
 
-core-deps-build-c-lz4: build clean
+core-deps-build-c-lz4: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -60,7 +60,7 @@ core-deps-build-c-lz4: build clean
 		false = lists:member(lz4, Deps), \
 		halt()"
 
-core-deps-build-erl: build clean
+core-deps-build-erl: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -83,7 +83,7 @@ core-deps-build-erl: build clean
 		false = lists:member(cowlib, Deps), \
 		halt()"
 
-core-deps-build-js: build clean
+core-deps-build-js: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -106,7 +106,7 @@ core-deps-build-js: build clean
 		false = lists:member(jquery, Deps), \
 		halt()"
 
-core-deps-dep-built: build clean
+core-deps-dep-built: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -145,7 +145,7 @@ core-deps-dep-built: build clean
 	$t find $(APP)/deps/cowlib -type f -newer $(APP)/EXPECT | grep -v ".git" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
 
-core-deps-dep-built-full: build clean
+core-deps-dep-built-full: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -174,7 +174,7 @@ core-deps-dep-built-full: build clean
 	$t find $(APP)/deps/cowlib -type f -newer $(APP)/EXPECT | grep -v ".git" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
 
-core-deps-dep-built-ln: build clean
+core-deps-dep-built-ln: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -209,7 +209,7 @@ core-deps-dep-built-ln: build clean
 	$t find $(APP)/cowlib -type f -newer $(APP)/EXPECT | grep -v ".git" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
 
-core-deps-dep-commit: build clean
+core-deps-dep-commit: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -240,7 +240,7 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
 		halt()"
 
-core-deps-dir: build clean
+core-deps-dir: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -270,7 +270,7 @@ endif
 		true = lists:member(cowboy, Deps), \
 		halt()"
 
-core-deps-doc: build clean
+core-deps-doc: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -307,7 +307,7 @@ core-deps-doc: build clean
 	$t test -f $(APP)/doc/boy.md
 	$t test -f $(APP)/doc/girl.md
 
-core-deps-fetch-cp: build clean
+core-deps-fetch-cp: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -340,7 +340,7 @@ endif
 		true = lists:member(my_dep, Deps), \
 		halt()"
 
-core-deps-fetch-custom: build clean
+core-deps-fetch-custom: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -368,7 +368,7 @@ endif
 		true = lists:member(boop, Deps), \
 		halt()"
 
-core-deps-fetch-fail-bad: build clean
+core-deps-fetch-fail-bad: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -381,7 +381,7 @@ core-deps-fetch-fail-bad: build clean
 	$i "Check that building the application fails"
 	$t ! $(MAKE) -C $(APP) $v
 
-core-deps-fetch-fail-unknown: build clean
+core-deps-fetch-fail-unknown: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -394,7 +394,7 @@ core-deps-fetch-fail-unknown: build clean
 	$i "Check that building the application fails"
 	$t ! $(MAKE) -C $(APP) $v
 
-core-deps-fetch-git: build clean
+core-deps-fetch-git: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -425,7 +425,7 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
 		halt()"
 
-core-deps-fetch-git-subfolder: build clean
+core-deps-fetch-git-subfolder: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -466,7 +466,7 @@ endif
 		true = lists:member(my_dep, Deps), \
 		halt()"
 
-core-deps-fetch-git-submodule: build clean
+core-deps-fetch-git-submodule: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -520,7 +520,7 @@ endif
 		true = lists:member(my_dep, Deps), \
 		halt()"
 
-core-deps-fetch-hex: build clean
+core-deps-fetch-hex: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -551,7 +551,7 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
 		halt()"
 
-core-deps-fetch-hg: build clean
+core-deps-fetch-hg: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -581,7 +581,7 @@ endif
 		halt()"
 
 # Legacy must fail for the top-level application, but work for dependencies.
-core-deps-fetch-legacy: build clean
+core-deps-fetch-legacy: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -597,7 +597,7 @@ core-deps-fetch-legacy: build clean
 	$i "Check that building the application works with IS_DEP=1"
 	$t $(MAKE) -C $(APP) IS_DEP=1 $v
 
-core-deps-fetch-ln: build clean
+core-deps-fetch-ln: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -630,7 +630,7 @@ endif
 		true = lists:member(my_dep, Deps), \
 		halt()"
 
-core-deps-fetch-svn: build clean
+core-deps-fetch-svn: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -659,7 +659,7 @@ endif
 		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
 		halt()"
 
-core-deps-ignore: build clean
+core-deps-ignore: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -722,7 +722,7 @@ define add_dep_and_subdep
 		git commit -q --no-gpg-sign -m "Initial commit")
 endef
 
-core-deps-list-deps: build clean
+core-deps-list-deps: init
 
 # We pass $(MAKE) directly so that GNU Make can pass its context forward.
 # If we didn't then $(MAKE) would be expanded in the call without context.
@@ -825,7 +825,7 @@ dep_shelldep = git file://$(abspath $(APP)_shelldep) master\
 	$t cmp $(APP)/expected-all-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
 	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
 
-core-deps-mv: build clean
+core-deps-mv: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -847,7 +847,7 @@ core-deps-mv: build clean
 	$i "Build the application"
 	$t $(MAKE) -C $(APP)-moved $v
 
-core-deps-mv-rebar: build clean
+core-deps-mv-rebar: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -872,7 +872,7 @@ core-deps-mv-rebar: build clean
 
 # A lower-level dependency of the first dependency always
 # wins over a lower-level dependency of the second dependency.
-core-deps-order-first: build clean
+core-deps-order-first: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -913,7 +913,7 @@ endif
 		halt()"
 
 # A higher-level dependency always wins.
-core-deps-order-top: build clean
+core-deps-order-top: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -945,7 +945,7 @@ endif
 		halt()"
 
 ifndef LEGACY
-core-deps-otp: build clean
+core-deps-otp: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -969,7 +969,7 @@ core-deps-otp: build clean
 		halt()"
 endif
 
-core-deps-pkg: build clean
+core-deps-pkg: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -999,7 +999,7 @@ endif
 		true = lists:member(cowboy, Deps), \
 		halt()"
 
-core-deps-rel: build clean
+core-deps-rel: init
 
 	$i "Bootstrap a new release-enabled OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1064,7 +1064,7 @@ else
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
 endif
 
-core-deps-search: build clean
+core-deps-search: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1077,7 +1077,7 @@ core-deps-search: build clean
 	$i "Run 'make search q=cowboy' and check that it prints packages"
 	$t test -n "`$(MAKE) -C $(APP) search q=cowboy`"
 
-core-deps-shell: build clean
+core-deps-shell: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1116,7 +1116,7 @@ core-deps-shell: build clean
 		false = lists:member(tddreloader, Deps), \
 		halt()"
 
-core-deps-skip: build clean
+core-deps-skip: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1153,7 +1153,7 @@ endif
 	$t test -d $(APP)/deps/cowboy
 	$t test -d $(APP)/deps/ranch
 
-core-deps-test: build clean
+core-deps-test: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

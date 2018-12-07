@@ -6,7 +6,7 @@ TRIQ_TARGETS = $(call list_targets,triq)
 
 triq: $(TRIQ_TARGETS)
 
-triq-test-dir: build clean
+triq-test-dir: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/

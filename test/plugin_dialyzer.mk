@@ -10,7 +10,7 @@ endif
 
 dialyzer: $(DIALYZER_TARGETS)
 
-dialyzer-app: build clean
+dialyzer-app: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -37,7 +37,7 @@ dialyzer-app: build clean
 	$i "Check that the PLT file was removed"
 	$t test ! -e $(APP)/.$(APP).plt
 
-dialyzer-apps-only: build clean
+dialyzer-apps-only: init
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -70,7 +70,7 @@ dialyzer-apps-only: build clean
 	$i "Confirm that Dialyzer errors out"
 	$t ! $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
-dialyzer-apps-with-local-deps: build clean
+dialyzer-apps-with-local-deps: init
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -95,7 +95,7 @@ dialyzer-apps-with-local-deps: build clean
 	$i "Confirm that my_core_app was NOT included in the PLT"
 	$t ! dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q my_core_app
 
-dialyzer-beam: build clean
+dialyzer-beam: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -126,7 +126,7 @@ dialyzer-beam: build clean
 	$i "Run Dialyzer again using the produced PLT file"
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
-dialyzer-check: build clean
+dialyzer-check: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -147,7 +147,7 @@ dialyzer-check: build clean
 	$i "Confirm that Dialyzer errors out on 'make check'"
 	$t ! $(DIALYZER_MUTEX) $(MAKE) -C $(APP) check $v
 
-dialyzer-custom-plt: build clean
+dialyzer-custom-plt: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -169,7 +169,7 @@ dialyzer-custom-plt: build clean
 	$i "Check that the PLT file was removed"
 	$t test ! -e $(APP)/custom.plt
 
-dialyzer-deps: build clean
+dialyzer-deps: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -188,7 +188,7 @@ dialyzer-deps: build clean
 	$i "Confirm that Cowlib was included in the PLT"
 	$t dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q cowlib
 
-dialyzer-erlc-opts: build clean
+dialyzer-erlc-opts: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -212,7 +212,7 @@ dialyzer-erlc-opts: build clean
 	$i "Run Dialyzer"
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
 
-dialyzer-local-deps: build clean
+dialyzer-local-deps: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -228,7 +228,7 @@ dialyzer-local-deps: build clean
 	$i "Confirm that runtime_tools was included in the PLT"
 	$t dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q runtime_tools
 
-dialyzer-opts: build clean
+dialyzer-opts: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -253,7 +253,7 @@ dialyzer-opts: build clean
 	$i "Check that the output file was created"
 	$t test -f $(APP)/output.txt
 
-dialyzer-plt-apps: build clean
+dialyzer-plt-apps: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -269,7 +269,7 @@ dialyzer-plt-apps: build clean
 	$i "Confirm that runtime_tools was included in the PLT"
 	$t dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q runtime_tools
 
-dialyzer-plt-ebin-only: build clean
+dialyzer-plt-ebin-only: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -297,7 +297,7 @@ dialyzer-plt-ebin-only: build clean
 	$i "Confirm that rebar files were not included in the PLT"
 	$t ! dialyzer --plt_info --plt $(APP)/.$(APP).plt | grep -q rebar
 
-dialyzer-plt-swallow-warnings: build clean
+dialyzer-plt-swallow-warnings: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -310,7 +310,7 @@ dialyzer-plt-swallow-warnings: build clean
 	$i "Create the PLT file"
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) plt $v
 
-dialyzer-pt: build clean
+dialyzer-pt: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

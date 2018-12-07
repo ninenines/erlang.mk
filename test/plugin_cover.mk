@@ -6,7 +6,7 @@ COVER_TARGETS = $(call list_targets,cover)
 
 cover: $(COVER_TARGETS)
 
-cover-ct: build clean
+cover-ct: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -33,7 +33,7 @@ cover-ct: build clean
 	$t test ! -e $(APP)/cover/ct.coverdata
 	$t test ! -e $(APP)/test/ct.cover.spec
 
-cover-ct-incl-apps: build clean
+cover-ct-incl-apps: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -76,7 +76,7 @@ endif
 	$t test -f $(APP)/logs/ct_run.*/app_three_app.COVER.html
 	$t ! test -e $(APP)/logs/ct_run.*/app_two_app.COVER.html
 
-cover-ct-incl-apps-default: build clean
+cover-ct-incl-apps-default: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -116,7 +116,7 @@ endif
 	$t test -f $(APP)/logs/ct_run.*/app_two_app.COVER.html
 	$t test -f $(APP)/logs/ct_run.*/app_three_app.COVER.html
 
-cover-ct-incl-deps: build clean
+cover-ct-incl-deps: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -150,7 +150,7 @@ endif
 	$t test -f $(APP)/logs/ct_run.*/cow_http_hd.COVER.html
 	$t ! test -e $(APP)/logs/ct_run.*/ranch_app.COVER.html
 
-cover-custom-dir: build clean
+cover-custom-dir: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -206,7 +206,7 @@ cover-custom-dir: build clean
 	$t $(MAKE) -C $(APP) distclean $v
 	$t test -f $(APP)/custom_dir/file
 
-cover-eunit: build clean
+cover-eunit: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -231,7 +231,7 @@ cover-eunit: build clean
 	$t $(MAKE) -C $(APP) clean $v
 	$t test ! -e $(APP)/cover/eunit.coverdata
 
-cover-eunit-apps-only: build clean
+cover-eunit-apps-only: init
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -258,7 +258,7 @@ cover-eunit-apps-only: build clean
 	$i "Check that the generated file exists"
 	$t test -f $(APP)/apps/my_app/cover/eunit.coverdata
 
-cover-eunit-incl-apps: build clean
+cover-eunit-incl-apps: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -304,7 +304,7 @@ endif
 	$t test -f $(APP)/cover/app_three_app.COVER.html
 	$t ! test -e $(APP)/cover/app_two_app.COVER.html
 
-cover-eunit-incl-apps-default: build clean
+cover-eunit-incl-apps-default: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -347,7 +347,7 @@ endif
 	$t test -f $(APP)/cover/app_two_app.COVER.html
 	$t test -f $(APP)/cover/app_three_app.COVER.html
 
-cover-eunit-incl-deps: build clean
+cover-eunit-incl-deps: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -384,7 +384,7 @@ endif
 	$t test -f $(APP)/cover/cow_http_hd.COVER.html
 	$t ! test -e $(APP)/cover/ranch_app.COVER.html
 
-cover-proper: build clean
+cover-proper: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -412,7 +412,7 @@ cover-proper: build clean
 	$t $(MAKE) -C $(APP) clean $v
 	$t test ! -e $(APP)/cover/proper.coverdata
 
-cover-report-and-merge: build clean
+cover-report-and-merge: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -460,7 +460,7 @@ cover-report-and-merge: build clean
 	$t $(MAKE) -C $(APP) distclean $v
 	$t test ! -e $(APP)/cover/
 
-cover-triq: build clean
+cover-triq: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/

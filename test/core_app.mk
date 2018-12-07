@@ -7,7 +7,7 @@ CORE_APP_TARGETS = $(call list_targets,core-app)
 core-app: $(CORE_APP_TARGETS)
 
 ifdef LEGACY
-core-app-appsrc-change: build clean
+core-app-appsrc-change: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -27,7 +27,7 @@ core-app-appsrc-change: build clean
 	$t rm $(APP)/EXPECT
 endif
 
-core-app-asn1: build clean
+core-app-asn1: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -163,7 +163,7 @@ endif
 		true = lists:member({record_name_prefix, \"FOO-\"}, Opts), \
 		halt()"
 
-core-app-asn1-maps: build clean
+core-app-asn1-maps: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -201,7 +201,7 @@ core-app-asn1-maps: build clean
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-auto-git-id: build clean
+core-app-auto-git-id: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -250,7 +250,7 @@ endif
 		halt()"
 
 ifndef LEGACY
-core-app-env: build clean
+core-app-env: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -282,7 +282,7 @@ core-app-env: build clean
 		{ok, '\\\$$test'} = application:get_env($(APP), test_atom), \
 		halt()"
 
-core-app-env-invalid: build clean
+core-app-env-invalid: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -296,7 +296,7 @@ core-app-env-invalid: build clean
 	$t ! $(MAKE) -C $(APP) $v
 endif
 
-core-app-erlc-exclude: build clean
+core-app-erlc-exclude: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -324,7 +324,7 @@ core-app-erlc-exclude: build clean
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-erlc-opts: build clean
+core-app-erlc-opts: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -351,7 +351,7 @@ core-app-erlc-opts: build clean
 		false = proplists:is_defined(debug_info, proplists:get_value(options, girl:module_info(compile))), \
 		halt()"
 
-core-app-erlc-opts-filter: build clean
+core-app-erlc-opts-filter: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -378,7 +378,7 @@ core-app-erlc-opts-filter: build clean
 		false = proplists:is_defined(debug_info, proplists:get_value(options, girl:module_info(compile))), \
 		halt()"
 
-core-app-error: build clean
+core-app-error: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -396,7 +396,7 @@ core-app-error: build clean
 	$t ! $(MAKE) -C $(APP) $v
 
 ifndef LEGACY
-core-app-extra-keys: build clean
+core-app-extra-keys: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -436,7 +436,7 @@ core-app-extra-keys: build clean
 		halt()"
 endif
 
-core-app-generate-erl: build clean
+core-app-generate-erl: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -542,7 +542,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-generate-erl-include: build clean
+core-app-generate-erl-include: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -604,7 +604,7 @@ core-app-generate-erl-include: build clean
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-generate-erl-prepend: build clean
+core-app-generate-erl-prepend: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -713,7 +713,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hrl: build clean
+core-app-hrl: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -802,7 +802,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hrl-recursive: build clean
+core-app-hrl-recursive: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -893,7 +893,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-makefile-change: build clean
+core-app-makefile-change: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -918,7 +918,7 @@ core-app-makefile-change: build clean
 	$t find $(APP) -type f -newer $(APP)/Makefile -not -path "$(APP)/.erlang.mk/*" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
 
-core-app-mib: build clean
+core-app-mib: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1027,7 +1027,7 @@ endif
 		halt()"
 
 ifndef LEGACY
-core-app-name-special-char: build clean
+core-app-name-special-char: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1047,7 +1047,7 @@ core-app-name-special-char: build clean
 		halt()"
 endif
 
-core-app-no-app: build clean
+core-app-no-app: init
 
 	$i "Bootstrap a project without an OTP library"
 	$t mkdir $(APP)/
@@ -1058,7 +1058,7 @@ core-app-no-app: build clean
 	$i "Build the project"
 	$t $(MAKE) -C $(APP) $v
 
-core-app-no-makedep: build clean
+core-app-no-makedep: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1171,7 +1171,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-project-mod: build clean
+core-app-project-mod: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1191,7 +1191,7 @@ core-app-project-mod: build clean
 	$i "Check that the application starts correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval "ok = application:start($(APP)), halt()"
 
-core-app-pt: build clean
+core-app-pt: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1221,7 +1221,7 @@ core-app-pt: build clean
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-pt-erlc-opts: build clean
+core-app-pt-erlc-opts: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1261,7 +1261,7 @@ core-app-pt-erlc-opts: build clean
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-xrl: build clean
+core-app-xrl: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1362,7 +1362,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-xrl-help: build clean
+core-app-xrl-help: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1384,7 +1384,7 @@ core-app-xrl-help: build clean
 	$t test ! -e $(APP)/ebin/erlang_scan.beam
 	$t test ! -e $(APP)/src/erlang_scan.erl
 
-core-app-xrl-include: build clean
+core-app-xrl-include: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1528,7 +1528,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-yrl: build clean
+core-app-yrl: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1626,7 +1626,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-yrl-header: build clean
+core-app-yrl-header: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1692,7 +1692,7 @@ core-app-yrl-header: build clean
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-yrl-include: build clean
+core-app-yrl-include: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1806,7 +1806,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-yrl-test-build-then-normal-build: build clean
+core-app-yrl-test-build-then-normal-build: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1834,7 +1834,7 @@ core-app-yrl-test-build-then-normal-build: build clean
 	$i "Build the application in normal mode"
 	$t $(MAKE) -C $(APP) $v
 
-core-app-hrl-include-lib: build clean
+core-app-hrl-include-lib: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -1923,7 +1923,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hrl-include-lib-recursive: build clean
+core-app-hrl-include-lib-recursive: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -2014,7 +2014,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hrl-multiapps-include-lib: build clean
+core-app-hrl-multiapps-include-lib: init
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -2117,7 +2117,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hrl-multiapps-include-lib-recursive: build clean
+core-app-hrl-multiapps-include-lib-recursive: init
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -2222,7 +2222,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hrl-include-lib-src: build clean
+core-app-hrl-include-lib-src: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -2309,7 +2309,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hrl-include-lib-src-recursive: build clean
+core-app-hrl-include-lib-src-recursive: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -2399,7 +2399,7 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
-core-app-hrl-deps: build clean
+core-app-hrl-deps: init
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -2495,7 +2495,7 @@ ifndef LEGACY
 		halt()"
 endif
 
-core-app-hrl-include-loop: build clean
+core-app-hrl-include-loop: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -2518,7 +2518,7 @@ core-app-hrl-include-loop: build clean
 	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 
-core-app-hrl-include_lib-loop: build clean
+core-app-hrl-include_lib-loop: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -2541,7 +2541,7 @@ core-app-hrl-include_lib-loop: build clean
 	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 
-core-app-hrl-include-loop-define-protected: build clean
+core-app-hrl-include-loop-define-protected: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -2564,7 +2564,7 @@ core-app-hrl-include-loop-define-protected: build clean
 	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 
-core-app-hrl-include_lib-loop-define-protected: build clean
+core-app-hrl-include_lib-loop-define-protected: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -2587,7 +2587,7 @@ core-app-hrl-include_lib-loop-define-protected: build clean
 	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 
-core-app-hrl-multiapps-include-loop-define-protected: build clean
+core-app-hrl-multiapps-include-loop-define-protected: init
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/

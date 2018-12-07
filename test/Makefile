@@ -94,16 +94,24 @@ endef
 
 # Main targets.
 
-.PHONY: all clean build
+.PHONY: all clean init
 
 all:: core
 
 clean::
 	$t rm -rf erl_crash.dump packages/ test_*/
 
-build:
+init: clean
+	$i "Prefetch Rebar if necessary"
+	$t if [ ! -d test_rebar_git ]; then \
+		git clone -q -n -- https://github.com/rebar/rebar test_rebar_git; \
+	fi
+
 	$i "Generate a bleeding edge Erlang.mk"
 	$t cd .. && $(MAKE) $v
+
+REBAR_GIT = file://$(CURDIR)/test_rebar_git
+export REBAR_GIT
 
 # Core.
 
@@ -139,7 +147,7 @@ packages: $(addprefix pkg-,$(PACKAGES))
 define pkg_target
 .PHONY: pkg-$1
 
-pkg-$1: build clean
+pkg-$1: init
 
 # Make sure $@ is defined inside the define.
 	$(eval @ = pkg-$1)

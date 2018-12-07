@@ -6,7 +6,7 @@ CORE_AUTOPATCH_TARGETS = $(call list_targets,core-autopatch)
 
 core-autopatch: $(CORE_AUTOPATCH_TARGETS)
 
-core-autopatch-extended: build clean
+core-autopatch-extended: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -26,7 +26,7 @@ core-autopatch-extended: build clean
 	$t ! test -e $(APP)/deps/ranch/src/ranch_protocol.erl
 	$t ! test -e $(APP)/deps/ranch/ebin/ranch_protocol.beam
 
-core-autopatch-extended-erlc-opts: build clean
+core-autopatch-extended-erlc-opts: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -45,7 +45,7 @@ core-autopatch-extended-erlc-opts: build clean
 	$i "Check that couchbeam_ejson was compiled with the added option"
 	$t $(ERL) -pa $(APP)/deps/couchbeam/ebin -eval 'c:m(couchbeam_ejson), halt()' | grep -c "WITH_JIFFY" | grep -q 1
 
-core-autopatch-no-autopatch: build clean
+core-autopatch-no-autopatch: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -66,7 +66,7 @@ core-autopatch-no-autopatch: build clean
 	$i "Check that Cowlib was not autopatched"
 	$t grep -q Hoguin $(APP)/deps/cowlib/erlang.mk
 
-core-autopatch-no-autopatch-erlang-mk: build clean
+core-autopatch-no-autopatch-erlang-mk: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -85,7 +85,7 @@ core-autopatch-no-autopatch-erlang-mk: build clean
 	$i "Check that Erlang.mk was not autopatched"
 	$t grep -q Hoguin $(APP)/deps/cowlib/erlang.mk
 
-core-autopatch-no-autopatch-rebar: build clean
+core-autopatch-no-autopatch-rebar: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -106,7 +106,7 @@ core-autopatch-no-autopatch-rebar: build clean
 	$t if grep -q erlang\.mk $(APP)/deps/goldrush/Makefile; then false; fi
 	$t if grep -q erlang\.mk $(APP)/deps/lager/Makefile; then false; fi
 
-core-autopatch-port_env: build clean
+core-autopatch-port_env: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -143,7 +143,7 @@ endif
 	$i "Confirm that the port_env configuration was expanded properly"
 	$t grep -q "shell pkg-config" $(APP)/deps/my_dep/c_src/Makefile.erlang.mk
 
-core-autopatch-rebar: build clean
+core-autopatch-rebar: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -164,7 +164,7 @@ ifneq ($(PLATFORM),msys2)
 endif
 
 # This test is expected to fail when run in parallel and flock/lockf is not available.
-core-autopatch-two-rebar: build clean
+core-autopatch-two-rebar: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

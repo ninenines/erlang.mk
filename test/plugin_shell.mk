@@ -6,7 +6,7 @@ SHELL_TARGETS = $(call list_targets,shell)
 
 shell: $(SHELL_TARGETS)
 
-shell-compile: build clean
+shell-compile: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -25,7 +25,7 @@ shell-compile: build clean
 	$t test -f $(APP)/ebin/$(APP)_app.beam
 	$t test -f $(APP)/ebin/$(APP)_sup.beam
 
-shell-default: build clean
+shell-default: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -35,7 +35,7 @@ shell-default: build clean
 	$i "Run the shell"
 	$t $(MAKE) -C $(APP) shell SHELL_OPTS="-eval 'halt()'" $v
 
-shell-kjell: build clean
+shell-kjell: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -48,7 +48,7 @@ shell-kjell: build clean
 	$i "Run the shell"
 	$t $(MAKE) -C $(APP) shell SHELL_OPTS="-eval 'halt()'" $v
 
-shell-test-dir: build clean
+shell-test-dir: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

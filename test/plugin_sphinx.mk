@@ -11,7 +11,7 @@ endif
 
 sphinx: $(SPHINX_TARGETS)
 
-sphinx-build: build clean
+sphinx-build: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -44,7 +44,7 @@ sphinx-build: build clean
 	$i "Check that the 'today' macro was defined"
 	$t grep -q erlang_mk_sphinx_today $(APP)/html/manpage.html
 
-sphinx-source-dir: build clean
+sphinx-source-dir: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -64,7 +64,7 @@ sphinx-source-dir: build clean
 	$t test -f $(APP)/html/index.html
 	$t test -f $(APP)/html/manpage.html
 
-sphinx-formats: build clean
+sphinx-formats: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -113,7 +113,7 @@ sphinx-formats: build clean
 	$t test ! -e $(APP)/sphinx/html_output/index.html
 	$t test ! -e $(APP)/sphinx/html_output/manpage.html
 
-sphinx-format-opts: build clean
+sphinx-format-opts: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/

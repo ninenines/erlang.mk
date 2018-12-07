@@ -6,7 +6,7 @@ ERLYDTL_TARGETS = $(call list_targets,erlydtl)
 
 erlydtl: $(ERLYDTL_TARGETS)
 
-erlydtl-compile: build clean
+erlydtl-compile: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -34,7 +34,7 @@ erlydtl-compile: build clean
 		{ok, [$(APP_)_one_dtl, $(APP)_two_dtl]} = application:get_key($(APP), modules), \
 		halt()"
 
-erlydtl-custom-tag: build clean
+erlydtl-custom-tag: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -81,7 +81,7 @@ erlydtl-custom-tag: build clean
 		'file:write_file("$(APP)/OUT", element(2, $(APP)_dtl:render())), halt()'
 	$t cat $(APP)/OUT | grep -q hello
 
-erlydtl-full-path: build clean
+erlydtl-full-path: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -109,7 +109,7 @@ erlydtl-full-path: build clean
 		{ok, [deep_$(APP)_two_dtl, $(APP_)_one_dtl]} = application:get_key($(APP), modules), \
 		halt()"
 
-erlydtl-include-template: build clean
+erlydtl-include-template: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -136,7 +136,7 @@ erlydtl-include-template: build clean
 		{ok, [foo, foo_bar, foo_baz]} = application:get_key($(APP), modules), \
 		halt()"
 
-erlydtl-opts: build clean
+erlydtl-opts: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -173,7 +173,7 @@ erlydtl-opts: build clean
 		<<\"<&>\", _/binary>> = iolist_to_binary(Result), \
 		halt()"
 
-erlydtl-path-full-path-suffix: build clean
+erlydtl-path-full-path-suffix: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -198,7 +198,7 @@ erlydtl-path-full-path-suffix: build clean
 		{ok, [one_suffix, two_three_suffix]} = application:get_key($(APP), modules), \
 		halt()"
 
-erlydtl-prefix: build clean
+erlydtl-prefix: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -223,7 +223,7 @@ erlydtl-prefix: build clean
 		{ok, [number_one_dtl, number_two_dtl]} = application:get_key($(APP), modules), \
 		halt()"
 
-erlydtl-suffix: build clean
+erlydtl-suffix: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

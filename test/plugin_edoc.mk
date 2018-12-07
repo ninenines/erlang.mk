@@ -6,7 +6,7 @@ EDOC_TARGETS = $(call list_targets,edoc)
 
 edoc: $(EDOC_TARGETS)
 
-edoc-build: build clean
+edoc-build: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -58,7 +58,7 @@ edoc-build: build clean
 	$i "Check that EDoc errors out"
 	$t ! $(MAKE) -C $(APP) edoc $v
 
-edoc-docs: build clean
+edoc-docs: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -81,7 +81,7 @@ edoc-docs: build clean
 	$i "Check that the overview.edoc file was used"
 	$t grep -q frobnicator $(APP)/doc/overview-summary.html
 
-edoc-no-overview: build clean
+edoc-no-overview: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -92,7 +92,7 @@ edoc-no-overview: build clean
 	$t $(MAKE) -C $(APP) docs $v
 	$t test ! -e $(APP)/doc/index.html
 
-edoc-opts: build clean
+edoc-opts: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -110,7 +110,7 @@ edoc-opts: build clean
 	$t test -f $(APP)/doc/$(APP)_app.md
 	$t test -f $(APP)/doc/$(APP)_sup.md
 
-edoc-src-dirs: build clean
+edoc-src-dirs: init
 
 	$i "Create a multi application repository with a root application"
 	$t mkdir $(APP)/

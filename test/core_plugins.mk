@@ -6,7 +6,7 @@ CORE_PLUGINS_TARGETS = $(call list_targets,core-plugins)
 
 core-plugins: $(CORE_PLUGINS_TARGETS)
 
-core-plugins-all: build clean
+core-plugins-all: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -38,7 +38,7 @@ core-plugins-all: build clean
 	$i "Run 'make plugin2' and check that it prints plugin2"
 	$t test -n "`$(MAKE) -C $(APP) plugin2 | grep plugin2`"
 
-core-plugins-early: build clean
+core-plugins-early: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -64,7 +64,7 @@ core-plugins-early: build clean
 	$t test -e $(APP)/deps/cowlib
 	$t test -e $(APP)/deps/ranch
 
-core-plugins-early-local: build clean
+core-plugins-early-local: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -85,7 +85,7 @@ core-plugins-early-local: build clean
 	$i "Run 'make plugin2' and check that it prints plugin2"
 	$t $(MAKE) --no-print-directory -C $(APP) plugin2 | grep -qw plugin2
 
-core-plugins-early-help: build clean
+core-plugins-early-help: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -109,7 +109,7 @@ core-plugins-early-help: build clean
 	$i "Run 'make help' and check that it prints external plugins help"
 	$t test -n "`$(MAKE) -C $(APP) help` | grep WORKING"
 
-core-plugins-early-rebar: build clean
+core-plugins-early-rebar: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -130,7 +130,7 @@ core-plugins-early-rebar: build clean
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
-core-plugins-local: build clean
+core-plugins-local: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -151,7 +151,7 @@ core-plugins-local: build clean
 	$i "Run 'make plugin2' and check that it prints plugin2"
 	$t $(MAKE) --no-print-directory -C $(APP) plugin2 | grep -qw plugin2
 
-core-plugins-one: build clean
+core-plugins-one: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -183,7 +183,7 @@ core-plugins-one: build clean
 	$i "Run 'make plugin2' and confirm the target doesn't exist"
 	$t ! $(MAKE) --no-print-directory -C $(APP) plugin2
 
-core-plugins-templates: build clean
+core-plugins-templates: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -221,7 +221,7 @@ core-plugins-templates: build clean
 	$i "Check that the file was compiled correctly"
 	$t test -f $(APP)/ebin/test_mk.beam
 
-core-plugins-templates-apps-only: build clean
+core-plugins-templates-apps-only: init
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -263,7 +263,7 @@ core-plugins-templates-apps-only: build clean
 	$i "Check that the file was compiled correctly"
 	$t test -f $(APP)/apps/my_app/ebin/test_mk.beam
 
-core-plugins-test: build clean
+core-plugins-test: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

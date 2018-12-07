@@ -13,7 +13,7 @@ else
 C_SRC_OUTPUT_EXECUTABLE_EXTENSION = .so
 endif
 
-c-src-makefile-change: build clean
+c-src-makefile-change: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -41,7 +41,7 @@ c-src-makefile-change: build clean
 	$t find $(APP) -type f -newer $(APP)/Makefile -not -path "$(APP)/.erlang.mk/*" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
 
-c-src-nif: build clean
+c-src-nif: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -109,7 +109,7 @@ c-src-nif: build clean
 	$i "Check that all files were removed"
 	$t test ! -e $(APP)/c_src/env.mk
 
-c-src-nif-missing-name: build clean
+c-src-nif-missing-name: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

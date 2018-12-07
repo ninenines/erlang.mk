@@ -11,7 +11,7 @@ REBAR3_BINARY = https://s3.amazonaws.com/rebar3/rebar3
 
 core-compat: $(CORE_COMPAT_TARGETS)
 
-core-compat-auto-rebar: build clean
+core-compat-auto-rebar: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -53,7 +53,7 @@ core-compat-auto-rebar: build clean
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar compile $v
 
-core-compat-rebar: build clean
+core-compat-rebar: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -92,7 +92,7 @@ core-compat-rebar: build clean
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar compile $v
 
-core-compat-rebar-deps-git: build clean
+core-compat-rebar-deps-git: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -124,7 +124,7 @@ core-compat-rebar-deps-git: build clean
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar get-deps compile $v
 
-core-compat-rebar-deps-hex: build clean
+core-compat-rebar-deps-hex: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -156,7 +156,7 @@ core-compat-rebar-deps-hex: build clean
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar3 compile $v
 
-core-compat-rebar-deps-pkg: build clean
+core-compat-rebar-deps-pkg: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -188,7 +188,7 @@ core-compat-rebar-deps-pkg: build clean
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar get-deps compile $v
 
-core-compat-rebar-erlc-opts: build clean
+core-compat-rebar-erlc-opts: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -237,7 +237,7 @@ core-compat-rebar-erlc-opts: build clean
 	$i "Use rebar to build the application"
 	$t cd $(APP) && ./rebar compile $v
 
-core-compat-rebar-pt: build clean
+core-compat-rebar-pt: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

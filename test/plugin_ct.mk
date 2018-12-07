@@ -6,7 +6,7 @@ CT_TARGETS = $(call list_targets,ct)
 
 ct: $(CT_TARGETS)
 
-ct-all: build clean
+ct-all: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -49,7 +49,7 @@ ct-all: build clean
 	$t $(MAKE) -C $(APP) distclean $v
 	$t test ! -e $(APP)/logs/index.html
 
-ct-apps: build clean
+ct-apps: init
 
 	$i "Create a multi application repository with root application"
 	$t mkdir $(APP)/
@@ -83,7 +83,7 @@ ct-apps: build clean
 	$i "Check that Common Test runs tests from a specific test suite using CT_SUITES"
 	$t $(MAKE) -C $(APP) ct CT_SUITES=my_root $v
 
-ct-apps-only: build clean
+ct-apps-only: init
 
 	$i "Create a multi application repository with no root application"
 	$t mkdir $(APP)/
@@ -131,7 +131,7 @@ ct-apps-only: build clean
 	$t test -f $(APP)/apps/my_app_only/logs/index.html
 	$t test -f $(APP)/apps/my_lib_only/logs/index.html
 
-ct-case: build clean
+ct-case: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -151,7 +151,7 @@ ct-case: build clean
 	$i "Check that we can run Common Test on a specific test case"
 	$t $(MAKE) -C $(APP) ct-$(APP) t=mygroup:ok $v
 
-ct-case-without-group: build clean
+ct-case-without-group: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -170,7 +170,7 @@ ct-case-without-group: build clean
 	$i "Check that we can run Common Test on a specific test case"
 	$t $(MAKE) -C $(APP) ct-$(APP) c=ok $v
 
-ct-check: build clean
+ct-check: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -190,7 +190,7 @@ ct-check: build clean
 	$t $(MAKE) -C $(APP) check $v
 	$t test -f $(APP)/logs/index.html
 
-ct-group: build clean
+ct-group: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -210,7 +210,7 @@ ct-group: build clean
 	$i "Check that we can run Common Test on a specific group"
 	$t $(MAKE) -C $(APP) ct-$(APP) t=okgroup $v
 
-ct-opts: build clean
+ct-opts: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -234,7 +234,7 @@ ct-opts: build clean
 	$i "Check that Common Test uses options from CT_OPTS"
 	$t grep -q hello_ct_opts $(APP)/logs/index.html
 
-ct-logs-dir: build clean
+ct-logs-dir: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -257,7 +257,7 @@ ct-logs-dir: build clean
 	$t $(MAKE) -C $(APP) ct $v
 	$t test -f $(APP)/custom_dir/index.html
 
-ct-suite: build clean
+ct-suite: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -280,7 +280,7 @@ ct-suite: build clean
 	$i "Check that we can run Common Test on a specific test suite"
 	$t $(MAKE) -C $(APP) ct-$(APP)_ok $v
 
-ct-tests: build clean
+ct-tests: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/

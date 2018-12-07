@@ -21,6 +21,9 @@ export DEPS_DIR
 REBAR_DEPS_DIR = $(DEPS_DIR)
 export REBAR_DEPS_DIR
 
+REBAR_GIT ?= https://github.com/rebar/rebar
+REBAR_COMMIT ?= 576e12171ab8d69b048b827b92aa65d067deea01
+
 # External "early" plugins (see core/plugins.mk for regular plugins).
 # They both use the core_dep_plugin macro.
 
@@ -221,9 +224,9 @@ endef
 
 define dep_autopatch_fetch_rebar2
 	if [ ! -d $(ERLANG_MK_TMP)/rebar ]; then \
-		git clone -q -n -- https://github.com/rebar/rebar $(ERLANG_MK_TMP)/rebar; \
+		git clone -q -n -- $(REBAR_GIT) $(ERLANG_MK_TMP)/rebar; \
 		cd $(ERLANG_MK_TMP)/rebar; \
-		git checkout -q 576e12171ab8d69b048b827b92aa65d067deea01; \
+		git checkout -q $(REBAR_COMMIT); \
 		./bootstrap; \
 		cd -; \
 	fi

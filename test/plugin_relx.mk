@@ -15,7 +15,7 @@ endif
 
 relx: $(RELX_TARGETS)
 
-relx-rel: build clean
+relx-rel: init
 
 	$i "Bootstrap a new release named $(APP)"
 	$t mkdir $(APP)/
@@ -53,7 +53,7 @@ relx-rel: build clean
 	$i "Check that the output directory was removed entirely"
 	$t test ! -d $(APP)/_rel/
 
-relx-apps-with-deps: build clean
+relx-apps-with-deps: init
 
 	$i "Bootstrap a new release as a multi application repository"
 	$t mkdir $(APP)/
@@ -87,7 +87,7 @@ endif
 	$i "Check that Cowlib was included in the release"
 	$t test -d $(APP)/_rel/test_relx_apps_with_deps_release/lib/cowlib-1.0.2
 
-relx-bare-rel: build clean
+relx-bare-rel: init
 
 	$i "Bootstrap a new release named $(APP)"
 	$t mkdir $(APP)/
@@ -108,7 +108,7 @@ relx-bare-rel: build clean
 	$t test -d $(APP)/_rel/$(APP)_release/releases
 	$t test -d $(APP)/_rel/$(APP)_release/releases/1
 
-relx-post-rel: build clean
+relx-post-rel: init
 
 	$i "Bootstrap a new release named $(APP)"
 	$t mkdir $(APP)/
@@ -154,7 +154,7 @@ relx-post-rel: build clean
 	$i "Check that the output directory was removed entirely"
 	$t test ! -d $(APP)/_rel/
 
-relx-relup: build clean
+relx-relup: init
 
 	$i "Bootstrap a new release named $(APP)"
 	$t mkdir $(APP)/
@@ -243,7 +243,7 @@ ifeq ($(PLATFORM),msys2)
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall $v
 endif
 
-relx-start-stop: build clean
+relx-start-stop: init
 
 	$i "Bootstrap a new release named $(APP)"
 	$t mkdir $(APP)/
@@ -272,7 +272,7 @@ endif
 	$i "Check that further pings get no replies"
 	$t ! $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping $v
 
-relx-tar: build clean
+relx-tar: init
 
 	$i "Bootstrap a new release named $(APP)"
 	$t mkdir $(APP)/
@@ -291,7 +291,7 @@ relx-tar: build clean
 	$i "Check that tarball exists"
 	$t test -f $(APP)/_rel/$(APP)_release/$(APP)_release-1.tar.gz
 
-relx-vsn: build clean
+relx-vsn: init
 
 	$i "Bootstrap a new release named $(APP)"
 	$t mkdir $(APP)/

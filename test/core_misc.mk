@@ -8,7 +8,7 @@ CORE_MISC_TARGETS = $(filter-out core-misc,$(call list_targets,core))
 
 core-misc: $(CORE_MISC_TARGETS)
 
-core-clean-crash-dump: build clean
+core-clean-crash-dump: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -24,7 +24,7 @@ core-clean-crash-dump: build clean
 	$i "Check that the crash dump is removed"
 	$t test ! -e $(APP)/erl_crash.dump
 
-core-distclean-tmp: build clean
+core-distclean-tmp: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -40,7 +40,7 @@ core-distclean-tmp: build clean
 	$i "Check that .erlang.mk directory got removed"
 	$t test ! -e $(APP)/.erlang.mk
 
-core-help: build clean
+core-help: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

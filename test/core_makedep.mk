@@ -6,7 +6,7 @@ CORE_MAKEDEP_TARGETS = $(call list_targets,core-makedep)
 
 core-makedep: $(CORE_MAKEDEP_TARGETS)
 
-core-makedep-behavior: build clean
+core-makedep-behavior: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -25,7 +25,7 @@ core-makedep-behavior: build clean
 	$t test -f $(APP)/ebin/boy.beam
 	$t test -f $(APP)/ebin/human.beam
 
-core-makedep-import: build clean
+core-makedep-import: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

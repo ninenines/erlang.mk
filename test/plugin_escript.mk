@@ -6,7 +6,7 @@ ESCRIPT_TARGETS = $(call list_targets,escript)
 
 escript: $(ESCRIPT_TARGETS)
 
-escript-build: build clean
+escript-build: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -34,7 +34,7 @@ escript-build: build clean
 	$i "Check that the escript was removed"
 	$t test ! -e $(APP)/$(APP)
 
-escript-build-deps: build clean
+escript-build-deps: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -65,7 +65,7 @@ escript-build-deps: build clean
 	$i "Check that the escript does not contain the build dependency"
 	$t ! zipinfo $(APP)/$(APP) 2> /dev/null | grep -q lfe
 
-escript-deps: build clean
+escript-deps: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -90,7 +90,7 @@ escript-deps: build clean
 	$i "Check that the escript contains the dependency"
 	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q ranch
 
-escript-deps-with-deps: build clean
+escript-deps-with-deps: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -120,7 +120,7 @@ escript-deps-with-deps: build clean
 	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q cowlib
 	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q ranch
 
-escript-distclean: build clean
+escript-distclean: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -148,7 +148,7 @@ escript-distclean: build clean
 	$t test ! -f $(APP)/$(APP)
 	$t test ! -f $(APP)/real-escript
 
-escript-extra: build clean
+escript-extra: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/

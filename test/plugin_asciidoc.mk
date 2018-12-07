@@ -9,7 +9,7 @@ asciidoc: $(ASCIIDOC_TARGETS)
 # Disable the Asciidoc tests requiring the DocBook toolchain
 # when Asciidoc is not installed. The toolchain is too heavy for CI.
 ifneq ($(shell which a2x),)
-asciidoc-build: build clean
+asciidoc-build: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -72,7 +72,7 @@ asciidoc-build: build clean
 	$i "Check that AsciiDoc errors out"
 	$t ! $(MAKE) -C $(APP) asciidoc $v
 
-asciidoc-docs: build clean
+asciidoc-docs: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -93,7 +93,7 @@ asciidoc-docs: build clean
 	$t test -f $(APP)/doc/guide.pdf
 	$t test -d $(APP)/doc/html/
 
-asciidoc-guide: build clean
+asciidoc-guide: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -122,7 +122,7 @@ asciidoc-guide: build clean
 	$t test ! -e $(APP)/doc/man3/
 endif
 
-asciidoc-install: build clean
+asciidoc-install: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
@@ -150,7 +150,7 @@ asciidoc-install: build clean
 	$i "Check that the documentation was installed properly"
 	$t test -f $(APP)/installed/share/man3/erlang_mk.3.gz
 
-asciidoc-manual: build clean
+asciidoc-manual: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/

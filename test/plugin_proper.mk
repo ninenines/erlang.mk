@@ -6,7 +6,7 @@ PROPER_TARGETS = $(call list_targets,proper)
 
 proper: $(PROPER_TARGETS)
 
-proper-test-dir: build clean
+proper-test-dir: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/

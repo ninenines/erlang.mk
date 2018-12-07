@@ -8,7 +8,7 @@ protobuffs: $(PROTOBUFFS_TARGETS)
 
 PROTOBUFFS_URL = https://raw.githubusercontent.com/basho/erlang_protobuffs/master/test/erlang_protobuffs_SUITE_data
 
-protobuffs-compile: build clean
+protobuffs-compile: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -40,7 +40,7 @@ protobuffs-compile: build clean
 		{ok, [empty_pb, simple_pb]} = application:get_key($(APP), modules), \
 		halt()"
 
-protobuffs-compile-with-gpb: build clean
+protobuffs-compile-with-gpb: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -72,7 +72,7 @@ protobuffs-compile-with-gpb: build clean
 		{ok, [empty_pb, simple_pb]} = application:get_key($(APP), modules), \
 		halt()"
 
-protobuffs-makefile-change: build clean
+protobuffs-makefile-change: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
