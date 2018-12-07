@@ -33,14 +33,14 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="about.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="history.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="why"></a>Chapter 27. Why Erlang.mk</h2></div></div></div><p>Why would you choose Erlang.mk, if not for its
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="about.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="history.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="why"></a>Chapter 28. Why Erlang.mk</h2></div></div></div><p>Why would you choose Erlang.mk, if not for its
 <a class="link" href="overview.html" title="Chapter 3. Overview">many features</a>? This chapter will
-attempt to answer that.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_is_fast"></a>27.1. Erlang.mk is fast</h2></div></div></div><p>Erlang.mk is as fast as it gets.</p><p>Erlang.mk will group the compilation of files so as to avoid
+attempt to answer that.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_is_fast"></a>28.1. Erlang.mk is fast</h2></div></div></div><p>Erlang.mk is as fast as it gets.</p><p>Erlang.mk will group the compilation of files so as to avoid
 running the BEAM more than necessary. This saves many seconds
 compared to traditional Makefiles, even on small projects.</p><p>Erlang.mk will not try to be too smart. It provides a simple
 solution that works for most people, and gives additional
 options for projects that run into edge cases, often in the
-form of extra variables or rules to be defined.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_gives_you_the_full_power_of_unix"></a>27.2. Erlang.mk gives you the full power of Unix</h2></div></div></div><p>Erlang.mk is a Makefile.</p><p>You could use Erlang.mk directly without configuring anything
+form of extra variables or rules to be defined.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_gives_you_the_full_power_of_unix"></a>28.2. Erlang.mk gives you the full power of Unix</h2></div></div></div><p>Erlang.mk is a Makefile.</p><p>You could use Erlang.mk directly without configuring anything
 and it would just work. But you can also extend it greatly
 either through configuration or hooks, and you can of course
 add your own rules to the Makefile.</p><p>In all cases: for configuration, hooks or custom rules, you
@@ -48,22 +48,22 @@ have all the power of Unix at your disposal, and can call
 any utility <span class="emphasis"><em>or even any language interpreter</em></span> you want,
 every time you need to. Erlang.mk also allows you to write
 scripts in this small language called Erlang directly inside
-your Makefile if you ever need to…</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_is_a_text_file"></a>27.3. Erlang.mk is a text file</h2></div></div></div><p>Erlang.mk is a Makefile.</p><p>Which means Erlang.mk is a simple text file. You can edit a
+your Makefile if you ever need to…</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_is_a_text_file"></a>28.3. Erlang.mk is a text file</h2></div></div></div><p>Erlang.mk is a Makefile.</p><p>Which means Erlang.mk is a simple text file. You can edit a
 text file. Nothing stops you. If you run into any bug, or
 behavior that does not suit you, you can just open the
 <span class="emphasis"><em>erlang.mk</em></span> file in your favorite editor, fix and/or comment
-a few lines, save, and try again. It’s as simple as it gets.</p><p>Currently using a binary build tool? Good luck with that.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_can_manage_erlang_itself"></a>27.4. Erlang.mk can manage Erlang itself</h2></div></div></div><p>Erlang.mk isn’t written in Erlang.</p><p>That’s not a good thing, you say? Well, here’s one thing
+a few lines, save, and try again. It’s as simple as it gets.</p><p>Currently using a binary build tool? Good luck with that.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_can_manage_erlang_itself"></a>28.4. Erlang.mk can manage Erlang itself</h2></div></div></div><p>Erlang.mk isn’t written in Erlang.</p><p>That’s not a good thing, you say? Well, here’s one thing
 that Erlang.mk and Makefiles can do for you that Erlang
 build tool can’t easily: choose what version of Erlang is
 to be used for compiling the project.</p><p>This really is a one-liner in Erlang.mk (a few more lines
 if you also let it download and build Erlang directly)
 and allows for even greater things, like testing your
 project across all supported Erlang versions in one small
-command: <code class="literal">make -k ci</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_can_do_more_than_erlang"></a>27.5. Erlang.mk can do more than Erlang</h2></div></div></div><p>Erlang.mk doesn’t care what your dependencies are written in.</p><p>Erlang.mk will happily compile any dependency, as long as
+command: <code class="literal">make -k ci</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_can_do_more_than_erlang"></a>28.5. Erlang.mk can do more than Erlang</h2></div></div></div><p>Erlang.mk doesn’t care what your dependencies are written in.</p><p>Erlang.mk will happily compile any dependency, as long as
 they come with a Makefile. The dependency can be written
 in C, C++ or even Javascript… Who cares, really? If you
 need Erlang.mk to fetch it, then Erlang.mk will fetch it
-and compile it as needed.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_integrates_nicely_in_make_and_automake_projects"></a>27.6. Erlang.mk integrates nicely in Make and Automake projects</h2></div></div></div><p>If you are planning to put your project in the middle of
+and compile it as needed.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_integrates_nicely_in_make_and_automake_projects"></a>28.6. Erlang.mk integrates nicely in Make and Automake projects</h2></div></div></div><p>If you are planning to put your project in the middle of
 a Make or Automake-based build environment, then the most
 logical thing to do is to use a Makefile.</p><p>Erlang.mk will happily sit in such an environment and behave
 as you expect it to.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="about.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="about.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="history.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>

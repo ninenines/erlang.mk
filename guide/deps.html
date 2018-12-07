@@ -264,11 +264,10 @@ If it contains a <span class="emphasis"><em>configure</em></span> script, run it
 </li><li class="listitem">
 Run autopatch on the project
 </li></ul></div><p>Autopatch first checks if there is any project-specific patch
-enabled. There are currently two: <code class="literal">RABBITMQ_CLIENT_PATCH</code> for
-the <code class="literal">amqp_client</code> dependency, and <code class="literal">RABBITMQ_SERVER_PATCH</code> for
-the <code class="literal">rabbit</code> dependency. These are needed only for RabbitMQ
-versions before 3.6.0 (assuming you are using upstream RabbitMQ,
-and not a fork).</p><p>Otherwise, autopatch performs different operations depending
+enabled. There are currently three: <code class="literal">RABBITMQ_CLIENT_PATCH</code> for
+the <code class="literal">amqp_client</code> dependency (before 3.6.0), <code class="literal">RABBITMQ_SERVER_PATCH</code>
+for the <code class="literal">rabbit</code> dependency (before 3.6.0) and <code class="literal">ELIXIR_PATCH</code>
+for the <code class="literal">elixir</code> dependency.</p><p>Otherwise, autopatch performs different operations depending
 on the kind of project it finds the dependency to be.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 Rebar projects are automatically converted to use Erlang.mk
 as their build tool. This essentially patches Rebar out, and
@@ -287,7 +286,15 @@ Projects with no source directory and no Makefile get an
 empty Makefile generated, for compatibility purposes.
 </li><li class="listitem">
 Other projects with no Makefile are left untouched.
-</li></ul></div><p>You can disable the replacing of the <span class="emphasis"><em>erlang.mk</em></span> file by
+</li></ul></div><p>You can add additional commands to be run immediately before
+or after autopatch is done by extending the target
+<code class="literal">autopatch-$(dep)::</code>, for example this would remove
+a module:</p><pre class="programlisting">autopatch-ranch::
+    rm -f $(DEPS_DIR)/ranch/src/ranch_proxy_header.erl</pre><p>A common use case for this feature is to apply a PATCH
+file on the dependency immediately after fetching it.
+It can also be used to add compiler options, for example:</p><pre class="programlisting">autopatch-couchbeam::
+    printf "\nERLC_OPTS += -DWITH_JIFFY\n" &gt;&gt; $(DEPS_DIR)/couchbeam/Makefile</pre><p>The commands will run before autopatch when the target is
+defined before including <span class="emphasis"><em>erlang.mk</em></span>, and after otherwise.</p><p>You can disable the replacing of the <span class="emphasis"><em>erlang.mk</em></span> file by
 defining the <code class="literal">NO_AUTOPATCH_ERLANG_MK</code> variable:</p><pre class="programlisting">NO_AUTOPATCH_ERLANG_MK = 1</pre><p>You can also disable autopatch entirely for a few select
 projects using the <code class="literal">NO_AUTOPATCH</code> variable:</p><pre class="programlisting">NO_AUTOPATCH = cowboy ranch cowlib</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dealing_with_duplicate_modules"></a>7.10. Dealing with duplicate modules</h2></div></div></div><p>When there are duplicate modules found in both applications
 and their dependencies, some tasks may fail. Erlang expects

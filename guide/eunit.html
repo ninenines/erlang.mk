@@ -33,9 +33,9 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="shell.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ct.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="eunit"></a>Chapter 18. EUnit</h2></div></div></div><p>EUnit is the tool of choice for unit testing. Erlang.mk
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="shell.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ct.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="eunit"></a>Chapter 19. EUnit</h2></div></div></div><p>EUnit is the tool of choice for unit testing. Erlang.mk
 automates a few things on top of EUnit, including the
-discovery and running of unit tests.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_tests"></a>18.1. Writing tests</h2></div></div></div><p>The <a class="ulink" href="http://www.erlang.org/doc/apps/eunit/chapter.html" target="_top">EUnit user guide</a>
+discovery and running of unit tests.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_tests"></a>19.1. Writing tests</h2></div></div></div><p>The <a class="ulink" href="http://www.erlang.org/doc/apps/eunit/chapter.html" target="_top">EUnit user guide</a>
 is the best place to learn how to write tests. Of note is
 that all functions ending with <code class="literal">_test</code> or <code class="literal">_test_</code> will be
 picked up as EUnit test cases.</p><p>Erlang.mk will automatically pick up tests found in any of
@@ -58,19 +58,19 @@ compiled.</p><pre class="programlisting">-ifdef(TEST).
 %% Insert tests here.
 
 -endif.</pre><p>Erlang.mk will automatically recompile your code when you
-perform a normal build after running tests, and vice versa.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_6"></a>18.2. Configuration</h2></div></div></div><p>The <code class="literal">EUNIT_OPTS</code> variable allows you to specify additional
+perform a normal build after running tests, and vice versa.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_6"></a>19.2. Configuration</h2></div></div></div><p>The <code class="literal">EUNIT_OPTS</code> variable allows you to specify additional
 EUnit options. Options are documented in the
 <a class="ulink" href="http://www.erlang.org/doc/man/eunit.html#test-2" target="_top">EUnit manual</a>.
 At the time of writing, the only available option is <code class="literal">verbose</code>:</p><pre class="programlisting">EUNIT_OPTS = verbose</pre><p>The <code class="literal">EUNIT_ERL_OPTS</code> variable allows you to specify options
 to be passed to <code class="literal">erl</code> when running EUnit tests. For example,
-you can load the <span class="emphasis"><em>vm.args</em></span> and <span class="emphasis"><em>sys.config</em></span> files:</p><pre class="programlisting">EUNIT_ERL_OPTS = -args_file config/vm.args -config config/sys.config</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_usage_4"></a>18.3. Usage</h2></div></div></div><p>To run all tests (including EUnit):</p><pre class="programlisting">$ make tests</pre><p>To run all tests and static checks (including EUnit):</p><pre class="programlisting">$ make check</pre><p>You can also run EUnit separately:</p><pre class="programlisting">$ make eunit</pre><p>EUnit will be quiet by default, only outputting errors.
+you can load the <span class="emphasis"><em>vm.args</em></span> and <span class="emphasis"><em>sys.config</em></span> files:</p><pre class="programlisting">EUNIT_ERL_OPTS = -args_file config/vm.args -config config/sys.config</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_usage_4"></a>19.3. Usage</h2></div></div></div><p>To run all tests (including EUnit):</p><pre class="programlisting">$ make tests</pre><p>To run all tests and static checks (including EUnit):</p><pre class="programlisting">$ make check</pre><p>You can also run EUnit separately:</p><pre class="programlisting">$ make eunit</pre><p>EUnit will be quiet by default, only outputting errors.
 You can easily make it verbose for a single invocation:</p><pre class="programlisting">$ make eunit EUNIT_OPTS=verbose</pre><p>Erlang.mk allows you to run all tests from a specific
 module, or a specific test case from that module, using
 the variable <code class="literal">t</code>.</p><p>For example, to run all tests from the <code class="literal">cow_http_hd</code>
 module (instead of all tests from the entire project),
 one could write:</p><pre class="programlisting">$ make eunit t=cow_http_hd</pre><p>Similarly, to run a specific test case:</p><pre class="programlisting">$ make eunit t=cow_http_hd:parse_accept_test_</pre><p>To do the same against a multi-application repository,
 you can use the <code class="literal">-C</code> option:</p><pre class="programlisting">$ make -C apps/my_app eunit t=my_module:hello_test</pre><p>Note that this also applies to dependencies. From Cowboy,
-you can run the following directly:</p><pre class="programlisting">$ make -C deps/cowlib eunit t=cow_http_hd</pre><p>Finally, <a class="link" href="coverage.html" title="Chapter 21. Code coverage">code coverage</a> is available,
+you can run the following directly:</p><pre class="programlisting">$ make -C deps/cowlib eunit t=cow_http_hd</pre><p>Finally, <a class="link" href="coverage.html" title="Chapter 22. Code coverage">code coverage</a> is available,
 but covered in its own chapter.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="shell.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tests.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ct.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>

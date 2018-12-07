@@ -33,13 +33,13 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="edoc.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="tests.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="sphinx"></a>Chapter 16. Sphinx documentation</h2></div></div></div><p>Erlang.mk includes targets for running the
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="edoc.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="tests.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="sphinx"></a>Chapter 17. Sphinx documentation</h2></div></div></div><p>Erlang.mk includes targets for running the
 <a class="ulink" href="http://www.sphinx-doc.org/" target="_top">Sphinx documentation generator</a>, which can produce
 documentation in various formats, like HTML, man pages, Texinfo, LaTeX, and
-others.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_sphinx_documentation"></a>16.1. Writing Sphinx documentation</h2></div></div></div><p>Sphinx generates documentation from a set of
+others.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_sphinx_documentation"></a>17.1. Writing Sphinx documentation</h2></div></div></div><p>Sphinx generates documentation from a set of
 <a class="ulink" href="http://www.sphinx-doc.org/en/stable/rest.html" target="_top">reST</a> documents. There is
 a <a class="ulink" href="http://www.sphinx-doc.org/en/stable/tutorial.html" target="_top">quick start guide</a> on
-Sphinx' website. For Erlang.mk, we’ll set up a minimal environment instead.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_basic_setup"></a>16.2. Basic setup</h2></div></div></div><p>By default, Erlang.mk expects Sphinx documentation to be placed in the <span class="emphasis"><em>doc</em></span>
+Sphinx' website. For Erlang.mk, we’ll set up a minimal environment instead.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_basic_setup"></a>17.2. Basic setup</h2></div></div></div><p>By default, Erlang.mk expects Sphinx documentation to be placed in the <span class="emphasis"><em>doc</em></span>
 directory, with <span class="emphasis"><em>doc/conf.py</em></span> config file in particular. The file contains
 information about the project, among the other things.</p><p>A minimal <span class="emphasis"><em>doc/conf.py</em></span> will look similar to this:</p><pre class="programlisting">project = 'My Project'
 version = '0.0'
@@ -66,7 +66,7 @@ header with some text will do for now:</p><pre class="screen">Other Page
 ==========
 
 Lorem ipsum dolor sit amet...</pre><p>The files above are enough to build HTML documentation to the <span class="emphasis"><em>html</em></span> directory.</p><pre class="programlisting">$ make docs     # all the docs, including EDoc and AsciiDoc if applicable
-$ make sphinx   # Sphinx docs specifically</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_configuration"></a>16.3. Erlang.mk configuration</h2></div></div></div><p>Erlang.mk defaults to the following configuration:</p><pre class="programlisting">SPHINX_FORMATS = html
+$ make sphinx   # Sphinx docs specifically</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_configuration"></a>17.3. Erlang.mk configuration</h2></div></div></div><p>Erlang.mk defaults to the following configuration:</p><pre class="programlisting">SPHINX_FORMATS = html
 SPHINX_SOURCE = doc</pre><p>To change the location of Sphinx sources, you need to set the <code class="literal">$(SPHINX_SOURCE)</code>
 variable. The <span class="emphasis"><em>conf.py</em></span> file should also be placed in that directory, unless you
 specify <code class="literal">$(SPHINX_CONFDIR)</code>.</p><p>The variable <code class="literal">$(SPHINX_OPTS)</code> allows to provide options to <code class="literal">sphinx-build</code>, which
@@ -82,7 +82,7 @@ for <code class="literal">sphinx-build</code> for a list of known formats.</p><p
 for a specific format, you can set the <code class="literal">$(sphinx_$(format)_output)</code> variable, e.g.
 <code class="literal">$(sphinx_html_output)</code> for <span class="emphasis"><em>html</em></span> or <code class="literal">$(sphinx_man_output)</code> for <span class="emphasis"><em>man</em></span>.
 There are also <code class="literal">$(sphinx_$(format)_opts)</code> variables for setting <code class="literal">sphinx-build</code>
-options for a single format only.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_man_pages"></a>16.4. Generating man pages</h2></div></div></div><p>To generate man pages, you need to include <code class="literal">man</code> in <code class="literal">$(SPHINX_FORMATS)</code> in
+options for a single format only.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_man_pages"></a>17.4. Generating man pages</h2></div></div></div><p>To generate man pages, you need to include <code class="literal">man</code> in <code class="literal">$(SPHINX_FORMATS)</code> in
 your Makefile and define the <code class="literal">man_pages</code> option in <span class="emphasis"><em>doc/conf.py</em></span>:</p><pre class="programlisting">man_pages = [
     ('doc_name', 'page_name', 'Manpage Title', ['Page Author'], 1),
 ]</pre><p>As the

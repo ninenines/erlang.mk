@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Erlang.mk User Guide</title>
+<style type="text/css"><!--
+body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
+header {align-items:center;display:flex;justify-content:center}
+header nav.left{text-align:right;width:150px}
+header nav.right{text-align:left;width:150px}
+header nav a{display:block;margin:1.5em 1em}
+main{margin-top:2em;text-align:justify}
+main h2, main h3{margin-top:2em}
+main h1, main div.chapter>div.titlepage h2{font-size:2em;margin-top:.67em}
+a{color:#d9230f;text-decoration:none}
+a:hover{text-decoration:underline}
+a.xref{display:none}
+h1, h2, h3{font-weight:normal}
+div.navfooter{margin-bottom:1em}
+--></style>
+</head>
+<body>
+<header>
+	<nav class="left">
+		<a href="index.html">User guide</a>
+		<a href="getting_started.html">Tutorials</a>
+	</nav>
+	<a href="/" class="logo"><img src="../res/logo-small.png" alt="Erlang.mk" title="Erlang.mk: A build tool for Erlang that just works" height="200" width="206"/></a>
+	<nav class="right">
+		<a href="https://github.com/ninenines/erlang.mk/tree/master/index">470+ packages</a>
+		<a href="https://github.com/ninenines/erlang.mk/issues">Issues?</a>
+	</nav>
+</header>
+<main>
+
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="kerl.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="compat.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="cross_compiling"></a>Chapter 13. Cross compiling</h2></div></div></div><p>Erlang.mk supports cross-compiling. While the compiled
+Erlang code is portable as-is, the C code is not and
+releases need to use the correct runtime system for the
+target environment.</p><p>There are therefore two steps that might require some
+intervention: compiling and building the release. If
+you do not have any C code you can just compile as you
+would normally, however.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_compiling"></a>13.1. Compiling</h2></div></div></div><p>To cross-compile the C code you need a cross compiler. If you
+were to target Windows from an Arch Linux machine you would
+install the <a class="ulink" href="https://aur.archlinux.org/packages/mingw-w64-gcc/" target="_top">mingw-w64-gcc</a>
+package. You would then need to define the <code class="literal">CC</code> environment
+variable to point to this compiler instead of the default:</p><pre class="programlisting">CC=/usr/bin/x86_64-w64-mingw32-gcc</pre><p>Additionally, on Windows the shared libraries use a different
+extension than on Linux, so it needs to be specified as well:</p><pre class="programlisting">C_SRC_OUTPUT_SHARED_EXTENSION=.dll</pre><p>These values can be added to the Makefile or given from the
+command line, for example:</p><pre class="programlisting">$ CC=/usr/bin/x86_64-w64-mingw32-gcc C_SRC_OUTPUT_SHARED_EXTENSION=.dll make
+ DEPEND my_nif.d
+ ERLC   my_nif.erl
+ APP    my_nif
+ C      my_nif.c
+ LD     my_nif.dll
+$ file priv/my_nif.dll
+priv/my_nif.dll: PE32+ executable (DLL) (console) x86-64, for MS Windows</pre><p>You could also add this configuration to your Makefile hidden
+behind a flag:</p><pre class="programlisting">ifdef WINDOWS_BUILD
+CC = /usr/bin/x86_64-w64-mingw32-gcc
+C_SRC_OUTPUT_SHARED_EXTENSION = .dll
+endif</pre><p>And then just compile like this:</p><pre class="programlisting">$ make WINDOWS_BUILD=1</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_building_the_release"></a>13.2. Building the release</h2></div></div></div><p>For the release there are two options. You can either include
+the correct runtime system directly in the release; or you
+can not include the runtime system in the release and instead
+let it use the one installed in the target environment.</p><p>To include the target runtime system, add the <code class="literal">include_erts</code>
+tuple to your <span class="emphasis"><em>relx.config</em></span> file:</p><pre class="programlisting">{include_erts, "/path/to/alternate/erlang"}.</pre><p>If you were to target Windows for example, you could copy
+the Erlang installation from the <span class="emphasis"><em>Program Files</em></span> directory
+and then configure <span class="emphasis"><em>relx.config</em></span> like this:</p><pre class="programlisting">{include_erts, "/path/to/erl10.1"}.</pre><p>You need to make sure that the runtime system version you
+will use is capable of running the compiled Erlang code
+you used to build your project, otherwise it will fail
+to run.</p><p>If you choose to not include the runtime system at all,
+configure <span class="emphasis"><em>relx.config</em></span> as follow:</p><pre class="programlisting">{include_erts, false}.</pre><p>In that case the runtime system needs to be available
+in the <code class="literal">$PATH</code> of the target environment.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="kerl.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="compat.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+</main>
+</body>
+</html>
