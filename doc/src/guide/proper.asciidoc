@@ -1,0 +1,31 @@
+[[proper]]
+== PropEr
+
+https://proper-testing.github.io/[PropEr] is a QuickCheck-like library for
+property-based testing. Erlang.mk automates discovery and checking of
+PropEr properties.
+
+To run all tests (including PropEr):
+
+[source,bash]
+$ make tests
+
+To run all tests and static checks (including PropEr):
+
+[source,bash]
+$ make check
+
+You can also run PropEr separately:
+
+[source,bash]
+$ make proper
+
+To check properties from a single module:
+
+[source,bash]
+$ make proper t=foo_tests
+
+To check a single property:
+
+[source,bash]
+$ make proper t=foo_tests:bar

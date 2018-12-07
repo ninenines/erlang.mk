@@ -54,6 +54,8 @@ include::eunit.asciidoc[EUnit]
 
 include::common_test.asciidoc[Common Test]
 
+include::proper.asciidoc[PropEr]
+
 include::triq.asciidoc[Triq]
 
 include::coverage.asciidoc[Code coverage]
