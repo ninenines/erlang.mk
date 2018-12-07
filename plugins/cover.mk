@@ -117,7 +117,9 @@ ifneq ($(COVER_REPORT_DIR),)
 
 cover-report-clean:
 	$(gen_verbose) rm -rf $(COVER_REPORT_DIR)
+ifneq ($(COVER_REPORT_DIR),$(COVER_DATA_DIR))
 	$(if $(shell ls -A $(COVER_DATA_DIR)/),,$(verbose) rmdir $(COVER_DATA_DIR))
+endif
 
 ifeq ($(COVERDATA),)
 cover-report:
