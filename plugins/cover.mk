@@ -5,6 +5,11 @@
 COVER_REPORT_DIR ?= cover
 COVER_DATA_DIR ?= $(COVER_REPORT_DIR)
 
+ifdef COVER
+COVER_APPS ?= $(notdir $(ALL_APPS_DIRS))
+COVER_DEPS ?=
+endif
+
 # Code coverage for Common Test.
 
 ifdef COVER
@@ -15,6 +20,9 @@ test-build:: $(TEST_DIR)/ct.cover.spec
 $(TEST_DIR)/ct.cover.spec: cover-data-dir
 	$(gen_verbose) printf "%s\n" \
 		"{incl_app, '$(PROJECT)', details}." \
+		"{incl_dirs, '$(PROJECT)', [\"$(CURDIR)/ebin\" \
+			$(foreach a,$(COVER_APPS),$(comma) \"$(APPS_DIR)/$a/ebin\") \
+			$(foreach d,$(COVER_DEPS),$(comma) \"$(DEPS_DIR)/$d/ebin\")]}." \
 		'{export,"$(abspath $(COVER_DATA_DIR))/ct.coverdata"}.' > $@
 
 CT_RUN += -cover $(TEST_DIR)/ct.cover.spec
@@ -27,14 +35,19 @@ endif
 ifdef COVER
 define cover.erl
 	CoverSetup = fun() ->
-		case filelib:is_dir("ebin") of
-			false -> false;
-			true ->
-				case cover:compile_beam_directory("ebin") of
-					{error, _} -> halt(1);
-					_ -> true
-				end
-		end
+		Dirs = ["$(CURDIR)/ebin"
+			$(foreach a,$(COVER_APPS),$(comma) "$(APPS_DIR)/$a/ebin")
+			$(foreach d,$(COVER_DEPS),$(comma) "$(DEPS_DIR)/$d/ebin")],
+		[begin
+			case filelib:is_dir(Dir) of
+				false -> false;
+				true ->
+					case cover:compile_beam_directory(Dir) of
+						{error, _} -> halt(1);
+						_ -> true
+					end
+			end
+		end || Dir <- Dirs]
 	end,
 	CoverExport = fun(Filename) -> cover:export(Filename) end,
 endef
