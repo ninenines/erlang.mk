@@ -395,7 +395,7 @@ define dep_autopatch_rebar.erl
 	end(),
 	ShellToMk = fun(V0) ->
 		V1 = re:replace(V0, "[$$][(]", "$$\(shell ", [global]),
-		V = re:replace(V1, "(\\\\$$$$)(?![(])(\\\\w*)", "\\\\1(\\\\2)", [global]),
+		V = re:replace(V1, "([$$])(?![(])(\\\\w*)", "\\\\1(\\\\2)", [global]),
 		re:replace(V, "-Werror\\\\b", "", [{return, list}, global])
 	end,
 	PortSpecs = fun() ->
