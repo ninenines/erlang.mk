@@ -22,11 +22,11 @@ ERLANG_MK_WITHOUT =
 
 # Make 3.81 and 3.82 are deprecated.
 
-ifeq ($(MAKE_VERSION),3.81)
+ifeq ($(MAKELEVEL)$(MAKE_VERSION),03.81)
 $(warning Please upgrade to GNU Make 4 or later: https://erlang.mk/guide/installation.html)
 endif
 
-ifeq ($(MAKE_VERSION),3.82)
+ifeq ($(MAKELEVEL)$(MAKE_VERSION),03.82)
 $(warning Please upgrade to GNU Make 4 or later: https://erlang.mk/guide/installation.html)
 endif
 
