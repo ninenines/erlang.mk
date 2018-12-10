@@ -115,6 +115,9 @@ endif
 
 distclean:: clean distclean-tmp
 
+$(ERLANG_MK_TMP):
+	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+
 distclean-tmp:
 	$(gen_verbose) rm -rf $(ERLANG_MK_TMP)
 

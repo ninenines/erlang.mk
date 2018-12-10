@@ -27,8 +27,7 @@ BEAM_FILES += $(addsuffix .beam,$(addprefix ebin/,$(DTL_MODULES)))
 
 ifneq ($(words $(DTL_FILES)),0)
 # Rebuild templates when the Makefile changes.
-$(ERLANG_MK_TMP)/last-makefile-change-erlydtl: $(MAKEFILE_LIST)
-	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+$(ERLANG_MK_TMP)/last-makefile-change-erlydtl: $(MAKEFILE_LIST) | $(ERLANG_MK_TMP)
 	$(verbose) if test -f $@; then \
 		touch $(DTL_FILES); \
 	fi

@@ -81,28 +81,31 @@ dep_verbose = $(dep_verbose_$(V))
 # Optimization: don't recompile deps unless truly necessary.
 
 ifndef IS_DEP
+ifneq ($(MAKELEVEL),0)
 $(shell rm -f ebin/dep_built)
+endif
 endif
 
 # Core targets.
 
-apps:: $(ALL_APPS_DIRS) clean-tmp-deps.log
-ifeq ($(IS_APP)$(IS_DEP),)
-	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log
-endif
-	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+ALL_APPS_DIRS_TO_BUILD = $(if $(LOCAL_DEPS_DIRS)$(IS_APP),$(LOCAL_DEPS_DIRS),$(ALL_APPS_DIRS))
+
+apps:: $(ALL_APPS_DIRS) clean-tmp-deps.log | $(ERLANG_MK_TMP)
 # Create ebin directory for all apps to make sure Erlang recognizes them
 # as proper OTP applications when using -include_lib. This is a temporary
 # fix, a proper fix would be to compile apps/* in the right order.
 ifndef IS_APP
+ifneq ($(ALL_APPS_DIRS),)
 	$(verbose) set -e; for dep in $(ALL_APPS_DIRS) ; do \
 		mkdir -p $$dep/ebin; \
 	done
 endif
+endif
 # At the toplevel: if LOCAL_DEPS is defined with at least one local app, only
 # compile that list of apps. Otherwise, compile everything.
 # Within an app: compile all LOCAL_DEPS that are (uncompiled) local apps.
-	$(verbose) set -e; for dep in $(if $(LOCAL_DEPS_DIRS)$(IS_APP),$(LOCAL_DEPS_DIRS),$(ALL_APPS_DIRS)) ; do \
+ifneq ($(ALL_APPS_DIRS_TO_BUILD),)
+	$(verbose) set -e; for dep in $(ALL_APPS_DIRS_TO_BUILD); do \
 		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/apps.log; then \
 			:; \
 		else \
@@ -110,18 +113,19 @@ endif
 			$(MAKE) -C $$dep $(if $(IS_TEST),test-build-app) IS_APP=1; \
 		fi \
 	done
+endif
 
 clean-tmp-deps.log:
 ifeq ($(IS_APP)$(IS_DEP),)
-	$(verbose) rm -f $(ERLANG_MK_TMP)/deps.log
+	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log $(ERLANG_MK_TMP)/deps.log
 endif
 
 ifneq ($(SKIP_DEPS),)
 deps::
 else
-deps:: $(ALL_DEPS_DIRS) apps clean-tmp-deps.log
-	$(verbose) mkdir -p $(ERLANG_MK_TMP)
-	$(verbose) set -e; for dep in $(ALL_DEPS_DIRS) ; do \
+deps:: $(ALL_DEPS_DIRS) apps clean-tmp-deps.log | $(ERLANG_MK_TMP)
+ifneq ($(ALL_DEPS_DIRS),)
+	$(verbose) set -e; for dep in $(ALL_DEPS_DIRS); do \
 		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/deps.log; then \
 			:; \
 		else \
@@ -137,6 +141,7 @@ deps:: $(ALL_DEPS_DIRS) apps clean-tmp-deps.log
 			fi \
 		fi \
 	done
+endif
 endif
 
 # Deps related targets.
@@ -212,7 +217,6 @@ endef
 
 # We use flock/lockf when available to avoid concurrency issues.
 define dep_autopatch_fetch_rebar
-	mkdir -p $(ERLANG_MK_TMP); \
 	if command -v flock >/dev/null; then \
 		flock $(ERLANG_MK_TMP)/rebar.lock sh -c "$(call dep_autopatch_fetch_rebar2)"; \
 	elif command -v lockf >/dev/null; then \
@@ -645,7 +649,7 @@ define dep_fetch
 endef
 
 define dep_target
-$(DEPS_DIR)/$(call dep_name,$1):
+$(DEPS_DIR)/$(call dep_name,$1): | $(ERLANG_MK_TMP)
 	$(eval DEP_NAME := $(call dep_name,$1))
 	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \

@@ -53,15 +53,9 @@ ifneq ($(wildcard src/),)
 
 # Targets.
 
-ifeq ($(wildcard ebin/test),)
-app:: deps
+app:: $(if $(wildcard ebin/test),clean) deps
 	$(verbose) $(MAKE) --no-print-directory $(PROJECT).d
 	$(verbose) $(MAKE) --no-print-directory app-build
-else
-app:: clean deps
-	$(verbose) $(MAKE) --no-print-directory $(PROJECT).d
-	$(verbose) $(MAKE) --no-print-directory app-build
-endif
 
 ifeq ($(wildcard src/$(PROJECT_MOD).erl),)
 define app_file
@@ -277,8 +271,7 @@ endif
 
 ifneq ($(words $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES)),0)
 # Rebuild everything when the Makefile changes.
-$(ERLANG_MK_TMP)/last-makefile-change: $(MAKEFILE_LIST)
-	$(verbose) mkdir -p $(ERLANG_MK_TMP)
+$(ERLANG_MK_TMP)/last-makefile-change: $(MAKEFILE_LIST) | $(ERLANG_MK_TMP)
 	$(verbose) if test -f $@; then \
 		touch $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES); \
 		touch -c $(PROJECT).d; \
@@ -288,6 +281,9 @@ $(ERLANG_MK_TMP)/last-makefile-change: $(MAKEFILE_LIST)
 $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES):: $(ERLANG_MK_TMP)/last-makefile-change
 ebin/$(PROJECT).app:: $(ERLANG_MK_TMP)/last-makefile-change
 endif
+
+$(PROJECT).d::
+	$(verbose) :
 
 include $(wildcard $(PROJECT).d)
 
