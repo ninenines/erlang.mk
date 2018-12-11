@@ -210,9 +210,9 @@ endif
 
 	$i "Start initial release and confirm it runs the old code"
 ifeq ($(PLATFORM),msys2)
-	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) install $v
+	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) install
 endif
-	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) start $v
+	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) start
 	$t sleep 1
 	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpcterms test test` = old
 
@@ -238,9 +238,9 @@ endif
 	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpcterms test test` = old
 
 	$i "Stop the release"
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) stop $v
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) stop
 ifeq ($(PLATFORM),msys2)
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall $v
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall
 endif
 
 relx-start-stop: init
@@ -255,22 +255,22 @@ relx-start-stop: init
 
 	$i "Start the release"
 ifeq ($(PLATFORM),msys2)
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd install $v
+	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) install
 endif
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) start $v
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) start
 	$t sleep 1
 
 	$i "Ping the release"
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping $v
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping
 
 	$i "Stop the release"
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) stop $v
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) stop
 ifeq ($(PLATFORM),msys2)
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd uninstall $v
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall
 endif
 
 	$i "Check that further pings get no replies"
-	$t ! $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping $v
+	$t ! $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping
 
 relx-tar: init
 
