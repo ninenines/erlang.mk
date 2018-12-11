@@ -55,6 +55,10 @@ gen_verbose_0 = @echo " GEN   " $@;
 gen_verbose_2 = set -x;
 gen_verbose = $(gen_verbose_$(V))
 
+gen_verbose_esc_0 = @echo " GEN   " $$@;
+gen_verbose_esc_2 = set -x;
+gen_verbose_esc = $(gen_verbose_esc_$(V))
+
 # Temporary files directory.
 
 ERLANG_MK_TMP ?= $(CURDIR)/.erlang.mk
