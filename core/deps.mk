@@ -325,13 +325,22 @@ define dep_autopatch_rebar.erl
 				false
 		end
 	end,
+	SemVsn = fun
+		("~> " ++ S) ->
+			case length([ok || $$. <- S]) of
+				0 -> S ++ ".0.0";
+				1 -> S ++ ".0";
+				_ -> S
+			end;
+		(S) -> S
+	end,
 	fun() ->
 		File = case lists:keyfind(deps, 1, Conf) of
 			false -> [];
 			{_, Deps} ->
 				[begin case case Dep of
 							N when is_atom(N) -> GetHexVsn(N);
-							{N, S} when is_atom(N), is_list(S) -> {N, {hex, S}};
+							{N, S} when is_atom(N), is_list(S) -> {N, {hex, SemVsn(S)}};
 							{_, S, {pkg, N}} -> {N, {hex, S}};
 							{N, S} when is_tuple(S) -> {N, S};
 							{N, _, S} -> {N, S};
