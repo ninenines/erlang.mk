@@ -825,6 +825,75 @@ dep_shelldep = git file://$(abspath $(APP)_shelldep) master\
 	$t cmp $(APP)/expected-all-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
 	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
 
+core-deps-makefile-change: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Add Cowlib to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowlib to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that Cowlib was included in the .app file"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, Apps} = application:get_key($(APP), applications), \
+		true = lists:member(cowlib, Apps), \
+		halt()."
+
+core-deps-dep-makefile-change: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Bootstrap a new OTP library named my_dep inside $(APP)"
+	$t mkdir $(APP)/my_dep
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
+
+	$i "Add my_dep to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = ln $(CURDIR)/$(APP)/my_dep/\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add my_dep to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tmy_dep,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) NO_AUTOPATCH=my_dep $v
+
+	$i "Add Cowlib to the list of dependencies in my_dep"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/my_dep/Makefile
+
+ifdef LEGACY
+	$i "Add Cowlib to the applications key in my_dep's .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/my_dep/src/my_dep.app.src
+endif
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that Cowlib was included in my_dep's .app file"
+	$t $(ERL) -pa $(APP)/my_dep/ebin/ -eval " \
+		ok = application:load(my_dep), \
+		{ok, Apps} = application:get_key(my_dep, applications), \
+		true = lists:member(cowlib, Apps), \
+		halt()."
+
 core-deps-mv: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
