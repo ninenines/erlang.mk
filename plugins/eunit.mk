@@ -8,6 +8,7 @@
 
 EUNIT_OPTS ?=
 EUNIT_ERL_OPTS ?=
+EUNIT_TEST_SPEC ?= $1
 
 # Core targets.
 
@@ -23,7 +24,7 @@ help::
 define eunit.erl
 	$(call cover.erl)
 	CoverSetup(),
-	case eunit:test($1, [$(EUNIT_OPTS)]) of
+	case eunit:test($(call EUNIT_TEST_SPEC,$1), [$(EUNIT_OPTS)]) of
 		ok -> ok;
 		error -> halt(2)
 	end,
