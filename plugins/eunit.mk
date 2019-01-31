@@ -20,12 +20,21 @@ help::
 
 # Plugin-specific targets.
 
+ifndef eunit_setup.erl
+define eunit_setup.erl
+	EunitSetup = fun () -> ok end,
+	EunitTeardown = fun () -> ok end,
+endef
+endif
+
 define eunit.erl
 	$(call cover.erl)
+	$(call eunit_setup.erl)
 	CoverSetup(),
+	EunitSetup(),
 	case eunit:test($1, [$(EUNIT_OPTS)]) of
-		ok -> ok;
-		error -> halt(2)
+		ok -> EunitTeardown(), ok;
+		error -> EunitTeardown(), halt(2)
 	end,
 	CoverExport("$(COVER_DATA_DIR)/eunit.coverdata"),
 	halt()
