@@ -411,7 +411,7 @@ ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif
 	$(eval p := $(PROJECT))
-	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
+	$(if $(shell echo $p | grep -x "[a-z0-9_-]*"),,\
 		$(error Error: Invalid characters in the application name))
 	$(eval n := $(PROJECT)_sup)
 	$(verbose) $(call core_render,bs_Makefile,Makefile)
@@ -428,7 +428,7 @@ ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif
 	$(eval p := $(PROJECT))
-	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
+	$(if $(shell echo $p | grep -x "[a-z0-9_-]*"),,\
 		$(error Error: Invalid characters in the application name))
 	$(verbose) $(call core_render,bs_Makefile,Makefile)
 	$(verbose) echo "include erlang.mk" >> Makefile
@@ -458,7 +458,7 @@ ifneq ($(wildcard $(APPS_DIR)/$in),)
 	$(error Error: Application $in already exists)
 endif
 	$(eval p := $(in))
-	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
+	$(if $(shell echo $p | grep -x "[a-z0-9_-]*"),,\
 		$(error Error: Invalid characters in the application name))
 	$(eval n := $(in)_sup)
 	$(verbose) mkdir -p $(APPS_DIR)/$p/src/
@@ -477,7 +477,7 @@ ifneq ($(wildcard $(APPS_DIR)/$in),)
 	$(error Error: Application $in already exists)
 endif
 	$(eval p := $(in))
-	$(if $(shell echo $p | grep -x "[a-z0-9_]*"),,\
+	$(if $(shell echo $p | grep -x "[a-z0-9_-]*"),,\
 		$(error Error: Invalid characters in the application name))
 	$(verbose) mkdir -p $(APPS_DIR)/$p/src/
 	$(verbose) $(call core_render,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
