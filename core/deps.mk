@@ -638,25 +638,32 @@ endef
 # Fetch data from Fossil repository.
 # We first clone repository to the local folder than extract data from it
 # and remove the cloned repo.
+# NOTE FOSSIL_TMP must be defined. for linux use /tmp/fossil
+
 define dep_fetch_fossil
-    mkdir $(DEPS_DIR)/$(call dep_name,$(1)); \
-    cd $(DEPS_DIR)/$(call dep_name,$(1)); \
-    fossil clone $(call dep_repo,$(1)) ./$(call dep_name,$(1)).fossil; \
-    fossil open --nested $(call dep_name,$(1)).fossil ;\
+    rm -f -r $(FOSSIL_TMP)/$(call dep_name,$(1)); \
+    mkdir -p $(FOSSIL_TMP)/$(call dep_name,$(1)); \
+    fossil clone $(call dep_repo,$(1)) $(FOSSIL_TMP)/$(call dep_name,$(1))/$(call dep_name,$(1)).fossil; \
+    cd $(FOSSIL_TMP)/$(call dep_name,$(1)); \
+    fossil open  $(call dep_name,$(1)).fossil ;\
     fossil update  $(call dep_commit,$(1)); \
-    rm $(call dep_name,$(1)).fossil;
+    rm -f $(call dep_name,$(1)).fossil; \
+    rm -f .fslckout; \
+    mkdir -p $(DEPS_DIR)/$(call dep_name,$(1)); \
+    cd ..; \
+    cp -R $(FOSSIL_TMP)/$(call dep_name,$(1)) $(DEPS_DIR);
 endef
 
 # Fetch data from local fossil repository.
 # We expect that repository was clonned to the local drive.
 # So we just open it and update to the specified version.
-define dep_fetch_fossil-local
-    mkdir $(DEPS_DIR)/$(call dep_name,$(1)); \
-    cd $(DEPS_DIR)/$(call dep_name,$(1)); \
-    fossil open --nested $(call dep_name,$(1)).fossil ;\
-    fossil update  $(call dep_commit,$(1)); \
-    rm $(call dep_name,$(1)).fossil;
-endef
+#define dep_fetch_fossil-local
+#    mkdir $(DEPS_DIR)/$(call dep_name,$(1)); \
+#    cd $(DEPS_DIR)/$(call dep_name,$(1)); \
+#    fossil open --nested $(call dep_name,$(1)).fossil ;\
+#    fossil update  $(call dep_commit,$(1)); \
+#    rm $(call dep_name,$(1)).fossil;
+#endef
 
 
 define dep_fetch_fail
