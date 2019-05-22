@@ -651,7 +651,6 @@ define dep_fetch_fossil
     rm -f _FOSSIL_; \
     cd ../..; \
     mkdir -p $(DEPS_DIR)/$(call dep_name,$(1)); \
-
     cp -R ./_tmp_fossil_/$(call dep_name,$(1)) $(DEPS_DIR); \
     rm -f -r ./_tmp_fossil_/$(call dep_name,$(1));
 endef
