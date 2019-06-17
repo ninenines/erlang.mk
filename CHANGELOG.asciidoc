@@ -10,3 +10,6 @@
 
 2018/12/06: Change the default COVER_DATA_DIR to be the
             same as COVER_REPORT_DIR.
+
+2019/06/20: `list-deps` now includes local applications
+            found in the `APPS_DIR` directory.

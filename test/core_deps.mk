@@ -825,6 +825,66 @@ dep_shelldep = git file://$(abspath $(APP)_shelldep) master\
 	$t cmp $(APP)/expected-all-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
 	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
 
+core-deps-list-deps-with-apps: init
+
+# We pass $(MAKE) directly so that GNU Make can pass its context forward.
+# If we didn't then $(MAKE) would be expanded in the call without context.
+	$(call add_dep_and_subdep,,$(MAKE))
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap another APP named $(APP)_app in $(APP) repository"
+	$t $(MAKE) -C $(APP) --no-print-directory new-lib in=my_app $v
+
+	$i "Bootstrap another APP named $(APP)_dep_app in $(APP)_dep repository"
+	$t $(MAKE) -C $(APP)_dep --no-print-directory new-lib in=my_dep_app $v
+	$t sed -i.bak '2i\
+APPS_DIR := $$(CURDIR)/apps\
+LOCAL_DEPS = my_dep_app ssl\
+' $(APP)_dep/Makefile
+	$t echo 'unexport APPS_DIR' >> $(APP)_dep/Makefile
+	$t rm $(APP)_dep/Makefile.bak
+	$t git -C $(APP)_dep add .
+	$t git -C $(APP)_dep commit -q --no-gpg-sign -m "Add application"
+
+	$i "Add $(APP)-dep as a dependency"
+	$t sed -i.bak '2i\
+DEPS = dep\
+dep_dep = git file://$(abspath $(APP)_dep) master\
+' $(APP)/Makefile
+	$t rm $(APP)/Makefile.bak
+
+	$i "Create a Git repository for $(APP)"
+	$t (cd $(APP) && \
+		git init -q && \
+		git config user.name "Testsuite" && \
+		git config user.email "testsuite@erlang.mk" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Initial commit")
+
+	$i "List application dependencies ($(APP)_app is missing)"
+	$t $(MAKE) -C $(APP) --no-print-directory list-deps $v
+	$t test -d $(APP)/deps/subdep
+	$t printf "%s\n%s\n%s\n" $(abspath $(APP)/deps/dep $(APP)/deps/dep/apps/my_dep_app $(APP)/deps/subdep) > $(APP)/expected-deps.txt
+	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
+	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
+
+	$i "Add $(APP)_app as a dependency"
+	$t sed -i.bak '3i\
+LOCAL_DEPS = my_app\
+' $(APP)/Makefile
+	$t rm $(APP)/Makefile.bak
+
+	$i "List application dependencies ($(APP)_app is listed)"
+	$t $(MAKE) -C $(APP) --no-print-directory list-deps $v
+	$t test -d $(APP)/deps/subdep
+	$t printf "%s\n%s\n%s\n%s\n" $(abspath $(APP)/apps/my_app $(APP)/deps/dep $(APP)/deps/dep/apps/my_dep_app $(APP)/deps/subdep) > $(APP)/expected-deps.txt
+	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
+	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
+
 core-deps-makefile-change: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
