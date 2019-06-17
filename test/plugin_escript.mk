@@ -63,7 +63,7 @@ escript-build-deps: init
 	$t $(APP)/$(APP) | grep -q good
 
 	$i "Check that the escript does not contain the build dependency"
-	$t ! zipinfo $(APP)/$(APP) 2> /dev/null | grep -q lfe
+	$t ! unzip -l $(APP)/$(APP) 2> /dev/null | grep -q lfe
 
 escript-deps: init
 
@@ -88,7 +88,7 @@ escript-deps: init
 	$t $(APP)/$(APP) | grep -q good
 
 	$i "Check that the escript contains the dependency"
-	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q ranch
+	$t unzip -l $(APP)/$(APP) 2> /dev/null | grep -q ranch
 
 escript-deps-with-deps: init
 
@@ -116,9 +116,9 @@ escript-deps-with-deps: init
 	$t $(APP)/$(APP) | grep -q good
 
 	$i "Check that the escript contains the dependencies"
-	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q cowboy
-	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q cowlib
-	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q ranch
+	$t unzip -l $(APP)/$(APP) 2> /dev/null | grep -q cowboy
+	$t unzip -l $(APP)/$(APP) 2> /dev/null | grep -q cowlib
+	$t unzip -l $(APP)/$(APP) 2> /dev/null | grep -q ranch
 
 escript-distclean: init
 
@@ -173,5 +173,5 @@ escript-extra: init
 	$t $(APP)/$(APP) | grep -q good
 
 	$i "Check that the escript contains the extra files"
-	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q Makefile
-	$t zipinfo $(APP)/$(APP) 2> /dev/null | grep -q erlang.mk
+	$t unzip -l $(APP)/$(APP) 2> /dev/null | grep -q Makefile
+	$t unzip -l $(APP)/$(APP) 2> /dev/null | grep -q erlang.mk
