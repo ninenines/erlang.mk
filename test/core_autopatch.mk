@@ -37,7 +37,7 @@ core-autopatch-extended-erlc-opts: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = couchbeam\n"}' $(APP)/Makefile
 
 	$i "Extend autopatch-couchbeam to add options to its ERLC_OPTS"
-	$t echo "autopatch-couchbeam:: ; printf '\nERLC_OPTS += -DWITH_JIFFY\n' >> \$$(DEPS_DIR)/couchbeam/Makefile" >> $(APP)/Makefile
+	$t echo "autopatch-couchbeam:: ; echo >> \$$(DEPS_DIR)/couchbeam/Makefile; echo 'ERLC_OPTS += -DWITH_JIFFY' >> \$$(DEPS_DIR)/couchbeam/Makefile" >> $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
