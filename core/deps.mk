@@ -326,7 +326,11 @@ define dep_autopatch_rebar.erl
 		end
 	end,
 	SemVsn = fun
-		("~> " ++ S) ->
+		("~>" ++ S0) ->
+			S = case S0 of
+				" " ++ S1 -> S1;
+				_ -> S0
+			end,
 			case length([ok || $$. <- S]) of
 				0 -> S ++ ".0.0";
 				1 -> S ++ ".0";
