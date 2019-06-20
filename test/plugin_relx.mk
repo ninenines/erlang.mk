@@ -253,6 +253,12 @@ relx-start-stop: init
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) $v
 
+	$i "Stop the release (in case one is running from a previously aborted run)"
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) stop || true
+ifeq ($(PLATFORM),msys2)
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall || true
+endif
+
 	$i "Start the release"
 ifeq ($(PLATFORM),msys2)
 	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) install
