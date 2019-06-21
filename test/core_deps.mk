@@ -825,6 +825,53 @@ dep_shelldep = git file://$(abspath $(APP)_shelldep) master\
 	$t cmp $(APP)/expected-all-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
 	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
 
+core-deps-list-deps-with-specified-full-var: init
+
+# We pass $(MAKE) directly so that GNU Make can pass its context forward.
+# If we didn't then $(MAKE) would be expanded in the call without context.
+	$(call add_dep_and_subdep,,$(MAKE))
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add $(APP)-dep as a dependency"
+	$t sed -i.bak '2i\
+DEPS = dep\
+dep_dep = git file://$(abspath $(APP)_dep) master\
+' $(APP)/Makefile
+	$t rm $(APP)/Makefile.bak
+
+	$i "Create a Git repository for $(APP)"
+	$t (cd $(APP) && \
+		git init -q && \
+		git config user.name "Testsuite" && \
+		git config user.email "testsuite@erlang.mk" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Initial commit")
+
+	$i "Build application"
+	$t $(MAKE) -C $(APP) --no-print-directory $v
+	$t test -d $(APP)/deps/subdep
+
+	$i "List application dependencies without FULL"
+	$t $(MAKE) -C $(APP) --no-print-directory list-deps $v
+	$t printf "%s\n%s\n" $(abspath $(APP)/deps/dep $(APP)/deps/subdep) > $(APP)/expected-deps.txt
+	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
+
+	$i "List application dependencies with empty FULL"
+	$t $(MAKE) -C $(APP) --no-print-directory list-deps FULL= $v
+	$t printf "%s\n%s\n" $(abspath $(APP)/deps/dep $(APP)/deps/subdep) > $(APP)/expected-deps.txt
+	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
+
+	$i "List application dependencies with FULL=1"
+	$t $(MAKE) -C $(APP) --no-print-directory list-deps FULL=1 $v
+	$t printf "%s\n%s\n" $(abspath $(APP)/deps/dep $(APP)/deps/subdep) > $(APP)/expected-deps.txt
+	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/recursive-deps-list.log
+
+	$t $(MAKE) -C $(APP) --no-print-directory distclean $v
+
 core-deps-makefile-change: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
