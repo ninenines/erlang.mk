@@ -174,6 +174,42 @@ core-deps-dep-built-full: init
 	$t find $(APP)/deps/cowlib -type f -newer $(APP)/EXPECT | grep -v ".git" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
 
+core-deps-dep-built-force-full: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add cowlib to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Touch one cowlib file to mark it for recompilation"
+	$t $(SLEEP)
+	$t touch $(APP)/deps/cowlib/src/cow_http.erl
+
+	$i "Check that cowlib is not rebuilt if \`force_rebuilding_dep\` returns false"
+	$t touch $(APP)/EXPECT
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) force_rebuilding_dep='test $$(1) != $(APP)/deps/cowlib' $v
+	$t find $(APP)/deps/cowlib -type f -newer $(APP)/EXPECT | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Check that cowlib is rebuilt if \`force_rebuilding_dep\` returns true"
+	$t printf "%s\n" \
+		$(APP)/deps/cowlib/cowlib.d \
+		$(APP)/deps/cowlib/ebin/cowlib.app \
+		$(APP)/deps/cowlib/ebin/cow_http.beam \
+		$(APP)/deps/cowlib/ebin/dep_built | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) force_rebuilding_dep='test $$(1) = $(APP)/deps/cowlib' $v
+# Files in .git might end up modified due to the id generation in the .app file.
+	$t find $(APP)/deps/cowlib -type f -newer $(APP)/EXPECT | grep -v ".git" | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
 core-deps-dep-built-ln: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
