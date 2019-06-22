@@ -175,7 +175,7 @@ $(ERL) $2 -pz $(ERLANG_MK_TMP)/rebar/ebin -eval "$(subst $(newline),,$(call esca
 endef
 
 ifeq ($(PLATFORM),msys2)
-core_native_path = $(subst \,\\\\,$(shell cygpath -w $1))
+core_native_path = $(shell cygpath -m $1)
 else
 core_native_path = $1
 endif
