@@ -12,7 +12,7 @@ EDOC_OUTPUT ?= doc
 define edoc.erl
 	SrcPaths = lists:foldl(fun(P, Acc) ->
 		filelib:wildcard(atom_to_list(P) ++ "/{src,c_src}") ++ Acc
-	end, [], [$(call comma_list,$(patsubst %,'%',$(EDOC_SRC_DIRS)))]),
+	end, [], [$(call comma_list,$(patsubst %,'%',$(call core_native_path,$(EDOC_SRC_DIRS))))]),
 	DefaultOpts = [{dir, "$(EDOC_OUTPUT)"}, {source_path, SrcPaths}, {subpackages, false}],
 	edoc:application($(1), ".", [$(2)] ++ DefaultOpts),
 	halt(0).
