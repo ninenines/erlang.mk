@@ -312,7 +312,7 @@ eunit-test-dir: init
 		"-module($(APP))." \
 		"-ifdef(TEST)." \
 		"-include_lib(\"eunit/include/eunit.hrl\")." \
-		"log_test() -> os:cmd(\"echo $(APP) >> eunit.log\")." \
+		"log_test() -> file:write_file(\"eunit.log\", \"$(APP)\n\", [append])." \
 		"-endif." > $(APP)/src/$(APP).erl
 
 	$i "Generate a module containing EUnit tests in TEST_DIR"
@@ -320,7 +320,7 @@ eunit-test-dir: init
 	$t printf "%s\n" \
 		"-module($(APP)_tests)." \
 		"-include_lib(\"eunit/include/eunit.hrl\")." \
-		"log_test() -> os:cmd(\"echo $(APP)_tests >> eunit.log\")." > $(APP)/test/$(APP)_tests.erl
+		"log_test() -> file:write_file(\"eunit.log\", \"$(APP)_tests\n\", [append])." > $(APP)/test/$(APP)_tests.erl
 
 	$i "Check that EUnit runs both tests"
 	$t $(MAKE) -C $(APP) eunit | grep -c "2 tests passed." | grep -q 1
