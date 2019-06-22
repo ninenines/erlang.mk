@@ -20,10 +20,10 @@ test-build:: $(TEST_DIR)/ct.cover.spec
 $(TEST_DIR)/ct.cover.spec: cover-data-dir
 	$(gen_verbose) printf "%s\n" \
 		"{incl_app, '$(PROJECT)', details}." \
-		"{incl_dirs, '$(PROJECT)', [\"$(CURDIR)/ebin\" \
-			$(foreach a,$(COVER_APPS),$(comma) \"$(APPS_DIR)/$a/ebin\") \
-			$(foreach d,$(COVER_DEPS),$(comma) \"$(DEPS_DIR)/$d/ebin\")]}." \
-		'{export,"$(abspath $(COVER_DATA_DIR))/ct.coverdata"}.' > $@
+		"{incl_dirs, '$(PROJECT)', [\"$(call core_native_path,$(CURDIR)/ebin)\" \
+			$(foreach a,$(COVER_APPS),$(comma) \"$(call core_native_path,$(APPS_DIR)/$a/ebin)\") \
+			$(foreach d,$(COVER_DEPS),$(comma) \"$(call core_native_path,$(DEPS_DIR)/$d/ebin)\")]}." \
+		'{export,"$(call core_native_path,$(abspath $(COVER_DATA_DIR))/ct.coverdata)"}.' > $@
 
 CT_RUN += -cover $(TEST_DIR)/ct.cover.spec
 endif
