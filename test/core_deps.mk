@@ -191,21 +191,21 @@ core-deps-dep-built-force-full: init
 	$t $(SLEEP)
 	$t touch $(APP)/deps/cowlib/src/cow_http.erl
 
-	$i "Check that cowlib is not rebuilt if \`force_rebuilding_dep\` returns false"
+	$i "Check that cowlib is not rebuilt if \`force_rebuild_dep\` returns false"
 	$t touch $(APP)/EXPECT
 	$t $(SLEEP)
-	$t $(MAKE) -C $(APP) force_rebuilding_dep='test $$(1) != $(CURDIR)/$(APP)/deps/cowlib' $v
+	$t $(MAKE) -C $(APP) force_rebuild_dep='test $$(1) != $(CURDIR)/$(APP)/deps/cowlib' $v
 	$t find $(APP)/deps/cowlib -type f -newer $(APP)/EXPECT | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
 
-	$i "Check that cowlib is rebuilt if \`force_rebuilding_dep\` returns true"
+	$i "Check that cowlib is rebuilt if \`force_rebuild_dep\` returns true"
 	$t printf "%s\n" \
 		$(APP)/deps/cowlib/cowlib.d \
 		$(APP)/deps/cowlib/ebin/cowlib.app \
 		$(APP)/deps/cowlib/ebin/cow_http.beam \
 		$(APP)/deps/cowlib/ebin/dep_built | sort > $(APP)/EXPECT
 	$t $(SLEEP)
-	$t $(MAKE) -C $(APP) force_rebuilding_dep='test $$(1) = $(CURDIR)/$(APP)/deps/cowlib' $v
+	$t $(MAKE) -C $(APP) force_rebuild_dep='test $$(1) = $(CURDIR)/$(APP)/deps/cowlib' $v
 # Files in .git might end up modified due to the id generation in the .app file.
 	$t find $(APP)/deps/cowlib -type f -newer $(APP)/EXPECT | grep -v ".git" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
@@ -1015,8 +1015,8 @@ core-deps-dep-makefile-change: init
 	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
 
 	$i "Add my_dep to the list of dependencies"
-# We use force_rebuilding_dep to ensure it gets rebuilt even on Windows.
-	$t perl -ni.bak -e "print;if ($$.==1) {print \"DEPS = my_dep\ndep_my_dep = ln $(CURDIR)/$(APP)/my_dep/\nforce_rebuilding_dep = test \";print '\$$1';print \" = $(CURDIR)/$(APP)/deps/my_dep\n\"}" $(APP)/Makefile
+# We use force_rebuild_dep to ensure it gets rebuilt even on Windows.
+	$t perl -ni.bak -e "print;if ($$.==1) {print \"DEPS = my_dep\ndep_my_dep = ln $(CURDIR)/$(APP)/my_dep/\nforce_rebuild_dep = test \";print '\$$1';print \" = $(CURDIR)/$(APP)/deps/my_dep\n\"}" $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add my_dep to the applications key in the .app.src file"
