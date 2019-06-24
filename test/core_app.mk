@@ -2410,6 +2410,7 @@ core-app-hrl-deps: init
 	$t $(MAKE) -C $(APP) new-lib in=my_app $v
 
 	$t echo "DEPS = cowlib" > $(APP)/apps/my_app/Makefile
+	$t echo "dep_cowlib_commit = master" >> $(APP)/apps/my_app/Makefile
 	$t echo "include ../../erlang.mk" >> $(APP)/apps/my_app/Makefile
 	$t printf "%s\n" "-module(boy)." "-include_lib(\"cowlib/include/cow_inline.hrl\")." > $(APP)/apps/my_app/src/boy.erl
 	$t printf "%s\n" "-module(girl)." > $(APP)/apps/my_app/src/girl.erl

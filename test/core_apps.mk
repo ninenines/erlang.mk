@@ -18,6 +18,7 @@ core-apps-build: init
 	$t mkdir -p $(APP)/apps/my_app/src/
 	$t touch $(APP)/apps/file.erl
 	$t echo "DEPS = cowlib" > $(APP)/apps/my_app/Makefile
+	$t echo "dep_cowlib_commit = master" >> $(APP)/apps/my_app/Makefile
 	$t echo "include ../../erlang.mk" >> $(APP)/apps/my_app/Makefile
 	$t echo "-module(boy)." > $(APP)/apps/my_app/src/boy.erl
 	$t echo "-module(girl)." > $(APP)/apps/my_app/src/girl.erl
@@ -550,7 +551,7 @@ core-apps-only: init
 	$t $(MAKE) -C $(APP) new t=gen_server n=my_server in=my_app $v
 
 	$i "Add Cowlib to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/apps/my_app/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib_commit = master\n"}' $(APP)/apps/my_app/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
