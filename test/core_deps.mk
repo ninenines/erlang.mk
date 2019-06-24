@@ -1015,7 +1015,8 @@ core-deps-dep-makefile-change: init
 	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
 
 	$i "Add my_dep to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = ln $(CURDIR)/$(APP)/my_dep/\n"}' $(APP)/Makefile
+# We use force_rebuilding_dep to ensure it gets rebuilt even on Windows.
+	$t perl -ni.bak -e "print;if ($$.==1) {print \"DEPS = my_dep\ndep_my_dep = ln $(CURDIR)/$(APP)/my_dep/\nforce_rebuilding_dep = test \";print '\$$1';print \" = $(CURDIR)/$(APP)/deps/my_dep\n\"}" $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add my_dep to the applications key in the .app.src file"
@@ -1026,18 +1027,18 @@ endif
 	$t $(MAKE) -C $(APP) NO_AUTOPATCH=my_dep $v
 
 	$i "Add Cowlib to the list of dependencies in my_dep"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/my_dep/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib_commit = master\n"}' $(APP)/deps/my_dep/Makefile
 
 ifdef LEGACY
 	$i "Add Cowlib to the applications key in my_dep's .app.src file"
-	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/my_dep/src/my_dep.app.src
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/deps/my_dep/src/my_dep.app.src
 endif
 
 	$i "Build the application again"
 	$t $(MAKE) -C $(APP) $v
 
 	$i "Check that Cowlib was included in my_dep's .app file"
-	$t $(ERL) -pa $(APP)/my_dep/ebin/ -eval " \
+	$t $(ERL) -pa $(APP)/deps/my_dep/ebin/ -eval " \
 		ok = application:load(my_dep), \
 		{ok, Apps} = application:get_key(my_dep, applications), \
 		true = lists:member(cowlib, Apps), \
