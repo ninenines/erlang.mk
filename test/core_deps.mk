@@ -194,7 +194,7 @@ core-deps-dep-built-force-full: init
 	$i "Check that cowlib is not rebuilt if \`force_rebuilding_dep\` returns false"
 	$t touch $(APP)/EXPECT
 	$t $(SLEEP)
-	$t $(MAKE) -C $(APP) force_rebuilding_dep='test $$(1) != $(APP)/deps/cowlib' $v
+	$t $(MAKE) -C $(APP) force_rebuilding_dep='test $$(1) != $(CURDIR)/$(APP)/deps/cowlib' $v
 	$t find $(APP)/deps/cowlib -type f -newer $(APP)/EXPECT | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
 
@@ -205,7 +205,7 @@ core-deps-dep-built-force-full: init
 		$(APP)/deps/cowlib/ebin/cow_http.beam \
 		$(APP)/deps/cowlib/ebin/dep_built | sort > $(APP)/EXPECT
 	$t $(SLEEP)
-	$t $(MAKE) -C $(APP) force_rebuilding_dep='test $$(1) = $(APP)/deps/cowlib' $v
+	$t $(MAKE) -C $(APP) force_rebuilding_dep='test $$(1) = $(CURDIR)/$(APP)/deps/cowlib' $v
 # Files in .git might end up modified due to the id generation in the .app file.
 	$t find $(APP)/deps/cowlib -type f -newer $(APP)/EXPECT | grep -v ".git" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
