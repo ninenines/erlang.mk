@@ -27,7 +27,7 @@ define eunit.erl
 		ok -> ok;
 		error -> halt(2)
 	end,
-	CoverExport("$(COVER_DATA_DIR)/eunit.coverdata"),
+	CoverExport("$(call core_native_path,$(COVER_DATA_DIR))/eunit.coverdata"),
 	halt()
 endef
 

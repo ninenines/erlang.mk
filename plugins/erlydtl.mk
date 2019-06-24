@@ -42,7 +42,7 @@ define erlydtl_compile.erl
 			"" ->
 				filename:basename(F, ".dtl");
 			_ ->
-				"$(DTL_PATH)/" ++ F2 = filename:rootname(F, ".dtl"),
+				"$(call core_native_path,$(DTL_PATH))/" ++ F2 = filename:rootname(F, ".dtl"),
 				re:replace(F2, "/",  "_",  [{return, list}, global])
 		end,
 		Module = list_to_atom("$(DTL_PREFIX)" ++ string:to_lower(Module0) ++ "$(DTL_SUFFIX)"),

@@ -35,9 +35,9 @@ endif
 ifdef COVER
 define cover.erl
 	CoverSetup = fun() ->
-		Dirs = ["$(CURDIR)/ebin"
-			$(foreach a,$(COVER_APPS),$(comma) "$(APPS_DIR)/$a/ebin")
-			$(foreach d,$(COVER_DEPS),$(comma) "$(DEPS_DIR)/$d/ebin")],
+		Dirs = ["$(call core_native_path,$(CURDIR)/ebin)"
+			$(foreach a,$(COVER_APPS),$(comma) "$(call core_native_path,$(APPS_DIR)/$a/ebin)")
+			$(foreach d,$(COVER_DEPS),$(comma) "$(call core_native_path,$(DEPS_DIR)/$d/ebin)")],
 		[begin
 			case filelib:is_dir(Dir) of
 				false -> false;
