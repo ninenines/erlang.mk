@@ -194,6 +194,10 @@ core-deps-dep-built-ln: init
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
+# On MSYS2 "ln" will by default not create symbolic links because
+# it requires an option to be enabled and administrative privileges.
+# The "rebuild" part of the test is therefore skipped on Windows.
+ifneq ($(PLATFORM),msys2)
 	$i "Touch one cowlib file to mark it for recompilation"
 	$t $(SLEEP)
 	$t touch $(APP)/deps/cowlib/src/cow_http.erl
@@ -203,11 +207,13 @@ core-deps-dep-built-ln: init
 		$(APP)/cowlib/cowlib.d \
 		$(APP)/cowlib/ebin/cowlib.app \
 		$(APP)/cowlib/ebin/cow_http.beam | sort > $(APP)/EXPECT
+
 	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 # Files in .git might end up modified due to the id generation in the .app file.
 	$t find $(APP)/cowlib -type f -newer $(APP)/EXPECT | grep -v ".git" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
+endif
 
 core-deps-dep-commit: init
 
