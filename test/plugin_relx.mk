@@ -154,6 +154,10 @@ relx-post-rel: init
 	$i "Check that the output directory was removed entirely"
 	$t test ! -d $(APP)/_rel/
 
+ifneq ($(PLATFORM),msys2)
+# This test is currently disabled on Windows because we are
+# running into too many issues preventing the test from
+# executing properly and leaving the release running at the end.
 relx-relup: init
 
 	$i "Bootstrap a new release named $(APP)"
@@ -208,39 +212,72 @@ endif
 	$t mkdir $(APP)/tmp
 	$t tar -xzf $(APP)/_rel/$(APP)_release/$(APP)_release-1.tar.gz -C $(APP)/tmp
 
-	$i "Start initial release and confirm it runs the old code"
 ifeq ($(PLATFORM),msys2)
+	$i "Start initial release"
 	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) install
+else
+	$i "Start initial release and confirm it runs the old code"
 endif
 	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) start
 	$t sleep 1
+ifneq ($(PLATFORM),msys2)
+# On Windows the script does not have the commands rpcterms and versions.
 	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpcterms test test` = old
 
 	$i "Check that it's 1 available version"
 	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) versions | wc -l` = "2"
+endif
 
 	$i "Copy the relup tarball to the release directory"
 	$t mkdir $(APP)/tmp/releases/2
 	$t cp $(APP)/_rel/$(APP)_release/$(APP)_release-2.tar.gz $(APP)/tmp/releases/2/$(APP)_release.tar.gz
 	$t test -f $(APP)/tmp/releases/2/$(APP)_release.tar.gz
 
+ifeq ($(PLATFORM),msys2)
+	$i "Upgrade the release"
+# On Windows the script doesn't seem to change the cwd properly
+# which results in the release tarball not being found.
+#
+# We use --no-permanent to avoid another bug.
+	$t cd $(APP)/tmp && ./bin/$(APP)_release$(RELX_REL_EXT) upgrade --no-permanent "2"
+else
 	$i "Upgrade the release and confirm it runs the new code"
 	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) upgrade "2"
+endif
 	$t sleep 1
+ifneq ($(PLATFORM),msys2)
+# On Windows the script does not have the commands rpcterms and versions.
 	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpcterms test test` = new
 
 	$i "Check that it's 2 available versions"
 	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) versions | wc -l` = "3"
+endif
 
+ifeq ($(PLATFORM),msys2)
+	$i "Downgrade the release"
+# On Windows the script doesn't seem to change the cwd properly
+# which results in the release tarball not being found.
+#
+# We use --no-permanent to avoid another bug.
+	$t cd $(APP)/tmp && ./bin/$(APP)_release$(RELX_REL_EXT) downgrade --no-permanent "1"
+else
 	$i "Downgrade the release and confirm it runs the old code"
 	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) downgrade "1"
+endif
 	$t sleep 1
+ifneq ($(PLATFORM),msys2)
+# On Windows the script does not have the commands rpcterms and versions.
 	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpcterms test test` = old
+endif
 
 	$i "Stop the release"
+# On Windows this fails with the following reason:
+#   The service test_relx_relup_release_2 is not an erlsrv controlled service.
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) stop
 ifeq ($(PLATFORM),msys2)
+	$t sleep 1
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall
+endif
 endif
 
 relx-start-stop: init
@@ -261,7 +298,7 @@ endif
 
 	$i "Start the release"
 ifeq ($(PLATFORM),msys2)
-	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) install
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) install
 endif
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) start
 	$t sleep 1
@@ -271,12 +308,17 @@ endif
 
 	$i "Stop the release"
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) stop
+	$t sleep 1
 ifeq ($(PLATFORM),msys2)
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall
 endif
 
+ifneq ($(PLATFORM),msys2)
+# The script will not return false on Windows when the ping fails.
+# It sometimes also gets stuck. So we just skip the ping for now.
 	$i "Check that further pings get no replies"
 	$t ! $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping
+endif
 
 relx-tar: init
 
