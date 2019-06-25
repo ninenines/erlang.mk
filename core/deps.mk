@@ -120,6 +120,25 @@ ifeq ($(IS_APP)$(IS_DEP),)
 	$(verbose) rm -f $(ERLANG_MK_TMP)/apps.log $(ERLANG_MK_TMP)/deps.log
 endif
 
+# Erlang.mk does not rebuild dependencies after they were compiled
+# once. If a developer is working on the top-level project and some
+# dependencies at the same time, he may want to change this behavior.
+# There are two solutions:
+#     1. Set `FULL=1` so that all dependencies are visited and
+#        recursively recompiled if necessary.
+#     2. Set `FORCE_REBUILD=` to the specific list of dependencies that
+#        should be recompiled (instead of the whole set).
+
+FORCE_REBUILD ?=
+
+ifeq ($(origin FULL),undefined)
+ifneq ($(strip $(force_rebuild_dep)$(FORCE_REBUILD)),)
+define force_rebuild_dep
+echo "$(FORCE_REBUILD)" | grep -qw "$$(basename "$1")"
+endef
+endif
+endif
+
 ifneq ($(SKIP_DEPS),)
 deps::
 else
