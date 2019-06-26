@@ -313,6 +313,9 @@ ifeq ($(PLATFORM),msys2)
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall
 endif
 
+	$i "Check that there's no erl_crash.dump file"
+	$t test ! -f $(APP)/_rel/$(APP)_release/erl_crash.dump
+
 ifneq ($(PLATFORM),msys2)
 # The script will not return false on Windows when the ping fails.
 # It sometimes also gets stuck. So we just skip the ping for now.

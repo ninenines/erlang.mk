@@ -227,22 +227,6 @@ else
 	$t test -f $(APP)/_rel/$(APP)_release/bin/$(APP)_release
 endif
 
-	$i "Check that the release can be started and stopped"
-ifeq ($(PLATFORM),msys2)
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd install $v
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd start $v
-	$t sleep 1
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd stop $v
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd uninstall $v
-else
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release start $v
-	$t sleep 1
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
-endif
-
-	$i "Check that there's no erl_crash.dump file"
-	$t test ! -f $(APP)/_rel/$(APP)_release/erl_crash.dump
-
 bootstrap-sp: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
