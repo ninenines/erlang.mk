@@ -55,7 +55,7 @@ endif
 # We only care about compiling the current application.
 ifdef IS_APP
 test-build-app:: ERLC_OPTS=$(TEST_ERLC_OPTS)
-test-build-app:: test-deps
+test-build-app:: deps test-deps
 ifneq ($(wildcard $(TEST_DIR)),)
 	$(verbose) $(MAKE) --no-print-directory test-dir ERLC_OPTS="$(call escape_dquotes,$(TEST_ERLC_OPTS))"
 endif
