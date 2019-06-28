@@ -301,27 +301,26 @@ ifeq ($(PLATFORM),msys2)
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) install
 endif
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) start
-	$t sleep 1
 
 	$i "Ping the release"
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping
+	$t $(call wait_for_success,$(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping)
 
 	$i "Stop the release"
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) stop
-	$t sleep 1
 ifeq ($(PLATFORM),msys2)
+	$t sleep 1
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall
 endif
-
-	$i "Check that there's no erl_crash.dump file"
-	$t test ! -f $(APP)/_rel/$(APP)_release/erl_crash.dump
 
 ifneq ($(PLATFORM),msys2)
 # The script will not return false on Windows when the ping fails.
 # It sometimes also gets stuck. So we just skip the ping for now.
 	$i "Check that further pings get no replies"
-	$t ! $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping
+	$t $(call wait_for_failure,$(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping)
 endif
+
+	$i "Check that there's no erl_crash.dump file"
+	$t test ! -f $(APP)/_rel/$(APP)_release/erl_crash.dump
 
 relx-tar: init
 

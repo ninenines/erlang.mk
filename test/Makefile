@@ -50,6 +50,31 @@ else
 SLEEP =
 endif
 
+# In some cases it is more appropriate to wait until a command succeeds or fails.
+# These functions run the given command every second and gives up after 10 tries.
+
+define wait_for_success
+	count=10; \
+	until [ $$count = 0 ] || $1; do \
+		count=`expr $$count - 1`; \
+		sleep 1; \
+	done; \
+	if [ $$count = 0 ]; then \
+		false; \
+	fi
+endef
+
+define wait_for_failure
+	count=10; \
+	while [ $$count != 0 ] && $1; do \
+		count=`expr $$count - 1`; \
+		sleep 1; \
+	done; \
+	if [ $$count = 0 ]; then \
+		false; \
+	fi
+endef
+
 # OTP master, for downloading files for testing.
 
 OTP_MASTER = https://raw.githubusercontent.com/erlang/otp/master
