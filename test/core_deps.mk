@@ -919,8 +919,8 @@ LOCAL_DEPS = my_dep_app ssl\
 ' $(APP)_dep/Makefile
 	$t echo 'unexport APPS_DIR' >> $(APP)_dep/Makefile
 	$t rm $(APP)_dep/Makefile.bak
-	$t git -C $(APP)_dep add .
-	$t git -C $(APP)_dep commit -q --no-gpg-sign -m "Add application"
+	$t cd $(APP)_dep && git add .
+	$t cd $(APP)_dep && git commit -q --no-gpg-sign -m "Add application"
 
 	$i "Add $(APP)-dep as a dependency"
 	$t sed -i.bak '2i\
