@@ -5,8 +5,9 @@
 
 Erlang.mk requires GNU Make to be installed. While it will
 currently work with GNU Make 3.81, support for this version
-is deprecated and will be removed in 2017. We recommend
-GNU Make 4.1 or later.
+is deprecated and will be removed in the future. We recommend
+GNU Make 4.2 or later (especially if you want to benefit
+from parallel builds via the `-j` flag).
 
 Git and Erlang/OTP must also be installed.
 
