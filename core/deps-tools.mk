@@ -63,13 +63,6 @@ $(ERLANG_MK_RECURSIVE_SHELL_DEPS_LIST): | $(ERLANG_MK_TMP)
 ifeq ($(IS_APP)$(IS_DEP),)
 	$(verbose) rm -f $(ERLANG_MK_RECURSIVE_TMP_LIST)
 endif
-ifndef IS_APP
-	$(verbose) set -e; for dep in $(ALL_APPS_DIRS) ; do \
-		$(MAKE) -C $$dep $@ \
-		 IS_APP=1 \
-		 ERLANG_MK_RECURSIVE_TMP_LIST=$(ERLANG_MK_RECURSIVE_TMP_LIST); \
-	done
-endif
 	$(verbose) set -e; for dep in $^ ; do \
 		if ! grep -qs ^$$dep$$ $(ERLANG_MK_RECURSIVE_TMP_LIST); then \
 			echo $$dep >> $(ERLANG_MK_RECURSIVE_TMP_LIST); \
