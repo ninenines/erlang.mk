@@ -40,6 +40,38 @@ protobuffs-compile: init
 		{ok, [empty_pb, simple_pb]} = application:get_key($(APP), modules), \
 		halt()"
 
+protobuffs-compile-imports: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add protobuffs to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = gpb\n"}' $(APP)/Makefile
+
+	$i "Download two proto files with an import"
+	$t mkdir $(APP)/src/proto/
+	$t curl -s -o $(APP)/src/proto/exports.proto $(PROTOBUFFS_URL)/proto/exports.proto
+	$t curl -s -o $(APP)/src/proto/imports.proto $(PROTOBUFFS_URL)/proto/imports.proto
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that an Erlang module was generated and compiled"
+	$t test -f $(APP)/src/exports_pb.erl
+	$t test -f $(APP)/src/imports_pb.erl
+	$t test -f $(APP)/include/exports_pb.hrl
+	$t test -f $(APP)/include/imports_pb.hrl
+	$t test -f $(APP)/ebin/exports_pb.beam
+	$t test -f $(APP)/ebin/imports_pb.beam
+
+	$i "Check that the generated modules are included in .app file"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, [exports_pb, imports_pb]} = application:get_key($(APP), modules), \
+		halt()"
+
 protobuffs-dont-compile: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
