@@ -324,6 +324,31 @@ core-app-erlc-exclude: init
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
+core-app-erlc-symlink: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t echo "-module(girl)." > $(APP)/girl.erl
+
+	$i "Symlink .erl file"
+	$t ln -s ../girl.erl $(APP)/src/girl.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods = [boy, girl]} \
+			= application:get_key($(APP), modules), \
+		[{module, M} = code:load_file(M) || M <- Mods], \
+		halt()"
+
 core-app-erlc-opts: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
