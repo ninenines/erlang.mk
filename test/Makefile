@@ -16,7 +16,7 @@ APP = test_$(subst -,_,$@)
 
 # Erlang, quickly!
 
-ERL = erl +A0 -noinput -boot start_clean
+ERL = erl +A0 -noinput -boot no_dot_erlang
 
 # Platform detection, condensed version.
 
