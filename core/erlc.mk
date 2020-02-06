@@ -331,6 +331,9 @@ else
 		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(subst /,\/,$(GITDESCRIBE))\"}/" \
 		> ebin/$(PROJECT).app
 endif
+ifneq ($(wildcard src/$(PROJECT).appup),)
+	$(verbose) cp src/$(PROJECT).appup ebin/
+endif
 
 clean:: clean-app
 

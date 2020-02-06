@@ -27,6 +27,31 @@ core-app-appsrc-change: init
 	$t rm $(APP)/EXPECT
 endif
 
+core-app-appup: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate a .appup file"
+	$t touch $(APP)/src/$(APP).appup
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the appup file was copied into ebin/"
+	$t test -f $(APP)/ebin/$(APP).appup
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the source file still exists"
+	$t test -f $(APP)/src/$(APP).appup
+
+	$i "Check that the file copied into ebin/ was removed"
+	$t test ! -e $(APP)/ebin/$(APP).appup
+
 core-app-asn1: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
