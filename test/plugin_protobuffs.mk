@@ -72,6 +72,37 @@ protobuffs-compile-with-gpb: init
 		{ok, [empty_pb, simple_pb]} = application:get_key($(APP), modules), \
 		halt()"
 
+protobuffs-dont-compile: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Do not add gpb/protobuffs to the list of dependencies"
+
+	$i "Download two proto files"
+	$t mkdir $(APP)/src/proto/
+	$t curl -s -o $(APP)/src/proto/empty.proto $(PROTOBUFFS_URL)/proto/empty.proto
+	$t curl -s -o $(APP)/src/proto/simple.proto $(PROTOBUFFS_URL)/proto/simple.proto
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the proto files were ignored"
+	$t test ! -e $(APP)/src/empty_pb.erl
+	$t test ! -e $(APP)/src/simple_pb.erl
+	$t test ! -e $(APP)/include/empty_pb.hrl
+	$t test ! -e $(APP)/include/simple_pb.hrl
+	$t test ! -e $(APP)/ebin/empty_pb.beam
+	$t test ! -e $(APP)/ebin/simple_pb.beam
+
+	$i "Check that the application itself was otherwise compiled properly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, []} = application:get_key($(APP), modules), \
+		halt()"
+
 protobuffs-makefile-change: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
