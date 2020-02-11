@@ -364,6 +364,7 @@ define dep_autopatch_rebar.erl
 				[begin case case Dep of
 							N when is_atom(N) -> GetHexVsn(N);
 							{N, S} when is_atom(N), is_list(S) -> {N, {hex, SemVsn(S)}};
+							{_, {pkg, N}} when is_atom(N) -> GetHexVsn(N);
 							{_, S, {pkg, N}} -> {N, {hex, S}};
 							{N, S} when is_tuple(S) -> {N, S};
 							{N, _, S} -> {N, S};
