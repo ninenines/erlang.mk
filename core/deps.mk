@@ -323,7 +323,7 @@ define dep_autopatch_rebar.erl
 		end,
 		Write("\n")
 	end(),
-	GetHexVsn = fun(N) ->
+	GetHexVsn = fun(N, NP) ->
 		case file:consult("$(call core_native_path,$(DEPS_DIR)/$1/rebar.lock)") of
 			{ok, Lock} ->
 				io:format("~p~n", [Lock]),
@@ -333,7 +333,7 @@ define dep_autopatch_rebar.erl
 						case lists:keyfind(atom_to_binary(N, latin1), 1, LockPkgs) of
 							{_, {pkg, _, Vsn}, _} ->
 								io:format("~p~n", [Vsn]),
-								{N, {hex, binary_to_list(Vsn)}};
+								{N, {hex, NP, binary_to_list(Vsn)}};
 							_ ->
 								false
 						end;
@@ -362,10 +362,10 @@ define dep_autopatch_rebar.erl
 			false -> [];
 			{_, Deps} ->
 				[begin case case Dep of
-							N when is_atom(N) -> GetHexVsn(N);
-							{N, S} when is_atom(N), is_list(S) -> {N, {hex, SemVsn(S)}};
-							{_, {pkg, N}} when is_atom(N) -> GetHexVsn(N);
-							{_, S, {pkg, N}} -> {N, {hex, S}};
+							N when is_atom(N) -> GetHexVsn(N, N);
+							{N, S} when is_atom(N), is_list(S) -> {N, {hex, N, SemVsn(S)}};
+							{N, {pkg, NP}} when is_atom(N) -> GetHexVsn(N, NP);
+							{N, S, {pkg, NP}} -> {N, {hex, NP, S}};
 							{N, S} when is_tuple(S) -> {N, S};
 							{N, _, S} -> {N, S};
 							{N, _, S, _} -> {N, S};
@@ -374,7 +374,7 @@ define dep_autopatch_rebar.erl
 					false -> ok;
 					{Name, Source} ->
 						{Method, Repo, Commit} = case Source of
-							{hex, V} -> {hex, V, undefined};
+							{hex, NPV, V} -> {hex, V, NPV};
 							{git, R} -> {git, R, master};
 							{M, R, {branch, C}} -> {M, R, C};
 							{M, R, {ref, C}} -> {M, R, C};
@@ -655,7 +655,7 @@ endef
 define dep_fetch_hex
 	mkdir -p $(ERLANG_MK_TMP)/hex $(DEPS_DIR)/$1; \
 	$(call core_http_get,$(ERLANG_MK_TMP)/hex/$1.tar,\
-		https://repo.hex.pm/tarballs/$1-$(strip $(word 2,$(dep_$1))).tar); \
+		https://repo.hex.pm/tarballs/$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar); \
 	tar -xOf $(ERLANG_MK_TMP)/hex/$1.tar contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
 

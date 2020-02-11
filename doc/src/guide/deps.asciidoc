@@ -169,17 +169,17 @@ The following table lists all existing methods:
 
 [cols="<,2*^",options="header"]
 |===
-| Name           | Format          | Description
-| git            | git repo commit | Clone the Git repository and checkout the given version
+| Name           | Format            | Description
+| git            | git repo commit   | Clone the Git repository and checkout the given version
 | git-subfolder  | git repo commit subfolder | Clone the Git repository, checkout the given version and use one of its subfolders as a dependency
-| git-submodule  | git-submodule   | Initialize and update the Git submodule
-| hg             | hg repo commit  | Clone the Mercurial repository and update to the given version
-| svn            | svn repo        | Checkout the given SVN repository
-| cp             | cp path/to/repo | Recursively copy a local directory
-| ln             | ln path/to/repo | Symbolically link a local directory
-| hex            | hex version     | Download the given project version from hex.pm
-| fail           | N/A             | Always fail, reserved for internal use
-| legacy         | N/A             | Legacy Erlang.mk fetcher, reserved for internal use
+| git-submodule  | git-submodule     | Initialize and update the Git submodule
+| hg             | hg repo commit    | Clone the Mercurial repository and update to the given version
+| svn            | svn repo          | Checkout the given SVN repository
+| cp             | cp path/to/repo   | Recursively copy a local directory
+| ln             | ln path/to/repo   | Symbolically link a local directory
+| hex            | hex version [pkg] | Download the given project version from hex.pm
+| fail           | N/A               | Always fail, reserved for internal use
+| legacy         | N/A               | Legacy Erlang.mk fetcher, reserved for internal use
 |===
 
 The `git` and `hg` methods both have a repository and commit.
@@ -229,6 +229,12 @@ link:https://hex.pm/[Hex repository]:
 
 [source,make]
 dep_cowboy = hex 1.0.3
+
+If the package on Hex has a different name than the application,
+you can provide it after the version:
+
+[source,make]
+dep_uuid = hex 1.7.5 uuid_erl
 
 ==== Custom fetch methods
 
