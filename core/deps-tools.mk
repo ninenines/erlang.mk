@@ -99,65 +99,59 @@ list-deps list-doc-deps list-rel-deps list-test-deps list-shell-deps:
 	$(verbose) cat $^
 
 # Show all deps recursively: path, version & homepage
+show_dep_path = { printf "%s ", "'$$dep'" }
+show_dep_hex = /hex / { printf("%s https://hex.pm/packages/%s\n", $$4, "'$$(basename $$dep)'") }
+show_dep_git = /git / { printf("%s %s\n", $$5, $$4) }
+show_dep_git_rmq = /git_rmq / { printf("%s https://github.com/rabbitmq/%s\n", $$7, $$4) }
 show-deps: $(ERLANG_MK_RECURSIVE_DEPS_LIST)
-	$(verbose) echo $(foreach d,$(notdir $(shell cat $^)),"\n$(DEPS_DIR)/$d $(call dep_commit,$d) $(call dep_repo,$d)")
+	$(verbose) for dep in $(DEPS_DIR)/* \
+	; do \
+	  grep --no-filename "^dep_$$(basename $$dep) " $(DEPS_DIR)/*/{makefile,Makefile,*.mk} \
+	  | sort \
+	  | uniq \
+	  | awk '$(show_dep_path); $(show_dep_hex); $(show_dep_git); $(show_dep_git_rmq)' \
+	; done
 
 # For dep_rabbitmq_management = git https://github.com/rabbitmq/rabbitmq-management v3.8.2
 # The current show-deps implementation produces the following output:
 #
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/amqp_client master https://github.com/rabbitmq/rabbitmq-erlang-client.git
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/aten
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/cowboy 1.0.4 https://github.com/ninenines/cowboy
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/cowlib 1.0.2 https://github.com/ninenines/cowlib
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/credentials_obfuscation
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/gen_batch_server
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/goldrush
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/jsx master https://github.com/talentdeficit/jsx
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/lager master https://github.com/erlang-lager/lager
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/observer_cli master https://github.com/zhongwencool/observer_cli
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/ra
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbit master https://github.com/rabbitmq/rabbitmq-server.git
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbit_common
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_cli
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_codegen
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_management v3.8.2 https://github.com/rabbitmq/rabbitmq-management
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_management_agent
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_web_dispatch
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/ranch 1.2.1 https://github.com/ninenines/ranch
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/recon master https://github.com/ferd/recon
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/stdout_formatter
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/syslog master https://github.com/Vagabond/erlang-syslog
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/sysmon_handler
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/amqp_client master https://github.com/rabbitmq/rabbitmq-erlang-client
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/aten 0.5.2 https://hex.pm/packages/aten
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/cowboy 2.0.0 https://hex.pm/packages/cowboy
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/cowboy 2.6.1 https://hex.pm/packages/cowboy
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/cowlib 2.7.0 https://github.com/ninenines/cowlib
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/cowlib 2.7.0 https://hex.pm/packages/cowlib
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/credentials_obfuscation 1.1.0 https://hex.pm/packages/credentials_obfuscation
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/gen_batch_server 0.8.2 https://hex.pm/packages/gen_batch_server
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/goldrush 0.1.9 https://github.com/DeadZen/goldrush.git
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/jsx 2.9.0 https://hex.pm/packages/jsx
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/lager 3.8.0 https://hex.pm/packages/lager
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/observer_cli 1.4.4 https://github.com/zhongwencool/observer_cli
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/observer_cli 1.5.2 https://hex.pm/packages/observer_cli
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/ra 1.0.5 https://hex.pm/packages/ra
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbit master https://github.com/rabbitmq/rabbitmq-server
+# + /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbit v3.8.2 https://github.com/rabbitmq/rabbitmq-server
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbit_common master https://github.com/rabbitmq/rabbitmq-common
+# + /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbit_common v3.8.2 https://github.com/rabbitmq/rabbitmq-common
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_cli master https://github.com/rabbitmq/rabbitmq-cli
+# + /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_cli v3.8.2 https://github.com/rabbitmq/rabbitmq-cli
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_codegen master https://github.com/rabbitmq/rabbitmq-codegen
+# + /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_codegen v3.8.2 https://github.com/rabbitmq/rabbitmq-codegen
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_management master https://github.com/rabbitmq/rabbitmq-management
+# + /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_management v3.8.2 https://github.com/rabbitmq/rabbitmq-management
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_management_agent master https://github.com/rabbitmq/rabbitmq-management-agent
+# + /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_management_agent v3.8.2 https://github.com/rabbitmq/rabbitmq-management-agent
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_web_dispatch master https://github.com/rabbitmq/rabbitmq-web-dispatch
+# + /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_web_dispatch v3.8.2 https://github.com/rabbitmq/rabbitmq-web-dispatch
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/ranch 1.7.1 https://github.com/ninenines/ranch
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/ranch 1.7.1 https://hex.pm/packages/ranch
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/recon 2.5.0 https://hex.pm/packages/recon
+# - /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/recon 2.5.0 https://hex.pm/packages/recon
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/stdout_formatter 0.2.2 https://hex.pm/packages/stdout_formatter
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/syslog 3.4.5 https://github.com/schlagert/syslog
+#   /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/sysmon_handler 1.2.0 https://hex.pm/packages/sysmon_handler
 #
-# I am working towards the following output:
+# - extra line
+# + missing line
 #
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/amqp_client master https://github.com/rabbitmq/rabbitmq-erlang-client
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/aten 0.5.2 https://hex.pm/packages/aten
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/cowboy 2.6.1 https://github.com/ninenines/cowboy
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/cowlib 2.7.0 https://github.com/ninenines/cowlib
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/credentials_obfuscation 1.1.0 https://hex.pm/packages/credentials_obfuscation
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/gen_batch_server 0.8.2 https://hex.pm/packages/gen_batch_server
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/goldrush 0.1.9 https://github.com/DeadZen/goldrush
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/jsx 2.9.0 https://hex.pm/packages/jsx
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/lager 3.8.0 https://hex.pm/packages/lager
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/observer_cli 1.5.2 https://hex.pm/packages/observer_cli
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/ra 1.0.5 https://hex.pm/packages/ra
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbit v3.8.2 https://github.com/rabbitmq/rabbitmq-server
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbit_common v3.8.2 https://github.com/rabbitmq/rabbitmq-common
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_cli v3.8.2 https://github.com/rabbitmq/rabbitmq-cli
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_codegen v3.8.2 https://github.com/rabbitmq/rabbitmq-codegen
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_management v3.8.2 https://github.com/rabbitmq/rabbitmq-management
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_management_agent v3.8.2 https://github.com/rabbitmq/rabbitmq-management-agent
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/rabbitmq_web_dispatch v3.8.2 https://github.com/rabbitmq/rabbitmq-web-dispatch
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/ranch 1.7.1 https://github.com/ninenines/ranch
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/recon 2.5.0 https://hex.pm/packages/recon
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/stdout_formatter 0.2.2 https://hex.pm/packages/stdout_formatter
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/syslog master 3.4.5 https://github.com/schlagert/syslog
-# /Users/gerhard/github.com/rabbitmq/LicenseFinder/features/fixtures/erlangmk/deps/sysmon_handler 1.2.0 https://hex.pm/packages/sysmon_handler
-#
-# The best approach that I can think of is to search for all 'dep_DEP ' occurences in all deps/*/{makefile,Makefile,*.mk} files using grep and generate the expected strings
-# Can you think of a better approach?
-#
-# This is was the first suggestion which didn't go far as it ignores recursive dependencies:
-#
-# $(foreach d,$(DEPS),echo $(DEPS_DIR)/$d $(word 3,$(dep_$d)) $(word 2,$(dep_$d)))
+# Can you think of a better approach than the one that I am currenlty on?
