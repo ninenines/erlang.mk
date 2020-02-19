@@ -98,10 +98,10 @@ list-shell-deps: $(ERLANG_MK_RECURSIVE_SHELL_DEPS_LIST)
 list-deps list-doc-deps list-rel-deps list-test-deps list-shell-deps:
 	$(verbose) cat $^
 
-# List 'PATH VERSION HOMEPAGE' for all deps, recursively
+# List 'PATH 	VERSION 	HOMEPAGE' for all deps, recursively
 .PHONY: list-deps-info
 list-deps-info: $(ALL_DEPS_DIRS:%=%-list-deps-info)
 
 %-list-deps-info: $(ERLANG_MK_RECURSIVE_DEPS_LIST)
-	$(verbose) echo " DEPI   $* $(call dep_commit,$(notdir $*)) $(call dep_repo,$(notdir $*))"
+	$(verbose) echo "$* 	$(call dep_commit,$(notdir $*)) 	$(call dep_repo,$(notdir $*))"
 	$(verbose) $(MAKE) --no-print-directory -C $* list-deps-info IS_DEP=1 || true
