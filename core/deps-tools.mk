@@ -104,4 +104,4 @@ list-deps-info: $(ALL_DEPS_DIRS:%=%-list-deps-info)
 
 %-list-deps-info: $(ERLANG_MK_RECURSIVE_DEPS_LIST)
 	$(verbose) echo " DEPI   $* $(call dep_commit,$(notdir $*)) $(call dep_repo,$(notdir $*))"
-	$(verbose) $(MAKE) --no-print-directory --directory $* list-deps-info IS_DEP=1 || true
+	$(verbose) $(MAKE) --no-print-directory -C $* list-deps-info IS_DEP=1 || true
