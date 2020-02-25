@@ -44,9 +44,64 @@ $(foreach p,$(DEP_EARLY_PLUGINS),\
 		$(call core_dep_plugin,$p,$(firstword $(subst /, ,$p))),\
 		$(call core_dep_plugin,$p/early-plugins.mk,$p))))
 
-dep_name = $(if $(dep_$(1)),$(1),$(if $(pkg_$(1)_name),$(pkg_$(1)_name),$(1)))
-dep_repo = $(patsubst git://github.com/%,https://github.com/%, \
-	$(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo)))
+# Query functions.
+
+query_fetch_method = $(if $(dep_$(1)),$(call _qfm_dep,$(word 1,$(dep_$(1)))),$(call _qfm_pkg,$(1)))
+_qfm_dep = $(if $(dep_fetch_$(1)),$(1),$(if $(IS_DEP),legacy,fail))
+_qfm_pkg = $(if $(pkg_$(1)_fetch),$(pkg_$(1)_fetch),fail)
+
+query_name = $(if $(dep_$(1)),$(1),$(if $(pkg_$(1)_name),$(pkg_$(1)_name),$(1)))
+
+query_repo = $(call _qr,$(1),$(call query_fetch_method,$(1)))
+_qr = $(if $(query_repo_$(2)),$(call query_repo_$(2),$(1)),$(call dep_repo,$(1)))
+
+query_repo_default = $(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo))
+query_repo_git = $(patsubst git://github.com/%,https://github.com/%,$(call query_repo_default,$(1)))
+query_repo_git-subfolder = $(call query_repo_git,$(1))
+query_repo_git-submodule = -
+query_repo_hg = $(call query_repo_default,$(1))
+query_repo_svn = $(call query_repo_default,$(1))
+query_repo_cp = $(call query_repo_default,$(1))
+query_repo_ln = $(call query_repo_default,$(1))
+query_repo_hex = https://hex.pm/packages/$(if $(word 3,$(dep_$(1))),$(word 3,$(dep_$(1))),$(1))
+query_repo_fail = -
+query_repo_legacy = -
+
+query_version = $(call _qv,$(1),$(call query_fetch_method,$(1)))
+_qv = $(if $(query_version_$(2)),$(call query_version_$(2),$(1)),$(call dep_commit,$(1)))
+
+query_version_default = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 3,$(dep_$(1))),$(pkg_$(1)_commit)))
+query_version_git = $(call query_version_default,$(1))
+query_version_git-subfolder = $(call query_version_git,$(1))
+query_version_git-submodule = -
+query_version_hg = $(call query_version_default,$(1))
+query_version_svn = -
+query_version_cp = -
+query_version_ln = -
+query_version_hex = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_commit)))
+query_version_fail = -
+query_version_legacy = -
+
+query_extra = $(call _qe,$(1),$(call query_fetch_method,$(1)))
+_qe = $(if $(query_extra_$(2)),$(call query_extra_$(2),$(1)),-)
+
+query_extra_git = -
+query_extra_git-subfolder = $(if $(dep_$(1)),subfolder=$(word 4,$(dep_$(1))),-)
+query_extra_git-submodule = -
+query_extra_hg = -
+query_extra_svn = -
+query_extra_cp = -
+query_extra_ln = -
+query_extra_hex = $(if $(dep_$(1)),package-name=$(word 3,$(dep_$(1))),-)
+query_extra_fail = -
+query_extra_legacy = -
+
+query_absolute_path = $(addprefix $(DEPS_DIR)/,$(call query_name,$(1)))
+
+# Deprecated legacy query functions.
+dep_fetch = $(call query_fetch_method,$(1))
+dep_name = $(call query_name,$(1))
+dep_repo = $(call query_repo_git,$(1))
 dep_commit = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(if $(filter hex,$(word 1,$(dep_$(1)))),$(word 2,$(dep_$(1))),$(word 3,$(dep_$(1)))),$(pkg_$(1)_commit)))
 
 LOCAL_DEPS_DIRS = $(foreach a,$(LOCAL_DEPS),$(if $(wildcard $(APPS_DIR)/$(a)),$(APPS_DIR)/$(a)))
@@ -671,16 +726,6 @@ define dep_fetch_legacy
 	cd $(DEPS_DIR)/$(1) && git checkout -q $(if $(word 2,$(dep_$(1))),$(word 2,$(dep_$(1))),master);
 endef
 
-define dep_fetch
-	$(if $(dep_$(1)), \
-		$(if $(dep_fetch_$(word 1,$(dep_$(1)))), \
-			$(word 1,$(dep_$(1))), \
-			$(if $(IS_DEP),legacy,fail)), \
-		$(if $(filter $(1),$(PACKAGES)), \
-			$(pkg_$(1)_fetch), \
-			fail))
-endef
-
 define dep_target
 $(DEPS_DIR)/$(call dep_name,$1): | $(ERLANG_MK_TMP)
 	$(eval DEP_NAME := $(call dep_name,$1))
@@ -762,3 +807,9 @@ ERLANG_MK_RECURSIVE_DOC_DEPS_LIST = $(ERLANG_MK_TMP)/recursive-doc-deps-list.log
 ERLANG_MK_RECURSIVE_REL_DEPS_LIST = $(ERLANG_MK_TMP)/recursive-rel-deps-list.log
 ERLANG_MK_RECURSIVE_TEST_DEPS_LIST = $(ERLANG_MK_TMP)/recursive-test-deps-list.log
 ERLANG_MK_RECURSIVE_SHELL_DEPS_LIST = $(ERLANG_MK_TMP)/recursive-shell-deps-list.log
+
+ERLANG_MK_QUERY_DEPS_FILE = $(ERLANG_MK_TMP)/query-deps.log
+ERLANG_MK_QUERY_DOC_DEPS_FILE = $(ERLANG_MK_TMP)/query-doc-deps.log
+ERLANG_MK_QUERY_REL_DEPS_FILE = $(ERLANG_MK_TMP)/query-rel-deps.log
+ERLANG_MK_QUERY_TEST_DEPS_FILE = $(ERLANG_MK_TMP)/query-test-deps.log
+ERLANG_MK_QUERY_SHELL_DEPS_FILE = $(ERLANG_MK_TMP)/query-shell-deps.log

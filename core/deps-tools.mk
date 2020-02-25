@@ -97,3 +97,43 @@ list-shell-deps: $(ERLANG_MK_RECURSIVE_SHELL_DEPS_LIST)
 
 list-deps list-doc-deps list-rel-deps list-test-deps list-shell-deps:
 	$(verbose) cat $^
+
+# Query dependencies recursively.
+
+.PHONY: query-deps query-doc-deps query-rel-deps query-test-deps \
+	query-shell-deps
+
+QUERY ?= name fetch_method repo version
+
+define query_target
+$(1): $(2) clean-tmp-query.log
+ifeq ($(IS_APP)$(IS_DEP),)
+	$(verbose) rm -f $(4)
+endif
+	$(verbose) $(foreach dep,$(3),\
+		echo $(PROJECT): $(foreach q,$(QUERY),$(call query_$(q),$(dep))) >> $(4) ;)
+	$(if $(filter-out query-deps,$(1)),,\
+		$(verbose) set -e; for dep in $(3) ; do \
+			if grep -qs ^$$$$dep$$$$ $(ERLANG_MK_TMP)/query.log; then \
+				:; \
+			else \
+				echo $$$$dep >> $(ERLANG_MK_TMP)/query.log; \
+				$(MAKE) -C $(DEPS_DIR)/$$$$dep $$@ QUERY="$(QUERY)" IS_DEP=1 || true; \
+			fi \
+		done)
+ifeq ($(IS_APP)$(IS_DEP),)
+	$(verbose) touch $(4)
+	$(verbose) cat $(4)
+endif
+endef
+
+clean-tmp-query.log:
+ifeq ($(IS_DEP),)
+	$(verbose) rm -f $(ERLANG_MK_TMP)/query.log
+endif
+
+$(eval $(call query_target,query-deps,$(ERLANG_MK_RECURSIVE_DEPS_LIST),$(BUILD_DEPS) $(DEPS),$(ERLANG_MK_QUERY_DEPS_FILE)))
+$(eval $(call query_target,query-doc-deps,$(ERLANG_MK_RECURSIVE_DOC_DEPS_LIST),$(DOC_DEPS),$(ERLANG_MK_QUERY_DOC_DEPS_FILE)))
+$(eval $(call query_target,query-rel-deps,$(ERLANG_MK_RECURSIVE_REL_DEPS_LIST),$(REL_DEPS),$(ERLANG_MK_QUERY_REL_DEPS_FILE)))
+$(eval $(call query_target,query-test-deps,$(ERLANG_MK_RECURSIVE_TEST_DEPS_LIST),$(TEST_DEPS),$(ERLANG_MK_QUERY_TEST_DEPS_FILE)))
+$(eval $(call query_target,query-shell-deps,$(ERLANG_MK_RECURSIVE_SHELL_DEPS_LIST),$(SHELL_DEPS),$(ERLANG_MK_QUERY_SHELL_DEPS_FILE)))
