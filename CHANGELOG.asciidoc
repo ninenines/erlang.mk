@@ -1,5 +1,3 @@
-2018/12/03: Changelog introduced.
-
 2018/12/03: Relx has been updated to v3.27.0.
 
 2018/12/03: Dependencies are no longer always rebuilt by
@@ -13,3 +11,11 @@
 
 2019/06/20: `list-deps` now includes local applications
             found in the `APPS_DIR` directory.
+
+2020/03/25: The `-lerl_interface` argument has been removed
+            from the default `LDLIBS`. This is an old library
+            that is getting removed in OTP-23 and should no
+            longer be used. Note that the default still includes
+            `-lei` which is part of the Erlang/OTP Erl_Interface
+            *application* but is built as a separate C library.
+            The removal only applies to `-lerl_interface` itself.
