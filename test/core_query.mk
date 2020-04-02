@@ -135,7 +135,7 @@ core-query-deps-no-duplicates: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy 2.7.0 and Farwest master to DEPS"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy farwest\ndep_cowboy_commit = 2.7.0\ndep_farwest = git https://github.com/ninenines/farwest master\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy farwest\ndep_cowboy_commit = 2.7.0\ndep_farwest = git https://github.com/ninenines/farwest 017dc36b59f028e7014bad927e745a2c0b529018\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy and Farwest to the applications key in the .app.src file"
@@ -148,13 +148,13 @@ endif
 	$i "Confirm that the expected applications were found"
 	$t printf "%s\n" \
 		"$(APP): cowboy git https://github.com/ninenines/cowboy 2.7.0" \
-		"$(APP): farwest git https://github.com/ninenines/farwest master" \
+		"$(APP): farwest git https://github.com/ninenines/farwest 017dc36b59f028e7014bad927e745a2c0b529018" \
 		"cowboy: cowlib git https://github.com/ninenines/cowlib 2.8.0" \
 		"cowboy: ranch git https://github.com/ninenines/ranch 1.7.1" \
 		"farwest: cowlib git https://github.com/ninenines/cowlib master" \
 		"farwest: cowboy git https://github.com/ninenines/cowboy master" \
 		"farwest: gun git https://github.com/ninenines/gun master" \
-		"gun: cowlib git https://github.com/ninenines/cowlib master" \
+		"gun: cowlib git https://github.com/ninenines/cowlib 2.9.0" \
 		> $(APP)/expected-deps.txt
 	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/query-deps.log
 
