@@ -31,9 +31,23 @@ test-deps: $(ALL_TEST_DEPS_DIRS)
 endif
 
 ifneq ($(wildcard $(TEST_DIR)),)
-test-dir:
-	$(gen_verbose) erlc -v $(TEST_ERLC_OPTS) -o $(TEST_DIR) \
-		-pa ebin/ -I include/ $(call core_find,$(TEST_DIR)/,*.erl)
+test-dir: $(ERLANG_MK_TMP)/$(PROJECT).last-testdir-build
+	@:
+
+test_erlc_verbose_0 = @echo " ERLC  " $(filter-out $(patsubst %,%.erl,$(ERLC_EXCLUDE)),\
+	$(filter %.erl %.core,$(notdir $(FILES_TO_COMPILE))));
+test_erlc_verbose_2 = set -x;
+test_erlc_verbose = $(test_erlc_verbose_$(V))
+
+define compile_test_erl
+	$(test_erlc_verbose) erlc -v $(TEST_ERLC_OPTS) -o $(TEST_DIR) \
+		-pa ebin/ -I include/ $(1)
+endef
+
+ERL_TEST_FILES = $(call core_find,$(TEST_DIR)/,*.erl)
+$(ERLANG_MK_TMP)/$(PROJECT).last-testdir-build: $(ERL_TEST_FILES) $(MAKEFILE_LIST)
+	$(eval FILES_TO_COMPILE := $(if $(filter $(MAKEFILE_LIST),$?),$(filter $(ERL_TEST_FILES),$^),$?))
+	$(if $(strip $(FILES_TO_COMPILE)),$(call compile_test_erl,$(FILES_TO_COMPILE)); touch $@)
 endif
 
 test-build:: IS_TEST=1
@@ -70,5 +84,5 @@ clean:: clean-test-dir
 
 clean-test-dir:
 ifneq ($(wildcard $(TEST_DIR)/*.beam),)
-	$(gen_verbose) rm -f $(TEST_DIR)/*.beam
+	$(gen_verbose) rm -f $(TEST_DIR)/*.beam $(ERLANG_MK_TMP)/$(PROJECT).last-testdir-build
 endif
