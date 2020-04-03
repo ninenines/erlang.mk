@@ -282,8 +282,8 @@ dialyzer-plt-ebin-only: init
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
-	$i "Run Cowlib tests to fetch autopatched dependencies"
-	$t $(MAKE) -C $(APP)/deps/cowlib tests $v
+	$i "Build Cowlib for tests to fetch autopatched dependencies"
+	$t $(MAKE) -C $(APP)/deps/cowlib test-build $v
 
 	$i "Run Dialyzer"
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) dialyze $v
