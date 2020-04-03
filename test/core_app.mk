@@ -1682,7 +1682,7 @@ core-app-yrl-header: init
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-	
+
 	$i "Create a .yrl file"
 	$t echo "Nonterminals E T F." > $(APP)/src/y_parse.yrl
 	$t echo "Terminals '+' '*' '(' ')' number." >> $(APP)/src/y_parse.yrl
@@ -2743,3 +2743,46 @@ endif
 			= application:get_key(my_app, modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+core-app-test-build-outofdate-files-only: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .erl test files"
+	$t mkdir $(APP)/test/
+	$t printf "%s\n" "-module(use_blue)." > $(APP)/test/use_blue.erl
+	$t printf "%s\n" "-module(use_red)." > $(APP)/test/use_red.erl
+
+	$i "Build the application testsuite"
+	$t $(MAKE) -C $(APP) test-build $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/test/use_blue.beam
+	$t test -f $(APP)/test/use_red.beam
+
+	$t $(SLEEP)
+	$t touch $(APP)/build-1
+
+	$i "Re-un the make command; check that nothing is rebuilt"
+	$t $(MAKE) -C $(APP) test-build $v
+	$t test $(APP)/test/use_blue.beam -ot $(APP)/build-1
+	$t test $(APP)/test/use_red.beam -ot $(APP)/build-1
+
+	$i "Touch one .erl file; check that only required files are rebuilt"
+	$t $(SLEEP)
+	$t touch $(APP)/test/use_blue.erl
+	$t $(MAKE) -C $(APP) test-build $v
+	$t test $(APP)/test/use_blue.beam -nt $(APP)/build-1
+	$t test $(APP)/test/use_red.beam -ot $(APP)/build-1
+
+	$t touch $(APP)/build-2
+
+	$i "Touch one Makefile; check that all files are rebuilt"
+	$t $(SLEEP)
+	$t touch $(APP)/Makefile
+	$t $(MAKE) -C $(APP) test-build $v
+	$t test $(APP)/test/use_blue.beam -nt $(APP)/build-2
+	$t test $(APP)/test/use_red.beam -nt $(APP)/build-2
