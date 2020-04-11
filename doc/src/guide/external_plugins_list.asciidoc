@@ -26,6 +26,11 @@ language for the BEAM.
 An https://github.com/inaka/elvis.mk[Elvis plugin] for Erlang.mk.
 Elvis is an https://github.com/inaka/elvis[Erlang style reviewer].
 
+=== esh.mk
+
+An https://github.com/crownedgrouse/esh.mk[Esh template plugin] for Erlang.mk.
+https://github.com/jirutka/esh[Esh] is a simple template engine using shell.
+
 === geas
 
 https://github.com/crownedgrouse/geas[Geas] gives aggregated

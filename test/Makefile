@@ -165,7 +165,7 @@ $(eval $(foreach t,$(patsubst %.mk,%,$(patsubst plugin_%,%,$(wildcard plugin_*.m
 # Packages.
 
 PACKAGES = $(foreach pkg,$(sort $(wildcard ../index/*.mk)),$(notdir $(basename $(pkg))))
-EXCLUDE_FROM_CHECK = ['ci.erlang.mk', hexer_mk, inaka_mk, 'lfe.mk', rabbitmq_codegen]
+EXCLUDE_FROM_CHECK = ['ci.erlang.mk', esh_mk, hexer_mk, inaka_mk, 'lfe.mk', rabbitmq_codegen]
 
 packages: $(addprefix pkg-,$(PACKAGES))
 
