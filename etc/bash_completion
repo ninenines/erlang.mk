@@ -5,7 +5,6 @@
 # Date: April 12th 2020
 # Bash completion for Erlang.mk
 
-
 _erlang_mk()
 {
     local cur prev words cword
@@ -27,21 +26,32 @@ _erlang_mk()
         new)
         	COMPREPLY=( $(compgen -W 't=' -- "$cur") ) && compopt -o nospace
         	;;
-        t)     
-        	if [[ "$cur" == '=' ]]; then
-        		COMPREPLY=( $(compgen -W "$T" -- "$cur") ) && compopt -o nospace
-        	fi
-        	;;
         =) 
-        	COMPREPLY=( $(compgen -W "$T" -- "$cur") ) && compopt -o nospace
+        	if [[ ${words[$cword - 2]} == "in" ]]; then
+        		COMPREPLY=( $(compgen -W "$(ls apps 2>/dev/null)" -- "$cur") ) && compopt -o nospace
+        	else 
+        		if [[ ${words[$cword - 2]} == "t" ]]; then
+        	    	COMPREPLY=( $(compgen -W "$T" -- "$cur") ) && compopt -o nospace   
+        	    fi     	
+        	fi
         	;;
         $TP)
         	COMPREPLY=( $(compgen -W "$T" -- "$cur") ) && compopt -o nospace
         	;;
         $TPP)
         	COMPREPLY=( $(compgen -W 'n=' -- "$cur") ) && compopt -o nospace
-        	;;
+        	;;	
         *) 
+		if [[ "$prev" == "in" && "$cur" == '=' ]]; then
+			test -d apps && echo  1>&2
+			test -d apps && echo $(ls apps 2>/dev/null)
+       			COMPREPLY=( $(compgen -W "$(ls apps 2>/dev/null )" -- "$cur") ) && compopt -o nospace
+		fi
+		if [[ "$prev" == "t" && "$cur" == '=' ]]; then
+			echo  1>&2
+			echo $T 1>&2
+        		COMPREPLY=( $(compgen -W "$T" -- "$cur") ) && compopt -o nospace
+		fi
         	if [[ $(echo "$T" | tr ' ' "\n" | grep "$prev") ]]; then
         		COMPREPLY=( $(compgen -W 'n=' -- "$cur") ) && compopt -o nospace
         	fi
@@ -56,11 +66,10 @@ _erlang_mk()
 
     case $cur in 
     	all|bootstrap|list|list-|new|new-)
-    		echo
+    		echo 1>&2
     		make help | grep "^  $cur" 1>&2
     		return
     		;;
-
     esac
 } &&
 complete -F _erlang_mk make
