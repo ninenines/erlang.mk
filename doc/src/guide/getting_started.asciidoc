@@ -38,6 +38,31 @@ Alternatively, just https://erlang.mk/erlang.mk[click on this link].
 
 Make sure you put the file inside the folder we created previously.
 
+==== Bash completion
+
+If your preferred shell is Bash, a completion script is available.
+In order to install it, use the following commands:
+
+[source,bash]
+----
+$ mkdir ~/.bash_completion.d/
+$ cd ~/.bash_completion.d/
+$ wget -O erlang_mk https://raw.githubusercontent.com/ninenines/erlang.mk/master/etc/bash_completion
+----
+
+Then edit the file `~/.bash_completion` and add:
+
+[source,bash]
+----
+for bcfile in ~/.bash_completion.d/* ; do
+    . $bcfile
+done
+----
+
+Note that Make's legacy Bash completion will be overwritten.
+If you need legacy completion for other C projects, consider sourcing
+Erlang.mk's Bash completion only in your Erlang project directory instead.
+
 === Getting started with OTP applications
 
 An OTP application is an Erlang application that has a supervision
