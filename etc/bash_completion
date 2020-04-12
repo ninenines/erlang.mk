@@ -3,6 +3,7 @@
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 # Author: Eric 'crownedgrouse' Pailleau
 # Date: April 12th 2020
+# Bash completion for Erlang.mk
 
 
 _erlang_mk()
@@ -18,7 +19,7 @@ _erlang_mk()
     		COMPREPLY=( $(compgen -W "all app deps fetch-deps list-deps search rel docs install-docs check tests clean distclean help erlang-mk bootstrap bootstrap-lib bootstrap-rel new-app new-lib new new list-templates ct plt dialyze escript eunit shell sphinx xref cover-report all.coverdata" -- "$cur") )
     		;;
         search)
-            COMPREPLY=( $(compgen -W 'q=' -- "$cur") ) && compopt -o nospace
+        	COMPREPLY=( $(compgen -W 'q=' -- "$cur") ) && compopt -o nospace
             ;;
         new-app|new-lib)
         	COMPREPLY=( $(compgen -W 'in=' -- "$cur") ) && compopt -o nospace
