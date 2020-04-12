@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Copyright (c) 2020, Loïc Hoguin <essen@ninenines.eu>
+# This file is part of erlang.mk and subject to the terms of the ISC License.
+# Author: Eric 'crownedgrouse' Pailleau
+# Date: April 12th 2020
+
+
+_erlang_mk()
+{
+    local cur prev words cword
+    _init_completion || return
+
+    T=$(make list-templates | cut -d ':' -f 2-)
+    TP=$(echo -n $T | cut -d '_' -f 1 | tr ' ' '|')
+    TPP=$(echo -n $T | tr ' ' '|')
+    case $prev in
+    	make)
+    		COMPREPLY=( $(compgen -W "all app deps fetch-deps list-deps search rel docs install-docs check tests clean distclean help erlang-mk bootstrap bootstrap-lib bootstrap-rel new-app new-lib new new list-templates ct plt dialyze escript eunit shell sphinx xref cover-report all.coverdata" -- "$cur") )
+    		;;
+        search)
+            COMPREPLY=( $(compgen -W 'q=' -- "$cur") ) && compopt -o nospace
+            ;;
+        new-app|new-lib)
+        	COMPREPLY=( $(compgen -W 'in=' -- "$cur") ) && compopt -o nospace
+        	;;
+        new)
+        	COMPREPLY=( $(compgen -W 't=' -- "$cur") ) && compopt -o nospace
+        	;;
+        t)     
+        	if [[ "$cur" == '=' ]]; then
+        		COMPREPLY=( $(compgen -W "$T" -- "$cur") ) && compopt -o nospace
+        	fi
+        	;;
+        =) 
+        	COMPREPLY=( $(compgen -W "$T" -- "$cur") ) && compopt -o nospace
+        	;;
+        $TP)
+        	COMPREPLY=( $(compgen -W "$T" -- "$cur") ) && compopt -o nospace
+        	;;
+        $TPP)
+        	COMPREPLY=( $(compgen -W 'n=' -- "$cur") ) && compopt -o nospace
+        	;;
+        *) 
+        	if [[ $(echo "$T" | tr ' ' "\n" | grep "$prev") ]]; then
+        		COMPREPLY=( $(compgen -W 'n=' -- "$cur") ) && compopt -o nospace
+        	fi
+        	if [[ ${words[$cword - 1]} == "n=" || ${words[$cword - 1]} == "n" ]]; then
+        		COMPREPLY=( $(compgen -W 'in=' -- "$cur") ) && compopt -o nospace        	
+        	fi
+        	if [[ ${words[$cword - 3]} == "n" ]]; then
+        		COMPREPLY=( $(compgen -W 'in=' -- "$cur") ) && compopt -o nospace        	
+        	fi
+        	;;
+    esac
+
+    case $cur in 
+    	all|bootstrap|list|list-|new|new-)
+    		echo
+    		make help | grep "^  $cur" 1>&2
+    		return
+    		;;
+
+    esac
+} &&
+complete -F _erlang_mk make
