@@ -1,5 +1,18 @@
 #!/bin/sh
 
+if [ -z "$1$2$3$4$5$6" ]
+then
+	echo "Missing arguments" 1>&2
+	exit 1
+fi
+
+T=`echo "$1" | grep "\." | wc -l `
+if [ "$T" -eq "1" ]
+then
+	echo "Invalid dot character in name. Considere replace by an underscore." 1>&2
+	exit 1
+fi
+
 PKG_FILE="index/$1.mk"
 CONTENTS="PACKAGES += $1
 pkg_$1_name = $1
