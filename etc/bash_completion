@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# Copyright (c) 2020, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) 2020, Eric Pailleau <crownedgrouse@wanadoo.fr>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
-# Author: Eric 'crownedgrouse' Pailleau
 # Date: April 12th 2020
 # Bash completion for Erlang.mk
 
