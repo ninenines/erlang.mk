@@ -1333,8 +1333,14 @@ core-deps-shell: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add TDDReloader to the list of shell dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "SHELL_DEPS = tddreloader\n"}' $(APP)/Makefile
+	$i "Bootstrap a new OTP application named my_dep inside $(APP)"
+	$t mkdir $(APP)/my_dep
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap $v
+
+	$i "Add my_dep to the list of dependencies"
+# We use FORCE_REBUILD to ensure it gets rebuilt even on Windows.
+	$t perl -ni.bak -e "print;if ($$.==1) {print \"SHELL_DEPS = my_dep\ndep_my_dep = ln $(CURDIR)/$(APP)/my_dep/\nFORCE_REBUILD = my_dep\n\"}" $(APP)/Makefile
 
 	$i "Build the application and its dependencies"
 	$t $(MAKE) -C $(APP) deps app $v
@@ -1346,23 +1352,23 @@ core-deps-shell: init
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		[ok = application:load(App) || App <- [$(APP)]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
-		false = lists:member(tddreloader, Deps), \
+		false = lists:member(my_dep, Deps), \
 		halt()"
 
 	$i "Run the shell"
 	$t $(MAKE) -C $(APP) shell SHELL_OPTS="-eval \" \
 		ok = application:load($(APP)), \
-		ok = application:load(tddreloader), \
+		ok = application:load(my_dep), \
 		halt()\"" $v
 
 	$i "Check that all dependencies were fetched"
-	$t test -d $(APP)/deps/tddreloader
+	$t test -d $(APP)/deps/my_dep
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
-		[ok = application:load(App) || App <- [$(APP), tddreloader]], \
+		[ok = application:load(App) || App <- [$(APP), my_dep]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
-		false = lists:member(tddreloader, Deps), \
+		false = lists:member(my_dep, Deps), \
 		halt()"
 
 core-deps-skip: init
