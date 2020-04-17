@@ -60,10 +60,10 @@ LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)" -lei
 
 # Verbosity.
 
-c_verbose_0 = @echo " C     " $(?F);
+c_verbose_0 = @echo " C     " $(filter-out $(notdir $(MAKEFILE_LIST) $(C_SRC_ENV)),$(^F));
 c_verbose = $(c_verbose_$(V))
 
-cpp_verbose_0 = @echo " CPP   " $(?F);
+cpp_verbose_0 = @echo " CPP   " $(filter-out $(notdir $(MAKEFILE_LIST) $(C_SRC_ENV)),$(^F));
 cpp_verbose = $(cpp_verbose_$(V))
 
 link_verbose_0 = @echo " LD    " $(@F);
