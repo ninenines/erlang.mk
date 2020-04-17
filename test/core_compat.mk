@@ -47,7 +47,7 @@ core-compat-auto-rebar: init
 	$t $(MAKE) -C $(APP) distclean $v
 
 	$i "Download rebar"
-	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t curl --retry 5 --retry-connrefused -s -L -o $(APP)/rebar $(REBAR_BINARY)
 	$t chmod +x $(APP)/rebar
 
 	$i "Use rebar to build the application"
@@ -86,7 +86,7 @@ core-compat-rebar: init
 	$t $(MAKE) -C $(APP) distclean $v
 
 	$i "Download rebar"
-	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t curl --retry 5 --retry-connrefused -s -L -o $(APP)/rebar $(REBAR_BINARY)
 	$t chmod +x $(APP)/rebar
 
 	$i "Use rebar to build the application"
@@ -118,7 +118,7 @@ core-compat-rebar-deps-git: init
 	$t $(MAKE) -C $(APP) distclean $v
 
 	$i "Download rebar"
-	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t curl --retry 5 --retry-connrefused -s -L -o $(APP)/rebar $(REBAR_BINARY)
 	$t chmod +x $(APP)/rebar
 
 	$i "Use rebar to build the application"
@@ -150,7 +150,7 @@ core-compat-rebar-deps-hex: init
 	$t $(MAKE) -C $(APP) distclean $v
 
 	$i "Download rebar3"
-	$t curl -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
+	$t curl --retry 5 --retry-connrefused -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
 	$t chmod +x $(APP)/rebar3
 
 	$i "Use rebar to build the application"
@@ -182,7 +182,7 @@ core-compat-rebar-deps-pkg: init
 	$t $(MAKE) -C $(APP) distclean $v
 
 	$i "Download rebar"
-	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t curl --retry 5 --retry-connrefused -s -L -o $(APP)/rebar $(REBAR_BINARY)
 	$t chmod +x $(APP)/rebar
 
 	$i "Use rebar to build the application"
@@ -231,7 +231,7 @@ core-compat-rebar-erlc-opts: init
 	$t $(MAKE) -C $(APP) distclean $v
 
 	$i "Download rebar"
-	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t curl --retry 5 --retry-connrefused -s -L -o $(APP)/rebar $(REBAR_BINARY)
 	$t chmod +x $(APP)/rebar
 
 	$i "Use rebar to build the application"
@@ -289,7 +289,7 @@ ifndef LEGACY
 endif
 
 	$i "Download rebar"
-	$t curl -s -L -o $(APP)/rebar $(REBAR_BINARY)
+	$t curl --retry 5 --retry-connrefused -s -L -o $(APP)/rebar $(REBAR_BINARY)
 	$t chmod +x $(APP)/rebar
 
 	$i "Use rebar to build the application"
