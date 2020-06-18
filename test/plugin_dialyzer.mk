@@ -26,6 +26,7 @@ dialyzer-app: init
 	$i "Create a module with a function that has no local return"
 	$t printf "%s\n" \
 		"-module(warn_me)." \
+		"-export([doit/0])." \
 		"doit() -> 1 = 2, ok." > $(APP)/src/warn_me.erl
 
 	$i "Confirm that Dialyzer errors out"
@@ -65,6 +66,7 @@ dialyzer-apps-only: init
 	$i "Create a module with a function that has no local return"
 	$t printf "%s\n" \
 		"-module(warn_me)." \
+		"-export([doit/0])." \
 		"doit() -> 1 = 2, ok." > $(APP)/apps/my_app/src/warn_me.erl
 
 	$i "Confirm that Dialyzer errors out"
@@ -142,6 +144,7 @@ dialyzer-check: init
 	$i "Create a module with a function that has no local return"
 	$t printf "%s\n" \
 		"-module(warn_me)." \
+		"-export([doit/0])." \
 		"doit() -> 1 = 2, ok." > $(APP)/src/warn_me.erl
 
 	$i "Confirm that Dialyzer errors out on 'make check'"
