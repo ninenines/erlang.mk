@@ -19,3 +19,7 @@
             `-lei` which is part of the Erlang/OTP Erl_Interface
             *application* but is built as a separate C library.
             The removal only applies to `-lerl_interface` itself.
+
+2020/06/18: Concuerror integration has been added. It is
+            currently minimal but usable. Experimentation
+            and feedback is welcome.

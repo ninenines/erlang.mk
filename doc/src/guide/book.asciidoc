@@ -64,6 +64,8 @@ include::ci.asciidoc[Continuous integration]
 
 include::dialyzer.asciidoc[Dialyzer]
 
+include::concuerror.asciidoc[Concuerror]
+
 include::xref.asciidoc[Xref]
 
 [[plugins]]

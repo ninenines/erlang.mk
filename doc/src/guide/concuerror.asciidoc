@@ -1,0 +1,77 @@
+[[concuerror]]
+== Concuerror
+
+https://concuerror.com/[Concuerror] is a stateless model
+checking tool for Erlang programs. It can be used to detect
+and debug concurrency errors, such as deadlocks and errors
+due to race conditions. The key property of such errors is
+that they only occur on few, specific schedulings of the
+program. Moreover, unlike tools based on randomisation,
+Concuerror can verify the absence of such errors, because
+it tests the program systematically.
+
+Erlang.mk provides a wrapper around Concuerror.
+
+=== Configuration
+
+The `CONCUERROR_TESTS` variable must be defined in order to
+use Concuerror. It lists the Concuerror test cases. There
+is currently no way to detect test cases automatically. The
+tests must be listed as `module:function` separated by
+whitespace. For example:
+
+[source,make]
+CONCUERROR_TESTS = ranch_concuerror:start_stop ranch_concuerror:info
+
+Concuerror will output some information directly on the
+screen when run, but errors will only be written to a file.
+This is because the error output can be very large. By
+default Erlang.mk instructs Concuerror to save log files
+in the 'logs/' directory (shared with Common Test). This
+can be changed by setting `CONCUERROR_LOGS_DIR`:
+
+[source,make]
+CONCUERROR_LOGS_DIR = $(CURDIR)/path/to/logs
+
+Concuerror options can be specified using the
+`CONCUERROR_OPTS` variable:
+
+[source,make]
+CONCUERROR_OPTS = -k
+
+Note that options may also be specified on a per-module
+basis using the `-concuerror_options([]).` attribute.
+
+=== Writing tests
+
+Concuerror tests are a simple 0-arity function that must
+be exported. For example:
+
+[source,erlang]
+----
+-export([info/0]).
+
+info() →
+    %% Ensure we can call ranch:info/1 after starting a listener.
+    SupPid = do_start(),
+    {ok, _} = ranch:start_listener(?FUNCTION_NAME,
+        ranch_erlang_transport, #{
+            num_acceptors ⇒ 1
+        },
+        echo_protocol, []),
+    #{} = ranch:info(?FUNCTION_NAME),
+    do_stop(SupPid).
+----
+
+Do not forget to add the function to `CONCUERROR_TESTS`
+as well.
+
+=== Usage
+
+To run Concuerror:
+
+[source,bash]
+$ make concuerror
+
+Erlang.mk will create an index of all the test logs in
+the '$(CONCUERROR_LOGS_DIR)/concuerror.html' file.
