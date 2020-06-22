@@ -2786,3 +2786,9 @@ core-app-test-build-outofdate-files-only: init
 	$t $(MAKE) -C $(APP) test-build $v
 	$t test $(APP)/test/use_blue.beam -nt $(APP)/build-2
 	$t test $(APP)/test/use_red.beam -nt $(APP)/build-2
+
+	$i "Add a syntax error to the test; check that the build fails"
+	$t $(SLEEP)
+	$t echo "garbage" >> $(APP)/test/use_blue.erl
+	$t ! $(MAKE) -C $(APP) test-build $v
+	$t ! test -f $(APP)/test/use_blue.beam
