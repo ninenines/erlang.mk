@@ -22,7 +22,7 @@ endif
 
 $(ERLANG_MK_TMP)/Concuerror/bin/concuerror: | $(ERLANG_MK_TMP)
 	$(verbose) git clone https://github.com/parapluu/Concuerror $(ERLANG_MK_TMP)/Concuerror
-	$(verbose) make -C $(ERLANG_MK_TMP)/Concuerror
+	$(verbose) $(MAKE) -C $(ERLANG_MK_TMP)/Concuerror
 
 $(CONCUERROR_LOGS_DIR):
 	$(verbose) mkdir -p $(CONCUERROR_LOGS_DIR)
