@@ -549,6 +549,15 @@ define dep_autopatch_rebar.erl
 				false -> [];
 				{_, PortEnv0} -> FilterEnv(PortEnv0)
 			end,
+			SharedFlag = fun
+							([],_) -> "\n";
+							(Ext,darwin) ->
+								case lists:member(Ext,[".so",".dylib"]) of
+									true -> " -shared\n";
+									_ -> "\n"
+								end;
+							(_,_) -> " -shared\n"
+						end,
 			PortSpec = fun ({Output, Input0, Env}) ->
 				filelib:ensure_dir("$(call core_native_path,$(DEPS_DIR)/$1/)" ++ Output),
 				Input = [[" ", I] || I <- Input0],
@@ -567,11 +576,7 @@ define dep_autopatch_rebar.erl
 					Output, ": $$\(foreach ext,.c .C .cc .cpp,",
 						"$$\(patsubst %$$\(ext),%.o,$$\(filter %$$\(ext),$$\(wildcard", Input, "))))\n",
 					"\t$$\(CC) -o $$\@ $$\? $$\(LDFLAGS) $$\(ERL_LDFLAGS) $$\(DRV_LDFLAGS) $$\(EXE_LDFLAGS)",
-					case {filename:extension(Output), $(PLATFORM)} of
-					    {[], _} -> "\n";
-					    {_, darwin} -> "\n";
-					    _ -> " -shared\n"
-					end])
+					SharedFlag(filename:extension(Output), $(PLATFORM))])
 			end,
 			[PortSpec(S) || S <- PortSpecs]
 	end,
