@@ -550,14 +550,14 @@ define dep_autopatch_rebar.erl
 				{_, PortEnv0} -> FilterEnv(PortEnv0)
 			end,
 			SharedFlag = fun
-              ([],_) -> "\n";
-							(Ext,darwin) ->
-							  case lists:member(Ext,[".so",".dylib"]) of
-									true -> " -shared\n";
-									_ -> "\n"
-								end;
-							(_,_) -> " -shared\n"
-						end,
+                            ([],_) -> "\n";
+                            (Ext,darwin) ->
+                              case lists:member(Ext,[".so",".dylib"]) of
+                                true -> " -shared\n";
+                                _ -> "\n"
+                              end;
+                            (_,_) -> " -shared\n"
+                        end,
 			PortSpec = fun ({Output, Input0, Env}) ->
 				filelib:ensure_dir("$(call core_native_path,$(DEPS_DIR)/$1/)" ++ Output),
 				Input = [[" ", I] || I <- Input0],
