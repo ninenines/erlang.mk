@@ -550,9 +550,9 @@ define dep_autopatch_rebar.erl
 				{_, PortEnv0} -> FilterEnv(PortEnv0)
 			end,
 			SharedFlag = fun
-							([],_) -> "\n";
+              ([],_) -> "\n";
 							(Ext,darwin) ->
-								case lists:member(Ext,[".so",".dylib"]) of
+							  case lists:member(Ext,[".so",".dylib"]) of
 									true -> " -shared\n";
 									_ -> "\n"
 								end;
