@@ -232,6 +232,20 @@ core-query-doc-deps: init
 		> $(APP)/expected-deps.txt
 	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/query-doc-deps.log
 
+core-query-no-deps: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Query the dependencies of $(APP)"
+	$t $(MAKE) -C $(APP) query-deps $v
+
+	$i "Confirm that nothing was found"
+	$t touch $(APP)/expected-deps.txt
+	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/query-deps.log
+
 core-query-rel-deps: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
