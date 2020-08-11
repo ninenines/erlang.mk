@@ -111,7 +111,7 @@ core-compat-rebar-deps-git: init
 	$i "Check that Cowboy is listed in rebar.config"
 	$t $(ERL) -eval " \
 		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
-		{_, [{cowboy, _, {git, _, \"1.0.0\"}}]} = lists:keyfind(deps, 1, C), \
+		{_, [{cowboy, _, {git, _, {ref,\"1.0.0\"}}}]} = lists:keyfind(deps, 1, C), \
 		halt()"
 
 	$i "Distclean the application"
