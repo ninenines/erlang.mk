@@ -33,6 +33,34 @@ cover-ct: init
 	$t test ! -e $(APP)/cover/ct.coverdata
 	$t test ! -e $(APP)/test/ct.cover.spec
 
+cover-ct-excl-mods: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Add supervisor module to the cover exclude module list "
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "COVER_EXCLUDE_MODS = $(APP)_sup  \n"}' $(APP)/Makefile
+
+	$i "Generate a Common Test suite"
+	$t mkdir $(APP)/test
+	$t printf "%s\n" \
+		"-module($(APP)_SUITE)." \
+		"-export([all/0, ok/1])." \
+		"all() -> [ok]." \
+		"ok(_) -> application:start($(APP))." > $(APP)/test/$(APP)_SUITE.erl
+
+	$i "Run Common Test with code coverage enabled"
+	$t $(MAKE) -C $(APP) ct COVER=1 $v
+
+	$i "Check that the generated files exist"
+	$t test -f $(APP)/cover/ct.coverdata
+	$t test -f $(APP)/test/ct.cover.spec
+
+	$i "Check that the supervisor module is not included in the cover report"
+	$t ! test -e $(APP)/logs/ct_run.*/$(APP)_sup.COVER.html
+
 cover-ct-incl-apps: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
@@ -284,6 +312,34 @@ cover-eunit-apps-only: init
 
 	$i "Check that the generated file exists"
 	$t test -f $(APP)/apps/my_app/cover/eunit.coverdata
+
+cover-eunit-excl-mods: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Add supervisor module to the cover exclude module list "
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "COVER_EXCLUDE_MODS = $(APP)_sup  \n"}' $(APP)/Makefile
+
+	$i "Generate a module containing EUnit tests"
+	$t printf "%s\n" \
+		"-module($(APP))." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"ok_test() -> application:ensure_all_started($(APP))." \
+		"-endif." > $(APP)/src/$(APP).erl
+
+	$i "Run EUnit with code coverage enabled"
+	$t $(MAKE) -C $(APP) eunit COVER=1 $v
+
+	$i "Build the cover report"
+	$t $(MAKE) -C $(APP) cover-report $v
+
+	$i "Check that app was covered, but supervisor wasn't"
+	$t test -f $(APP)/cover/$(APP)_app.COVER.html
+	$t ! test -e $(APP)/cover/$(APP)_sup.COVER.html
 
 cover-eunit-incl-apps: init
 
