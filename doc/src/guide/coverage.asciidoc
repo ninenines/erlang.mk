@@ -46,6 +46,17 @@ some applications by defining the `COVER_APPS` variable:
 [source,make]
 COVER_APPS = presence backend
 
+=== Removing modules from the cover report
+
+By default Erlang.mk will include all modules in the
+cover report.
+
+To exclude some modules from the report, you can
+define the `COVER_EXCLUDE_MODS` variable:
+
+[source,make]
+COVER_EXCLUDE_MODS = cowboy_app cowboy_sup
+
 === Configuring paths
 
 By default Erlang.mk will store 'coverdata' files and

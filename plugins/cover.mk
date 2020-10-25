@@ -8,6 +8,7 @@ COVER_DATA_DIR ?= $(COVER_REPORT_DIR)
 ifdef COVER
 COVER_APPS ?= $(notdir $(ALL_APPS_DIRS))
 COVER_DEPS ?=
+COVER_EXCLUDE_MODS ?=
 endif
 
 # Code coverage for Common Test.
@@ -23,7 +24,8 @@ $(TEST_DIR)/ct.cover.spec: cover-data-dir
 		"{incl_dirs, '$(PROJECT)', [\"$(call core_native_path,$(CURDIR)/ebin)\" \
 			$(foreach a,$(COVER_APPS),$(comma) \"$(call core_native_path,$(APPS_DIR)/$a/ebin)\") \
 			$(foreach d,$(COVER_DEPS),$(comma) \"$(call core_native_path,$(DEPS_DIR)/$d/ebin)\")]}." \
-		'{export,"$(call core_native_path,$(abspath $(COVER_DATA_DIR))/ct.coverdata)"}.' > $@
+		'{export,"$(call core_native_path,$(abspath $(COVER_DATA_DIR))/ct.coverdata)"}.' \
+		"{excl_mods, '$(PROJECT)', [$(call comma_list,$(COVER_EXCLUDE_MODS))]}." > $@
 
 CT_RUN += -cover $(TEST_DIR)/ct.cover.spec
 endif
@@ -38,15 +40,21 @@ define cover.erl
 		Dirs = ["$(call core_native_path,$(CURDIR)/ebin)"
 			$(foreach a,$(COVER_APPS),$(comma) "$(call core_native_path,$(APPS_DIR)/$a/ebin)")
 			$(foreach d,$(COVER_DEPS),$(comma) "$(call core_native_path,$(DEPS_DIR)/$d/ebin)")],
+		Excludes = [$(call comma_list,$(foreach e,$(COVER_EXCLUDE_MODS),"$e"))],
 		[begin
-			case filelib:is_dir(Dir) of
-				false -> false;
-				true ->
-					case cover:compile_beam_directory(Dir) of
-						{error, _} -> halt(1);
-						_ -> true
-					end
-			end
+				case file:list_dir(Dir) of
+					{error, enotdir} -> false;
+					{error, _} ->	halt(1);
+					{ok, Files} ->
+	    			BeamFiles =  [filename:join(Dir, File) ||
+			    										File <- Files,
+															not lists:member(filename:basename(File, ".beam"), Excludes),
+			    										filename:extension(File) =:= ".beam"],
+	    			case cover:compile_beam(BeamFiles) of
+							{error, _} -> halt(1);
+							_ -> true
+						end
+				end
 		end || Dir <- Dirs]
 	end,
 	CoverExport = fun(Filename) -> cover:export(Filename) end,
