@@ -9,6 +9,7 @@ Embrace the power and simplicity of Makefiles.
 [source,make]
 PROJECT = webchat
 DEPS = cowboy
+dep_cowboy_commit = 2.8.0
 include erlang.mk
 
 http://erlang.mk/guide/getting_started.html[Get started]
