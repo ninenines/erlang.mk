@@ -49,6 +49,15 @@ fetch and compile Cowboy. Erlang.mk will also ensure Cowboy
 is available whenever you use the shell, run tests and any
 other operations.
 
+Note though that you may need to specify the version of a
+dependency to use. Otherwise, you may get an outdated version,
+since the package index used by Erlang.mk is not always
+updated with the latest version of each package.
+
+[source,make]
+DEPS = cowboy
+dep_cowboy_commit = 2.8.0
+
 Erlang.mk will fill in the application resource file with
 all applications found in `DEPS`. But not all dependencies
 are Erlang applications, and not all dependencies need to
