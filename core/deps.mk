@@ -24,6 +24,17 @@ export REBAR_DEPS_DIR
 REBAR_GIT ?= https://github.com/rebar/rebar
 REBAR_COMMIT ?= 576e12171ab8d69b048b827b92aa65d067deea01
 
+HEX_CORE_GIT ?= https://github.com/hexpm/hex_core
+HEX_CORE_COMMIT ?= v0.7.0
+
+PACKAGES += hex_core
+pkg_hex_core_name = hex_core
+pkg_hex_core_description = Reference implementation of Hex specifications
+pkg_hex_core_homepage = $(HEX_CORE_GIT)
+pkg_hex_core_fetch = git
+pkg_hex_core_repo = $(HEX_CORE_GIT)
+pkg_hex_core_commit = $(HEX_CORE_COMMIT)
+
 # External "early" plugins (see core/plugins.mk for regular plugins).
 # They both use the core_dep_plugin macro.
 
@@ -706,12 +717,28 @@ define dep_fetch_ln
 	ln -s $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1));
 endef
 
+# @todo Handle errors.
+define dep_fetch_hex.erl
+	{ok, _} = application:ensure_all_started(ssl),
+	{ok, _} = application:ensure_all_started(inets),
+	Config = hex_core:default_config(),
+	{ok, {200, #{}, Tarball}} = hex_repo:get_tarball(Config, <<"$(strip $3)">>, <<"$(strip $2)">>),
+	{ok, #{}} = hex_tarball:unpack(Tarball, "$(DEPS_DIR)/$1"),
+	halt(0)
+endef
+
 # Hex only has a package version. No need to look in the Erlang.mk packages.
 define dep_fetch_hex
-	mkdir -p $(ERLANG_MK_TMP)/hex $(DEPS_DIR)/$1; \
-	$(call core_http_get,$(ERLANG_MK_TMP)/hex/$1.tar,\
-		https://repo.hex.pm/tarballs/$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar); \
-	tar -xOf $(ERLANG_MK_TMP)/hex/$1.tar contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
+	if [ ! -e $(DEPS_DIR)/hex_core ]; then \
+		echo "Error: Dependency hex_core missing. BUILD_DEPS += hex_core to fix." >&2; \
+		exit 81; \
+	fi; \
+	if [ ! -e $(DEPS_DIR)/hex_core/ebin/dep_built ]; then \
+		$(MAKE) -C $(DEPS_DIR)/hex_core IS_DEP=1; \
+		touch $(DEPS_DIR)/hex_core/ebin/dep_built; \
+	fi; \
+	$(call erlang,$(call dep_fetch_hex.erl,$1,$(word 2,$(dep_$1)),\
+		$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)));
 endef
 
 define dep_fetch_fail
