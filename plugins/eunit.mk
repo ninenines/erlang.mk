@@ -42,7 +42,7 @@ eunit: test-build cover-data-dir
 	$(gen_verbose) $(call erlang,$(call eunit.erl,fun $(t)/0),$(EUNIT_ERL_OPTS))
 endif
 else
-EUNIT_EBIN_MODS = $(notdir $(basename $(ERL_FILES) $(BEAM_FILES)))
+EUNIT_EBIN_MODS = $(notdir $(basename $(ORIG_ERL_FILES) $(BEAM_FILES)))
 EUNIT_TEST_MODS = $(notdir $(basename $(call core_find,$(TEST_DIR)/,*.erl)))
 
 EUNIT_MODS = $(foreach mod,$(EUNIT_EBIN_MODS) $(filter-out \

@@ -89,14 +89,17 @@ define app_file
 endef
 endif
 
+ifneq ($(ERLC_USE_SERVER), true)
 app-build: ebin/$(PROJECT).app
 	$(verbose) :
+endif
 
 # Source files.
 
 ALL_SRC_FILES := $(sort $(call core_find,src/,*))
 
 ERL_FILES := $(filter %.erl,$(ALL_SRC_FILES))
+ORIG_ERL_FILES := $(ERL_FILES)
 CORE_FILES := $(filter %.core,$(ALL_SRC_FILES))
 
 # ASN.1 files.
@@ -328,6 +331,7 @@ ebin/%.beam: src/%.erl
 ERL_BEAM_FILES += $(patsubst src/%.erl, ebin/%.beam, $(ERL_FILES))
 
 app:: $(ERL_BEAM_FILES)
+app-build: ebin/$(PROJECT).app $(ERL_BEAM_FILES)
 endif
 
 ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES) $(wildcard src/$(PROJECT).app.src)
