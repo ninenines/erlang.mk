@@ -132,3 +132,66 @@ edoc-src-dirs: init
 	$t test -f $(APP)/doc/$(APP)_sup.html
 	$t test -f $(APP)/doc/my_app_app.html
 	$t test -f $(APP)/doc/my_app_sup.html
+
+edoc-src-subdirs: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Add current directory to the list of EDoc source directories"
+	$t echo 'EDOC_SRC_DIRS = $$(CURDIR)' >> $(APP)/Makefile
+
+	$i "Generate a module in a subdirectory with EDoc comments"
+	$t mkdir $(APP)/src/subdir/
+	$t printf "%s\n" \
+		"%% @doc erlang-mk-edoc-subdir-module" \
+		"-module($(APP))." \
+		"-export([ok/0])." \
+		"" \
+		"%% @doc erlang-mk-edoc-subdir-function" \
+		"ok() -> ok." > $(APP)/src/subdir/$(APP).erl
+
+	$i "Run EDoc"
+	$t $(MAKE) -C $(APP) edoc $v
+
+	$i "Check that the new module's documentation was generated"
+	$t test -f $(APP)/doc/$(APP).html
+
+	$i "Check that the EDoc comments are in the generated documentation"
+	$t grep -q erlang-mk-edoc-subdir-module $(APP)/doc/$(APP).html
+	$t grep -q erlang-mk-edoc-subdir-function $(APP)/doc/$(APP).html
+
+edoc-src-multiapp-subdirs: init
+
+	$i "Bootstrap a multi application repository with a root application"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Create a new application my_app"
+	$t $(MAKE) -C $(APP) new-app in=my_app $v
+
+	$i "Add apps directories to the list of EDoc source directories"
+	$t echo 'EDOC_SRC_DIRS = $$(ALL_APPS_DIRS)' >> $(APP)/Makefile
+
+	$i "Generate a module in a subdirectory with EDoc comments"
+	$t mkdir $(APP)/apps/my_app/src/subdir/
+	$t printf "%s\n" \
+		"%% @doc erlang-mk-edoc-subdir-module" \
+		"-module($(APP))." \
+		"-export([ok/0])." \
+		"" \
+		"%% @doc erlang-mk-edoc-subdir-function" \
+		"ok() -> ok." > $(APP)/apps/my_app/src/subdir/$(APP).erl
+
+	$i "Run EDoc"
+	$t $(MAKE) -C $(APP) edoc $v
+
+	$i "Check that the new module's documentation was generated"
+	$t test -f $(APP)/doc/$(APP).html
+
+	$i "Check that the EDoc comments are in the generated documentation"
+	$t grep -q erlang-mk-edoc-subdir-module $(APP)/doc/$(APP).html
+	$t grep -q erlang-mk-edoc-subdir-function $(APP)/doc/$(APP).html
