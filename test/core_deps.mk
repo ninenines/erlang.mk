@@ -594,24 +594,38 @@ endif
 
 core-deps-fetch-hex: init
 
-	$i "Bootstrap a new OTP library named $(APP)"
+	$i "Bootstrap a new OTP application named $(APP)"
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
-	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
 	$i "Add hex_core to the list of build dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS += hex_core\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
 
-	$i "Add Cowboy 1.0.0 to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = hex 1.0.0\n"}' $(APP)/Makefile
+	$i "Add extra Hex metadata"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
 
-ifdef LEGACY
-	$i "Add Cowboy to the applications key in the .app.src file"
-	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
-endif
+#	$i "Add Cowboy 1.0.0 to the list of dependencies"
+#	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = hex 1.0.0\n"}' $(APP)/Makefile
+#
+#ifdef LEGACY
+#	$i "Add Cowboy to the applications key in the .app.src file"
+#	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
+#endif
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
+
+	$i "Experiment with Hex"
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=essen HEX_PASSWORD=1234567 HEX_EMAIL=essen@ninenines.eu
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=essen HEX_PASSWORD=1234567
+	$t $(MAKE) -C $(APP) hex-tarball-create
+	$t $(MAKE) -C $(APP) hex-release-publish
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "PROJECT_DESCRIPTION = REPLACED DESCRIPTION\n"}' $(APP)/Makefile
+	$t $(MAKE) -C $(APP) hex-release-replace
+	$t $(MAKE) -C $(APP) hex-release-retire
+	$t $(MAKE) -C $(APP) hex-release-unretire
+	$t $(MAKE) -C $(APP) hex-release-delete
 
 	$i "Check that all dependencies were fetched"
 	$t test -d $(APP)/deps/cowboy
