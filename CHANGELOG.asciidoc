@@ -23,3 +23,7 @@
 2020/06/18: Concuerror integration has been added. It is
             currently minimal but usable. Experimentation
             and feedback is welcome.
+
+2020/11/30: Support for publishing Hex releases and docs
+            has been added. It is currently experimental.
+            Feedback is more than welcome.
