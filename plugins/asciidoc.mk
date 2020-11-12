@@ -57,8 +57,8 @@ try
 		})
 	end || F <- [$(shell echo $(addprefix $(comma)\",$(addsuffix \",$1)) | sed 's/^.//')]],
 	halt(0)
-catch C:E ->
-	io:format("Exception ~p:~p~nStacktrace: ~p~n", [C, E, erlang:get_stacktrace()]),
+catch C:E$(if $V,:S) ->
+	io:format("Exception: ~p:~p~n$(if $V,Stacktrace: ~p~n)", [C, E$(if $V,$(comma) S)]),
 	halt(1)
 end.
 endef

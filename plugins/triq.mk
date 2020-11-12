@@ -26,8 +26,8 @@ define triq_check.erl
 	end of
 		true -> halt(0);
 		_ -> halt(1)
-	catch error:undef ->
-		io:format("Undefined property or module?~n~p~n", [erlang:get_stacktrace()]),
+	catch error:undef$(if $V,:Stacktrace) ->
+		io:format("Undefined property or module?~n$(if $V,~p~n)", [$(if $V,Stacktrace)]),
 		halt(0)
 	end.
 endef
