@@ -114,7 +114,7 @@ hex-release-publish: init
 	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
@@ -122,7 +122,47 @@ hex-release-publish: init
 	$i "Check that the release exists"
 	$t curl -sf http://localhost:4000/api/packages/$(APP)/releases/0.1.0 >/dev/null
 
-# @todo hex-release-publish-with-deps
+hex-release-publish-with-deps: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Add Cowlib to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib_commit = 2.10.1\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowlib to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Configure a local Hex provider for Cowlib"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/deps/cowlib/Makefile
+
+	$i "Configure a local Hex provider"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Add extra Hex metadata"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
+
+	$i "Create a Hex user"
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+
+	$i "Create a key for that user"
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+
+	$i "Publish the Cowlib release"
+	$t $(MAKE) -C $(APP)/deps/cowlib hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
+
+	$i "Publish the release"
+	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
+
+	$i "Check that the release exists and includes Cowlib as requirement"
+	$t curl -sf http://localhost:4000/api/packages/$(APP)/releases/0.1.0 | grep -q cowlib
 
 hex-release-replace: init
 
@@ -141,7 +181,7 @@ hex-release-replace: init
 	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
@@ -172,7 +212,7 @@ hex-release-delete: init
 	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
@@ -200,7 +240,7 @@ hex-release-retire: init
 	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
@@ -228,7 +268,7 @@ hex-release-unretire: init
 	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
