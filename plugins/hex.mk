@@ -79,6 +79,7 @@ hex-key-add: hex-core
 HEX_TARBALL_EXTRA_METADATA ?=
 
 # @todo Check that we can += files
+# @todo Probably better if we sort the core_find results.
 HEX_TARBALL_FILES ?= \
 	$(wildcard early-plugins.mk) \
 	$(wildcard ebin/$(PROJECT).app) \
