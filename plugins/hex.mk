@@ -79,20 +79,19 @@ hex-key-add: hex-core
 HEX_TARBALL_EXTRA_METADATA ?=
 
 # @todo Check that we can += files
-# @todo Probably better if we sort the core_find results.
 HEX_TARBALL_FILES ?= \
 	$(wildcard early-plugins.mk) \
 	$(wildcard ebin/$(PROJECT).app) \
 	$(wildcard ebin/$(PROJECT).appup) \
 	$(wildcard $(notdir $(ERLANG_MK_FILENAME))) \
-	$(call core_find,include/,*.hrl) \
+	$(sort $(call core_find,include/,*.hrl)) \
 	$(wildcard LICENSE*) \
 	$(wildcard Makefile) \
 	$(wildcard plugins.mk) \
-	$(call core_find,priv/,*) \
+	$(sort $(call core_find,priv/,*)) \
 	$(wildcard README*) \
 	$(wildcard rebar.config) \
-	$(call core_find,src/,*)
+	$(sort $(call core_find,src/,*))
 
 HEX_TARBALL_OUTPUT_FILE ?= $(ERLANG_MK_TMP)/$(PROJECT).tar
 
