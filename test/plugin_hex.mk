@@ -27,6 +27,7 @@ hex-user-create: init
 	$i "Check that the user exists"
 	$t curl -sf http://localhost:4000/api/users/$(APP) >/dev/null
 
+# @todo Fix this.
 #hex-user-create-password-with-dollar-sign: init
 #
 #	$i "Bootstrap a new OTP application named $(APP)"
@@ -43,6 +44,7 @@ hex-user-create: init
 #	$i "Check that the user exists"
 #	$t curl --user "$(APP):123$$567" -sf http://localhost:4000/api/users/$(APP) >/dev/null
 
+# @todo Fix this.
 #hex-user-create-password-with-backslash: init
 #
 #	$i "Bootstrap a new OTP application named $(APP)"
@@ -94,8 +96,71 @@ hex-key-add: init
 	$i "Check that the key exists"
 	$t curl --user $(APP):1234567 -sf http://localhost:4000/api/keys/$(shell hostname)-erlang-mk >/dev/null
 
-# @todo hex-tarball-create
-# @todo hex-tarball-create-with-deps
+hex-tarball-create: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Create a release tarball"
+	$t $(MAKE) -C $(APP) hex-tarball-create $v
+
+	$i "Confirm the tarball contents can be extracted"
+	$t cd $(APP)/.erlang.mk/ && tar xf $(APP).tar
+
+	$i "Confirm the tarball contains a CHECKSUM file"
+	$t test -f $(APP)/.erlang.mk/CHECKSUM
+
+	$i "Confirm the tarball contains a VERSION file containing '3'"
+	$t cat $(APP)/.erlang.mk/VERSION | grep -q ^3$$
+
+	$i "Confirm the tarball contains a valid metadata.config file"
+	$t $(ERL) -eval " \
+		{ok, _} = file:consult(\"$(APP)/.erlang.mk/metadata.config\"), \
+		halt(0)"
+
+	$i "Confirm the tarball contains a contents.tar.gz file that can be extracted"
+	$t cd $(APP)/.erlang.mk/ && tar xf contents.tar.gz
+
+	$i "Confirm contents.tar.gz contains the expected files"
+	$t printf "%s\n" \
+		erlang.mk \
+		Makefile \
+		ebin/$(APP).app \
+		src/$(APP)_app.erl \
+		src/$(APP)_sup.erl | sort > $(APP)/.erlang.mk/EXPECT
+	$t cd $(APP)/.erlang.mk/ && tar tf contents.tar.gz | sort | diff EXPECT -
+
+hex-tarball-create-with-deps: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Add Cowlib to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib_commit = 2.10.1\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowlib to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Create a release tarball"
+	$t $(MAKE) -C $(APP) hex-tarball-create $v
+
+	$i "Confirm the tarball contents can be extracted"
+	$t cd $(APP)/.erlang.mk/ && tar xf $(APP).tar
+
+	$i "Confirm the tarball contains a metadata.config file that lists Cowlib as requirement"
+	$t $(ERL) -eval " \
+		{ok, Metadata} = file:consult(\"$(APP)/.erlang.mk/metadata.config\"), \
+		{_, [{<<\"cowlib\">>, Cowlib}]} = lists:keyfind(<<\"requirements\">>, 1, Metadata), \
+		{_, <<\"cowlib\">>} = lists:keyfind(<<\"app\">>, 1, Cowlib), \
+		{_, false} = lists:keyfind(<<\"optional\">>, 1, Cowlib), \
+		{_, <<\"2.10.1\">>} = lists:keyfind(<<\"requirement\">>, 1, Cowlib), \
+		halt(0)"
 
 hex-release-publish: init
 

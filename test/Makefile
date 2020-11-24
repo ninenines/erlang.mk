@@ -124,7 +124,7 @@ endef
 all:: core
 
 clean::
-	$t rm -rf erl_crash.dump packages/ test_*/
+	$t rm -rf erl_crash.dump packages/ $(filter-out test_rebar_git/,$(wildcard test_*/))
 
 init: clean
 	$i "Prefetch Rebar if necessary"
