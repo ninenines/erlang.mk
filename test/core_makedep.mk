@@ -77,3 +77,23 @@ core-makedep-non-usascii-paths: init
 	$t grep -qw $(NON_USASCII_DIR) $(NON_USASCII_DIR)/my_app/my_app.d
 	$t test -f $(NON_USASCII_DIR)/my_app/ebin/my_app.app
 	$t test -f $(NON_USASCII_DIR)/my_app/ebin/hello.beam
+
+core-makedep-ignore-special-files: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+	$t mkdir $(APP)/src/core
+
+	$i "Generate related .erl files"
+	$t printf "%s\n" "-module(human)." "-export([live/0])." "live() -> ok." > $(APP)/src/core/human.erl
+	$t printf "%s\n" "-module(boy)." "-import(human,[live/0])." > $(APP)/src/boy.erl
+	$t printf "%s\n" "-module(boy)." "-import(human,[live/0])." > $(APP)/src/.#boy.erl
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/human.beam
