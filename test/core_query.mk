@@ -145,6 +145,8 @@ endif
 	$i "Query the dependencies of $(APP)"
 	$t $(MAKE) -C $(APP) query-deps $v
 
+	$(eval COWLIB_MASTER_VSN := $(shell curl -s https://raw.githubusercontent.com/ninenines/gun/master/Makefile | awk '/dep_cowlib/ {print $$5}'))
+
 	$i "Confirm that the expected applications were found"
 	$t printf "%s\n" \
 		"$(APP): cowboy git https://github.com/ninenines/cowboy 2.7.0" \
@@ -154,7 +156,7 @@ endif
 		"farwest: cowlib git https://github.com/ninenines/cowlib master" \
 		"farwest: cowboy git https://github.com/ninenines/cowboy master" \
 		"farwest: gun git https://github.com/ninenines/gun master" \
-		"gun: cowlib git https://github.com/ninenines/cowlib 2.9.0" \
+		"gun: cowlib git https://github.com/ninenines/cowlib $(COWLIB_MASTER_VSN)" \
 		> $(APP)/expected-deps.txt
 	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/query-deps.log
 

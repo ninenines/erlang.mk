@@ -2766,7 +2766,7 @@ core-app-test-build-outofdate-files-only: init
 	$t $(SLEEP)
 	$t touch $(APP)/build-1
 
-	$i "Re-un the make command; check that nothing is rebuilt"
+	$i "Re-run the make command; check that nothing is rebuilt"
 	$t $(MAKE) -C $(APP) test-build $v
 	$t test $(APP)/test/use_blue.beam -ot $(APP)/build-1
 	$t test $(APP)/test/use_red.beam -ot $(APP)/build-1
