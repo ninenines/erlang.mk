@@ -46,6 +46,8 @@ endif
 
 ifeq ($(shell touch a; sleep 0.01; touch b; sleep 0.01; touch c; test c -nt b -a b -nt a; echo $$?; rm a b c),1)
 SLEEP = sleep 1
+else ifeq ($(shell touch a; touch b; touch c; test c -nt b -a b -nt a; echo $$?; rm a b c),1)
+SLEEP = sleep 0.01
 else
 SLEEP =
 endif
