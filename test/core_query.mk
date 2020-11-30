@@ -154,7 +154,7 @@ endif
 		"farwest: cowlib git https://github.com/ninenines/cowlib master" \
 		"farwest: cowboy git https://github.com/ninenines/cowboy master" \
 		"farwest: gun git https://github.com/ninenines/gun master" \
-		"gun: cowlib git https://github.com/ninenines/cowlib 2.9.0" \
+		"gun: cowlib git https://github.com/ninenines/cowlib 2.10.1" \
 		> $(APP)/expected-deps.txt
 	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/query-deps.log
 
