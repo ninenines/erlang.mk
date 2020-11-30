@@ -346,4 +346,112 @@ hex-release-unretire: init
 
 	$i "Check that the release is no longer retired"
 	$t curl -sf http://localhost:4000/api/packages/$(APP)/releases/0.1.0 | grep -q \"retirement\":null
+
+hex-docs-tarball-create: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Generate a doc/overview.edoc file"
+	$t mkdir $(APP)/doc
+	$t printf "%s\n" \
+		"@author R. J. Hacker <rjh@acme.com>" \
+		"@copyright 2007 R. J. Hacker" \
+		"@version 1.0.0" \
+		"@title Welcome to the 'frob' application!" \
+		"@doc 'frob' is a highly advanced frobnicator with low latency," > $(APP)/doc/overview.edoc
+
+	$i "Create a docs tarball"
+	$t $(MAKE) -C $(APP) hex-docs-tarball-create $v
+
+	$i "Confirm the tarball contents can be extracted"
+	$t cd $(APP)/.erlang.mk/ && tar xf $(APP)-docs.tar.gz
+
+	$i "Confirm the tarball contains the expected files"
+	$t printf "%s\n" \
+		edoc-info \
+		erlang.png \
+		index.html \
+		modules-frame.html \
+		overview-summary.html \
+		overview.edoc \
+		stylesheet.css \
+		$(APP)_app.html \
+		$(APP)_sup.html | sort > $(APP)/.erlang.mk/EXPECT
+	$t cd $(APP)/.erlang.mk/ && tar tf $(APP)-docs.tar.gz | sort | diff EXPECT -
+
+hex-docs-publish: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Generate a doc/overview.edoc file"
+	$t mkdir $(APP)/doc
+	$t printf "%s\n" \
+		"@author R. J. Hacker <rjh@acme.com>" \
+		"@copyright 2007 R. J. Hacker" \
+		"@version 1.0.0" \
+		"@title Welcome to the 'frob' application!" \
+		"@doc 'frob' is a highly advanced frobnicator with low latency," > $(APP)/doc/overview.edoc
+
+	$i "Configure a local Hex provider"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Add extra Hex metadata"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
+
+	$i "Create a Hex user"
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+
+	$i "Create a key for that user"
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+
+	$i "Publish the release"
+	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
+
+	$i "Publish the documentation for the release"
+	$t $(MAKE) -C $(APP) hex-docs-publish HEX_SECRET=`cat $(APP)/hex.key` $v
+
+# @todo hex-docs-publish when there are no docs
+
+hex-docs-delete: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Generate a doc/overview.edoc file"
+	$t mkdir $(APP)/doc
+	$t printf "%s\n" \
+		"@author R. J. Hacker <rjh@acme.com>" \
+		"@copyright 2007 R. J. Hacker" \
+		"@version 1.0.0" \
+		"@title Welcome to the 'frob' application!" \
+		"@doc 'frob' is a highly advanced frobnicator with low latency," > $(APP)/doc/overview.edoc
+
+	$i "Configure a local Hex provider"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Add extra Hex metadata"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
+
+	$i "Create a Hex user"
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+
+	$i "Create a key for that user"
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+
+	$i "Publish the release"
+	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
+
+	$i "Publish the documentation for the release"
+	$t $(MAKE) -C $(APP) hex-docs-publish HEX_SECRET=`cat $(APP)/hex.key` $v
+
+	$i "Delete the documentation for the release"
+	$t $(MAKE) -C $(APP) hex-docs-delete HEX_SECRET=`cat $(APP)/hex.key` $v
 endif

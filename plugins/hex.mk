@@ -270,3 +270,56 @@ hex-release-unretire: hex-core
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
 	$(gen_verbose) $(call erlang,$(call hex_release_unretire.erl,$(HEX_SECRET),\
 		$(if $(HEX_VERSION),$(HEX_VERSION),$(PROJECT_VERSION))))
+
+HEX_DOCS_DOC_DIR ?= doc/
+HEX_DOCS_TARBALL_FILES ?= $(sort $(call core_find,$(HEX_DOCS_DOC_DIR),*))
+HEX_DOCS_TARBALL_OUTPUT_FILE ?= $(ERLANG_MK_TMP)/$(PROJECT)-docs.tar.gz
+
+$(HEX_DOCS_TARBALL_OUTPUT_FILE): hex-core app docs
+	$(hex_tar_verbose) tar czf $(HEX_DOCS_TARBALL_OUTPUT_FILE) -C $(HEX_DOCS_DOC_DIR) \
+		$(HEX_DOCS_TARBALL_FILES:$(HEX_DOCS_DOC_DIR)%=%)
+
+hex-docs-tarball-create: $(HEX_DOCS_TARBALL_OUTPUT_FILE)
+
+define hex_docs_publish.erl
+	{ok, _} = application:ensure_all_started(ssl),
+	{ok, _} = application:ensure_all_started(inets),
+	Config = $(hex_config.erl),
+	ConfigF = Config#{api_key => <<"$(strip $1)">>},
+	{ok, Tarball} = file:read_file("$(strip $(HEX_DOCS_TARBALL_OUTPUT_FILE))"),
+	case hex_api:post(ConfigF,
+			["packages", "$(strip $(PROJECT))", "releases", "$(strip $(PROJECT_VERSION))", "docs"],
+			{"application/octet-stream", Tarball}) of
+		{ok, {Status, _, _}} when Status >= 200, Status < 300 ->
+			io:format("Docs published~n"),
+			halt(0);
+		{ok, {Status, _, Errors}} ->
+			io:format("Error ~b: ~0p~n", [Status, Errors]),
+			halt(88)
+	end
+endef
+
+hex-docs-publish: hex-core hex-docs-tarball-create
+	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
+	$(gen_verbose) $(call erlang,$(call hex_docs_publish.erl,$(HEX_SECRET)))
+
+define hex_docs_delete.erl
+	{ok, _} = application:ensure_all_started(ssl),
+	{ok, _} = application:ensure_all_started(inets),
+	Config = $(hex_config.erl),
+	ConfigF = Config#{api_key => <<"$(strip $1)">>},
+	case hex_api:delete(ConfigF,
+			["packages", "$(strip $(PROJECT))", "releases", "$(strip $2)", "docs"]) of
+		{ok, {Status, _, _}} when Status >= 200, Status < 300 ->
+			io:format("Docs removed~n"),
+			halt(0);
+		{ok, {Status, _, Errors}} ->
+			io:format("Error ~b: ~0p~n", [Status, Errors]),
+			halt(89)
+	end
+endef
+
+hex-docs-delete: hex-core
+	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
+	$(gen_verbose) $(call erlang,$(call hex_docs_delete.erl,$(HEX_SECRET),\
+		$(if $(HEX_VERSION),$(HEX_VERSION),$(PROJECT_VERSION))))
