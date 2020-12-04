@@ -3,10 +3,50 @@
 # The miscellaneous tests use the prefix "core-", not "core-misc-".
 
 CORE_MISC_TARGETS = $(filter-out core-misc,$(call list_targets,core))
+CORE_MISC_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+
+space :=
+space +=
 
 .PHONY: core-misc $(CORE_MISC_TARGETS)
 
 core-misc: $(CORE_MISC_TARGETS)
+
+core-relpath: init
+
+	$i "Copy makefile"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t echo -e 'relpath:\n\ttest "$$(call core_relpath,$${to},$${from})" = "$${rel}"' >> $(APP)/erlang.mk
+
+	$i "Compute relative paths"
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar to=foo/bar rel=. $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar to=baz rel=../../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar/ to=baz rel=../../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar to=baz/ rel=../../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar/ to=baz/ rel=../../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar to=foo/baz rel=../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar/ to=foo/baz rel=../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar to=foo/baz/ rel=../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar/ to=foo/baz/ rel=../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=baz to=foo/bar rel=../foo/bar $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=baz/ to=foo/bar rel=../foo/bar $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=baz to=foo/bar/ rel=../foo/bar $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=baz/ to=foo/bar/ rel=../foo/bar $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=/foo/bar to=/foo/bar rel=. $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=/foo/bar to=baz rel=../..$(CORE_MISC_DIR)$(APP)/baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=/foo/bar/ to=baz rel=../..$(CORE_MISC_DIR)$(APP)/baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=/foo/bar to=baz/ rel=../..$(CORE_MISC_DIR)$(APP)/baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=/foo/bar/ to=baz/ rel=../..$(CORE_MISC_DIR)$(APP)/baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar to=/baz rel=$(subst $(space),/,$(foreach d,$(subst /,$(space),$(CORE_MISC_DIR)$(APP)),..))/../../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar/ to=/baz rel=$(subst $(space),/,$(foreach d,$(subst /,$(space),$(CORE_MISC_DIR)$(APP)),..))/../../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar to=/baz/ rel=$(subst $(space),/,$(foreach d,$(subst /,$(space),$(CORE_MISC_DIR)$(APP)),..))/../../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=foo/bar/ to=/baz/ rel=$(subst $(space),/,$(foreach d,$(subst /,$(space),$(CORE_MISC_DIR)$(APP)),..))/../../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=/foo/bar to=/baz rel=../../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=/foo/bar to=/foo/baz rel=../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=/foo/bar/ to=/foo/baz rel=../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=/foo/bar to=/foo/baz/ rel=../baz $v
+	$t $(MAKE) -C $(APP) -f erlang.mk relpath from=/foo/bar/ to=/foo/baz/ rel=../baz $v
 
 core-clean-crash-dump: init
 

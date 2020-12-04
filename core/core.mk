@@ -192,7 +192,27 @@ core_lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,
 core_ls = $(filter-out $(1),$(shell echo $(1)))
 
 # @todo Use a solution that does not require using perl.
-core_relpath = $(shell perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"' $1 $2)
+core_relpath = $(shell awk --posix '\
+	BEGIN { \
+		if("$(abspath ${1})" == "$(abspath ${2})") { \
+			print "."; \
+		} else { \
+			flen=split("$(abspath ${2})",from,"/"); \
+			tlen=split("$(abspath ${1})",to,"/"); \
+			for(i = 1; i <= (flen < tlen ? flen : tlen); i++) { \
+				if(from[i] != to[i]) break \
+			} \
+			rel=""; \
+			for(j = i; j <= flen; j++) { \
+				rel = rel "../"; \
+			} \
+			for(j = i; j <= tlen; j++) { \
+				rel = rel to[j]; \
+				if(j < tlen) rel = rel "/"; \
+			} \
+			print rel; \
+		} \
+	}')
 
 define core_render
 	printf -- '$(subst $(newline),\n,$(subst %,%%,$(subst ','\'',$(subst $(tab),$(WS),$(call $(1))))))\n' > $(2)
