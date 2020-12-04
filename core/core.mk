@@ -191,7 +191,8 @@ core_lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,
 
 core_ls = $(filter-out $(1),$(shell echo $(1)))
 
-core_relpath = $(shell realpath --canonicalize-missing --relative-to=$2 $1)
+# @todo Use a solution that does not require using perl.
+core_relpath = $(shell perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"' $1 $2)
 
 define core_render
 	printf -- '$(subst $(newline),\n,$(subst %,%%,$(subst ','\'',$(subst $(tab),$(WS),$(call $(1))))))\n' > $(2)
