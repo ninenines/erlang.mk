@@ -600,7 +600,7 @@ core-deps-fetch-hex: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy 1.0.0 to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = hex 1.0.0\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy systemd\ndep_cowboy = hex 1.0.0\ndep_systemd = hex 0.6.0\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
@@ -614,13 +614,17 @@ endif
 	$t test -d $(APP)/deps/cowboy
 	$t test -d $(APP)/deps/cowlib
 	$t test -d $(APP)/deps/ranch
+	$t test -d $(APP)/deps/systemd
+	$t test -d $(APP)/deps/enough
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
-		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch]], \
+		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch, systemd, enough]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(cowboy, Deps), \
+		true = lists:member(systemd, Deps), \
 		{ok, \"1.0.0\"} = application:get_key(cowboy, vsn), \
+		{ok, \"0.6.0\"} = application:get_key(systemd, vsn), \
 		halt()"
 
 # @todo Enable this test again when a host provides Mercurial again.
