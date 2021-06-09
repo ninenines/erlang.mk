@@ -7,7 +7,7 @@
 
 TEST_DIR ?= $(CURDIR)/test
 
-ALL_TEST_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
+ALL_TEST_DEPS_DIRS = $(addprefix $(APPS_DIR)/,$(LOCAL_TEST_DEPS)) $(addprefix $(DEPS_DIR)/,$(TEST_DEPS))
 
 TEST_ERLC_OPTS ?= +debug_info +warn_export_vars +warn_shadow_vars +warn_obsolete_guard
 TEST_ERLC_OPTS += -DTEST=1
