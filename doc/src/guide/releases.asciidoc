@@ -33,7 +33,7 @@ Relx does not need to be installed. Erlang.mk will download
 and build it automatically.
 
 The Relx executable will be saved in the '$(RELX)' file. This
-location defaults to '$(CURDIR)/relx' and can be overriden.
+location defaults to '$(CURDIR)/relx' and can be overridden.
 
 // @todo You can use a custom location by ???
 

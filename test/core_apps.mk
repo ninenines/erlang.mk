@@ -477,7 +477,7 @@ core-apps-local-deps: init
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
-	$i "Test after swapping my_app_1 and my_app_2 to make sure lexical ordering didnt incidentally build the correct app first"
+	$i "Test after swapping my_app_1 and my_app_2 to make sure lexical ordering didn't incidentally build the correct app first"
 
 	$i "Add my_app_2 to the list of local dependencies of my_app_1, don't add lager, but add the lager parse_transform (this will fail unless my_app_2 was indeed built first)"
 	$t mv $(APP)/apps/my_app_1/Makefile.bak $(APP)/apps/my_app_1/Makefile
