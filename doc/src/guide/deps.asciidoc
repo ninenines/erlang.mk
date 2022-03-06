@@ -154,7 +154,7 @@ DEPS = cowboy
 dep_cowboy_commit = 2.0.0-pre.2
 
 Erlang.mk will use the package index to get all information
-about Cowboy, except the commit number which will be overriden.
+about Cowboy, except the commit number which will be overridden.
 
 If you need to set the fetch method or repository information
 too, for example because you want to use your own fork, or

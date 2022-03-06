@@ -134,7 +134,7 @@ C:\> C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syu"
 ==== Installing the required MSYS2 packages
 
 After following these instructions, you can install GNU Make,
-Git and any other required softwares. From an MSYS2 shell,
+Git and any other required software. From an MSYS2 shell,
 you can call `pacman` directly:
 
 [source,bash]

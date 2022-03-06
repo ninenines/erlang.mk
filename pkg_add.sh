@@ -9,7 +9,7 @@ fi
 T=`echo "$1" | grep "\." | wc -l `
 if [ "$T" -eq "1" ]
 then
-	echo "Invalid dot character in name. Considere replace by an underscore." 1>&2
+	echo "Invalid dot character in name. Consider replace by an underscore." 1>&2
 	exit 1
 fi
 

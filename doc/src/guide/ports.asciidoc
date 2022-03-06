@@ -81,7 +81,7 @@ nothing.
 
 Erlang.mk sets appropriate compile and linker flags by default.
 These flags vary depending on the platform, and can of course
-be overriden.
+be overridden.
 
 `CC`::
 	The compiler to be used.
