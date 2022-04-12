@@ -8,7 +8,7 @@
 RELX ?= $(ERLANG_MK_TMP)/relx
 RELX_CONFIG ?= $(CURDIR)/relx.config
 
-RELX_URL ?= https://erlang.mk/res/relx-v3.27.0
+RELX_URL ?= https://erlang.mk/res/relx-v3.27.0-22
 RELX_OPTS ?=
 RELX_OUTPUT_DIR ?= _rel
 RELX_REL_EXT ?=
@@ -46,6 +46,7 @@ relx-rel: $(RELX) rel-deps app
 	$(verbose) $(RELX) $(if $(filter 1,$V),-V 3) -c $(RELX_CONFIG) $(RELX_OPTS) release
 	$(verbose) $(MAKE) relx-post-rel
 ifeq ($(RELX_TAR),1)
+	$(verbose) touch $(RELX_OUTPUT_DIR)/$(PROJECT)_release/releases/RELEASES
 	$(verbose) $(RELX) $(if $(filter 1,$V),-V 3) -c $(RELX_CONFIG) $(RELX_OPTS) tar
 endif
 
