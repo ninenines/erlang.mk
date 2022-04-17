@@ -649,7 +649,10 @@ endef
 define dep_autopatch_appsrc_script.erl
 	AppSrc = "$(call core_native_path,$(DEPS_DIR)/$1/src/$1.app.src)",
 	AppSrcScript = AppSrc ++ ".script",
-	{ok, Conf0} = file:consult(AppSrc),
+	case file:consult(AppSrc) of
+		{error, enoent} -> halt();
+		_ -> ok
+	end,
 	Bindings0 = erl_eval:new_bindings(),
 	Bindings1 = erl_eval:add_binding('CONFIG', Conf0, Bindings0),
 	Bindings = erl_eval:add_binding('SCRIPT', AppSrcScript, Bindings1),
