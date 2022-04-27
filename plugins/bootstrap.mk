@@ -93,6 +93,8 @@ endef
 
 define bs_relx_config
 {release, {$p_release, "1"}, [$p, sasl, runtime_tools]}.
+{dev_mode, false}.
+{include_erts, true}.
 {extended_start_script, true}.
 {sys_config, "config/sys.config"}.
 {vm_args, "config/vm.args"}.

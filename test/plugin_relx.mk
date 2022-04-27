@@ -22,11 +22,11 @@ relx-rel: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
+	$i "Add Relx to the list of release dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
+
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) $v
-
-	$i "Check that relx was downloaded"
-	$t test -f $(APP)/.erlang.mk/relx
 
 	$i "Check that the release was built"
 	$t test -d $(APP)/_rel
@@ -59,6 +59,9 @@ relx-apps-with-deps: init
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib bootstrap-rel $v
+
+	$i "Add Relx to the list of release dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
 
 	$i "Create a new application my_app"
 	$t $(MAKE) -C $(APP) new-app in=my_app $v
@@ -94,11 +97,11 @@ relx-bare-rel: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
+	$i "Add Relx to the list of release dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
+
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) rel $v
-
-	$i "Check that relx was downloaded"
-	$t test -f $(APP)/.erlang.mk/relx
 
 	$i "Check that the release was built"
 	$t test -d $(APP)/_rel
@@ -115,15 +118,15 @@ relx-post-rel: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
+	$i "Add Relx to the list of release dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
+
 	$i "Add relx-post-rel target to Makefile"
 	$t echo "relx-post-rel::" >> $(APP)/Makefile
 	$t echo "	echo test post rel > _rel/$(APP)_release/test_post_rel" >> $(APP)/Makefile
 
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) $v
-
-	$i "Check that relx was downloaded"
-	$t test -f $(APP)/.erlang.mk/relx
 
 	$i "Check that the release was built"
 	$t test -d $(APP)/_rel
@@ -164,6 +167,9 @@ relx-relup: init
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Add Relx to the list of release dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
 
 	$i "Set the initial application version"
 ifeq ($(LEGACY),1)
@@ -218,11 +224,11 @@ ifeq ($(PLATFORM),msys2)
 else
 	$i "Start initial release and confirm it runs the old code"
 endif
-	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) start
+	$t $(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) daemon
 	$t sleep 1
 ifneq ($(PLATFORM),msys2)
-# On Windows the script does not have the commands rpcterms and versions.
-	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpcterms test test` = old
+# On Windows the script does not have the commands rpc and versions.
+	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpc test test` = old
 
 	$i "Check that it's 1 available version"
 	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) versions | wc -l` = "2"
@@ -246,8 +252,8 @@ else
 endif
 	$t sleep 1
 ifneq ($(PLATFORM),msys2)
-# On Windows the script does not have the commands rpcterms and versions.
-	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpcterms test test` = new
+# On Windows the script does not have the commands rpc and versions.
+	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpc test test` = new
 
 	$i "Check that it's 2 available versions"
 	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) versions | wc -l` = "3"
@@ -266,8 +272,8 @@ else
 endif
 	$t sleep 1
 ifneq ($(PLATFORM),msys2)
-# On Windows the script does not have the commands rpcterms and versions.
-	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpcterms test test` = old
+# On Windows the script does not have the commands rpc and versions.
+	$t test `$(APP)/tmp/bin/$(APP)_release$(RELX_REL_EXT) rpc test test` = old
 endif
 
 	$i "Stop the release"
@@ -287,6 +293,9 @@ relx-start-stop: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
+	$i "Add Relx to the list of release dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
+
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) $v
 
@@ -300,7 +309,7 @@ endif
 ifeq ($(PLATFORM),msys2)
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) install
 endif
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) start
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) daemon
 
 	$i "Ping the release"
 	$t $(call wait_for_success,$(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) ping)
@@ -329,6 +338,9 @@ relx-tar: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
+	$i "Add Relx to the list of release dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
+
 	$i "Build the release without a tarball"
 	$t $(MAKE) -C $(APP) RELX_TAR=0 $v
 
@@ -347,6 +359,9 @@ relx-vsn: init
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Add Relx to the list of release dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
 
 	$i "Replace the vsn"
 	$t sed -i.bak s/"\"1\""/"{cmd, \"printf 2\"}"/ $(APP)/relx.config
