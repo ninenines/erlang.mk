@@ -1,25 +1,3 @@
-2018/12/03: Relx has been updated to v3.27.0.
-
-2018/12/03: Dependencies are no longer always rebuilt by
-            default. Please check the documentation for
-            information. A quick fix if this causes an
-            issue is to add `FULL = 1` at the top of your
-            Makefile.
-
-2018/12/06: Change the default COVER_DATA_DIR to be the
-            same as COVER_REPORT_DIR.
-
-2019/06/20: `list-deps` now includes local applications
-            found in the `APPS_DIR` directory.
-
-2020/03/25: The `-lerl_interface` argument has been removed
-            from the default `LDLIBS`. This is an old library
-            that is getting removed in OTP-23 and should no
-            longer be used. Note that the default still includes
-            `-lei` which is part of the Erlang/OTP Erl_Interface
-            *application* but is built as a separate C library.
-            The removal only applies to `-lerl_interface` itself.
-
 2020/06/18: Concuerror integration has been added. It is
             currently minimal but usable. Experimentation
             and feedback is welcome.
@@ -27,3 +5,23 @@
 2020/11/30: Support for publishing Hex releases and docs
             has been added. It is currently experimental.
             Feedback is more than welcome.
+
+2022/03/25: The -Wrace_conditions Dialyzer flag was removed
+            as it is no longer available starting from OTP 25.
+
+2022/??/??: Relx has been updated to v4. Relx v4 is no longer
+            an escript, therefore breaking changes were
+            introduced. The `RELX`, `RELX_URL` and `RELX_OPTS`
+            variables were removed. The `relx` project must
+            be added as a `DEPS`, `BUILD_DEPS` or `REL_DEPS`
+            dependency to enable building releases. For example:
+            `REL_DEPS = relx`. Relx itself has had some
+            additional changes: the `start` command has
+            been replaced by `daemon`, and configuration
+            defaults have changed so that you may need
+            to add the following to your relx.config file:
+
+            ``` erlang
+            {dev_mode, false}.
+            {include_erts, true}.
+            ```

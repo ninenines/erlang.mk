@@ -6,11 +6,8 @@ ifeq ($(filter relx,$(BUILD_DEPS) $(DEPS) $(REL_DEPS)),relx)
 
 # Configuration.
 
-#RELX ?= $(ERLANG_MK_TMP)/relx
 RELX_CONFIG ?= $(CURDIR)/relx.config
 
-#RELX_URL ?= https://erlang.mk/res/relx-v3.27.0-22
-#RELX_OPTS ?=
 RELX_OUTPUT_DIR ?= _rel
 RELX_REL_EXT ?=
 RELX_TAR ?= 1
@@ -18,12 +15,6 @@ RELX_TAR ?= 1
 ifdef SFX
 	RELX_TAR = 1
 endif
-
-#ifeq ($(firstword $(RELX_OPTS)),-o)
-#	RELX_OUTPUT_DIR = $(word 2,$(RELX_OPTS))
-#else
-#	RELX_OPTS += -o $(RELX_OUTPUT_DIR)
-#endif
 
 # Core targets.
 
@@ -38,10 +29,6 @@ endif
 distclean:: distclean-relx-rel
 
 # Plugin-specific targets.
-
-#$(RELX): | $(ERLANG_MK_TMP)
-#	$(gen_verbose) $(call core_http_get,$(RELX),$(RELX_URL))
-#	$(verbose) chmod +x $(RELX)
 
 define relx_release.erl
 	{ok, Config} = file:consult("$(call core_native_path,$(RELX_CONFIG))"),
@@ -78,26 +65,20 @@ define relx_relup.erl
 		{semver, _} -> "";
 		VsnStr -> Vsn0
 	end,
-	io:format("~p~n~n", [Vsn]),
 	{ok, _} = relx:build_relup(Name, Vsn, undefined, Config ++ [{output_dir, "$(RELX_OUTPUT_DIR)"}]),
 	halt(0).
 endef
 
 relx-rel: rel-deps app
-#	$(verbose) $(RELX) $(if $(filter 1,$V),-V 3) -c $(RELX_CONFIG) $(RELX_OPTS) release
 	$(call erlang,$(call relx_release.erl),-pa ebin/)
 	$(verbose) $(MAKE) relx-post-rel
 ifeq ($(RELX_TAR),1)
-#	$(verbose) touch $(RELX_OUTPUT_DIR)/$(PROJECT)_release/releases/RELEASES
-#	$(verbose) $(RELX) $(if $(filter 1,$V),-V 3) -c $(RELX_CONFIG) $(RELX_OPTS) tar
 	$(call erlang,$(call relx_tar.erl),-pa ebin/)
 endif
 
 relx-relup: rel-deps app
-#	$(verbose) $(RELX) $(if $(filter 1,$V),-V 3) -c $(RELX_CONFIG) $(RELX_OPTS) release
 	$(call erlang,$(call relx_release.erl),-pa ebin/)
 	$(MAKE) relx-post-rel
-#	$(verbose) $(RELX) $(if $(filter 1,$V),-V 3) -c $(RELX_CONFIG) $(RELX_OPTS) relup $(if $(filter 1,$(RELX_TAR)),tar)
 	$(call erlang,$(call relx_relup.erl),-pa ebin/)
 ifeq ($(RELX_TAR),1)
 	$(call erlang,$(call relx_tar.erl),-pa ebin/)

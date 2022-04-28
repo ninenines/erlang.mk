@@ -1260,8 +1260,8 @@ core-deps-rel: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib bootstrap-rel $v
 
-	$i "Add Recon to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = recon\n"}' $(APP)/Makefile
+	$i "Add Relx and Recon to the list of release dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx recon\n"}' $(APP)/Makefile
 
 	$i "Add Recon to the relx.config file"
 	$t $(ERL) -eval " \
@@ -1302,17 +1302,17 @@ core-deps-rel: init
 ifeq ($(PLATFORM),msys2)
 #	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd install $v
 #	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd start $v
-#	$t test -n "`$(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd rpcterms \
+#	$t test -n "`$(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd rpc \
 #		application loaded_applications | grep recon`"
 #	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd stop $v
 #	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release.cmd uninstall $v
 else
 	$i "Start the release and check that Recon is loaded"
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release start $v
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release daemon $v
 	$t apps="Node is not running!"; \
 		while test "$$apps" = "Node is not running!"; do \
 			apps=$$($(APP)/_rel/$(APP)_release/bin/$(APP)_release \
-			rpcterms \ application loaded_applications); \
+			rpc application loaded_applications); \
 		done; \
 		echo "$$apps" | grep -q recon
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
