@@ -4,7 +4,6 @@
 
 CORE_COMPAT_TARGETS = $(call list_targets,core-compat)
 
-REBAR_BINARY = https://github.com/rebar/rebar/releases/download/2.6.0/rebar
 REBAR3_BINARY = https://s3.amazonaws.com/rebar3/rebar3
 
 .PHONY: core-compat $(CORE_COMPAT_TARGETS)
@@ -46,12 +45,12 @@ core-compat-auto-rebar: init
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
-	$i "Download rebar"
-	$t curl --retry 5 -s -L -o $(APP)/rebar $(REBAR_BINARY)
-	$t chmod +x $(APP)/rebar
+	$i "Download rebar3"
+	$t curl --retry 5 -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
+	$t chmod +x $(APP)/rebar3
 
-	$i "Use rebar to build the application"
-	$t cd $(APP) && ./rebar compile $v
+	$i "Use rebar3 to build the application"
+	$t cd $(APP) && ./rebar3 compile $v
 
 core-compat-rebar: init
 
@@ -85,12 +84,12 @@ core-compat-rebar: init
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
-	$i "Download rebar"
-	$t curl --retry 5 -s -L -o $(APP)/rebar $(REBAR_BINARY)
-	$t chmod +x $(APP)/rebar
+	$i "Download rebar3"
+	$t curl --retry 5 -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
+	$t chmod +x $(APP)/rebar3
 
-	$i "Use rebar to build the application"
-	$t cd $(APP) && ./rebar compile $v
+	$i "Use rebar3 to build the application"
+	$t cd $(APP) && ./rebar3 compile $v
 
 core-compat-rebar-deps-git: init
 
@@ -100,7 +99,7 @@ core-compat-rebar-deps-git: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy as a dependency"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = git https://github.com/ninenines/cowboy 1.0.0\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = git https://github.com/ninenines/cowboy 2.9.0\n"}' $(APP)/Makefile
 
 	$i "Run 'make rebar.config'"
 	$t $(MAKE) -C $(APP) rebar.config $v
@@ -111,18 +110,18 @@ core-compat-rebar-deps-git: init
 	$i "Check that Cowboy is listed in rebar.config"
 	$t $(ERL) -eval " \
 		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
-		{_, [{cowboy, _, {git, _, \"1.0.0\"}}]} = lists:keyfind(deps, 1, C), \
+		{_, [{cowboy, _, {git, _, \"2.9.0\"}}]} = lists:keyfind(deps, 1, C), \
 		halt()"
 
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
-	$i "Download rebar"
-	$t curl --retry 5 -s -L -o $(APP)/rebar $(REBAR_BINARY)
-	$t chmod +x $(APP)/rebar
+	$i "Download rebar3"
+	$t curl --retry 5 -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
+	$t chmod +x $(APP)/rebar3
 
-	$i "Use rebar to build the application"
-	$t cd $(APP) && ./rebar get-deps compile $v
+	$i "Use rebar3 to build the application"
+	$t cd $(APP) && ./rebar3 compile $v
 
 core-compat-rebar-deps-hex: init
 
@@ -153,7 +152,7 @@ core-compat-rebar-deps-hex: init
 	$t curl --retry 5 -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
 	$t chmod +x $(APP)/rebar3
 
-	$i "Use rebar to build the application"
+	$i "Use rebar3 to build the application"
 	$t cd $(APP) && ./rebar3 compile $v
 
 core-compat-rebar-deps-pkg: init
@@ -181,12 +180,12 @@ core-compat-rebar-deps-pkg: init
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
-	$i "Download rebar"
-	$t curl --retry 5 -s -L -o $(APP)/rebar $(REBAR_BINARY)
-	$t chmod +x $(APP)/rebar
+	$i "Download rebar3"
+	$t curl --retry 5 -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
+	$t chmod +x $(APP)/rebar3
 
-	$i "Use rebar to build the application"
-	$t cd $(APP) && ./rebar get-deps compile $v
+	$i "Use rebar3 to build the application"
+	$t cd $(APP) && ./rebar3 compile $v
 
 core-compat-rebar-erlc-opts: init
 
@@ -230,12 +229,12 @@ core-compat-rebar-erlc-opts: init
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
-	$i "Download rebar"
-	$t curl --retry 5 -s -L -o $(APP)/rebar $(REBAR_BINARY)
-	$t chmod +x $(APP)/rebar
+	$i "Download rebar3"
+	$t curl --retry 5 -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
+	$t chmod +x $(APP)/rebar3
 
-	$i "Use rebar to build the application"
-	$t cd $(APP) && ./rebar compile $v
+	$i "Use rebar3 to build the application"
+	$t cd $(APP) && ./rebar3 compile $v
 
 core-compat-rebar-pt: init
 
@@ -288,14 +287,14 @@ ifndef LEGACY
 	$t mv $(APP)/$(APP).app $(APP)/ebin/
 endif
 
-	$i "Download rebar"
-	$t curl --retry 5 -s -L -o $(APP)/rebar $(REBAR_BINARY)
-	$t chmod +x $(APP)/rebar
+	$i "Download rebar3"
+	$t curl --retry 5 -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
+	$t chmod +x $(APP)/rebar3
 
-	$i "Use rebar to build the application"
-	$t cd $(APP) && ./rebar get-deps compile $v
+	$i "Use rebar3 to build the application"
+	$t cd $(APP) && ./rebar3 compile $v
 
 	$i "Check that all compiled files exist"
-	$t test -f $(APP)/ebin/$(APP).app
-	$t test -f $(APP)/ebin/boy.beam
-	$t test -f $(APP)/ebin/girl.beam
+	$t test -f $(APP)/_build/default/lib/$(APP)/ebin/$(APP).app
+	$t test -f $(APP)/_build/default/lib/$(APP)/ebin/boy.beam
+	$t test -f $(APP)/_build/default/lib/$(APP)/ebin/girl.beam
