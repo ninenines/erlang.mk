@@ -599,12 +599,12 @@ core-deps-fetch-hex: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add Cowboy 1.0.0 to the list of dependencies"
+	$i "Add Cowboy 1.0.0 and SystemD 0.6.0 to the list of dependencies"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy systemd\ndep_cowboy = hex 1.0.0\ndep_systemd = hex 0.6.0\n"}' $(APP)/Makefile
 
 ifdef LEGACY
-	$i "Add Cowboy to the applications key in the .app.src file"
-	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
+	$i "Add Cowboy and SystemD to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n\t\tsystemd,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Build the application"
