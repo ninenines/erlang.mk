@@ -25,3 +25,13 @@
             {dev_mode, false}.
             {include_erts, true}.
             ```
+
+2022/05/31: Xref support has been rewritten. Erlang.mk no
+            longer uses the xref_runner, instead implementing
+            its own interface. This new interface is more
+            flexible and more powerful: it supports both
+            checks and informational analyses as well as
+            the Xref query functions that use the powerful
+            Xref language to perform custom queries. Erlang.mk
+            can also run analyses and queries against all
+            dependencies as well as Erlang/OTP applications.

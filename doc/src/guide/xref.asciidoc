@@ -1,6 +1,183 @@
 [[xref]]
 == Xref
 
-// @todo Write it.
+Xref is a cross reference tool for analyzing dependencies
+between functions, modules, applications and releases.
+Erlang.mk provides an interface to analyzing all except
+the releases.
 
-Placeholder chapter.
+Both predefined checks and custom queries are supported
+in Erlang.mk.
+
+=== Usage
+
+To run Xref with the default predefined checks:
+
+[source,bash]
+$ make xref
+
+Erlang.mk will error out when warnings are found.
+
+The following predefined checks can be used:
+
+* `undefined_function_calls`
+* `undefined_functions` (similar to the previous)
+* `locals_not_used` (detected by the compiler)
+* `exports_not_used`
+* `deprecated_function_calls` (also detected by the compiler)
+* `deprecated_functions` (similar to the previous)
+* `{deprecated_function_calls, Flag}`
+* `{deprecated_functions, Flag}` (similar to the previous)
+
+Erlang.mk will only run the `undefined_function_calls`
+check by default.
+
+To change the check the `XREF_CHECKS` variable can be used:
+
+[source,bash]
+$ make xref XREF_CHECKS=exports_not_used
+
+Multiple checks can be run at once. The checks variable
+must be defined as an Erlang list:
+
+[source,bash]
+$ make xref XREF_CHECKS="[undefined_function_calls, exports_not_used]"
+
+Erlang.mk also supports informational analyses. Those will
+not error out when results are found, since they are not
+errors. To find all modules that call `cowboy_req` functions:
+
+[source,bash]
+$ make xref XREF_CHECKS="{module_use, cowboy_req}"
+
+The following informational checks are supported:
+
+* `{call, MFA}` - functions that MFA calls
+* `{use, MFA}` - functions that call MFA
+* `{module_call, Mod}` - modules that Mod calls (Mod depends on them)
+* `{module_use, Mod}` - modules that call Mod (they depend on Mod)
+* `{application_call, App}` - apps that App calls (App depends on them)
+* `{application_use, App}` - apps that call App (they depend on App)
+
+The scope might need to be increased in order to obtain
+the complete results of informational checks. This is
+especially true for module and applications, with
+application results being dependent on the applications
+being added to the scope to be found.
+
+=== Queries
+
+Erlang.mk provides an interface to the Xref query
+functions. To perform a query, the `q` variable
+must be used instead of `XREF_CHECKS`. For example,
+to obtain all unresolved calls:
+
+[source,bash]
+$ make xref q=UC
+
+The query language is documented at the top of the
+link:https://www.erlang.org/doc/man/xref.html[XRef manual page].
+
+=== Analysis scope
+
+Erlang.mk will set the scope of analysis to the current
+project by default. The scope can be automatically
+extended to the applications from multi-application
+repositories, to dependencies and to the built-in
+Erlang/OTP applications themselves.
+
+To change the scope, the `XREF_SCOPE` variable can be
+set. The variable can either be set in your Makefile
+or from the command line. The following values can
+be defined:
+
+* `app` - the current project
+* `apps` - applications from multi-application repositories
+* `deps` - dependencies
+* `otp` - Erlang/OTP applications
+
+To get the most complete analysis possible they should
+all be added to the variable:
+
+[source,bash]
+----
+$ make xref XREF_CHECKS="{application_use, ssl}" XREF_SCOPE="app apps deps otp"
+Application ssl is used by:
+- my_app
+- diameter
+- eldap
+- ftp
+- inets
+- ssl
+----
+
+Additional applications can be provided using the
+`XREF_EXTRA_APP_DIRS` variable. Note that these
+applications will need to be compiled before they
+can be found by Xref.
+
+Similarly, non-application directories can be
+added using `XREF_EXTRA_DIRS`. The directory
+to be provided must be the one that contains
+the beam files.
+
+=== Ignoring warnings
+
+Sometimes it is necessary to ignore warnings because
+they are expected. This is the case for example
+when multiple Erlang/OTP versions must be supported
+and modules or functions have been added or removed.
+
+Erlang.mk supports both project-wide configuration
+and Rebar-compatible inline ignores. To ignore
+warnings for a function in the current module the
+following line can be added to the source file:
+
+[source,erlang]
+----
+-ignore_xref({log, 1}).
+----
+
+The module name can be specified explicitly:
+
+[source,erlang]
+----
+-ignore_xref({my_mod, log, 1}).
+----
+
+As well as a full module can be ignored:
+
+[source,erlang]
+----
+-ignore_xref(my_mod).
+----
+
+The ignored functions can be provided as a list:
+
+[source,erlang]
+----
+-ignore_xref([{log, 1}, {pretty_print, 1}]).
+----
+
+The `XREF_IGNORE` variable can be used to define
+functions and modules to ignore project-wide. It
+accepts either MFAs or modules:
+
+[source,make]
+XREF_IGNORE={my_mod, log, 1}
+
+Multiple ignores must be provided as an Erlang
+list:
+
+[source,make]
+XREF_IGNORE=[{my_mod, log, 1}, other_mod]
+
+By default Erlang.mk will ignore unused exports
+for behavior callbacks when the `exports_not_used`
+check is run. It is possible to override this
+behavior, or to ignore the callbacks for queries
+and other checks, by defining the `XREF_IGNORE_CALLBACKS`
+variable:
+
+[source,bash]
+$ make xref XREF_CHECKS=exports_not_used XREF_IGNORE_CALLBACKS=0
