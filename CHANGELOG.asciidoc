@@ -9,7 +9,7 @@
 2022/03/25: The -Wrace_conditions Dialyzer flag was removed
             as it is no longer available starting from OTP 25.
 
-2022/??/??: Relx has been updated to v4. Relx v4 is no longer
+2022/05/20: Relx has been updated to v4. Relx v4 is no longer
             an escript, therefore breaking changes were
             introduced. The `RELX`, `RELX_URL` and `RELX_OPTS`
             variables were removed. The `relx` project must
