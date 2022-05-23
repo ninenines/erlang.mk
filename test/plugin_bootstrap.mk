@@ -201,9 +201,6 @@ bootstrap-rel: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
-	$i "Add Relx to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
-
 	$i "Check that all bootstrapped files exist"
 	$t test -f $(APP)/Makefile
 	$t test -f $(APP)/relx.config
