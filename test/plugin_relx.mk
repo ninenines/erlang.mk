@@ -22,9 +22,6 @@ relx-rel: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
-	$i "Add Relx to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
-
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) $v
 
@@ -60,9 +57,6 @@ relx-apps-with-deps: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib bootstrap-rel $v
 
-	$i "Add Relx to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
-
 	$i "Create a new application my_app"
 	$t $(MAKE) -C $(APP) new-app in=my_app $v
 
@@ -97,9 +91,6 @@ relx-bare-rel: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
-	$i "Add Relx to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
-
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) rel $v
 
@@ -117,9 +108,6 @@ relx-post-rel: init
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
-
-	$i "Add Relx to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
 
 	$i "Add relx-post-rel target to Makefile"
 	$t echo "relx-post-rel::" >> $(APP)/Makefile
@@ -167,9 +155,6 @@ relx-relup: init
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
-
-	$i "Add Relx to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
 
 	$i "Set the initial application version"
 ifeq ($(LEGACY),1)
@@ -293,9 +278,6 @@ relx-start-stop: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
-	$i "Add Relx to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
-
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) $v
 
@@ -338,9 +320,6 @@ relx-tar: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
 
-	$i "Add Relx to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
-
 	$i "Build the release without a tarball"
 	$t $(MAKE) -C $(APP) RELX_TAR=0 $v
 
@@ -359,9 +338,6 @@ relx-vsn: init
 	$t mkdir $(APP)/
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
-
-	$i "Add Relx to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx\n"}' $(APP)/Makefile
 
 	$i "Replace the vsn"
 	$t sed -i.bak s/"\"1\""/"{cmd, \"printf 2\"}"/ $(APP)/relx.config
