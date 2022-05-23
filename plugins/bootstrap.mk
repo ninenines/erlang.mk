@@ -451,7 +451,8 @@ endif
 	$(verbose) mkdir config/
 	$(verbose) $(call core_render,bs_sys_config,config/sys.config)
 	$(verbose) $(call core_render,bs_vm_args,config/vm.args)
-	$(verbose) sed -i'' -e $$'/^include erlang.mk/i\\\nBUILD_DEPS += relx\\\n' Makefile
+	$(verbose) awk '/^include erlang.mk/ && !ins {print "BUILD_DEPS += relx";ins=1};{print}' Makefile > Makefile.bak
+	$(verbose) mv Makefile.bak Makefile
 
 new-app:
 ifndef in
