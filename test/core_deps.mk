@@ -1260,8 +1260,8 @@ core-deps-rel: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib bootstrap-rel $v
 
-	$i "Add Relx and Recon to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = relx recon\n"}' $(APP)/Makefile
+	$i "Add Recon to the list of release dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = recon\n"}' $(APP)/Makefile
 
 	$i "Add Recon to the relx.config file"
 	$t $(ERL) -eval " \
@@ -1274,8 +1274,8 @@ core-deps-rel: init
 	$i "Build the application and its dependencies"
 	$t $(MAKE) -C $(APP) deps app $v
 
-	$i "Check that no dependencies were fetched"
-	$t test ! -e $(APP)/deps
+	$i "Check that Recon was not fetched"
+	$t test ! -e $(APP)/deps/recon
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
@@ -1287,7 +1287,7 @@ core-deps-rel: init
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) $v
 
-	$i "Check that all dependencies were fetched"
+	$i "Check that Recon was fetched"
 	$t test -d $(APP)/deps/recon
 
 	$i "Check that the application was compiled correctly"
