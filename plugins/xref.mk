@@ -22,7 +22,7 @@ XREF_CHECKS ?= [undefined_function_calls]
 # application directories, being essentially an easy way
 # to configure which applications to analyze. With:
 #
-# - app:  ../$(PROJECT)
+# - app:  .
 # - apps: $(ALL_APPS_DIRS)
 # - deps: $(ALL_DEPS_DIRS)
 # - otp:  Built-in Erlang/OTP applications.
@@ -80,7 +80,7 @@ define xref.erl
 	end,
 	AppDirs = case lists:member(app, Scope) of
 		false -> AppDirs3;
-		true -> ["../$(PROJECT)"|AppDirs3]
+		true -> ["../$(notdir $(CURDIR))"|AppDirs3]
 	end,
 	[{ok, _} = xref:add_application(Xref, AppDir, [{builtins, true}]) || AppDir <- AppDirs],
 	ExtraDirs = [$(call comma_list,$(foreach d,$(XREF_EXTRA_DIRS),"$d"))],
