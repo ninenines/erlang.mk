@@ -114,8 +114,8 @@ and Rebar-compatible inline ignores. To ignore
 warnings for a function in the current module the
 following line can be added to the source file:</p><pre class="programlisting">-ignore_xref({log, 1}).</pre><p>The module name can be specified explicitly:</p><pre class="programlisting">-ignore_xref({my_mod, log, 1}).</pre><p>As well as a full module can be ignored:</p><pre class="programlisting">-ignore_xref(my_mod).</pre><p>The ignored functions can be provided as a list:</p><pre class="programlisting">-ignore_xref([{log, 1}, {pretty_print, 1}]).</pre><p>The <code class="literal">XREF_IGNORE</code> variable can be used to define
 functions and modules to ignore project-wide. It
-accepts either MFAs or modules:</p><pre class="programlisting">XREF_IGNORE={my_mod, log, 1}</pre><p>Multiple ignores must be provided as an Erlang
-list:</p><pre class="programlisting">XREF_IGNORE=[{my_mod, log, 1}, other_mod]</pre><p>By default Erlang.mk will ignore unused exports
+accepts either MFAs or modules:</p><pre class="programlisting">XREF_IGNORE = {my_mod, log, 1}</pre><p>Multiple ignores must be provided as an Erlang
+list:</p><pre class="programlisting">XREF_IGNORE = [{my_mod, log, 1}, other_mod]</pre><p>By default Erlang.mk will ignore unused exports
 for behavior callbacks when the <code class="literal">exports_not_used</code>
 check is run. It is possible to override this
 behavior, or to ignore the callbacks for queries
