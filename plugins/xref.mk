@@ -107,9 +107,9 @@ define xref.erl
 			true -> Res0;
 			false ->
 				lists:filter(fun(R) ->
-					{Mod, MFA} = case R of
-						{MFA0 = {M, _, _}, _} -> {M, MFA0};
-						{M, _, _} -> {M, R}
+					{Mod, InMFA, MFA} = case R of
+						{InMFA0 = {M, _, _}, MFA0} -> {M, InMFA0, MFA0};
+						{M, _, _} -> {M, R, R}
 					end,
 					Attrs = try
 						Mod:module_info(attributes)
@@ -147,7 +147,8 @@ define xref.erl
 						true -> [$(XREF_IGNORE)]
 					end,
 					Ignores = InlineIgnores ++ BuiltinIgnores ++ CallbackIgnores ++ WideIgnores,
-					not (lists:member(MFA, Ignores)
+					not (lists:member(InMFA, Ignores)
+					orelse lists:member(MFA, Ignores)
 					orelse lists:member({Mod, '_', '_'}, Ignores))
 				end, Res0)
 		end,

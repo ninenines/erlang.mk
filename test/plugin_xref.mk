@@ -215,7 +215,7 @@ xref-ignore-inline-fa: init
 		"-module(bad)." \
 		"-export([f/0])." \
 		"-ignore_xref([{f,0}])." \
-		"f() -> this_module:does_not_exist()." \
+		"f() -> f_module:f_not_exist()." \
 		> $(APP)/src/bad.erl
 
 	$i "Run the Xref plugin, expect success"
@@ -228,12 +228,14 @@ xref-ignore-inline-mfa: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
-	$i "Create a module with an undefined function call and an inline ignore"
+	$i "Create a module with undefined function calls and inline ignores"
 	$t printf "%s\n" \
 		"-module(bad)." \
-		"-export([f/0])." \
+		"-export([f/0, g/0])." \
 		"-ignore_xref([{bad,f,0}])." \
-		"f() -> this_module:does_not_exist()." \
+		"-ignore_xref({g_module,g_not_exist,0})." \
+		"f() -> f_module:f_not_exist()." \
+		"g() -> g_module:g_not_exist()." \
 		> $(APP)/src/bad.erl
 
 	$i "Run the Xref plugin, expect success"
@@ -246,12 +248,14 @@ xref-ignore-inline-mod: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
-	$i "Create a module with an undefined function call and an inline ignore"
+	$i "Create a module with undefined function calls and inline ignores"
 	$t printf "%s\n" \
 		"-module(bad)." \
-		"-export([f/0])." \
-		"-ignore_xref(?MODULE)." \
-		"f() -> this_module:does_not_exist()." \
+		"-export([f/0, g/0])." \
+		"-ignore_xref([?MODULE])." \
+		"-ignore_xref(g_module)." \
+		"f() -> f_module:f_not_exist()." \
+		"g() -> g_module:g_not_exist()." \
 		> $(APP)/src/bad.erl
 
 	$i "Run the Xref plugin, expect success"
