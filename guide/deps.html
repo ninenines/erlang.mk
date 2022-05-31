@@ -47,7 +47,11 @@ tools to find what you need, for example:</p><pre class="programlisting">$ make 
 to your project is a one-liner:</p><pre class="programlisting">DEPS = cowboy</pre><p>And that’s it! The next time you run <code class="literal">make</code>, Erlang.mk will
 fetch and compile Cowboy. Erlang.mk will also ensure Cowboy
 is available whenever you use the shell, run tests and any
-other operations.</p><p>Erlang.mk will fill in the application resource file with
+other operations.</p><p>Note though that you may need to specify the version of a
+dependency to use. Otherwise, you may get an outdated version,
+since the package index used by Erlang.mk is not always
+updated with the latest version of each package.</p><pre class="programlisting">DEPS = cowboy
+dep_cowboy_commit = 2.8.0</pre><p>Erlang.mk will fill in the application resource file with
 all applications found in <code class="literal">DEPS</code>. But not all dependencies
 are Erlang applications, and not all dependencies need to
 be a runtime dependency. That’s where the <code class="literal">BUILD_DEPS</code>

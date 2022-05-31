@@ -33,7 +33,94 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="concuerror.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="plugins.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="xref"></a>Chapter 27. Xref</h2></div></div></div><p>Placeholder chapter.</p></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="concuerror.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tests.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="plugins.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="concuerror.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="plugins.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="xref"></a>Chapter 27. Xref</h2></div></div></div><p>Xref is a cross reference tool for analyzing dependencies
+between functions, modules, applications and releases.
+Erlang.mk provides an interface to analyzing all except
+the releases.</p><p>Both predefined checks and custom queries are supported
+in Erlang.mk.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_usage_8"></a>27.1. Usage</h2></div></div></div><p>To run Xref with the default predefined checks:</p><pre class="programlisting">$ make xref</pre><p>Erlang.mk will error out when warnings are found.</p><p>The following predefined checks can be used:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<code class="literal">undefined_function_calls</code>
+</li><li class="listitem">
+<code class="literal">undefined_functions</code> (similar to the previous)
+</li><li class="listitem">
+<code class="literal">locals_not_used</code> (detected by the compiler)
+</li><li class="listitem">
+<code class="literal">exports_not_used</code>
+</li><li class="listitem">
+<code class="literal">deprecated_function_calls</code> (also detected by the compiler)
+</li><li class="listitem">
+<code class="literal">deprecated_functions</code> (similar to the previous)
+</li><li class="listitem">
+<code class="literal">{deprecated_function_calls, Flag}</code>
+</li><li class="listitem">
+<code class="literal">{deprecated_functions, Flag}</code> (similar to the previous)
+</li></ul></div><p>Erlang.mk will only run the <code class="literal">undefined_function_calls</code>
+check by default.</p><p>To change the check the <code class="literal">XREF_CHECKS</code> variable can be used:</p><pre class="programlisting">$ make xref XREF_CHECKS=exports_not_used</pre><p>Multiple checks can be run at once. The checks variable
+must be defined as an Erlang list:</p><pre class="programlisting">$ make xref XREF_CHECKS="[undefined_function_calls, exports_not_used]"</pre><p>Erlang.mk also supports informational analyses. Those will
+not error out when results are found, since they are not
+errors. To find all modules that call <code class="literal">cowboy_req</code> functions:</p><pre class="programlisting">$ make xref XREF_CHECKS="{module_use, cowboy_req}"</pre><p>The following informational checks are supported:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<code class="literal">{call, MFA}</code> - functions that MFA calls
+</li><li class="listitem">
+<code class="literal">{use, MFA}</code> - functions that call MFA
+</li><li class="listitem">
+<code class="literal">{module_call, Mod}</code> - modules that Mod calls (Mod depends on them)
+</li><li class="listitem">
+<code class="literal">{module_use, Mod}</code> - modules that call Mod (they depend on Mod)
+</li><li class="listitem">
+<code class="literal">{application_call, App}</code> - apps that App calls (App depends on them)
+</li><li class="listitem">
+<code class="literal">{application_use, App}</code> - apps that call App (they depend on App)
+</li></ul></div><p>The scope might need to be increased in order to obtain
+the complete results of informational checks. This is
+especially true for module and applications, with
+application results being dependent on the applications
+being added to the scope to be found.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_queries"></a>27.2. Queries</h2></div></div></div><p>Erlang.mk provides an interface to the Xref query
+functions. To perform a query, the <code class="literal">q</code> variable
+must be used instead of <code class="literal">XREF_CHECKS</code>. For example,
+to obtain all unresolved calls:</p><pre class="programlisting">$ make xref q=UC</pre><p>The query language is documented at the top of the
+<a class="ulink" href="https://www.erlang.org/doc/man/xref.html" target="_top">XRef manual page</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_analysis_scope"></a>27.3. Analysis scope</h2></div></div></div><p>Erlang.mk will set the scope of analysis to the current
+project by default. The scope can be automatically
+extended to the applications from multi-application
+repositories, to dependencies and to the built-in
+Erlang/OTP applications themselves.</p><p>To change the scope, the <code class="literal">XREF_SCOPE</code> variable can be
+set. The variable can either be set in your Makefile
+or from the command line. The following values can
+be defined:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<code class="literal">app</code> - the current project
+</li><li class="listitem">
+<code class="literal">apps</code> - applications from multi-application repositories
+</li><li class="listitem">
+<code class="literal">deps</code> - dependencies
+</li><li class="listitem">
+<code class="literal">otp</code> - Erlang/OTP applications
+</li></ul></div><p>To get the most complete analysis possible they should
+all be added to the variable:</p><pre class="programlisting">$ make xref XREF_CHECKS="{application_use, ssl}" XREF_SCOPE="app apps deps otp"
+Application ssl is used by:
+- my_app
+- diameter
+- eldap
+- ftp
+- inets
+- ssl</pre><p>Additional applications can be provided using the
+<code class="literal">XREF_EXTRA_APP_DIRS</code> variable. Note that these
+applications will need to be compiled before they
+can be found by Xref.</p><p>Similarly, non-application directories can be
+added using <code class="literal">XREF_EXTRA_DIRS</code>. The directory
+to be provided must be the one that contains
+the beam files.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_ignoring_warnings"></a>27.4. Ignoring warnings</h2></div></div></div><p>Sometimes it is necessary to ignore warnings because
+they are expected. This is the case for example
+when multiple Erlang/OTP versions must be supported
+and modules or functions have been added or removed.</p><p>Erlang.mk supports both project-wide configuration
+and Rebar-compatible inline ignores. To ignore
+warnings for a function in the current module the
+following line can be added to the source file:</p><pre class="programlisting">-ignore_xref({log, 1}).</pre><p>The module name can be specified explicitly:</p><pre class="programlisting">-ignore_xref({my_mod, log, 1}).</pre><p>As well as a full module can be ignored:</p><pre class="programlisting">-ignore_xref(my_mod).</pre><p>The ignored functions can be provided as a list:</p><pre class="programlisting">-ignore_xref([{log, 1}, {pretty_print, 1}]).</pre><p>The <code class="literal">XREF_IGNORE</code> variable can be used to define
+functions and modules to ignore project-wide. It
+accepts either MFAs or modules:</p><pre class="programlisting">XREF_IGNORE={my_mod, log, 1}</pre><p>Multiple ignores must be provided as an Erlang
+list:</p><pre class="programlisting">XREF_IGNORE=[{my_mod, log, 1}, other_mod]</pre><p>By default Erlang.mk will ignore unused exports
+for behavior callbacks when the <code class="literal">exports_not_used</code>
+check is run. It is possible to override this
+behavior, or to ignore the callbacks for queries
+and other checks, by defining the <code class="literal">XREF_IGNORE_CALLBACKS</code>
+variable:</p><pre class="programlisting">$ make xref XREF_CHECKS=exports_not_used XREF_IGNORE_CALLBACKS=0</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="concuerror.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="tests.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="plugins.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>
