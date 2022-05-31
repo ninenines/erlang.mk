@@ -76,7 +76,7 @@ to obtain all unresolved calls:
 $ make xref q=UC
 
 The query language is documented at the top of the
-link:https://www.erlang.org/doc/man/xref.html[XRef manual page].
+link:https://www.erlang.org/doc/man/xref.html[Xref manual page].
 
 === Analysis scope
 
