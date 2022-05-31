@@ -164,13 +164,13 @@ functions and modules to ignore project-wide. It
 accepts either MFAs or modules:
 
 [source,make]
-XREF_IGNORE={my_mod, log, 1}
+XREF_IGNORE = {my_mod, log, 1}
 
 Multiple ignores must be provided as an Erlang
 list:
 
 [source,make]
-XREF_IGNORE=[{my_mod, log, 1}, other_mod]
+XREF_IGNORE = [{my_mod, log, 1}, other_mod]
 
 By default Erlang.mk will ignore unused exports
 for behavior callbacks when the `exports_not_used`
