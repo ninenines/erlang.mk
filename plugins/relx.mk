@@ -37,6 +37,8 @@ define relx_release.erl
 		{cmd, Cmd} -> os:cmd(Cmd);
 		semver -> "";
 		{semver, _} -> "";
+		{git, short} -> string:trim(os:cmd("git rev-parse --short HEAD"), both, "\n");
+		{git, long} -> string:trim(os:cmd("git rev-parse HEAD"), both, "\n");
 		VsnStr -> Vsn0
 	end,
 	{ok, _} = relx:build_release(#{name => Name, vsn => Vsn}, Config),
@@ -50,6 +52,8 @@ define relx_tar.erl
 		{cmd, Cmd} -> os:cmd(Cmd);
 		semver -> "";
 		{semver, _} -> "";
+		{git, short} -> string:trim(os:cmd("git rev-parse --short HEAD"), both, "\n");
+		{git, long} -> string:trim(os:cmd("git rev-parse HEAD"), both, "\n");
 		VsnStr -> Vsn0
 	end,
 	{ok, _} = relx:build_tar(#{name => Name, vsn => Vsn}, Config),
@@ -63,6 +67,8 @@ define relx_relup.erl
 		{cmd, Cmd} -> os:cmd(Cmd);
 		semver -> "";
 		{semver, _} -> "";
+		{git, short} -> string:trim(os:cmd("git rev-parse --short HEAD"), both, "\n");
+		{git, long} -> string:trim(os:cmd("git rev-parse HEAD"), both, "\n");
 		VsnStr -> Vsn0
 	end,
 	{ok, _} = relx:build_relup(Name, Vsn, undefined, Config ++ [{output_dir, "$(RELX_OUTPUT_DIR)"}]),
@@ -104,6 +110,8 @@ define get_relx_release.erl
 		{cmd, Cmd} -> os:cmd(Cmd);
 		semver -> "";
 		{semver, _} -> "";
+		{git, short} -> string:trim(os:cmd("git rev-parse --short HEAD"), both, "\n");
+		{git, long} -> string:trim(os:cmd("git rev-parse HEAD"), both, "\n");
 		VsnStr -> Vsn0
 	end,
 	Extended = case lists:keyfind(extended_start_script, 1, Config) of
