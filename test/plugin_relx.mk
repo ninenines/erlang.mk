@@ -145,6 +145,99 @@ relx-post-rel: init
 	$i "Check that the output directory was removed entirely"
 	$t test ! -d $(APP)/_rel/
 
+relx-rel-with-script: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Create a relx.config.script file"
+	$t printf "%s\n" \
+		"{release, {App, _Ver}, Apps} = lists:keyfind(release, 1, CONFIG)," \
+		"lists:keyreplace(release, 1, CONFIG, {release, {App, \"ONE\"}, Apps})." \
+		> $(APP)/relx.config.script
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the release was built"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/ONE
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the release still exists"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/ONE
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that the output directory was removed entirely"
+	$t test ! -d $(APP)/_rel/
+
+define relx-rel-with-only-script-relx.config.script.erl
+endef
+
+relx-rel-with-script-only: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Delete relx.config and create a relx.config.script file"
+	$t rm -f $(APP)/relx.config
+	$t printf "%s\n" \
+		"CONFIG = [], %% Assert that config is empty." \
+		"[" \
+		"	{release, {$(APP)_release, \"ONE\"}, [$(APP), sasl, runtime_tools]}," \
+		"	{dev_mode, false}," \
+		"	{include_erts, true}," \
+		"	{extended_start_script, true}," \
+		"	{sys_config, \"config/sys.config\"}," \
+		"	{vm_args, \"config/vm.args\"}" \
+		"| CONFIG]." \
+		> $(APP)/relx.config.script
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the release was built"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/ONE
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the release still exists"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/ONE
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that the output directory was removed entirely"
+	$t test ! -d $(APP)/_rel/
+
 ifneq ($(PLATFORM),msys2)
 # This test is currently disabled on Windows because we are
 # running into too many issues preventing the test from

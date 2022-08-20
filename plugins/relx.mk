@@ -7,6 +7,7 @@ ifeq ($(filter relx,$(BUILD_DEPS) $(DEPS) $(REL_DEPS)),relx)
 # Configuration.
 
 RELX_CONFIG ?= $(CURDIR)/relx.config
+RELX_CONFIG_SCRIPT ?= $(CURDIR)/relx.config.script
 
 RELX_OUTPUT_DIR ?= _rel
 RELX_REL_EXT ?=
@@ -19,7 +20,7 @@ endif
 # Core targets.
 
 ifeq ($(IS_DEP),)
-ifneq ($(wildcard $(RELX_CONFIG)),)
+ifneq ($(wildcard $(RELX_CONFIG))$(wildcard $(RELX_CONFIG_SCRIPT)),)
 rel:: relx-rel
 
 relup:: relx-relup
@@ -30,8 +31,28 @@ distclean:: distclean-relx-rel
 
 # Plugin-specific targets.
 
+define relx_get_config.erl
+	(fun() ->
+		Config0 =
+			case file:consult("$(call core_native_path,$(RELX_CONFIG))") of
+				{ok, Terms} ->
+					Terms;
+				{error, _} ->
+					[]
+			end,
+		case filelib:is_file("$(call core_native_path,$(RELX_CONFIG_SCRIPT))") of
+			true ->
+				Bindings = erl_eval:add_binding('CONFIG', Config0, erl_eval:new_bindings()),
+				{ok, Config1} = file:script("$(call core_native_path,$(RELX_CONFIG_SCRIPT))", Bindings),
+				Config1;
+			false ->
+				Config0
+		end
+	end)()
+endef
+
 define relx_release.erl
-	{ok, Config} = file:consult("$(call core_native_path,$(RELX_CONFIG))"),
+	Config = $(call relx_get_config.erl),
 	{release, {Name, Vsn0}, _} = lists:keyfind(release, 1, Config),
 	Vsn = case Vsn0 of
 		{cmd, Cmd} -> os:cmd(Cmd);
@@ -46,7 +67,7 @@ define relx_release.erl
 endef
 
 define relx_tar.erl
-	{ok, Config} = file:consult("$(call core_native_path,$(RELX_CONFIG))"),
+	Config = $(call relx_get_config.erl),
 	{release, {Name, Vsn0}, _} = lists:keyfind(release, 1, Config),
 	Vsn = case Vsn0 of
 		{cmd, Cmd} -> os:cmd(Cmd);
@@ -61,7 +82,7 @@ define relx_tar.erl
 endef
 
 define relx_relup.erl
-	{ok, Config} = file:consult("$(call core_native_path,$(RELX_CONFIG))"),
+	Config = $(call relx_get_config.erl),
 	{release, {Name, Vsn0}, _} = lists:keyfind(release, 1, Config),
 	Vsn = case Vsn0 of
 		{cmd, Cmd} -> os:cmd(Cmd);
@@ -99,12 +120,12 @@ relx-post-rel::
 
 # Run target.
 
-ifeq ($(wildcard $(RELX_CONFIG)),)
+ifeq ($(wildcard $(RELX_CONFIG))$(wildcard $(RELX_CONFIG_SCRIPT)),)
 run::
 else
 
 define get_relx_release.erl
-	{ok, Config} = file:consult("$(call core_native_path,$(RELX_CONFIG))"),
+	Config = $(call relx_get_config.erl),
 	{release, {Name, Vsn0}, _} = lists:keyfind(release, 1, Config),
 	Vsn = case Vsn0 of
 		{cmd, Cmd} -> os:cmd(Cmd);
