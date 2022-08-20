@@ -13,6 +13,15 @@ else
 RELX_REL_EXT =
 endif
 
+define newline
+
+
+endef
+
+define escape_dquotes
+$(subst ",\",$1)
+endef
+
 relx: $(RELX_TARGETS)
 
 relx-rel: init
@@ -348,3 +357,94 @@ relx-vsn: init
 	$i "Check that the correct release exists"
 	$t ! test -d $(APP)/_rel/$(APP)_release/releases/1
 	$t test -d $(APP)/_rel/$(APP)_release/releases/2
+
+define relx-rel-with-script-relx.config.script.erl
+{release, {App, _Ver}, Apps} = lists:keyfind(release, 1, CONFIG),
+lists:keyreplace(release, 1, CONFIG, {release, {App, "NEWVER"}, Apps}).
+endef
+
+relx-rel-with-script: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+	$t echo "$(subst $(newline),\n,$(call escape_dquotes,$(call relx-rel-with-script-relx.config.script.erl)))" > $(APP)/relx.config.script
+
+	$i "Build the release"
+	echo '$t $(MAKE) -C $(APP) $v'
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the release was built"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/NEWVER
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the release still exists"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/NEWVER
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that the output directory was removed entirely"
+	$t test ! -d $(APP)/_rel/
+
+define relx-rel-with-only-script-relx.config.script.erl
+CONFIG = [], %% Assert that config is empty
+[
+	{release, {$(1)_release, "1"}, [$1, sasl, runtime_tools]},
+	{dev_mode, false},
+	{include_erts, true},
+	{extended_start_script, true},
+	{sys_config, "config/sys.config"},
+	{vm_args, "config/vm.args"}
+| CONFIG].
+endef
+
+relx-rel-with-only-script: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+	$t rm -f $(APP)/relx.config
+	$t echo "$(subst $(newline),\n,$(call escape_dquotes,$(call relx-rel-with-only-script-relx.config.script.erl,$(APP))))" > $(APP)/relx.config.script
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the release was built"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/1
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the release still exists"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/1
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that the output directory was removed entirely"
+	$t test ! -d $(APP)/_rel/
