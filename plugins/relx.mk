@@ -91,7 +91,6 @@ define relx_relup.erl
 endef
 
 relx-rel: rel-deps app
-	$(info $(call relx_release.erl))
 	$(call erlang,$(call relx_release.erl),-pa ebin/)
 	$(verbose) $(MAKE) relx-post-rel
 ifeq ($(RELX_TAR),1)
