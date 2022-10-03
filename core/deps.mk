@@ -767,20 +767,11 @@ endif
 
 autopatch-$(call dep_name,$1)::
 	$(verbose) if [ "$(1)" = "amqp_client" -a "$(RABBITMQ_CLIENT_PATCH)" ]; then \
-		if [ ! -d $(DEPS_DIR)/rabbitmq-codegen ]; then \
-			echo " PATCH  Downloading rabbitmq-codegen"; \
-			git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \
-		fi; \
 		if [ ! -d $(DEPS_DIR)/rabbitmq-server ]; then \
 			echo " PATCH  Downloading rabbitmq-server"; \
 			git clone https://github.com/rabbitmq/rabbitmq-server.git $(DEPS_DIR)/rabbitmq-server; \
 		fi; \
 		ln -s $(DEPS_DIR)/amqp_client/deps/rabbit_common-0.0.0 $(DEPS_DIR)/rabbit_common; \
-	elif [ "$(1)" = "rabbit" -a "$(RABBITMQ_SERVER_PATCH)" ]; then \
-		if [ ! -d $(DEPS_DIR)/rabbitmq-codegen ]; then \
-			echo " PATCH  Downloading rabbitmq-codegen"; \
-			git clone https://github.com/rabbitmq/rabbitmq-codegen.git $(DEPS_DIR)/rabbitmq-codegen; \
-		fi \
 	elif [ "$1" = "elixir" -a "$(ELIXIR_PATCH)" ]; then \
 		ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/; \
 	else \
