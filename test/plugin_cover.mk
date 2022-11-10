@@ -150,6 +150,33 @@ endif
 	$t test -f $(APP)/logs/ct_run.*/cow_http_hd.COVER.html
 	$t ! test -e $(APP)/logs/ct_run.*/ranch_app.COVER.html
 
+cover-ct-single-suite: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Generate a Common Test suite"
+	$t mkdir $(APP)/test
+	$t printf "%s\n" \
+		"-module($(APP)_SUITE)." \
+		"-export([all/0, ok/1])." \
+		"all() -> [ok]." \
+		"ok(_) -> application:start($(APP))." > $(APP)/test/$(APP)_SUITE.erl
+
+	$i "Run Common Test against this specific test suite with code coverage enabled"
+	$t $(MAKE) -C $(APP) ct-$(APP) COVER=1 $v
+
+	$i "Check that the generated files exist"
+	$t test -f $(APP)/cover/ct.coverdata
+	$t test -f $(APP)/test/ct.cover.spec
+
+	$i "Check that the generated files are removed on clean"
+	$t $(MAKE) -C $(APP) clean $v
+	$t test ! -e $(APP)/cover/ct.coverdata
+	$t test ! -e $(APP)/test/ct.cover.spec
+
 cover-custom-dir: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
