@@ -99,5 +99,11 @@ the test suite does not group test cases:
 [source,bash]
 $ make ct-http c=headers_dupe
 
+A test within a specific subgroup can be run by providing a
+group path:
+
+[source,bash]
+$ make ct-http t=[top_level_group,second_level_group,third_level_group]:my_case
+
 Finally, xref:coverage[code coverage] is available,
 but covered in its own chapter.
