@@ -687,13 +687,15 @@ define dep_autopatch_appsrc.erl
 	halt()
 endef
 
+ifeq ($(CACHE_DEPS),1)
+
 define __fetch_git
 	mkdir -p $(CACHE_DIR)/gits; \
 	if test -d "$(join $(CACHE_DIR)/gits/,$(call dep_name,$(1)))"; then \
 		cd $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))); \
 		if ! git checkout -q $(call dep_commit,$(1)); then \
 			git remote set-url origin $(call dep_repo,$(1)) && \
-			git fetch && \
+			git fetch && git pull && \
 			git checkout -q $(call dep_commit,$(1)); \
 		fi; \
 	else \
@@ -701,8 +703,6 @@ define __fetch_git
 	fi; \
 	git clone -q --branch --single-branch $(call dep_commit,$(1)) -- $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))) $(2)
 endef
-
-ifeq ($(CACHE_DEPS),1)
 
 define dep_fetch_git
 	$(call __fetch_git,$(1),$(DEPS_DIR)/$(call dep_name,$(1)));
