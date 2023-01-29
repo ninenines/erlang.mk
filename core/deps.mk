@@ -24,6 +24,11 @@ export REBAR_DEPS_DIR
 REBAR3_GIT ?= https://github.com/erlang/rebar3
 REBAR3_COMMIT ?= 3f563feaf1091a1980241adefa83a32dd2eebf7c # 3.20.0
 
+CACHE_DEPS ?= 0
+
+CACHE_DIR ?= $(if $(XDG_CACHE_HOME),$(XDG_CACHE_HOME),$(HOME)/.cache)/erlang.mk
+export CACHE_DIR
+
 # External "early" plugins (see core/plugins.mk for regular plugins).
 # They both use the core_dep_plugin macro.
 
@@ -703,6 +708,36 @@ define dep_autopatch_appsrc.erl
 	halt()
 endef
 
+ifeq ($(CACHE_DEPS),1)
+
+define __fetch_git
+	mkdir -p $(CACHE_DIR)/gits; \
+	if test -d "$(join $(CACHE_DIR)/gits/,$(call dep_name,$(1)))"; then \
+		cd $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))); \
+		if ! git checkout -q $(call dep_commit,$(1)); then \
+			git remote set-url origin $(call dep_repo,$(1)) && \
+			git pull --all && \
+			git cat-file -e $(call dep_commit,$(1)) 2>/dev/null; \
+		fi; \
+	else \
+		git clone -q -n -- $(call dep_repo,$(1)) $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))); \
+	fi; \
+	git clone -q --branch $(call dep_commit,$(1)) --single-branch -- $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))) $(2)
+endef
+
+define dep_fetch_git
+	$(call __fetch_git,$(1),$(DEPS_DIR)/$(call dep_name,$(1)));
+endef
+
+define dep_fetch_git-subfolder
+	mkdir -p $(ERLANG_MK_TMP)/git-subfolder; \
+	$(call __fetch_git,$(1),$(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$(1))); \
+	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)/$(word 4,$(dep_$(1))) \
+		$(DEPS_DIR)/$(call dep_name,$1);
+endef
+
+else
+
 define dep_fetch_git
 	git clone -q -n -- $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1)); \
 	cd $(DEPS_DIR)/$(call dep_name,$(1)) && git checkout -q $(call dep_commit,$(1));
@@ -717,6 +752,8 @@ define dep_fetch_git-subfolder
 	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)/$(word 4,$(dep_$(1))) \
 		$(DEPS_DIR)/$(call dep_name,$1);
 endef
+
+endif
 
 define dep_fetch_git-submodule
 	git submodule update --init -- $(DEPS_DIR)/$1;
@@ -739,6 +776,19 @@ define dep_fetch_ln
 	ln -s $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1));
 endef
 
+ifeq ($(CACHE_DEPS),1)
+
+# Hex only has a package version. No need to look in the Erlang.mk packages.
+define dep_fetch_hex
+	mkdir -p $(CACHE_DIR)/hex $(DEPS_DIR)/$1; \
+	$(eval hex_tar_name=$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar) \
+	$(if $(wildcard $(CACHE_DIR)/hex/$(hex_tar_name)),,$(call core_http_get,$(CACHE_DIR)/hex/$(hex_tar_name),\
+		https://repo.hex.pm/tarballs/$(hex_tar_name))); \
+	tar -xOf $(CACHE_DIR)/hex/$(hex_tar_name) contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
+endef
+
+else
+
 # Hex only has a package version. No need to look in the Erlang.mk packages.
 define dep_fetch_hex
 	mkdir -p $(ERLANG_MK_TMP)/hex $(DEPS_DIR)/$1; \
@@ -746,6 +796,8 @@ define dep_fetch_hex
 		https://repo.hex.pm/tarballs/$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar); \
 	tar -xOf $(ERLANG_MK_TMP)/hex/$1.tar contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
+
+endif
 
 define dep_fetch_fail
 	echo "Error: Unknown or invalid dependency: $(1)." >&2; \
@@ -815,6 +867,16 @@ distclean:: distclean-deps
 
 distclean-deps:
 	$(gen_verbose) rm -rf $(DEPS_DIR)
+endif
+
+ifeq ($(CACHE_DEPS),1)
+cacheclean:: cacheclean-git cacheclean-hex
+
+cacheclean-git:
+	$(gen_verbose) rm -rf $(CACHE_DIR)/git
+
+cacheclean-hex:
+	$(gen_verbose) rm -rf $(CACHE_DIR)/hex
 endif
 
 # Forward-declare variables used in core/deps-tools.mk. This is required
