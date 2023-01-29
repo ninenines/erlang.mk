@@ -695,8 +695,8 @@ define __fetch_git
 		cd $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))); \
 		if ! git checkout -q $(call dep_commit,$(1)); then \
 			git remote set-url origin $(call dep_repo,$(1)) && \
-			git fetch && git pull && \
-			git checkout -q $(call dep_commit,$(1)); \
+			git pull --all && \
+			git cat-file -e $(call dep_commit,$(1)) 2>/dev/null; \
 		fi; \
 	else \
 		git clone -q -n -- $(call dep_repo,$(1)) $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))); \
