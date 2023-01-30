@@ -703,7 +703,7 @@ define __fetch_git
 	else \
 		git clone -q -n -- $(call dep_repo,$(1)) $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))); \
 	fi; \
-	git clone -q --branch --single-branch $(call dep_commit,$(1)) -- $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))) $(2)
+	git clone -q --branch $(call dep_commit,$(1)) --single-branch -- $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))) $(2)
 endef
 
 define dep_fetch_git
