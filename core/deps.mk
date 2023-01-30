@@ -24,8 +24,10 @@ export REBAR_DEPS_DIR
 REBAR_GIT ?= https://github.com/rebar/rebar
 REBAR_COMMIT ?= 576e12171ab8d69b048b827b92aa65d067deea01
 
-CACHE_DIR ?= $(HOME)/.cache/erlang.mk
 CACHE_DEPS ?= 0
+
+CACHE_DIR ?= $(if $(XDG_CACHE_HOME),$(XDG_CACHE_HOME),$(HOME)/.cache)/erlang.mk
+export CACHE_DIR
 
 # External "early" plugins (see core/plugins.mk for regular plugins).
 # They both use the core_dep_plugin macro.
@@ -861,6 +863,16 @@ distclean:: distclean-deps
 
 distclean-deps:
 	$(gen_verbose) rm -rf $(DEPS_DIR)
+endif
+
+ifeq ($(CACHE_DEPS),1)
+cacheclean:: cacheclean-git cacheclean-hex
+
+cacheclean-git:
+	$(gen_verbose) rm -rf $(CACHE_DIR)/git
+
+cacheclean-hex:
+	$(gen_verbose) rm -rf $(CACHE_DIR)/hex
 endif
 
 # Forward-declare variables used in core/deps-tools.mk. This is required
