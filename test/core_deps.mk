@@ -562,7 +562,7 @@ core-deps-fetch-git-submodule: init
 	$t mkdir $(APP)/deps
 	$t cd $(APP) && \
 		git init -q && \
-		git submodule -q add file://$(abspath $(APP)/my_dep) deps/my_dep && \
+		git -c protocol.file.allow=always submodule -q add file://$(abspath $(APP)/my_dep) deps/my_dep && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
