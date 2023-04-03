@@ -1699,6 +1699,8 @@ core-app-yrl-header: init
 	$t echo "-export([forty_two/0])." > $(APP)/include/yecc_header.hrl
 # A bunch of gobbldygook we don't actually care about, they just
 # need to exist so we don't get errors.
+	$t echo "-export([yeccpars1/5])." >> $(APP)/include/yecc_header.hrl
+	$t echo "-export([yeccerror/1])." >> $(APP)/include/yecc_header.hrl
 	$t echo "yeccpars1(_,_,_,_,_) -> throw(not_implemented)." >> $(APP)/include/yecc_header.hrl
 	$t echo "yeccerror(_) -> throw(not_implemented)." >> $(APP)/include/yecc_header.hrl
 # Required bits done, now part we'll actually test for.
