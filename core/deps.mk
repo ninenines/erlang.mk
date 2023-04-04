@@ -21,8 +21,8 @@ export DEPS_DIR
 REBAR_DEPS_DIR = $(DEPS_DIR)
 export REBAR_DEPS_DIR
 
-REBAR_GIT ?= https://github.com/rebar/rebar
-REBAR_COMMIT ?= 576e12171ab8d69b048b827b92aa65d067deea01
+REBAR_GIT ?= https://github.com/erlang/rebar3
+REBAR_COMMIT ?= 3.20.0
 
 # External "early" plugins (see core/plugins.mk for regular plugins).
 # They both use the core_dep_plugin macro.
