@@ -559,10 +559,8 @@ performed:
 * Run autopatch on the project
 
 Autopatch first checks if there is any project-specific patch
-enabled. There are currently three: `RABBITMQ_CLIENT_PATCH` for
-the `amqp_client` dependency (before 3.6.0), `RABBITMQ_SERVER_PATCH`
-for the `rabbit` dependency (before 3.6.0) and `ELIXIR_PATCH`
-for the `elixir` dependency.
+enabled. There is currently one: `ELIXIR_PATCH` for the `elixir`
+dependency.
 
 Otherwise, autopatch performs different operations depending
 on the kind of project it finds the dependency to be.
