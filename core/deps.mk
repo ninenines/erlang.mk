@@ -355,7 +355,7 @@ define dep_autopatch_rebar.erl
 		(V) when is_list(V) -> "'\\"" ++ V ++ "\\"'"
 	end,
 	fun() ->
-		Write("ERLC_OPTS = +debug_info\nexport ERLC_OPTS\n"),
+		Write("ERLC_OPTS = +debug_info\n"),
 		case lists:keyfind(erl_opts, 1, Conf) of
 			false -> ok;
 			{_, ErlOpts} ->
