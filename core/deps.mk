@@ -413,23 +413,28 @@ define dep_autopatch_rebar.erl
 				false
 		end
 	end,
+	GetHexVsn3Common = fun(N, NP, S0) ->
+		case GetHexVsn2(N, NP) of
+			false ->
+				S2 = case S0 of
+					" " ++ S1 -> S1;
+					_ -> S0
+				end,
+				S = case length([ok || $$. <- S2]) of
+					0 -> S2 ++ ".0.0";
+					1 -> S2 ++ ".0";
+					_ -> S2
+				end,
+				{N, {hex, NP, S}};
+			NameSource ->
+				NameSource
+		end
+	end,
 	GetHexVsn3 = fun
 		(N, NP, "~>" ++ S0) ->
-			case GetHexVsn2(N, NP) of
-				false ->
-					S2 = case S0 of
-						" " ++ S1 -> S1;
-						_ -> S0
-					end,
-					S = case length([ok || $$. <- S2]) of
-						0 -> S2 ++ ".0.0";
-						1 -> S2 ++ ".0";
-						_ -> S2
-					end,
-					{N, {hex, NP, S}};
-				NameSource ->
-					NameSource
-			end;
+			GetHexVsn3Common(N, NP, S0);
+		(N, NP, ">=" ++ S0) ->
+			GetHexVsn3Common(N, NP, S0);
 		(N, NP, S) -> {N, {hex, NP, S}}
 	end,
 	fun() ->
