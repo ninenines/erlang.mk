@@ -167,6 +167,7 @@ $(eval $(foreach t,$(patsubst %.mk,%,$(patsubst plugin_%,%,$(wildcard plugin_*.m
 # Packages.
 
 PACKAGES = $(foreach pkg,$(sort $(wildcard ../index/*.mk)),$(notdir $(basename $(pkg))))
+PATCHES = HUT_PATCH=1
 EXCLUDE_FROM_CHECK = ['ci.erlang.mk', elvis_mk, esh_mk, hexer_mk, inaka_mk, 'lfe.mk', rust_mk]
 EXCLUDE_FROM_APP_CHECK = esh_mk rust_mk
 

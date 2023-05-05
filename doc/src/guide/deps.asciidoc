@@ -559,8 +559,8 @@ performed:
 * Run autopatch on the project
 
 Autopatch first checks if there is any project-specific patch
-enabled. There is currently one: `ELIXIR_PATCH` for the `elixir`
-dependency.
+enabled. There are currently two: `ELIXIR_PATCH` for the `elixir`
+dependency and `HUT_PATCH` for the `hut` dependency.
 
 Otherwise, autopatch performs different operations depending
 on the kind of project it finds the dependency to be.
