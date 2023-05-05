@@ -167,7 +167,8 @@ $(eval $(foreach t,$(patsubst %.mk,%,$(patsubst plugin_%,%,$(wildcard plugin_*.m
 # Packages.
 
 PACKAGES = $(foreach pkg,$(sort $(wildcard ../index/*.mk)),$(notdir $(basename $(pkg))))
-EXCLUDE_FROM_CHECK = ['ci.erlang.mk', esh_mk, hexer_mk, inaka_mk, 'lfe.mk']
+EXCLUDE_FROM_CHECK = ['ci.erlang.mk', elvis_mk, esh_mk, hexer_mk, inaka_mk, 'lfe.mk', rust_mk]
+EXCLUDE_FROM_APP_CHECK = esh_mk rust_mk
 
 packages: $(addprefix pkg-,$(PACKAGES))
 
@@ -196,11 +197,12 @@ pkg-$1: init
 		false; \
 	fi
 
+	$(if $(filter $1,$(EXCLUDE_FROM_APP_CHECK)),,
 	$i "Check that $1 has a .app file"
 	$t if ! test -f packages/$1_pkg/deps/$(APP_NAME)/ebin/$(APP_NAME).app; then \
 		echo "$1: no .app file" >> packages/errors.log; \
 		false; \
-	fi
+	fi)
 
 	$i "Check that all applications and their modules can be loaded"
 	$t if ! ( cd packages/$1_pkg/ && $(ERL) -pa deps/*/ebin/ -eval " \
@@ -230,11 +232,12 @@ pkg-$1: init
 		false; \
 	fi
 
+	$(if $(filter $1,$(EXCLUDE_FROM_APP_CHECK)),,
 	$i "Check that $1 has a .app file"
 	$t if ! test -f packages/$1_pkg/deps/$(APP_NAME)/ebin/$(APP_NAME).app; then \
 		echo "$1: no .app file" >> packages/errors.log; \
 		false; \
-	fi
+	fi)
 
 	$i "Check that all applications and their modules can still be loaded"
 	$t if ! ( cd packages/$1_pkg/ && $(ERL) -pa deps/*/ebin/ -eval " \
