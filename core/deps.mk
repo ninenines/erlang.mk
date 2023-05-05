@@ -378,7 +378,7 @@ define dep_autopatch_rebar.erl
 		end,
 		Write("\n")
 	end(),
-	GetHexVsn = fun(N, NP) ->
+	GetHexVsn2 = fun(N, NP) ->
 		case file:consult("$(call core_native_path,$(DEPS_DIR)/$1/rebar.lock)") of
 			{ok, Lock} ->
 				io:format("~p~n", [Lock]),
@@ -410,28 +410,34 @@ define dep_autopatch_rebar.erl
 				false
 		end
 	end,
-	SemVsn = fun
-		("~>" ++ S0) ->
-			S = case S0 of
-				" " ++ S1 -> S1;
-				_ -> S0
-			end,
-			case length([ok || $$. <- S]) of
-				0 -> S ++ ".0.0";
-				1 -> S ++ ".0";
-				_ -> S
+	GetHexVsn3 = fun
+		(N, NP, "~>" ++ S0) ->
+			case GetHexVsn2(N, NP) of
+				false ->
+					S2 = case S0 of
+						" " ++ S1 -> S1;
+						_ -> S0
+					end,
+					S = case length([ok || $$. <- S2]) of
+						0 -> S2 ++ ".0.0";
+						1 -> S2 ++ ".0";
+						_ -> S2
+					end,
+					{N, {hex, NP, S}};
+				NameSource ->
+					NameSource
 			end;
-		(S) -> S
+		(N, NP, S) -> {N, {hex, NP, S}}
 	end,
 	fun() ->
 		File = case lists:keyfind(deps, 1, Conf) of
 			false -> [];
 			{_, Deps} ->
 				[begin case case Dep of
-							N when is_atom(N) -> GetHexVsn(N, N);
-							{N, S} when is_atom(N), is_list(S) -> {N, {hex, N, SemVsn(S)}};
-							{N, {pkg, NP}} when is_atom(N) -> GetHexVsn(N, NP);
-							{N, S, {pkg, NP}} -> {N, {hex, NP, S}};
+							N when is_atom(N) -> GetHexVsn2(N, N);
+							{N, S} when is_atom(N), is_list(S) -> GetHexVsn3(N, N, S);
+							{N, {pkg, NP}} when is_atom(N) -> GetHexVsn2(N, NP);
+							{N, S, {pkg, NP}} -> GetHexVsn3(N, NP, S);
 							{N, S} when is_tuple(S) -> {N, S};
 							{N, _, S} -> {N, S};
 							{N, _, S, _} -> {N, S};
