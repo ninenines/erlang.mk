@@ -35,3 +35,12 @@
             Xref language to perform custom queries. Erlang.mk
             can also run analyses and queries against all
             dependencies as well as Erlang/OTP applications.
+
+2023/05/05: Rebar3 is now used for autopatch instead of
+            Rebar2. `make distclean` or `rm -rf .erlang.mk`
+            might be required after updating Erlang.mk.
+            Moving to Rebar3 increases compatibility now
+            that few maintained projects are using Rebar2.
+            For compatibility reasons the variables to
+            point to a different rebar are now REBAR3_GIT
+            and REBAR3_COMMIT.

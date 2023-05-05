@@ -21,8 +21,8 @@ export DEPS_DIR
 REBAR_DEPS_DIR = $(DEPS_DIR)
 export REBAR_DEPS_DIR
 
-REBAR_GIT ?= https://github.com/rebar/rebar
-REBAR_COMMIT ?= 576e12171ab8d69b048b827b92aa65d067deea01
+REBAR3_GIT ?= https://github.com/erlang/rebar3
+REBAR3_COMMIT ?= 3f563feaf1091a1980241adefa83a32dd2eebf7c # 3.20.0
 
 # External "early" plugins (see core/plugins.mk for regular plugins).
 # They both use the core_dep_plugin macro.
@@ -301,10 +301,10 @@ define dep_autopatch_fetch_rebar
 endef
 
 define dep_autopatch_fetch_rebar2
-	if [ ! -d $(ERLANG_MK_TMP)/rebar ]; then \
-		git clone -q -n -- $(REBAR_GIT) $(ERLANG_MK_TMP)/rebar; \
-		cd $(ERLANG_MK_TMP)/rebar; \
-		git checkout -q $(REBAR_COMMIT); \
+	if [ ! -d $(ERLANG_MK_TMP)/rebar3 ]; then \
+		git clone -q -n -- $(REBAR3_GIT) $(ERLANG_MK_TMP)/rebar3; \
+		cd $(ERLANG_MK_TMP)/rebar3; \
+		git checkout -q $(REBAR3_COMMIT); \
 		./bootstrap; \
 		cd -; \
 	fi
@@ -321,7 +321,7 @@ endef
 define dep_autopatch_rebar.erl
 	application:load(rebar),
 	application:set_env(rebar, log_level, debug),
-	rmemo:start(),
+	{module, rebar3} = c:l(rebar3),
 	Conf1 = case file:consult("$(call core_native_path,$(DEPS_DIR)/$1/rebar.config)") of
 		{ok, Conf0} -> Conf0;
 		_ -> []

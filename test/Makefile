@@ -131,14 +131,14 @@ clean::
 init: clean
 	$i "Prefetch Rebar if necessary"
 	$t if [ ! -d test_rebar_git ]; then \
-		git clone -q -n -- https://github.com/rebar/rebar test_rebar_git; \
+		git clone -q -n -- https://github.com/erlang/rebar3 test_rebar_git; \
 	fi
 
 	$i "Generate a bleeding edge Erlang.mk"
 	$t cd .. && $(MAKE) $v
 
-REBAR_GIT = file://$(CURDIR)/test_rebar_git
-export REBAR_GIT
+REBAR3_GIT = file://$(CURDIR)/test_rebar_git
+export REBAR3_GIT
 
 # Core.
 
