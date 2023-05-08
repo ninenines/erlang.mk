@@ -132,6 +132,18 @@ target `deps::` before including 'erlang.mk', for example:
 [source,make]
 deps:: $(CURDIR)/deps/triq
 
+Sometimes dependencies are allowed to be missing. However, your application
+may depend on an optional application being started. To ensure that an
+optional dependency is started before your application, the variable
+`OPTIONAL_DEPS` may be used:
+
+[source,make]
+OPTIONAL_DEPS = quicer
+
+The top-level project can then decide whether to include this
+application by adding it to its `BUILD_DEPS` and including
+it in the release dependencies.
+
 ==== Modifying the dependency source or version
 
 By default, Erlang.mk will look into its package index to

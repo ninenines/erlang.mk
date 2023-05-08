@@ -1124,6 +1124,30 @@ core-deps-mv-rebar: init
 	$i "Build the application"
 	$t $(MAKE) -C $(APP)-moved $v
 
+core-deps-optional: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Add quicer to the list of optional dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "OPTIONAL_DEPS = quicer\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that no dependencies were fetched"
+	$t test ! -e $(APP)/deps
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:start($(APP)), \
+		{ok, Deps} = application:get_key($(APP), applications), \
+		true = lists:member(quicer, Deps), \
+		{ok, [quicer]} = application:get_key($(APP), optional_applications), \
+		halt()"
+
 # A lower-level dependency of the first dependency always
 # wins over a lower-level dependency of the second dependency.
 core-deps-order-first: init
