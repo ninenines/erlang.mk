@@ -661,3 +661,13 @@ When the variable is defined:
 * The dependency directory '$(DEPS_DIR)' will not be removed on `make distclean`
 
 This variable only applies to remote dependencies.
+
+=== Optional deps
+
+Sometimes dependencies are allowed to be missing. However, your application
+may depend on an optional application being started. To ensure that an
+optional dependency is started before your application, the variable
+`OPTIONAL_DEPS` may be used:
+
+[source,make]
+OPTIONAL_DEPS = quicer
