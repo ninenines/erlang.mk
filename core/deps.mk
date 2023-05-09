@@ -468,13 +468,16 @@ define dep_autopatch_rebar.erl
 	fun() ->
 		case lists:keyfind(erl_first_files, 1, Conf) of
 			false -> ok;
-			{_, Files} ->
+			{_, Files0} ->
+				Files = [begin
+					hd(filelib:wildcard("$(call core_native_path,$(DEPS_DIR)/$1/src/**/" ++ filename:rootname(F) ++ ".*rl")))
+				end || "src/" ++ F <- Files0],
 				Names = [[" ", case lists:reverse(F) of
 					"lre." ++ Elif -> lists:reverse(Elif);
 					"lrx." ++ Elif -> lists:reverse(Elif);
 					"lry." ++ Elif -> lists:reverse(Elif);
 					Elif -> lists:reverse(Elif)
-				end] || "src/" ++ F <- Files],
+				end] || "$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ F <- Files],
 				Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
 		end
 	end(),
