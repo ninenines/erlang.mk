@@ -37,6 +37,10 @@ ifneq ($(DEPS),)
 		$(subst $(DEPS_DIR)/,,$(addsuffix /*,$(wildcard \
 			$(addsuffix /ebin,$(shell cat $(ERLANG_MK_TMP)/deps.log)))))
 endif
+ifneq ($(USES_ELIXIR),)
+	$(verbose) cd $(DEPS_DIR) && $(ESCRIPT_ZIP) $(abspath $(ESCRIPT_ZIP_FILE)) \
+		$(addsuffix /*,$(wildcard $(addsuffix /ebin,$(ELIXIR_BUILTINS))))
+endif
 
 escript:: escript-zip
 	$(gen_verbose) printf "%s\n" \
