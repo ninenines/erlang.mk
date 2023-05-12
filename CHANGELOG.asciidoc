@@ -1,11 +1,3 @@
-2020/06/18: Concuerror integration has been added. It is
-            currently minimal but usable. Experimentation
-            and feedback is welcome.
-
-2020/11/30: Support for publishing Hex releases and docs
-            has been added. It is currently experimental.
-            Feedback is more than welcome.
-
 2022/03/25: The -Wrace_conditions Dialyzer flag was removed
             as it is no longer available starting from OTP 25.
 
@@ -36,7 +28,7 @@
             can also run analyses and queries against all
             dependencies as well as Erlang/OTP applications.
 
-2023/05/05: Rebar3 is now used for autopatch instead of
+2023/05/12: Rebar3 is now used for autopatch instead of
             Rebar2. `make distclean` or `rm -rf .erlang.mk`
             might be required after updating Erlang.mk.
             Moving to Rebar3 increases compatibility now
@@ -44,3 +36,7 @@
             For compatibility reasons the variables to
             point to a different rebar are now REBAR3_GIT
             and REBAR3_COMMIT.
+
+2023/05/12: A number of broken packages have been removed.
+            They were all unmaintained and there's a low
+            chance that this will break anyone's project.
