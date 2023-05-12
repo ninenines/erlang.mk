@@ -50,6 +50,10 @@ MAKEOVERRIDES := $(filter-out p=$p,$(MAKEOVERRIDES))
 check:
 	$(MAKE) -C test pkg-$p KEEP_BUILDS=1
 else
+ifdef hp
+check:
+	$(MAKE) -C test hexpm-pkg-$(hp) KEEP_BUILDS=1 HEXPM=1
+else
 ifdef c
 check:
 	$(MAKE) -C test $c c=
@@ -58,9 +62,13 @@ check:
 	$(MAKE) -C test
 endif
 endif
+endif
 
 packages:
 	$(MAKE) -C test packages
+
+hexpm-packages:
+	$(MAKE) -C test hexpm-packages HEXPM=1
 
 summary:
 	@mkdir -p test/logs/

@@ -273,3 +273,118 @@ pkg-$1: init
 endef
 
 $(foreach pkg,$(PACKAGES),$(eval $(call pkg_target,$(pkg))))
+
+# Hex.pm packages.
+
+ifdef HEXPM
+
+HEXPM_PACKAGES =
+
+define hexpm_pkg_target
+HEXPM_PACKAGES += $1
+
+.PHONY: hexpm-pkg-$1
+
+hexpm-pkg-$1: init
+
+# Make sure $@ is defined inside the define.
+	$(eval @ = hexpm-pkg-$1)
+
+# @todo Get the real application's name. How?
+	$(eval APP_NAME := $1)
+
+	$i "Bootstrap a new OTP library in packages/$1_pkg"
+	$t mkdir -p packages/$1_pkg/
+	$t cp ../erlang.mk packages/$1_pkg/
+	$t cd packages/$1_pkg/ && $(MAKE) -f erlang.mk bootstrap-lib $v
+
+	$i "Add package $1 to the Makefile"
+	$t perl -ni.bak -e 'print;if ($$$$.==1) {print "DEPS = $1\ndep_$1 = hex $2\n"}' packages/$1_pkg/Makefile
+
+	$i "Compile package $1"
+	$t if ! ( cd packages/$1_pkg/ && $(MAKE) $(PATCHES) $v ); then \
+		echo "$1: compile error" >> packages/errors.log; \
+		false; \
+	fi
+
+#	$(if $(filter $1,$(EXCLUDE_FROM_APP_CHECK)),,
+	$i "Check that $1 has a .app file"
+	$t if ! test -f packages/$1_pkg/deps/$(APP_NAME)/ebin/$(APP_NAME).app; then \
+		echo "$1: no .app file" >> packages/errors.log; \
+		false; \
+	fi
+#	)
+
+	$i "Check that all applications and their modules can be loaded"
+	$t if ! ( cd packages/$1_pkg/ && $(ERL) -pa deps/*/ebin/ -eval " \
+		Apps0 = [list_to_atom(App) || \"deps/\" ++ App \
+			<- filelib:wildcard(\"deps/*\")], \
+		Apps = [App || App <- Apps0, not lists:member(App, $(EXCLUDE_FROM_CHECK))], \
+		[begin \
+			io:format(\"Loading application ~p~n\", [App]), \
+			case application:load(App) of \
+				ok -> ok; \
+				{error, {already_loaded, App}} -> ok \
+			end, \
+			{ok, Mods} = application:get_key(App, modules), \
+			[try io:format(\"  Loading module ~p~n\", [Mod]), \
+				{module, Mod} = code:load_file(Mod) \
+			catch C:R -> timer:sleep(500), erlang:C(R) \
+			end || Mod <- Mods] \
+		end || App <- Apps], \
+		halt()." ); then \
+			echo "$1: load error" >> packages/errors.log; \
+			false; \
+	fi
+
+	$i "Recompile package $1"
+	$t if ! ( cd packages/$1_pkg/ && $(MAKE) $(PATCHES) FULL=1 $v ); then \
+		echo "$(1): recompile error" >> packages/errors.log; \
+		false; \
+	fi
+
+#	$(if $(filter $1,$(EXCLUDE_FROM_APP_CHECK)),,
+	$i "Check that $1 has a .app file"
+	$t if ! test -f packages/$1_pkg/deps/$(APP_NAME)/ebin/$(APP_NAME).app; then \
+		echo "$1: no .app file" >> packages/errors.log; \
+		false; \
+	fi
+#	)
+
+	$i "Check that all applications and their modules can still be loaded"
+	$t if ! ( cd packages/$1_pkg/ && $(ERL) -pa deps/*/ebin/ -eval " \
+		Apps0 = [list_to_atom(App) || \"deps/\" ++ App \
+			<- filelib:wildcard(\"deps/*\")], \
+		Apps = [App || App <- Apps0, not lists:member(App, $(EXCLUDE_FROM_CHECK))], \
+		[begin \
+			io:format(\"Loading application ~p~n\", [App]), \
+			case application:load(App) of \
+				ok -> ok; \
+				{error, {already_loaded, App}} -> ok \
+			end, \
+			{ok, Mods} = application:get_key(App, modules), \
+			[try io:format(\"  Loading module ~p~n\", [Mod]), \
+				{module, Mod} = code:load_file(Mod) \
+			catch C:R -> timer:sleep(500), erlang:C(R) \
+			end || Mod <- Mods] \
+		end || App <- Apps], \
+		halt()." ); then \
+			echo "$1: recompile+load error" >> packages/errors.log; \
+			false; \
+	fi
+
+	$i "Check that no erl_crash.dump file exists"
+	$t if ( ! find packages/$1_pkg/ -type f -name erl_crash.dump ); then \
+		echo "$(1): erl_crash.dump found" >> packages/errors.log; \
+	fi
+
+	$(if $(KEEP_BUILDS),,
+		$i "OK; delete the build directory"
+		$t rm -rf packages/$1_pkg/)
+endef
+
+$(foreach pkg,$(shell grep -v '^#' hexpm_packages.txt | sed 's/ /@/'),$(eval $(call hexpm_pkg_target,$(firstword $(subst @, ,$(pkg))),$(lastword $(subst @, ,$(pkg))))))
+
+hexpm-packages: $(addprefix hexpm-pkg-,$(HEXPM_PACKAGES))
+
+endif
