@@ -98,6 +98,8 @@ endif
 export PLATFORM
 endif
 
+UNIQUE = $(if $1,$(firstword $1) $(call UNIQUE,$(filter-out $(firstword $1),$1)))
+
 # Core targets.
 
 all:: deps app rel

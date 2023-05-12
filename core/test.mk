@@ -24,7 +24,7 @@ test-deps: $(ALL_TEST_DEPS_DIRS)
 		if [ -z "$(strip $(FULL))" ] && [ ! -L $$dep ] && [ -f $$dep/ebin/dep_built ]; then \
 			:; \
 		else \
-			$(MAKE) -C $$dep IS_DEP=1; \
+			$(MAKE) -C $$dep IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 			if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
 		fi \
 	done

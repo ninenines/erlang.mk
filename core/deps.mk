@@ -178,7 +178,7 @@ ifneq ($(ALL_APPS_DIRS_TO_BUILD),)
 			:; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/apps.log; \
-			$(MAKE) -C $$dep $(if $(IS_TEST),test-build-app) IS_APP=1; \
+			$(MAKE) -C $$dep $(if $(IS_TEST),test-build-app) IS_APP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 		fi \
 	done
 endif
@@ -220,10 +220,10 @@ ifneq ($(ALL_DEPS_DIRS),)
 			if [ -z "$(strip $(FULL))" ] $(if $(force_rebuild_dep),&& ! ($(call force_rebuild_dep,$$dep)),) && [ ! -L $$dep ] && [ -f $$dep/ebin/dep_built ]; then \
 				:; \
 			elif [ "$$dep" = "$(DEPS_DIR)/hut" -a "$(HUT_PATCH)" ]; then \
-				$(MAKE) -C $$dep app IS_DEP=1; \
+				$(MAKE) -C $$dep app IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
 			elif [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
-				$(MAKE) -C $$dep IS_DEP=1; \
+				$(MAKE) -C $$dep IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
 			else \
 				echo "Error: No Makefile to build dependency $$dep." >&2; \
@@ -236,6 +236,79 @@ endif
 
 # Deps related targets.
 
+define elixir_get_deps.erl
+(fun(Deps) ->
+	GetVer = fun(Name, Req) ->
+		application:ensure_all_started(ssl),
+		application:ensure_all_started(inets),
+		{ok, PackageInfo} =
+			case hex_repo:get_package(hex_core:default_config(), atom_to_binary(Name)) of
+				{ok, {200, _RespHeaders, Decoded}} ->
+					LFirst(Decoded, fun(#{version := Vsn}) -> 'Elixir.Version':'match?'(Vsn, Req) end);
+				Other ->
+					io:format(standard_error, "Unexpected response for Dep ~p", [Name]),
+					erlang:halt(1)
+			end,
+		maps:get(version, PackageInfo)
+	end,
+	(fun
+		F([], DEPS_Acc0, DEP_Acc0) ->
+			[DEPS_Acc0, "\n", DEP_Acc0];
+		F([H|T], DEPS_Acc0, DEP_Acc0) ->
+			{DEPS_Acc1, DEP_Acc1} =
+				case H of
+					{Name, Req} when is_binary(Req) ->
+						{
+							[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+							[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, GetVer(Name, Req), Name])]
+						};
+					{Name, Opts} when is_list(Opts) ->
+						Path = proplists:get_value(path, Opts),
+						IsRequired = proplists:get_value(optional, Opts) =/= true,
+						IsProdOnly = case proplists:get_value(only, Opts, prod) of
+							prod -> true;
+							L when is_list(L) -> lists:member(prod, L);
+							_ -> false
+						end,
+						case IsRequired andalso IsProdOnly of
+							true when Path =/= undefined ->
+								{
+									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+									[DEP_Acc0, io_lib:format("dep_~p = ln ~s~n", [Name, Path])]
+								};
+							true when Path =:= undefined ->
+								io:format(standard_error, "Skipping 'dep_~p' as no vsn given.", [Name]),
+								{
+									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+									DEP_Acc0
+								};
+							false ->
+								{DEPS_Acc0, DEP_Acc0}
+						end;
+					{Name, Req, Opts} ->
+						IsRequired = proplists:get_value(optional, Opts) =/= true,
+						IsProdOnly = case proplists:get_value(only, Opts, prod) of
+							prod -> true;
+							L when is_list(L) -> lists:member(prod, L);
+							_ -> false
+						end,
+						case IsRequired andalso IsProdOnly of
+							true ->
+								{
+									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+									[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, GetVer(Name, Req), Name])]
+								};
+							false ->
+								{DEPS_Acc0, DEP_Acc0}
+						end;
+					_ ->
+						{DEPS_Acc0, DEP_Acc0}
+				end,
+			F(T, DEPS_Acc1, DEP_Acc1)
+	end)(Deps, [], [])
+end)($1)
+endef
+
 # @todo rename GNUmakefile and makefile into Makefile first, if they exist
 # While Makefile file could be GNUmakefile or makefile,
 # in practice only Makefile is needed so far.
@@ -244,6 +317,8 @@ define dep_autopatch
 		rm -rf $(DEPS_DIR)/$1/ebin/; \
 		$(call erlang,$(call dep_autopatch_appsrc.erl,$1)); \
 		$(call dep_autopatch_erlang_mk,$1); \
+	elif [ -f $(DEPS_DIR)/$1/mix.exs ]; then \
+		$(call dep_autopatch_mix,$1); \
 	elif [ -f $(DEPS_DIR)/$1/Makefile ]; then \
 		if [ -f $(DEPS_DIR)/$1/rebar.lock ]; then \
 			$(call dep_autopatch2,$1); \
@@ -661,7 +736,7 @@ define dep_autopatch_rebar.erl
 								_ ->
 									Path = "$(call core_native_path,$(DEPS_DIR)/)" ++ atom_to_list(P),
 									io:format("~s", [os:cmd("$(MAKE) -C $(call core_native_path,$(DEPS_DIR)/$1) " ++ Path)]),
-									io:format("~s", [os:cmd("$(MAKE) -C " ++ Path ++ " IS_DEP=1")]),
+									io:format("~s", [os:cmd("$(MAKE) -C " ++ Path ++ " IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM)")]),
 									code:add_patha(Path ++ "/ebin")
 							end
 					end
@@ -755,7 +830,7 @@ endef
 else
 
 define dep_fetch_git
-	git clone -q -n -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1); \
+	git clone -q -n $(if $(filter elixir,$1), --depth 1 ,) -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1); \
 	cd $(DEPS_DIR)/$(call query_name,$1) && git checkout -q $(call query_version_git,$1);
 endef
 
@@ -835,7 +910,10 @@ define dep_fetch_fail
 endef
 
 define dep_target
-$(DEPS_DIR)/$(call query_name,$1): | $(if $(filter hex,$(call query_fetch_method,$1)),hex-core) $(ERLANG_MK_TMP)
+prefetch-$1::
+	@
+
+$(DEPS_DIR)/$(call query_name,$1): prefetch-$1 | $(if $(filter hex,$(call query_fetch_method,$1)),hex-core) $(ERLANG_MK_TMP)
 	$(eval DEP_NAME := $(call query_name,$1))
 	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
@@ -860,7 +938,7 @@ endif
 .PHONY: autopatch-$(call query_name,$1)
 
 autopatch-$(call query_name,$1)::
-	$(verbose) if [ "$1" = "elixir" -a "$(ELIXIR_PATCH)" ]; then \
+	$(verbose) if [ "$1" = "elixir" ]; then \
 		ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/; \
 	else \
 		$$(call dep_autopatch,$(call query_name,$1)) \
@@ -886,14 +964,14 @@ clean:: clean-apps
 
 clean-apps:
 	$(verbose) set -e; for dep in $(ALL_APPS_DIRS) ; do \
-		$(MAKE) -C $$dep clean IS_APP=1; \
+		$(MAKE) -C $$dep clean IS_APP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 	done
 
 distclean:: distclean-apps
 
 distclean-apps:
 	$(verbose) set -e; for dep in $(ALL_APPS_DIRS) ; do \
-		$(MAKE) -C $$dep distclean IS_APP=1; \
+		$(MAKE) -C $$dep distclean IS_APP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 	done
 endif
 
