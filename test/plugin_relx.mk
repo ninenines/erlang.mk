@@ -332,7 +332,7 @@ relx-tar: init
 	$i "Check that tarball exists"
 	$t test -f $(APP)/_rel/$(APP)_release/$(APP)_release-1.tar.gz
 
-relx-vsn: init
+relx-vsn-cmd: init
 
 	$i "Bootstrap a new release named $(APP)"
 	$t mkdir $(APP)/
@@ -348,3 +348,37 @@ relx-vsn: init
 	$i "Check that the correct release exists"
 	$t ! test -d $(APP)/_rel/$(APP)_release/releases/1
 	$t test -d $(APP)/_rel/$(APP)_release/releases/2
+
+relx-vsn-git-long: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Replace the vsn"
+	$t sed -i.bak s/"\"1\""/"{git, long}"/ $(APP)/relx.config
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the correct release exists"
+	$t ! test -d $(APP)/_rel/$(APP)_release/releases/1
+	$t test -d $(APP)/_rel/$(APP)_release/releases/$(shell git rev-parse HEAD)
+
+relx-vsn-git-short: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Replace the vsn"
+	$t sed -i.bak s/"\"1\""/"{git, short}"/ $(APP)/relx.config
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the correct release exists"
+	$t ! test -d $(APP)/_rel/$(APP)_release/releases/1
+	$t test -d $(APP)/_rel/$(APP)_release/releases/$(shell git rev-parse --short HEAD)
