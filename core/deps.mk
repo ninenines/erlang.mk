@@ -150,7 +150,7 @@ endif
 
 # Core targets.
 
-ALL_APPS_DIRS_TO_BUILD = $(if $(LOCAL_DEPS_DIRS)$(IS_APP),$(LOCAL_DEPS_DIRS),$(ALL_APPS_DIRS))
+ALL_APPS_DIRS_TO_BUILD = $(if $(filter-out $(ELIXIR_BUILTINS),$(LOCAL_DEPS_DIRS))$(IS_APP),$(filter-out $(ELIXIR_BUILTINS),$(LOCAL_DEPS_DIRS)),$(ALL_APPS_DIRS))
 
 apps:: $(ALL_APPS_DIRS) clean-tmp-deps.log | $(ERLANG_MK_TMP)
 # Create ebin directory for all apps to make sure Erlang recognizes them
@@ -172,7 +172,7 @@ ifneq ($(ALL_APPS_DIRS_TO_BUILD),)
 			:; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/apps.log; \
-			$(MAKE) -C $$dep $(if $(IS_TEST),test-build-app) IS_APP=1; \
+			$(MAKE) -C $$dep $(if $(IS_TEST),test-build-app) IS_APP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 		fi \
 	done
 endif
@@ -214,10 +214,10 @@ ifneq ($(ALL_DEPS_DIRS),)
 			if [ -z "$(strip $(FULL))" ] $(if $(force_rebuild_dep),&& ! ($(call force_rebuild_dep,$$dep)),) && [ ! -L $$dep ] && [ -f $$dep/ebin/dep_built ]; then \
 				:; \
 			elif [ "$$dep" = "$(DEPS_DIR)/hut" -a "$(HUT_PATCH)" ]; then \
-				$(MAKE) -C $$dep app IS_DEP=1; \
+				$(MAKE) -C $$dep app IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
 			elif [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
-				$(MAKE) -C $$dep IS_DEP=1; \
+				$(MAKE) -C $$dep IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
 			else \
 				echo "Error: No Makefile to build dependency $$dep." >&2; \
@@ -238,6 +238,8 @@ define dep_autopatch
 		rm -rf $(DEPS_DIR)/$1/ebin/; \
 		$(call erlang,$(call dep_autopatch_appsrc.erl,$(1))); \
 		$(call dep_autopatch_erlang_mk,$(1)); \
+	elif [ -f $(DEPS_DIR)/$1/mix.exs ]; then \
+		$(call dep_autopatch_mix,$(1)); \
 	elif [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
 		if [ -f $(DEPS_DIR)/$1/rebar.lock ]; then \
 			$(call dep_autopatch2,$1); \
@@ -650,7 +652,7 @@ define dep_autopatch_rebar.erl
 								_ ->
 									Path = "$(call core_native_path,$(DEPS_DIR)/)" ++ atom_to_list(P),
 									io:format("~s", [os:cmd("$(MAKE) -C $(call core_native_path,$(DEPS_DIR)/$1) " ++ Path)]),
-									io:format("~s", [os:cmd("$(MAKE) -C " ++ Path ++ " IS_DEP=1")]),
+									io:format("~s", [os:cmd("$(MAKE) -C " ++ Path ++ " IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM)")]),
 									code:add_patha(Path ++ "/ebin")
 							end
 					end
@@ -780,6 +782,8 @@ define dep_fetch_ln
 	ln -s $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1));
 endef
 
+HEX_REPO = https://repo.hex.pm
+
 ifeq ($(CACHE_DEPS),1)
 
 # Hex only has a package version. No need to look in the Erlang.mk packages.
@@ -787,7 +791,7 @@ define dep_fetch_hex
 	mkdir -p $(CACHE_DIR)/hex $(DEPS_DIR)/$1; \
 	$(eval hex_tar_name=$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar) \
 	$(if $(wildcard $(CACHE_DIR)/hex/$(hex_tar_name)),,$(call core_http_get,$(CACHE_DIR)/hex/$(hex_tar_name),\
-		https://repo.hex.pm/tarballs/$(hex_tar_name);)) \
+		$(HEX_REPO)/tarballs/$(hex_tar_name);)) \
 	tar -xOf $(CACHE_DIR)/hex/$(hex_tar_name) contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
 
@@ -797,7 +801,7 @@ else
 define dep_fetch_hex
 	mkdir -p $(ERLANG_MK_TMP)/hex $(DEPS_DIR)/$1; \
 	$(call core_http_get,$(ERLANG_MK_TMP)/hex/$1.tar,\
-		https://repo.hex.pm/tarballs/$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar); \
+		$(HEX_REPO)/tarballs/$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar); \
 	tar -xOf $(ERLANG_MK_TMP)/hex/$1.tar contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
 
@@ -841,7 +845,7 @@ endif
 .PHONY: autopatch-$(call dep_name,$1)
 
 autopatch-$(call dep_name,$1)::
-	$(verbose) if [ "$1" = "elixir" -a "$(ELIXIR_PATCH)" ]; then \
+	$(verbose) if [ "$1" = "elixir" ]; then \
 		ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/; \
 	else \
 		$$(call dep_autopatch,$(call dep_name,$1)) \
@@ -855,14 +859,14 @@ clean:: clean-apps
 
 clean-apps:
 	$(verbose) set -e; for dep in $(ALL_APPS_DIRS) ; do \
-		$(MAKE) -C $$dep clean IS_APP=1; \
+		$(MAKE) -C $$dep clean IS_APP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 	done
 
 distclean:: distclean-apps
 
 distclean-apps:
 	$(verbose) set -e; for dep in $(ALL_APPS_DIRS) ; do \
-		$(MAKE) -C $$dep distclean IS_APP=1; \
+		$(MAKE) -C $$dep distclean IS_APP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 	done
 endif
 
