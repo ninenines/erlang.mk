@@ -4,6 +4,11 @@
 
 .PHONY: eunit apps-eunit
 
+# Eunit can be disabled by setting this to any other value.
+EUNIT ?= system
+
+ifeq ($(EUNIT),system)
+
 # Configuration
 
 EUNIT_OPTS ?=
@@ -60,4 +65,6 @@ apps-eunit: test-build
 		[ $$? -ne 0 ] && eunit_retcode=1 ; done ; \
 		exit $$eunit_retcode
 endif
+endif
+
 endif
