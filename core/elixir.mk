@@ -19,9 +19,19 @@ EX_FILES := $(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES))
 ELIXIR_BUILTINS = $(addprefix $(DEPS_DIR)/$(call dep_name,elixir)/lib/,eex elixir logger mix)
 
 define Mix_Makefile.erl
+case "$(basename $(wildcard $(DEPS_DIR)/$(1)/.tmp/Elixir.*.beam))" =:= "" of
+	true ->
+		BeamFilter = "$(DEPS_DIR)/$(1)/.tmp/Elixir.*.beam",
+		Wildcard = "$(wildcard $(DEPS_DIR)/$(1)/.tmp/Elixir.*.beam)",
+		Basename = "$(basename $(wildcard $(DEPS_DIR)/$(1)/.tmp/Elixir.*.beam))",
+		io:format(standard_error, "FAILED TO FIND BEAM!! BeamFilter: ~p, Wildcard: ~p, Basename: ~p~n", [BeamFilter, Wildcard, Basename]),
+		halt(1);
+	false ->
+		ok
+end,
 {ok, _} = application:ensure_all_started(mix),
-{module, _} = code:load_abs("$(basename $(wildcard $(DEPS_DIR)/$(1)/.tmp/Elixir*Mixfile.beam))"),
-Project = '$(notdir $(basename $(wildcard $(DEPS_DIR)/$(1)/.tmp/Elixir*Mixfile.beam)))':project(),
+{module, Mod} = code:load_abs("$(basename $(wildcard $(DEPS_DIR)/$(1)/.tmp/Elixir.*.beam))"),
+Project = Mod:project(),
 Fmt =
 	"PROJECT = ~p~n"
 	"PROJECT_DESCRIPTION = ~s~n"
@@ -29,22 +39,104 @@ Fmt =
 	"~n~n~s~n~n"
 	"ERLC_OPTS = +debug_info~n"
 	"include ../../erlang.mk",
+GetDeps = 
+	fun(Deps) ->
+		CleanVer = 
+			fun(Ver) ->
+				Trim = fun(Bin) ->
+					ShouldTrim = fun(C) -> C =:= $$\s orelse C =:= $$\t end,
+					TrimLeft = 
+						fun 
+							F(<<>>) -> <<>>;
+							F(Bin = <<C, Tail/binary>>) ->
+								case ShouldTrim(C) of
+									true ->
+										F(Tail);
+									false ->
+										Bin
+								end
+						end,
+					TrimRight =
+						fun
+							F(<<>>) ->
+								<<>>;
+							F(Bin) ->
+								Len = byte_size(Bin),
+								<<Left:(Len-1)/binary, C:8>> = Bin,
+								case ShouldTrim(C) of
+									true ->
+										F(Left);
+									false ->
+										Bin
+								end
+						end,
+					TrimLeft(TrimRight(Bin))
+				end,
+				CharList = [$$., $$\s | lists:seq($$0, $$9)],
+				SmallVer = << <<C>> || <<C:8>> <= Ver, lists:member(C, CharList)>>,
+				hd(binary:split(Trim(SmallVer), <<" ">>, [global]))
+			end,
+		(fun
+			F([], DEPS_Acc0, DEP_Acc0) ->
+				[DEPS_Acc0, "\n", DEP_Acc0];
+			F([H|T], DEPS_Acc0, DEP_Acc0) ->
+				{DEPS_Acc1, DEP_Acc1} =
+					case H of
+						{Name, Ver} when is_binary(Ver) ->
+							{
+								[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+								[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, CleanVer(Ver), Name])]
+							};
+						{Name, Opts} when is_list(Opts) ->
+							Path = proplists:get_value(path, Opts),
+							IsRequired = proplists:get_value(optional, Opts) =/= true,
+							IsProdOnly = case proplists:get_value(only, Opts, prod) of
+								prod -> true;
+								L when is_list(L) -> lists:member(prod, L);
+								_ -> false
+							end,
+							case IsRequired andalso IsProdOnly of
+								true when Path =/= undefined ->
+									{
+										[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+										[DEP_Acc0, io_lib:format("dep_~p = ln ~s~n", [Name, Path])]
+									};
+								true when Path =:= undefined ->
+									io:format(standard_error, "Skipping 'dep_~p' as no vsn given.", [Name]),
+									{
+										[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+										DEP_Acc0
+									};
+								false ->
+									{DEPS_Acc0, DEP_Acc0}
+							end;
+						{Name, Ver, Opts} ->
+							IsRequired = proplists:get_value(optional, Opts) =/= true,
+							IsProdOnly = case proplists:get_value(only, Opts, prod) of
+								prod -> true;
+								L when is_list(L) -> lists:member(prod, L);
+								_ -> false
+							end,
+							case IsRequired andalso IsProdOnly of
+								true ->
+									{
+										[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+										[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, CleanVer(Ver), Name])]
+									};
+								false ->
+									{DEPS_Acc0, DEP_Acc0}
+							end;
+						_ ->
+							{DEPS_Acc0, DEP_Acc0}
+					end,
+				F(T, DEPS_Acc1, DEP_Acc1)
+		end)(Deps, [], [])
+	end,
 Args = [
 	proplists:get_value(app, Project),
 	proplists:get_value(description, Project, ""),
 	proplists:get_value(version, Project, ""),
-	[
-		[io_lib:format("DEPS += ~s~ndep_~s = hex ~s ~p~n", [Name, Name, Ver, Name])
-			|| {Name, Ver} <- proplists:get_value(deps, Project, [])],
-		[io_lib:format("DEPS += ~s~ndep_~s = hex ~s ~p~n", [Name, Name, Ver, Name])
-			|| {Name, Ver, Opts} <- proplists:get_value(deps, Project, []),
-			proplists:get_value(optional, Opts) =/= true,
-			case proplists:get_value(only, Opts, prod) of
-				prod -> true;
-				L when is_list(L) -> lists:member(prod, L);
-				_ -> false
-			end]
-	]
+	GetDeps((proplists:get_value(deps, Project, [])))
 ],
 Str = io_lib:format(Fmt, Args),
 case file:write_file("$(DEPS_DIR)/$(1)/Makefile", Str) of
@@ -56,18 +148,29 @@ case file:write_file("$(DEPS_DIR)/$(1)/Makefile", Str) of
 end
 endef
 
+define SHELL_ASSERT_
+if ! $(1); then \
+	echo "$(2)" >&2; \
+	exit 1; \
+fi
+endef
+
+define SHELL_ASSERT
+$(if $(verbose),,$(info [SHELL_ASSERT] $(call SHELL_ASSERT_,$(1),$(2)))) $(call SHELL_ASSERT_,$(1),$(2))
+endef
+
 define dep_autopatch_mix
 	$(MAKE) $(ELIXIRC); \
-	echo $(shell \
-		sed 's|use Mix.Project||g' $(DEPS_DIR)/$1/mix.exs > $(DEPS_DIR)/$1/mix.exs.tmp; \
-		$(ELIXIRC) $(if $(elixirc_verbose),--verbose) $(DEPS_DIR)/$1/mix.exs.tmp -o $(DEPS_DIR)/$1/.tmp/; \
-		rm -f $(DEPS_DIR)/$1/mix.exs.tmp \
-	); \
-	$(ERL) $(addprefix -pa ,$(addsuffix /ebin,$(ELIXIR_BUILTINS))) \
-		-eval "$(subst ",\",$(subst $(newline), ,$(call Mix_Makefile.erl,$(1))))." \
-		-eval "halt(0)."; \
-	rm -rf $(DEPS_DIR)/$1/.tmp/; \
-	mkdir $(DEPS_DIR)/$1/src
+	echo "$(shell \
+		$(call SHELL_ASSERT,sed 's|use Mix.Project||g' $(DEPS_DIR)/$1/mix.exs > $(DEPS_DIR)/$1/mix.exs.tmp,Failed to create mix.exs.tmp); \
+		$(call SHELL_ASSERT,$(ELIXIRC) $(if $(elixirc_verbose),--verbose) --eval '{:ok$(comma) _} = :application.ensure_all_started(:mix);' $(DEPS_DIR)/$1/mix.exs.tmp -o $(DEPS_DIR)/$1/.tmp/,Failed to compile mix.exs.tmp); \
+		$(call SHELL_ASSERT,rm -f $(DEPS_DIR)/$1/mix.exs.tmp,Failed to remove mix.exs.tmp); \
+	)"; \
+	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" $(ERL) $(addprefix -pa ,$(addsuffix /ebin,$(ELIXIR_BUILTINS))) \
+		-eval "$(subst ",\",$(subst $(newline), ,$(subst $$,\$$,$(call Mix_Makefile.erl,$(1)))))." \
+		-eval "halt(0)." || exit 1 \
+	rm -rf $(DEPS_DIR)/$1/.tmp/ || exit 1 \
+	mkdir $(DEPS_DIR)/$1/src || exit 1
 endef
 
 ifneq ($(EX_FILES),)
