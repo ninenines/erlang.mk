@@ -106,6 +106,119 @@ core-deps-build-js: init
 		false = lists:member(jquery, Deps), \
 		halt()"
 
+core-deps-cache-git: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/Makefile
+
+	$i "Add CACHE_DEPS = 1 to the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "CACHE_DEPS = 1\n"}' $(APP)/Makefile
+
+	$i "Check that the cache doesn't exist yet"
+	$t test ! -d $(CACHE_DIR)
+
+	$i "Build the dependencies"
+	$t $(MAKE) -C $(APP) deps $v
+
+	$i "Check that the cache has been created"
+	$t test -d $(CACHE_DIR)
+
+	$i "Check that Cowlib was cloned in the cache"
+	$t test -d $(CACHE_DIR)/gits/cowlib
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that Cowlib is still in the cache"
+	$t test -d $(CACHE_DIR)/gits/cowlib
+
+	$i "Break the Cowlib git link so we're forced to use the cache"
+	$t echo 'dep_cowlib = git bad_url master' >> $(APP)/Makefile
+
+	$i "Build the dependencies"
+	$t $(MAKE) -C $(APP) deps $v
+
+core-deps-cache-git-reuse: init
+
+	$i "Bootstrap a new OTP library named $(APP)_1"
+	$t mkdir $(APP)_1/
+	$t cp ../erlang.mk $(APP)_1/
+	$t $(MAKE) -C $(APP)_1 -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib 1.0.0 to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git \$$(pkg_cowlib_repo) 1.0.0\n"}' $(APP)_1/Makefile
+
+	$i "Add CACHE_DEPS = 1 to the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "CACHE_DEPS = 1\n"}' $(APP)_1/Makefile
+
+	$i "Bootstrap a new OTP library named $(APP)_2"
+	$t mkdir $(APP)_2/
+	$t cp ../erlang.mk $(APP)_2/
+	$t $(MAKE) -C $(APP)_2 -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib 2.0.0 to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git \$$(pkg_cowlib_repo) 2.0.0\n"}' $(APP)_2/Makefile
+
+	$i "Add CACHE_DEPS = 1 to the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "CACHE_DEPS = 1\n"}' $(APP)_2/Makefile
+
+	$i "Build the dependencies in $(APP)_1"
+	$t $(MAKE) -C $(APP)_1 deps $v
+
+	$i "Check that the cache has been created"
+	$t test -d $(CACHE_DIR)
+
+	$i "Check that Cowlib was cloned in the cache"
+	$t test -d $(CACHE_DIR)/gits/cowlib
+
+	$i "Build the dependencies in $(APP)_2"
+	$t $(MAKE) -C $(APP)_2 deps $v
+
+	$i "Check that $(APP)_1 cloned Cowlib 1.0.0"
+	$t test "$$(cat $(APP)_1/deps/cowlib/.git/HEAD)" = "d544a494af4dbc810fc9c15eaf5cc050cced1501"
+
+	$i "Check that $(APP)_2 cloned Cowlib 2.0.0"
+	$t test "$$(cat $(APP)_2/deps/cowlib/.git/HEAD)" = "bd37be4d3b065600c3b76b492535e76e5d413fc1"
+
+core-deps-cache-hex: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib to the list of dependencies using Hex"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
+
+	$i "Add CACHE_DEPS = 1 to the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "CACHE_DEPS = 1\n"}' $(APP)/Makefile
+
+	$i "Check that the cache doesn't exist yet"
+	$t test ! -d $(CACHE_DIR)
+
+	$i "Build the dependencies"
+	$t $(MAKE) -C $(APP) deps $v
+
+	$i "Check that the cache has been created"
+	$t test -d $(CACHE_DIR)
+
+	$i "Check that Cowlib was cloned in the cache"
+	$t test -f $(CACHE_DIR)/hex/cowlib-2.12.1.tar
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that Cowlib is still in the cache"
+	$t test -f $(CACHE_DIR)/hex/cowlib-2.12.1.tar
+
+	$i "Build the dependencies"
+	$t $(MAKE) -C $(APP) deps $v
+
 core-deps-dep-built: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -1476,54 +1589,3 @@ core-deps-test: init
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(triq, Deps), \
 		halt()"
-
-# Checks that the cache is populate and reused
-core-deps-cache-creation: init
-	$i "Bootstrap a new OTP library named $(APP)"
-	$t mkdir $(APP)/
-	$t cp ../erlang.mk $(APP)/
-	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-	$t tmp=`mktemp` && { echo 'DEPS += cowlib' && echo 'CACHE_DEPS=1' && cat $(APP)/Makefile; } >> $$tmp && mv $$tmp $(APP)/Makefile
-	$i "Check that the Cache Directory doesn't exist yet"
-	$t test ! -d $(CACHE_DIR)
-	$i "Pull down & Cache the deps"
-	$t $(MAKE) -C $(APP) deps
-	$i "Check that the Cache Directory has been created"
-	$t test -d $(CACHE_DIR)
-	$i "Check that cowlib was cloned"
-	$t test -d $(CACHE_DIR)/gits/cowlib
-	$t $(MAKE) -C $(APP) distclean
-	$i "Check that cowlib is still in the cache"
-	$t test -d $(CACHE_DIR)/gits/cowlib
-	$i "Break cowlib git link so we're forced to use the cache"
-	$t echo 'dep_cowlib = git bad_url master' >> $(APP)/Makefile
-	$i "Pull down the deps from the cache"
-	$t $(MAKE) -C $(APP) deps
-	$i "Check that cowlib was cloned"
-	$t test -d $(CACHE_DIR)/gits/cowlib
-
-# Checks that 2 apps can reuse the cache
-#  with different versions of the same dep
-core-deps-cache-reuse: init
-	$i "Bootstrap a new OTP library named $(APP)_1"
-	$t mkdir $(APP)_1/
-	$t cp ../erlang.mk $(APP)_1/
-	$t $(MAKE) -C $(APP)_1 -f erlang.mk bootstrap-lib $v
-	$t tmp=`mktemp` && { echo 'DEPS += cowlib' && echo 'dep_cowlib = git $$(pkg_cowlib_repo) 1.0.0' && echo 'CACHE_DEPS=1' && cat $(APP)_1/Makefile; } >> $$tmp && mv $$tmp $(APP)_1/Makefile
-	$i "Bootstrap a new OTP library named $(APP)_2"
-	$t mkdir $(APP)_2/
-	$t cp ../erlang.mk $(APP)_2/
-	$t $(MAKE) -C $(APP)_2 -f erlang.mk bootstrap-lib $v
-	$t tmp=`mktemp` && { echo 'DEPS += cowlib' && echo 'dep_cowlib = git $$(pkg_cowlib_repo) 2.0.0' && echo 'CACHE_DEPS=1' && cat $(APP)_2/Makefile; } >> $$tmp && mv $$tmp $(APP)_2/Makefile
-	$i "Clone & Cache deps in $(APP)_1"
-	$t $(MAKE) -C $(APP)_1 deps
-	$i "Check that the Cache Directory has been created"
-	$t test -d $(CACHE_DIR)
-	$i "Check that cowlib was cloned"
-	$t test -d $(CACHE_DIR)/gits/cowlib
-	$i "Clone & Re-use cached deps in $(APP)_2"
-	$t $(MAKE) -C $(APP)_2 deps
-	$i "Check that $(APP)_1 cloned cowlib 1.x.x"
-	$t test "$$(cat $(APP)_1/deps/cowlib/.git/HEAD)" = "d544a494af4dbc810fc9c15eaf5cc050cced1501"
-	$i "Check that $(APP)_2 cloned cowlib 2.x.x"
-	$t test "$$(cat $(APP)_2/deps/cowlib/.git/HEAD)" = "bd37be4d3b065600c3b76b492535e76e5d413fc1"

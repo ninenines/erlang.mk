@@ -13,7 +13,7 @@ endif
 # Temporary application name, taken from rule name.
 
 APP = test_$(subst -,_,$@)
-CACHE_DIR = $(CURDIR)/$(APP).cache
+CACHE_DIR = $(CURDIR)/$(APP)/.cache
 export CACHE_DIR
 
 # Erlang, quickly!
@@ -128,7 +128,7 @@ endef
 all:: core
 
 clean::
-	$t rm -rf erl_crash.dump packages/ $(filter-out test_rebar_git/,$(wildcard test_*/)) $(CACHE_DIR)
+	$t rm -rf erl_crash.dump packages/ $(filter-out test_rebar_git/,$(wildcard test_*/))
 
 init: clean
 	$i "Prefetch Rebar if necessary"

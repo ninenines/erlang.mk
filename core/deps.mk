@@ -783,7 +783,7 @@ define dep_fetch_hex
 	mkdir -p $(CACHE_DIR)/hex $(DEPS_DIR)/$1; \
 	$(eval hex_tar_name=$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar) \
 	$(if $(wildcard $(CACHE_DIR)/hex/$(hex_tar_name)),,$(call core_http_get,$(CACHE_DIR)/hex/$(hex_tar_name),\
-		https://repo.hex.pm/tarballs/$(hex_tar_name))); \
+		https://repo.hex.pm/tarballs/$(hex_tar_name);)) \
 	tar -xOf $(CACHE_DIR)/hex/$(hex_tar_name) contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
 
