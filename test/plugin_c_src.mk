@@ -8,9 +8,11 @@ c-src: $(C_SRC_TARGETS)
 c_src: c-src
 
 ifeq ($(PLATFORM),msys2)
-C_SRC_OUTPUT_EXECUTABLE_EXTENSION = .dll
+C_SRC_OUTPUT_SHARED_EXTENSION = .dll
+C_SRC_OUTPUT_STATIC_EXTENSION = .lib
 else
-C_SRC_OUTPUT_EXECUTABLE_EXTENSION = .so
+C_SRC_OUTPUT_SHARED_EXTENSION = .so
+C_SRC_OUTPUT_STATIC_EXTENSION = .a
 endif
 
 c-src-makefile-change: init
@@ -32,7 +34,7 @@ c-src-makefile-change: init
 		$(APP)/c_src/$(APP).o \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/$(APP).beam \
-		$(APP)/priv/$(APP)$(C_SRC_OUTPUT_EXECUTABLE_EXTENSION) \
+		$(APP)/priv/$(APP)$(C_SRC_OUTPUT_SHARED_EXTENSION) \
 		$(APP)/src/$(APP).erl | sort > $(APP)/EXPECT
 	$t $(SLEEP)
 	$t touch $(APP)/Makefile
@@ -60,7 +62,7 @@ c-src-nif: init
 	$t test -f $(APP)/c_src/env.mk
 	$t test -f $(APP)/ebin/$(APP).app
 	$t test -f $(APP)/ebin/$(APP).beam
-	$t test -f $(APP)/priv/$(APP)$(C_SRC_OUTPUT_EXECUTABLE_EXTENSION)
+	$t test -f $(APP)/priv/$(APP)$(C_SRC_OUTPUT_SHARED_EXTENSION)
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
@@ -81,7 +83,7 @@ c-src-nif: init
 	$t test -f $(APP)/c_src/env.mk
 	$t test -f $(APP)/ebin/$(APP).app
 	$t test -f $(APP)/ebin/$(APP).beam
-	$t test -f $(APP)/priv/$(APP)$(C_SRC_OUTPUT_EXECUTABLE_EXTENSION)
+	$t test -f $(APP)/priv/$(APP)$(C_SRC_OUTPUT_SHARED_EXTENSION)
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
@@ -101,7 +103,7 @@ c-src-nif: init
 	$t test ! -e $(APP)/c_src/$(APP).o
 	$t test ! -e $(APP)/ebin/$(APP).app
 	$t test ! -e $(APP)/ebin/$(APP).beam
-	$t test ! -e $(APP)/priv/$(APP)$(C_SRC_OUTPUT_EXECUTABLE_EXTENSION)
+	$t test ! -e $(APP)/priv/$(APP)$(C_SRC_OUTPUT_SHARED_EXTENSION)
 
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
@@ -118,3 +120,60 @@ c-src-nif-missing-name: init
 
 	$i "Try to generate a NIF without giving it a name"
 	$t ! $(MAKE) -C $(APP) new-nif $v
+
+c-src-static-nif: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate a NIF from templates"
+	$t $(MAKE) -C $(APP) new-nif n=$(APP) $v
+
+	$i "Set C_SRC_TYPE = static in the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "C_SRC_TYPE = static\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/c_src/$(APP).o
+	$t test -f $(APP)/c_src/env.mk
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/$(APP).beam
+	$t test -f $(APP)/priv/$(APP)$(C_SRC_OUTPUT_STATIC_EXTENSION)
+
+	$i "Check that the library file contains the expected functions"
+	$t objdump -t $(APP)/priv/test_c_src_static_nif.a | grep -c hello | grep -q 1
+
+	$i "Re-build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that all compiled files exist"
+	$t test -f $(APP)/$(APP).d
+	$t test -f $(APP)/c_src/$(APP).o
+	$t test -f $(APP)/c_src/env.mk
+	$t test -f $(APP)/ebin/$(APP).app
+	$t test -f $(APP)/ebin/$(APP).beam
+	$t test -f $(APP)/priv/$(APP)$(C_SRC_OUTPUT_STATIC_EXTENSION)
+
+	$i "Check that the library file contains the expected functions"
+	$t objdump -t $(APP)/priv/test_c_src_static_nif.a | grep -c hello | grep -q 1
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that all intermediate files were removed"
+	$t test ! -e $(APP)/$(APP).d
+	$t test ! -e $(APP)/c_src/$(APP).o
+	$t test ! -e $(APP)/ebin/$(APP).app
+	$t test ! -e $(APP)/ebin/$(APP).beam
+	$t test ! -e $(APP)/priv/$(APP)$(C_SRC_OUTPUT_STATIC_EXTENSION)
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Check that all files were removed"
+	$t test ! -e $(APP)/c_src/env.mk
