@@ -41,10 +41,13 @@ else
 define compile_proto.erl
 	[begin
 		gpb_compile:file(F, [
+			$(foreach i,$(sort $(dir $(PROTO_FILES))),{i$(comma) "$i"}$(comma))
 			{include_as_lib, true},
 			{module_name_suffix, "_pb"},
 			{o_hrl, "./include"},
-			{o_erl, "./src"}])
+			{o_erl, "./src"},
+			{use_packages, true}
+		])
 	end || F <- string:tokens("$1", " ")],
 	halt().
 endef

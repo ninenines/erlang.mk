@@ -40,3 +40,6 @@
 2023/05/12: A number of broken packages have been removed.
             They were all unmaintained and there's a low
             chance that this will break anyone's project.
+
+2023/05/15: Protobuff compilation with `gpb` now uses the
+            `{use_packages, true}` option.
