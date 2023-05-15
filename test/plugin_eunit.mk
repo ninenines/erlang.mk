@@ -347,6 +347,27 @@ eunit-test-dir: init
 	$i "Check that tests were both run only once"
 	$t printf "%s\n" $(APP) $(APP)_tests | cmp $(APP)/eunit.log -
 
+eunit-test-spec: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Configure EUNIT_TEST_SPEC to run a setup function"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "EUNIT_TEST_SPEC = {setup, fun() -> erlang:display(\"EUNIT_TEST_SPEC\" \"-setup\") end, \$$1} \n"}' $(APP)/Makefile
+
+	$i "Generate a module containing EUnit tests"
+	$t printf "%s\n" \
+		"-module($(APP))." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"ok_test() -> ok." \
+		"-endif." > $(APP)/src/$(APP).erl
+
+	$i "Check that EUnit runs the setup function"
+	$t $(MAKE) -C $(APP) eunit | grep -c "EUNIT_TEST_SPEC-setup" | grep -q 1
+
 eunit-tests: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
