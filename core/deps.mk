@@ -710,37 +710,37 @@ endef
 
 ifeq ($(CACHE_DEPS),1)
 
-define __fetch_git
+define dep_cache_fetch_git
 	mkdir -p $(CACHE_DIR)/gits; \
-	if test -d "$(join $(CACHE_DIR)/gits/,$(call dep_name,$(1)))"; then \
-		cd $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))); \
-		if ! git checkout -q $(call dep_commit,$(1)); then \
-			git remote set-url origin $(call dep_repo,$(1)) && \
+	if test -d "$(join $(CACHE_DIR)/gits/,$(call dep_name,$1))"; then \
+		cd $(join $(CACHE_DIR)/gits/,$(call dep_name,$1)); \
+		if ! git checkout -q $(call dep_commit,$1); then \
+			git remote set-url origin $(call dep_repo,$1) && \
 			git pull --all && \
-			git cat-file -e $(call dep_commit,$(1)) 2>/dev/null; \
+			git cat-file -e $(call dep_commit,$1) 2>/dev/null; \
 		fi; \
 	else \
-		git clone -q -n -- $(call dep_repo,$(1)) $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))); \
+		git clone -q -n -- $(call dep_repo,$1) $(join $(CACHE_DIR)/gits/,$(call dep_name,$1)); \
 	fi; \
-	git clone -q --branch $(call dep_commit,$(1)) --single-branch -- $(join $(CACHE_DIR)/gits/,$(call dep_name,$(1))) $(2)
+	git clone -q --branch $(call dep_commit,$1) --single-branch -- $(join $(CACHE_DIR)/gits/,$(call dep_name,$1)) $2
 endef
 
 define dep_fetch_git
-	$(call __fetch_git,$(1),$(DEPS_DIR)/$(call dep_name,$(1)));
+	$(call dep_cache_fetch_git,$1,$(DEPS_DIR)/$(call dep_name,$1));
 endef
 
 define dep_fetch_git-subfolder
 	mkdir -p $(ERLANG_MK_TMP)/git-subfolder; \
-	$(call __fetch_git,$(1),$(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$(1))); \
-	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)/$(word 4,$(dep_$(1))) \
+	$(call dep_cache_fetch_git,$1,$(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)); \
+	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)/$(word 4,$(dep_$1)) \
 		$(DEPS_DIR)/$(call dep_name,$1);
 endef
 
 else
 
 define dep_fetch_git
-	git clone -q -n -- $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1)); \
-	cd $(DEPS_DIR)/$(call dep_name,$(1)) && git checkout -q $(call dep_commit,$(1));
+	git clone -q -n -- $(call dep_repo,$1) $(DEPS_DIR)/$(call dep_name,$1); \
+	cd $(DEPS_DIR)/$(call dep_name,$1) && git checkout -q $(call dep_commit,$1);
 endef
 
 define dep_fetch_git-subfolder
@@ -749,7 +749,7 @@ define dep_fetch_git-subfolder
 		$(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1); \
 	cd $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1) \
 		&& git checkout -q $(call dep_commit,$1); \
-	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)/$(word 4,$(dep_$(1))) \
+	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)/$(word 4,$(dep_$1)) \
 		$(DEPS_DIR)/$(call dep_name,$1);
 endef
 
