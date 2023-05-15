@@ -711,18 +711,18 @@ endef
 ifeq ($(CACHE_DEPS),1)
 
 define dep_cache_fetch_git
-	mkdir -p $(CACHE_DIR)/gits; \
-	if test -d "$(join $(CACHE_DIR)/gits/,$(call dep_name,$1))"; then \
-		cd $(join $(CACHE_DIR)/gits/,$(call dep_name,$1)); \
+	mkdir -p $(CACHE_DIR)/git; \
+	if test -d "$(join $(CACHE_DIR)/git/,$(call dep_name,$1))"; then \
+		cd $(join $(CACHE_DIR)/git/,$(call dep_name,$1)); \
 		if ! git checkout -q $(call dep_commit,$1); then \
 			git remote set-url origin $(call dep_repo,$1) && \
 			git pull --all && \
 			git cat-file -e $(call dep_commit,$1) 2>/dev/null; \
 		fi; \
 	else \
-		git clone -q -n -- $(call dep_repo,$1) $(join $(CACHE_DIR)/gits/,$(call dep_name,$1)); \
+		git clone -q -n -- $(call dep_repo,$1) $(join $(CACHE_DIR)/git/,$(call dep_name,$1)); \
 	fi; \
-	git clone -q --branch $(call dep_commit,$1) --single-branch -- $(join $(CACHE_DIR)/gits/,$(call dep_name,$1)) $2
+	git clone -q --branch $(call dep_commit,$1) --single-branch -- $(join $(CACHE_DIR)/git/,$(call dep_name,$1)) $2
 endef
 
 define dep_fetch_git

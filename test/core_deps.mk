@@ -129,13 +129,13 @@ core-deps-cache-git: init
 	$t test -d $(CACHE_DIR)
 
 	$i "Check that Cowlib was cloned in the cache"
-	$t test -d $(CACHE_DIR)/gits/cowlib
+	$t test -d $(CACHE_DIR)/git/cowlib
 
 	$i "Distclean the application"
 	$t $(MAKE) -C $(APP) distclean $v
 
 	$i "Check that Cowlib is still in the cache"
-	$t test -d $(CACHE_DIR)/gits/cowlib
+	$t test -d $(CACHE_DIR)/git/cowlib
 
 	$i "Break the Cowlib git link so we're forced to use the cache"
 	$t echo 'dep_cowlib = git bad_url master' >> $(APP)/Makefile
@@ -174,7 +174,7 @@ core-deps-cache-git-reuse: init
 	$t test -d $(CACHE_DIR)
 
 	$i "Check that Cowlib was cloned in the cache"
-	$t test -d $(CACHE_DIR)/gits/cowlib
+	$t test -d $(CACHE_DIR)/git/cowlib
 
 	$i "Build the dependencies in $(APP)_2"
 	$t $(MAKE) -C $(APP)_2 deps $v
