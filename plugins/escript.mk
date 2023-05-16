@@ -29,7 +29,7 @@ help::
 
 escript-zip:: FULL=1
 escript-zip:: deps app
-	$(verbose) mkdir -p $(dir $(ESCRIPT_ZIP))
+	$(verbose) mkdir -p $(dir $(ESCRIPT_ZIP_FILE))
 	$(verbose) rm -f $(ESCRIPT_ZIP_FILE)
 	$(gen_verbose) cd .. && $(ESCRIPT_ZIP) $(ESCRIPT_ZIP_FILE) $(PROJECT)/ebin/*
 ifneq ($(DEPS),)
