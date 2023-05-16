@@ -102,6 +102,23 @@ relx-bare-rel: init
 	$t test -d $(APP)/_rel/$(APP)_release/releases
 	$t test -d $(APP)/_rel/$(APP)_release/releases/1
 
+relx-output-dir: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Set RELX_OUTPUT_DIR to _rel2"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "RELX_OUTPUT_DIR = _rel2\n"}' $(APP)/Makefile
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the release exists in the correct location"
+	$t ! test -d $(APP)/_rel
+	$t test -d $(APP)/_rel2
+
 relx-post-rel: init
 
 	$i "Bootstrap a new release named $(APP)"

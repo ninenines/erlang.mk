@@ -62,7 +62,7 @@ define relx_release.erl
 		{git, long} -> string:trim(os:cmd("git rev-parse HEAD"), both, "\n");
 		VsnStr -> Vsn0
 	end,
-	{ok, _} = relx:build_release(#{name => Name, vsn => Vsn}, Config),
+	{ok, _} = relx:build_release(#{name => Name, vsn => Vsn}, Config ++ [{output_dir, "$(RELX_OUTPUT_DIR)"}]),
 	halt(0).
 endef
 
@@ -77,7 +77,7 @@ define relx_tar.erl
 		{git, long} -> string:trim(os:cmd("git rev-parse HEAD"), both, "\n");
 		VsnStr -> Vsn0
 	end,
-	{ok, _} = relx:build_tar(#{name => Name, vsn => Vsn}, Config),
+	{ok, _} = relx:build_tar(#{name => Name, vsn => Vsn}, Config ++ [{output_dir, "$(RELX_OUTPUT_DIR)"}]),
 	halt(0).
 endef
 
