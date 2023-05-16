@@ -1237,6 +1237,7 @@ core-deps-mv-rebar: init
 	$i "Build the application"
 	$t $(MAKE) -C $(APP)-moved $v
 
+ifndef LEGACY
 core-deps-optional: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
@@ -1260,6 +1261,7 @@ core-deps-optional: init
 		true = lists:member(quicer, Deps), \
 		{ok, [quicer]} = application:get_key($(APP), optional_applications), \
 		halt()"
+endif
 
 # A lower-level dependency of the first dependency always
 # wins over a lower-level dependency of the second dependency.
