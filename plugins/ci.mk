@@ -4,24 +4,14 @@
 .PHONY: ci ci-prepare ci-setup
 
 CI_OTP ?=
-CI_HIPE ?=
-CI_ERLLVM ?=
 
-ifeq ($(CI_VM),native)
-ERLC_OPTS += +native
-TEST_ERLC_OPTS += +native
-else ifeq ($(CI_VM),erllvm)
-ERLC_OPTS += +native +'{hipe, [to_llvm]}'
-TEST_ERLC_OPTS += +native +'{hipe, [to_llvm]}'
-endif
-
-ifeq ($(strip $(CI_OTP) $(CI_HIPE) $(CI_ERLLVM)),)
+ifeq ($(strip $(CI_OTP)),)
 ci::
 else
 
-ci:: $(addprefix ci-,$(CI_OTP) $(addsuffix -native,$(CI_HIPE)) $(addsuffix -erllvm,$(CI_ERLLVM)))
+ci:: $(addprefix ci-,$(CI_OTP))
 
-ci-prepare: $(addprefix $(KERL_INSTALL_DIR)/,$(CI_OTP) $(addsuffix -native,$(CI_HIPE)))
+ci-prepare: $(addprefix $(KERL_INSTALL_DIR)/,$(CI_OTP))
 
 ci-setup::
 	$(verbose) :
@@ -45,11 +35,8 @@ ci-$1: $(KERL_INSTALL_DIR)/$2
 endef
 
 $(foreach otp,$(CI_OTP),$(eval $(call ci_target,$(otp),$(otp),otp)))
-$(foreach otp,$(CI_HIPE),$(eval $(call ci_target,$(otp)-native,$(otp)-native,native)))
-$(foreach otp,$(CI_ERLLVM),$(eval $(call ci_target,$(otp)-erllvm,$(otp)-native,erllvm)))
 
 $(foreach otp,$(filter-out $(ERLANG_OTP),$(CI_OTP)),$(eval $(call kerl_otp_target,$(otp))))
-$(foreach otp,$(filter-out $(ERLANG_HIPE),$(sort $(CI_HIPE) $(CI_ERLLLVM))),$(eval $(call kerl_hipe_target,$(otp))))
 
 help::
 	$(verbose) printf "%s\n" "" \

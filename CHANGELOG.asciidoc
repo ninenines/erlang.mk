@@ -47,3 +47,5 @@
 2023/05/15: Experimental support for caching git and
             hex dependencies has been added. Set
             `CACHE_DEPS=1` to enable.
+
+2023/05/16: Remove support for HiPE and ErlLLVM.

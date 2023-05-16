@@ -10,22 +10,13 @@ section of the xref:kerl[OTP version management] chapter.)
 === Configuring Erlang/OTP versions to test
 
 To use the CI plugin you must first configure which versions
-of Erlang/OTP will be used. Erlang.mk provides three separate
-configuration variables depending on whether you need a normal
-OTP release, a HiPE-enabled release or an ErLLVM-enabled release.
+of Erlang/OTP will be used.
 
 At the time of writing, this is how you would test against all
 the most recent patch releases of Erlang/OTP 19 and above:
 
 [source,make]
 CI_OTP = OTP-19.0.7 OTP-19.1.6 OTP-19.2.3 OTP-19.3.6.2 OTP-20.0.4
-
-If you want to test against HiPE and ErLLVM but only with the
-latest version of Erlang/OTP, the following could work:
-
-[source,make]
-CI_HIPE = $(lastword $(CI_OTP))
-CI_ERLLVM = $(CI_HIPE)
 
 Consult the xref:kerl[OTP version management] chapter for more
 information about Erlang/OTP versions and customization of the

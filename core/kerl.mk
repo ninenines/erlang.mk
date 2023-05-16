@@ -28,15 +28,6 @@ $(KERL_INSTALL_DIR)/$(1): $(KERL)
 	fi
 endef
 
-define kerl_hipe_target
-$(KERL_INSTALL_DIR)/$1-native: $(KERL)
-	$(verbose) if [ ! -d $$@ ]; then \
-		KERL_CONFIGURE_OPTIONS=--enable-native-libs \
-			MAKEFLAGS="$(KERL_MAKEFLAGS)" $(KERL) build git $(OTP_GIT) $1 $1-native; \
-		$(KERL) install $1-native $(KERL_INSTALL_DIR)/$1-native; \
-	fi
-endef
-
 $(KERL): $(KERL_DIR)
 
 $(KERL_DIR): | $(ERLANG_MK_TMP)
@@ -59,10 +50,10 @@ ERLANG_OTP := $(notdir $(lastword $(sort\
 endif
 
 ERLANG_OTP ?=
-ERLANG_HIPE ?=
 
 # Use kerl to enforce a specific Erlang/OTP version for a project.
 ifneq ($(strip $(ERLANG_OTP)),)
+
 export PATH := $(KERL_INSTALL_DIR)/$(ERLANG_OTP)/bin:$(PATH)
 SHELL := env PATH=$(PATH) $(SHELL)
 $(eval $(call kerl_otp_target,$(ERLANG_OTP)))
@@ -73,18 +64,4 @@ $(info Building Erlang/OTP $(ERLANG_OTP)... Please wait...)
 $(shell $(MAKE) $(KERL_INSTALL_DIR)/$(ERLANG_OTP) ERLANG_OTP=$(ERLANG_OTP) BUILD_ERLANG_OTP=1 >&2)
 endif
 
-else
-# Same for a HiPE enabled VM.
-ifneq ($(strip $(ERLANG_HIPE)),)
-export PATH := $(KERL_INSTALL_DIR)/$(ERLANG_HIPE)-native/bin:$(PATH)
-SHELL := env PATH=$(PATH) $(SHELL)
-$(eval $(call kerl_hipe_target,$(ERLANG_HIPE)))
-
-# Build Erlang/OTP only if it doesn't already exist.
-ifeq ($(wildcard $(KERL_INSTALL_DIR)/$(ERLANG_HIPE)-native)$(BUILD_ERLANG_OTP),)
-$(info Building HiPE-enabled Erlang/OTP $(ERLANG_OTP)... Please wait...)
-$(shell $(MAKE) $(KERL_INSTALL_DIR)/$(ERLANG_HIPE)-native ERLANG_HIPE=$(ERLANG_HIPE) BUILD_ERLANG_OTP=1 >&2)
-endif
-
-endif
 endif
