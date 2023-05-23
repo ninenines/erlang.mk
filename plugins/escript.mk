@@ -29,11 +29,11 @@ help::
 
 escript-zip:: FULL=1
 escript-zip:: deps app
-	$(verbose) mkdir -p $(dir $(ESCRIPT_ZIP_FILE))
-	$(verbose) rm -f $(ESCRIPT_ZIP_FILE)
-	$(gen_verbose) cd .. && $(ESCRIPT_ZIP) $(ESCRIPT_ZIP_FILE) $(PROJECT)/ebin/*
+	$(verbose) mkdir -p $(dir $(abspath $(ESCRIPT_ZIP_FILE)))
+	$(verbose) rm -f $(abspath $(ESCRIPT_ZIP_FILE))
+	$(gen_verbose) cd .. && $(ESCRIPT_ZIP) $(abspath $(ESCRIPT_ZIP_FILE)) $(PROJECT)/ebin/*
 ifneq ($(DEPS),)
-	$(verbose) cd $(DEPS_DIR) && $(ESCRIPT_ZIP) $(ESCRIPT_ZIP_FILE) \
+	$(verbose) cd $(DEPS_DIR) && $(ESCRIPT_ZIP) $(abspath $(ESCRIPT_ZIP_FILE)) \
 		$(subst $(DEPS_DIR)/,,$(addsuffix /*,$(wildcard \
 			$(addsuffix /ebin,$(shell cat $(ERLANG_MK_TMP)/deps.log)))))
 endif
@@ -43,8 +43,8 @@ escript:: escript-zip
 		"#!$(ESCRIPT_SHEBANG)" \
 		"%% $(ESCRIPT_COMMENT)" \
 		"%%! $(ESCRIPT_EMU_ARGS)" > $(ESCRIPT_FILE)
-	$(verbose) cat $(ESCRIPT_ZIP_FILE) >> $(ESCRIPT_FILE)
+	$(verbose) cat $(abspath $(ESCRIPT_ZIP_FILE)) >> $(ESCRIPT_FILE)
 	$(verbose) chmod +x $(ESCRIPT_FILE)
 
 distclean-escript:
-	$(gen_verbose) rm -f $(ESCRIPT_FILE)
+	$(gen_verbose) rm -f $(ESCRIPT_FILE) $(abspath $(ESCRIPT_ZIP_FILE))
