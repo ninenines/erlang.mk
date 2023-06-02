@@ -780,6 +780,8 @@ define dep_fetch_ln
 	ln -s $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1));
 endef
 
+HEX_REPO = https://repo.hex.pm
+
 ifeq ($(CACHE_DEPS),1)
 
 # Hex only has a package version. No need to look in the Erlang.mk packages.
@@ -787,7 +789,7 @@ define dep_fetch_hex
 	mkdir -p $(CACHE_DIR)/hex $(DEPS_DIR)/$1; \
 	$(eval hex_tar_name=$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar) \
 	$(if $(wildcard $(CACHE_DIR)/hex/$(hex_tar_name)),,$(call core_http_get,$(CACHE_DIR)/hex/$(hex_tar_name),\
-		https://repo.hex.pm/tarballs/$(hex_tar_name);)) \
+		$(HEX_REPO)/tarballs/$(hex_tar_name);)) \
 	tar -xOf $(CACHE_DIR)/hex/$(hex_tar_name) contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
 
@@ -797,7 +799,7 @@ else
 define dep_fetch_hex
 	mkdir -p $(ERLANG_MK_TMP)/hex $(DEPS_DIR)/$1; \
 	$(call core_http_get,$(ERLANG_MK_TMP)/hex/$1.tar,\
-		https://repo.hex.pm/tarballs/$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar); \
+		$(HEX_REPO)/tarballs/$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar); \
 	tar -xOf $(ERLANG_MK_TMP)/hex/$1.tar contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
 

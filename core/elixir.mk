@@ -19,18 +19,11 @@ EX_FILES := $(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES))
 ELIXIR_BUILTINS = $(addprefix $(DEPS_DIR)/$(call dep_name,elixir)/lib/,eex elixir logger mix)
 
 define Mix_Makefile.erl
-case "$(basename $(wildcard $(DEPS_DIR)/$(1)/.tmp/Elixir.*.beam))" =:= "" of
-	true ->
-		BeamFilter = "$(DEPS_DIR)/$(1)/.tmp/Elixir.*.beam",
-		Wildcard = "$(wildcard $(DEPS_DIR)/$(1)/.tmp/Elixir.*.beam)",
-		Basename = "$(basename $(wildcard $(DEPS_DIR)/$(1)/.tmp/Elixir.*.beam))",
-		io:format(standard_error, "FAILED TO FIND BEAM!! BeamFilter: ~p, Wildcard: ~p, Basename: ~p~n", [BeamFilter, Wildcard, Basename]),
-		halt(1);
-	false ->
-		ok
-end,
+{ok, _} = application:ensure_all_started(elixir),
 {ok, _} = application:ensure_all_started(mix),
-{module, Mod} = code:load_abs("$(basename $(wildcard $(DEPS_DIR)/$(1)/.tmp/Elixir.*.beam))"),
+File = <<"$(DEPS_DIR)/$(1)/mix.exs">>,
+[{Mod, Bin}] = elixir_compiler:file(File, fun(_File, _LexerPid) -> ok end),
+{module, Mod} = code:load_binary(Mod, binary_to_list(File), Bin),
 Project = Mod:project(),
 Fmt =
 	"PROJECT = ~p~n"
@@ -39,53 +32,42 @@ Fmt =
 	"~n~n~s~n~n"
 	"ERLC_OPTS = +debug_info~n"
 	"include ../../erlang.mk",
+LFirst = fun
+	F([], Pred) -> 
+		false;
+	F([H|T], Pred) ->
+		case catch Pred(H) of
+			true ->
+				{ok, H};
+			false ->
+				F(T, Pred)
+		end
+end,
 GetDeps = 
 	fun(Deps) ->
-		CleanVer = 
-			fun(Ver) ->
-				Trim = fun(Bin) ->
-					ShouldTrim = fun(C) -> C =:= $$\s orelse C =:= $$\t end,
-					TrimLeft = 
-						fun 
-							F(<<>>) -> <<>>;
-							F(Bin = <<C, Tail/binary>>) ->
-								case ShouldTrim(C) of
-									true ->
-										F(Tail);
-									false ->
-										Bin
-								end
-						end,
-					TrimRight =
-						fun
-							F(<<>>) ->
-								<<>>;
-							F(Bin) ->
-								Len = byte_size(Bin),
-								<<Left:(Len-1)/binary, C:8>> = Bin,
-								case ShouldTrim(C) of
-									true ->
-										F(Left);
-									false ->
-										Bin
-								end
-						end,
-					TrimLeft(TrimRight(Bin))
+		GetVer = fun(Name, Req) ->
+			application:ensure_all_started(ssl),
+			application:ensure_all_started(inets),
+			{ok, PackageInfo} =
+				case hex_repo:get_package(hex_core:default_config(), atom_to_binary(Name)) of
+					{ok, {200, _RespHeaders, Decoded}} ->
+						LFirst(Decoded, fun(#{version := Vsn}) -> 'Elixir.Version':'match?'(Vsn, Req) end);
+					Other ->
+						io:format(standard_error, "Unexpected response for Dep ~p", [Name]),
+						erlang:halt(1)
 				end,
-				CharList = [$$., $$\s | lists:seq($$0, $$9)],
-				SmallVer = << <<C>> || <<C:8>> <= Ver, lists:member(C, CharList)>>,
-				hd(binary:split(Trim(SmallVer), <<" ">>, [global]))
-			end,
+			maps:get(version, PackageInfo)
+		end,
 		(fun
 			F([], DEPS_Acc0, DEP_Acc0) ->
 				[DEPS_Acc0, "\n", DEP_Acc0];
 			F([H|T], DEPS_Acc0, DEP_Acc0) ->
 				{DEPS_Acc1, DEP_Acc1} =
 					case H of
-						{Name, Ver} when is_binary(Ver) ->
+						{Name, Req} when is_binary(Req) ->
 							{
 								[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-								[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, CleanVer(Ver), Name])]
+								[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, GetVer(Name, Req), Name])]
 							};
 						{Name, Opts} when is_list(Opts) ->
 							Path = proplists:get_value(path, Opts),
@@ -110,7 +92,7 @@ GetDeps =
 								false ->
 									{DEPS_Acc0, DEP_Acc0}
 							end;
-						{Name, Ver, Opts} ->
+						{Name, Req, Opts} ->
 							IsRequired = proplists:get_value(optional, Opts) =/= true,
 							IsProdOnly = case proplists:get_value(only, Opts, prod) of
 								prod -> true;
@@ -121,7 +103,7 @@ GetDeps =
 								true ->
 									{
 										[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-										[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, CleanVer(Ver), Name])]
+										[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, GetVer(Req), Name])]
 									};
 								false ->
 									{DEPS_Acc0, DEP_Acc0}
@@ -160,16 +142,11 @@ $(if $(verbose),,$(info [SHELL_ASSERT] $(call SHELL_ASSERT_,$(1),$(2)))) $(call 
 endef
 
 define dep_autopatch_mix
-	$(MAKE) $(ELIXIRC); \
-	echo "$(shell \
-		$(call SHELL_ASSERT,sed 's|use Mix.Project||g' $(DEPS_DIR)/$1/mix.exs > $(DEPS_DIR)/$1/mix.exs.tmp,Failed to create mix.exs.tmp); \
-		$(call SHELL_ASSERT,$(ELIXIRC) $(if $(elixirc_verbose),--verbose) --eval '{:ok$(comma) _} = :application.ensure_all_started(:mix);' $(DEPS_DIR)/$1/mix.exs.tmp -o $(DEPS_DIR)/$1/.tmp/,Failed to compile mix.exs.tmp); \
-		$(call SHELL_ASSERT,rm -f $(DEPS_DIR)/$1/mix.exs.tmp,Failed to remove mix.exs.tmp); \
-	)"; \
-	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" $(ERL) $(addprefix -pa ,$(addsuffix /ebin,$(ELIXIR_BUILTINS))) \
+	$(MAKE) $(ELIXIRC) hex-core; \
+	sed 's|\(defmodule.*do\)|\1\nCode.compiler_options(on_undefined_variable: :warn)\n|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
+	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" $(ERL) -pa $(DEPS_DIR)/hex_core $(addprefix -pa ,$(addsuffix /ebin,$(ELIXIR_BUILTINS))) \
 		-eval "$(subst ",\",$(subst $(newline), ,$(subst $$,\$$,$(call Mix_Makefile.erl,$(1)))))." \
 		-eval "halt(0)." || exit 1 \
-	rm -rf $(DEPS_DIR)/$1/.tmp/ || exit 1 \
 	mkdir $(DEPS_DIR)/$1/src || exit 1
 endef
 
