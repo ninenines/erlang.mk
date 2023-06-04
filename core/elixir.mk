@@ -15,8 +15,43 @@ elixirc_verbose = $(elixirc_verbose_$(V))
 
 ALL_LIB_FILES := $(sort $(call core_find,lib/,*))
 
-EX_FILES := $(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES))
+EX_FILES := $(filter-out lib/mix/%,$(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES)))
 ELIXIR_BUILTINS = $(addprefix $(DEPS_DIR)/$(call dep_name,elixir)/lib/,eex elixir logger mix)
+USES_ELIXIR = $(if $(EX_FILES)$(shell find $(DEPS_DIR) -name '*.ex' 2>/dev/null),1,)
+
+ifneq ($(USES_ELIXIR),)
+ERL_LIBS := $(ERL_LIBS):$(DEPS_DIR)/$(call dep_name,elixir)/lib/
+export ERL_LIBS
+
+define app_file
+{application, '$(PROJECT)', [
+	{description, "$(PROJECT_DESCRIPTION)"},
+	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
+	{id$(comma)$(space)"$(1)"}$(comma))
+	{modules, [$(call comma_list,$(2))]},
+	{registered, [$(call comma_list,$(PROJECT)_sup $(PROJECT_REGISTERED))]},
+	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(LOCAL_DEPS) $(foreach dep,$(DEPS),$(call dep_name,$(dep))))]},
+	$(if $(PROJECT_MOD),{mod$(comma) {'$(PROJECT_MOD)'$(comma) []}}$(comma),)
+	{env, $(subst \,\\,$(PROJECT_ENV))}$(if $(findstring {,$(PROJECT_APP_EXTRA_KEYS)),$(comma)$(newline)$(tab)$(subst \,\\,$(PROJECT_APP_EXTRA_KEYS)),)
+]}.
+endef
+
+app:: $(if $(wildcard ebin/test),clean) deps
+	$(verbose) $(MAKE) --no-print-directory $(PROJECT).d
+	$(verbose) $(MAKE) --no-print-directory app-build
+
+app-build: ebin/$(PROJECT).app
+	$(verbose) :
+
+$(PROJECT).d:: ebin/$(PROJECT).app
+
+define validate_app_file
+	case file:consult("ebin/$(PROJECT).app") of
+		{ok, _} -> halt();
+		_ -> halt(1)
+	end
+endef
+endif
 
 define Mix_Makefile.erl
 {ok, _} = application:ensure_all_started(elixir),
@@ -25,10 +60,16 @@ File = <<"$(DEPS_DIR)/$(1)/mix.exs">>,
 [{Mod, Bin}] = elixir_compiler:file(File, fun(_File, _LexerPid) -> ok end),
 {module, Mod} = code:load_binary(Mod, binary_to_list(File), Bin),
 Project = Mod:project(),
+Application = try Mod:application() catch error:undef -> [] end,
 Fmt =
 	"PROJECT = ~p~n"
 	"PROJECT_DESCRIPTION = ~s~n"
 	"PROJECT_VERSION = ~s~n"
+	"PROJECT_MOD = ~s~n"
+	"define PROJECT_ENV~n"
+	"~p~n"
+	"endef~n"
+	"~n~n~s~n~n"
 	"~n~n~s~n~n"
 	"ERLC_OPTS = +debug_info~n"
 	"include ../../erlang.mk",
@@ -114,10 +155,21 @@ GetDeps =
 				F(T, DEPS_Acc1, DEP_Acc1)
 		end)(Deps, [], [])
 	end,
+StartMod =
+	case lists:keyfind(mod, 1, Application) of
+		{mod, {StartMod_, _StartArgs}} ->
+			atom_to_list(StartMod_);
+		_ ->
+			""
+	end,
+ExtraApps = [io_lib:format("LOCAL_DEPS += ~p~n", [App]) || App <- proplists:get_value(extra_applications, Application, [])],
 Args = [
 	proplists:get_value(app, Project),
 	proplists:get_value(description, Project, ""),
 	proplists:get_value(version, Project, ""),
+	StartMod,
+	proplists:get_value(env, Application, []),
+	ExtraApps,
 	GetDeps((proplists:get_value(deps, Project, [])))
 ],
 Str = io_lib:format(Fmt, Args),
@@ -150,7 +202,7 @@ define dep_autopatch_mix
 	mkdir $(DEPS_DIR)/$1/src || exit 1
 endef
 
-ifneq ($(EX_FILES),)
+ifneq ($(USES),)
 LOCAL_DEPS_DIRS += $(ELIXIR_BUILTINS)
 LOCAL_DEPS += eex elixir logger mix
 
@@ -163,16 +215,16 @@ $(addsuffix /ebin,$(ELIXIR_BUILTINS)): $(DEPS_DIR)/$(call dep_name,elixir)
 	make -C $(DEPS_DIR)/elixir IS_DEP=1
 
 define compile_ex
-	ERL_COMPILER_OPTIONS="[$(call comma_list,$(patsubst '%',%,$(patsubst +%,%,$(filter +%,$(ELIXIRC_OPTS)))))]" $(ELIXIRC) \
-		--verbose $(if $(IS_DEP),,$(if $(filter -Werror,$(ELIXIRC_OPTS)),--warnings-as-errors)) -o ebin/ $(filter-out $(ELIXIRC_EXCLUDE_PATHS),$(ELIXIR_COMPILE_FIRST_PATHS)) $(1) --  -pa ebin/ -I include/
+ERL_COMPILER_OPTIONS="[$(call comma_list,$(patsubst '%',%,$(patsubst +%,%,$(filter +%,$(ELIXIRC_OPTS)))))]" $(ELIXIRC) \
+	--verbose $(if $(IS_DEP),,$(if $(filter -Werror,$(ELIXIRC_OPTS)),--warnings-as-errors)) -o ebin/ $(filter-out $(ELIXIRC_EXCLUDE_PATHS),$(ELIXIR_COMPILE_FIRST_PATHS)) $(1) --  -pa ebin/ -I include/
 endef
 
+# Currently doesn't account for nested modules
 define get_elixir_mod
-'Elixir.$(strip \
+$(foreach module,$(strip \
 	$(patsubst %do,%,$(patsubst defmodule%,%,\
 		$(shell grep 'defmodule' $(1))\
-	))\
-)'
+	))),'Elixir.$(module)')
 endef
 
 ebin/$(PROJECT).app:: $(EX_FILES)
@@ -187,7 +239,7 @@ ebin/$(PROJECT).app:: $(EX_FILES)
 		$(call get_elixir_mod,$(file)) \
 	))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
-	$(app_verbose) printf '$(subst %,%%,$(subst $(newline),\n,$(subst ','\'',$(call app_file,$(GITDESCRIBE),$(MODULES)))))' \
+	$(app_verbose) printf "$(subst %,%%,$(subst $(newline),\n,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))))" \
 		> ebin/$(PROJECT).app
 	$(verbose) if ! $(call erlang,$(call validate_app_file)); then \
 		echo "The .app file produced is invalid. Please verify the value of PROJECT_ENV." >&2; \
@@ -215,4 +267,7 @@ autopatch-elixir::
 	@cp $(DEPS_DIR)/elixir/Makefile $(DEPS_DIR)/elixir/Makefile.orig
 	@sed 's|"$$(MAKE)"|"$$(MAKE)" -f $$(CURDIR)/Makefile.orig|g' -i $(DEPS_DIR)/elixir/Makefile.orig
 
-$(EX_FILES): $(eval $(call dep_target,elixir)) $(addsuffix /ebin,$(ELIXIR_BUILTINS))
+ifneq ($(USES_ELIXIR),)
+ebin/$(PROJECT).app:: $(eval $(call dep_target,elixir)) $(addsuffix /ebin,$(ELIXIR_BUILTINS))
+	@
+endif
