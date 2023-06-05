@@ -71,6 +71,7 @@ Fmt =
 	"endef~n"
 	"~n~n~s~n~n"
 	"~n~n~s~n~n"
+	"~n~s~n"
 	"ERLC_OPTS = +debug_info~n"
 	"include ../../erlang.mk",
 LFirst = fun
@@ -144,7 +145,7 @@ GetDeps =
 								true ->
 									{
 										[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-										[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, GetVer(Req), Name])]
+										[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, GetVer(Name, Req), Name])]
 									};
 								false ->
 									{DEPS_Acc0, DEP_Acc0}
@@ -163,6 +164,45 @@ StartMod =
 			""
 	end,
 ExtraApps = [io_lib:format("LOCAL_DEPS += ~p~n", [App]) || App <- proplists:get_value(extra_applications, Application, [])],
+ProjectCompilers = proplists:get_value(compilers, Project, []),
+"https://hexdocs.pm/elixir_make/Mix.Tasks.Compile.ElixirMake.html",
+ExtraMakeLines = 
+	case lists:member(elixir_make, ProjectCompilers) of
+		false -> 
+			"";
+		true ->
+			Fetch = fun(Key, Proplist, DefaultVal, DefaultReplacement) ->
+				case proplists:get_value(Key, Proplist, DefaultVal) of
+					DefaultVal -> DefaultReplacement;
+					Value -> Value
+				end
+			end,
+			case file:copy("$(DEPS_DIR)/$(1)/" ++ Fetch(make_makefile, Project, default, "Makefile"), "$(DEPS_DIR)/$(1)/elixir_make.mk") of
+				{ok, _} -> ok;
+				Err = {error, _} ->
+					io:format(standard_error, "Failed to copy Makefile with error ~p~n", [Err]),
+					halt(1)
+			end,
+			[
+				io_lib:format("app::~n\t~s -C \"~s\" -f \"$(DEPS_DIR)/$(1)/elixir_make.mk\" ~s ~s~n", [
+					Fetch(make_executable, Project, default, "$(MAKE)"),
+					Fetch(make_cwd, Project, undefined, <<".">>),
+					lists:join(" ", Fetch(make_targets, Project, [], [])),
+					lists:join(" ", Fetch(make_args, Project, undefined, []))
+				]),
+				"\n",
+				case Fetch(make_clean, Project, nil, undefined) of
+					undefined -> 
+						"";
+					Clean ->
+						io_lib:format("clean::~n\t~s~n", [Clean])
+				end
+			]
+	end,
+Deps = 
+	lists:foldl(fun(DepToRemove, Acc) -> 
+		lists:keydelete(DepToRemove, 1, Acc)
+	end, proplists:get_value(deps, Project, []), [elixir_make]),
 Args = [
 	proplists:get_value(app, Project),
 	proplists:get_value(description, Project, ""),
@@ -170,7 +210,8 @@ Args = [
 	StartMod,
 	proplists:get_value(env, Application, []),
 	ExtraApps,
-	GetDeps((proplists:get_value(deps, Project, [])))
+	GetDeps(Deps),
+	ExtraMakeLines
 ],
 Str = io_lib:format(Fmt, Args),
 case file:write_file("$(DEPS_DIR)/$(1)/Makefile", Str) of

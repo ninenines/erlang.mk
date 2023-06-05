@@ -43,3 +43,26 @@ core-elixir-test-project: init
 		true = lists:member(jason, Apps), \
 		true = lists:member(phoenix, Apps), \
 		halt()\""
+
+core-elixir-nif: init
+ifneq ($(shell which cpp >/dev/null && echo '#include "sodium.h"' | cpp -H -o /dev/null 2>&1 | head -n1 | grep -v 'No such file or directory'),)
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Configure Makefile"
+	$t echo "DEPS += libsalty2" >> $(APP)/Makefile
+	$t echo "dep_libsalty2 = git https://github.com/Ianleeclark/libsalty2.git b11e544" >> $(APP)/Makefile
+	$t echo "$$(grep -v 'include erlang.mk' $(APP)/Makefile)" > $(APP)/Makefile
+	$t echo "include erlang.mk" >> $(APP)/Makefile
+
+	$i "Make deps"
+	$t $(MAKE) -C $(APP) deps $v
+
+	$i "Check libsalty2 has compiled"
+	$t test -f $(APP)/deps/libsalty2/ebin/libsalty2.app
+	$t test -f $(APP)/deps/libsalty2/priv/salty_nif.so
+else
+	$i "Test depends on libsodium-dev, skipping."
+endif

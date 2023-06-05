@@ -236,6 +236,8 @@ define dep_autopatch
 		rm -rf $(DEPS_DIR)/$1/ebin/; \
 		$(call erlang,$(call dep_autopatch_appsrc.erl,$(1))); \
 		$(call dep_autopatch_erlang_mk,$(1)); \
+	elif [ -f $(DEPS_DIR)/$1/mix.exs ]; then \
+		$(call dep_autopatch_mix,$(1)); \
 	elif [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
 		if [ -f $(DEPS_DIR)/$1/rebar.lock ]; then \
 			$(call dep_autopatch2,$1); \
@@ -246,8 +248,6 @@ define dep_autopatch
 		elif [ -n "`find $(DEPS_DIR)/$(1)/ -type f -name \*.mk -not -name erlang.mk -exec grep -i "^[^#].*rebar" '{}' \;`" ]; then \
 			$(call dep_autopatch2,$(1)); \
 		fi \
-	elif [ -f $(DEPS_DIR)/$1/mix.exs ]; then \
-		$(call dep_autopatch_mix,$(1)); \
 	else \
 		if [ ! -d $(DEPS_DIR)/$(1)/src/ ]; then \
 			$(call dep_autopatch_noop,$(1)); \
