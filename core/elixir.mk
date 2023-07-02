@@ -2,7 +2,17 @@ ifeq ($(pkg_elixir_commit),master)
 pkg_elixir_commit = main
 endif
 
+ELIXIR_USE_SYSTEM := 1
+
+ifeq ($(ELIXIR_USE_SYSTEM),1)
+ELIXIRC = $(shell which elixirc)
+endif
+
+ifeq ($(ELIXIRC),)
 ELIXIRC = $(DEPS_DIR)/$(call dep_name,elixir)/bin/elixirc
+endif
+
+ELIXIR_PATH = $(if $(ELIXIRC),$(abspath $(shell $(dir $(ELIXIRC))/elixir -e 'IO.puts(:code.lib_dir(:elixir))')/../../),$(DEPS_DIR)/$(call dep_name,elixir))
 
 ELIXIR_COMPILE_FIRST_PATHS = $(addprefix src/,$(addsuffix .ex,$(COMPILE_FIRST))) $(addprefix lib/,$(addsuffix .ex,$(COMPILE_FIRST)))
 ELIXIRC_EXCLUDE_PATHS = $(addprefix src/,$(addsuffix .ex,$(ERLC_EXCLUDE))) $(addprefix lib/,$(addsuffix .ex,$(ERLC_EXCLUDE)))
@@ -16,11 +26,11 @@ elixirc_verbose = $(elixirc_verbose_$(V))
 ALL_LIB_FILES := $(sort $(call core_find,lib/,*))
 
 EX_FILES := $(filter-out lib/mix/%,$(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES)))
-ELIXIR_BUILTINS = $(addprefix $(DEPS_DIR)/$(call dep_name,elixir)/lib/,eex elixir logger mix)
+ELIXIR_BUILTINS = $(addprefix $(ELIXIR_PATH)/lib/,eex elixir logger mix)
 USES_ELIXIR = $(if $(EX_FILES)$(shell find $(DEPS_DIR) -name '*.ex' 2>/dev/null),1,)
 
 ifneq ($(USES_ELIXIR),)
-ERL_LIBS := $(ERL_LIBS):$(DEPS_DIR)/$(call dep_name,elixir)/lib/
+ERL_LIBS := $(ERL_LIBS):$(ELIXIR_PATH)/lib/
 export ERL_LIBS
 
 define app_file
@@ -250,10 +260,10 @@ LOCAL_DEPS += eex elixir logger mix
 ebin/$(PROJECT).app:: $(ELIXIRC)
 endif
 
-$(ELIXIRC): $(DEPS_DIR)/$(call dep_name,elixir)/lib/elixir/ebin/elixir.app
+$(ELIXIRC): $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
 
-$(addsuffix /ebin,$(ELIXIR_BUILTINS)): $(DEPS_DIR)/$(call dep_name,elixir)
-	make -C $(DEPS_DIR)/elixir IS_DEP=1
+$(addsuffix /ebin,$(ELIXIR_BUILTINS)): $(ELIXIR_PATH)
+	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir IS_DEP=1)
 
 define compile_ex
 ERL_COMPILER_OPTIONS="[$(call comma_list,$(patsubst '%',%,$(patsubst +%,%,$(filter +%,$(ELIXIRC_OPTS)))))]" $(ELIXIRC) \
@@ -275,10 +285,10 @@ ebin/$(PROJECT).app:: $(EX_FILES)
 		|| git describe --dirty --abbrev=7 --tags --always 2>/dev/null || true))
 	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename \
 		$(filter-out $(ELIXIRC_EXCLUDE_PATHS), $(ERL_FILES) $(CORE_FILES) $(BEAM_FILES)))))))
-	$(eval MODULES := $(MODULES) $(foreach file, \
+	$(eval MODULES := $(call UNIQUE,$(MODULES) $(foreach file, \
 		$(EX_FILES), \
 		$(call get_elixir_mod,$(file)) \
-	))
+	)))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
 	$(app_verbose) printf "$(subst %,%%,$(subst $(newline),\n,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))))" \
 		> ebin/$(PROJECT).app
@@ -300,8 +310,8 @@ ifneq ($(wildcard src/$(PROJECT).appup),)
 	$(verbose) cp src/$(PROJECT).appup ebin/
 endif
 
-$(DEPS_DIR)/$(call dep_name,elixir)/lib/elixir/ebin/elixir.app: $(DEPS_DIR)/$(call dep_name,elixir)
-	$(MAKE) -C $(DEPS_DIR)/elixir -f Makefile.orig compile
+$(ELIXIR_PATH)/lib/elixir/ebin/elixir.app: $(ELIXIR_PATH)
+	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir -f Makefile.orig compile)
 
 # We need the original makefile so that we can compile the elixir compiler
 autopatch-elixir::
