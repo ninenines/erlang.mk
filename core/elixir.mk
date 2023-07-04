@@ -2,17 +2,22 @@ ifeq ($(pkg_elixir_commit),master)
 pkg_elixir_commit = main
 endif
 
-ELIXIR_USE_SYSTEM := 1
+ELIXIR_USE_SYSTEM ?= 1
 
 ifeq ($(ELIXIR_USE_SYSTEM),1)
-ELIXIRC = $(shell which elixirc)
+ELIXIRC := $(shell which elixirc)
+ifneq ($(ELIXIRC),)
+ELIXIR_PATH := $(shell $(dir $(ELIXIRC))/elixir -e 'IO.puts(:code.lib_dir(:elixir))')/../../
+endif
 endif
 
 ifeq ($(ELIXIRC),)
-ELIXIRC = $(DEPS_DIR)/$(call dep_name,elixir)/bin/elixirc
+ELIXIRC := $(DEPS_DIR)/$(call dep_name,elixir)/bin/elixirc
+ELIXIR_PATH = $(DEPS_DIR)/$(call dep_name,elixir)
 endif
 
-ELIXIR_PATH = $(if $(ELIXIRC),$(abspath $(shell $(dir $(ELIXIRC))/elixir -e 'IO.puts(:code.lib_dir(:elixir))')/../../),$(DEPS_DIR)/$(call dep_name,elixir))
+ELIXIRC := $(abspath $(ELIXIRC))
+ELIXIR_PATH := $(abspath $(ELIXIR_PATH))
 
 ELIXIR_COMPILE_FIRST_PATHS = $(addprefix src/,$(addsuffix .ex,$(COMPILE_FIRST))) $(addprefix lib/,$(addsuffix .ex,$(COMPILE_FIRST)))
 ELIXIRC_EXCLUDE_PATHS = $(addprefix src/,$(addsuffix .ex,$(ERLC_EXCLUDE))) $(addprefix lib/,$(addsuffix .ex,$(ERLC_EXCLUDE)))
@@ -279,7 +284,7 @@ $(foreach module,$(strip \
 endef
 
 ebin/$(PROJECT).app:: $(EX_FILES)
-	$(if $(strip $(EX_FILES)),$(call compile_ex,$(EX_FILES)))
+	$(gen_verbose) $(if $(strip $(EX_FILES)),$(call compile_ex,$(EX_FILES)))
 # Older git versions do not have the --first-parent flag. Do without in that case.
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null \
 		|| git describe --dirty --abbrev=7 --tags --always 2>/dev/null || true))
@@ -315,8 +320,8 @@ $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app: $(ELIXIR_PATH)
 
 # We need the original makefile so that we can compile the elixir compiler
 autopatch-elixir::
-	@cp $(DEPS_DIR)/elixir/Makefile $(DEPS_DIR)/elixir/Makefile.orig
-	@sed 's|"$$(MAKE)"|"$$(MAKE)" -f $$(CURDIR)/Makefile.orig|g' -i $(DEPS_DIR)/elixir/Makefile.orig
+	$(verbose) cp $(DEPS_DIR)/elixir/Makefile $(DEPS_DIR)/elixir/Makefile.orig
+	$(verbose) sed 's|"$$(MAKE)"|"$$(MAKE)" -f $$(CURDIR)/Makefile.orig|g' -i $(DEPS_DIR)/elixir/Makefile.orig
 
 ifneq ($(USES_ELIXIR),)
 ebin/$(PROJECT).app:: $(eval $(call dep_target,elixir)) $(addsuffix /ebin,$(ELIXIR_BUILTINS))
