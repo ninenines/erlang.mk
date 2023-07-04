@@ -843,7 +843,7 @@ endif
 .PHONY: autopatch-$(call dep_name,$1)
 
 autopatch-$(call dep_name,$1)::
-	$(verbose) if [ "$1" = "elixir" -a "$(ELIXIR_PATCH)" ]; then \
+	$(verbose) if [ "$1" = "elixir" ]; then \
 		ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/; \
 	else \
 		$$(call dep_autopatch,$(call dep_name,$1)) \

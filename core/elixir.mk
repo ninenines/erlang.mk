@@ -258,16 +258,16 @@ define dep_autopatch_mix
 	mkdir $(DEPS_DIR)/$1/src || exit 1
 endef
 
-ifneq ($(USES),)
+ifneq ($(USES_ELIXIR),)
 LOCAL_DEPS_DIRS += $(ELIXIR_BUILTINS)
 LOCAL_DEPS += eex elixir logger mix
 
-ebin/$(PROJECT).app:: $(ELIXIRC)
+ebin/$(PROJECT).app:: $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
 endif
 
 $(ELIXIRC): $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
 
-$(addsuffix /ebin,$(ELIXIR_BUILTINS)): $(ELIXIR_PATH)
+$(addsuffix /ebin,$(ELIXIR_BUILTINS)): $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
 	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir IS_DEP=1)
 
 define compile_ex
@@ -316,7 +316,11 @@ ifneq ($(wildcard src/$(PROJECT).appup),)
 endif
 
 $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app: $(ELIXIR_PATH)
-	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir -f Makefile.orig compile)
+ifeq ($(ELIXIR_USE_SYSTEM),1)
+	@
+else
+	$(verbose) $(MAKE) -C $(DEPS_DIR)/elixir -f Makefile.orig compile Q="$(verbose)"
+endif
 
 # We need the original makefile so that we can compile the elixir compiler
 autopatch-elixir::
