@@ -12,6 +12,7 @@ endif
 endif
 
 ifeq ($(ELIXIRC),)
+ELIXIR_USE_SYSTEM = 0
 ELIXIRC := $(DEPS_DIR)/$(call dep_name,elixir)/bin/elixirc
 ELIXIR_PATH = $(DEPS_DIR)/$(call dep_name,elixir)
 endif
