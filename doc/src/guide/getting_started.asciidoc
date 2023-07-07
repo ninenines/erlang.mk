@@ -12,6 +12,11 @@ contain your project.
 $ mkdir hello_joe
 $ cd hello_joe
 
+Note that the project directory name must match the name of
+your application for some of the functionality to work (such
+as OTP releases). The name should only include letters, numbers
+or underscore as well for better compatibility.
+
 Most people tend to put all their projects side by side in
 a common folder. We recommend keeping an organization similar
 to your remote repositories. For example, for GitHub users,
