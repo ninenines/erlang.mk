@@ -39,7 +39,7 @@ ifneq ($(DEPS),)
 endif
 ifneq ($(USES_ELIXIR),)
 	$(verbose) cd $(DEPS_DIR) && $(ESCRIPT_ZIP) $(abspath $(ESCRIPT_ZIP_FILE)) \
-		$(addsuffix /*,$(wildcard \ $(addsuffix /ebin,$(ELIXIR_BUILTINS))))
+		$(addsuffix /*,$(wildcard $(addsuffix /ebin,$(ELIXIR_BUILTINS))))
 endif
 
 escript:: escript-zip

@@ -98,7 +98,7 @@ endif
 export PLATFORM
 endif
 
-UNIQUE = $(if $1,$(firstword $1) $(call uniq,$(filter-out $(firstword $1),$1)))
+UNIQUE = $(if $1,$(firstword $1) $(call UNIQUE,$(filter-out $(firstword $1),$1)))
 
 # Core targets.
 
