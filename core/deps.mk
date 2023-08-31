@@ -604,8 +604,8 @@ define dep_autopatch_rebar.erl
 					"\t$$\(CC) -o $$\@ $$\? $$\(LDFLAGS) $$\(ERL_LDFLAGS) $$\(DRV_LDFLAGS) $$\(LDLIBS) $$\(EXE_LDFLAGS)",
 					case {filename:extension(Output), $(PLATFORM)} of
 					    {[], _} -> "\n";
-					    {".so", darwin} -> "-shared\n";
-					    {".dylib", darwin} -> "-shared\n";
+					    {".so", darwin} -> " -shared\n";
+					    {".dylib", darwin} -> " -shared\n";
 					    {_, darwin} -> "\n";
 					    _ -> " -shared\n"
 					end])
