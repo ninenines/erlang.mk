@@ -11,7 +11,7 @@ else
 
 ci:: $(addprefix ci-,$(CI_OTP))
 
-ci-prepare: $(addprefix $(KERL_INSTALL_DIR)/,$(CI_OTP))
+ci-prepare: $(addprefix ci-prepare-,$(CI_OTP))
 
 ci-setup::
 	$(verbose) :
@@ -23,7 +23,10 @@ ci_verbose_0 = @echo " CI    " $(1);
 ci_verbose = $(ci_verbose_$(V))
 
 define ci_target
-ci-$1: $(KERL_INSTALL_DIR)/$2
+ci-prepare-$1: $(KERL_INSTALL_DIR)/$2
+	$(verbose) :
+
+ci-$1: ci-prepare-$1
 	$(verbose) $(MAKE) --no-print-directory clean
 	$(ci_verbose) \
 		PATH="$(KERL_INSTALL_DIR)/$2/bin:$(PATH)" \
