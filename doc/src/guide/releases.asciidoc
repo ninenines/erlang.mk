@@ -7,8 +7,15 @@ https://erlware.github.io/relx/[Relx website] for more information.
 
 === Setup
 
-Erlang.mk will create a release if it detects a Relx configuration
-file in the '$(RELX_CONFIG)' location. This defaults to
+First, `relx` must be added in the dependencies of your
+project. You can add it to `REL_DEPS` so that it is fetched
+whenever you need to build the release:
+
+[source,erlang]
+REL_DEPS = relx
+
+Then, you need to create a 'relx.config' file in the
+'$(RELX_CONFIG)' location. This defaults to
 '$(CURDIR)/relx.config'. You can override it by defining
 the variable before including Erlang.mk:
 
@@ -28,14 +35,6 @@ else
 RELX_CONFIG = $(CURDIR)/relx.dev.config
 endif
 ----
-
-Relx does not need to be installed. Erlang.mk will download
-and build it automatically.
-
-The Relx executable will be saved in the '$(RELX)' file. This
-location defaults to '$(CURDIR)/relx' and can be overridden.
-
-// @todo You can use a custom location by ???
 
 === Configuration
 
