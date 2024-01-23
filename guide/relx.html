@@ -35,8 +35,10 @@ div.navfooter{margin-bottom:1em}
 
 <div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ports.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="sfx.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="relx"></a>Chapter 9. Releases</h2></div></div></div><p>Erlang.mk relies on <span class="emphasis"><em>Relx</em></span> for generating releases. This
 chapter covers the Erlang.mk-specific bits. Consult the
-<a class="ulink" href="https://erlware.github.io/relx/" target="_top">Relx website</a> for more information.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_setup"></a>9.1. Setup</h2></div></div></div><p>Erlang.mk will create a release if it detects a Relx configuration
-file in the <span class="emphasis"><em>$(RELX_CONFIG)</em></span> location. This defaults to
+<a class="ulink" href="https://erlware.github.io/relx/" target="_top">Relx website</a> for more information.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_setup"></a>9.1. Setup</h2></div></div></div><p>First, <code class="literal">relx</code> must be added in the dependencies of your
+project. You can add it to <code class="literal">REL_DEPS</code> so that it is fetched
+whenever you need to build the release:</p><pre class="programlisting">REL_DEPS = relx</pre><p>Then, you need to create a <span class="emphasis"><em>relx.config</em></span> file in the
+<span class="emphasis"><em>$(RELX_CONFIG)</em></span> location. This defaults to
 <span class="emphasis"><em>$(CURDIR)/relx.config</em></span>. You can override it by defining
 the variable before including Erlang.mk:</p><pre class="programlisting">RELX_CONFIG = $(CURDIR)/webchat.config</pre><p>It is also possible to have multiple <span class="emphasis"><em>relx.config</em></span> files.
 For example you might have one for development and one for
@@ -45,9 +47,7 @@ should be used:</p><pre class="programlisting">ifdef PROD
 RELX_CONFIG = $(CURDIR)/relx.prod.config
 else
 RELX_CONFIG = $(CURDIR)/relx.dev.config
-endif</pre><p>Relx does not need to be installed. Erlang.mk will download
-and build it automatically.</p><p>The Relx executable will be saved in the <span class="emphasis"><em>$(RELX)</em></span> file. This
-location defaults to <span class="emphasis"><em>$(CURDIR)/relx</em></span> and can be overriden.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration"></a>9.2. Configuration</h2></div></div></div><p>You can specify additional Relx options using the <code class="literal">RELX_OPTS</code>
+endif</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration"></a>9.2. Configuration</h2></div></div></div><p>You can specify additional Relx options using the <code class="literal">RELX_OPTS</code>
 variable. For example, to enable <code class="literal">dev_mode</code>:</p><pre class="programlisting">RELX_OPTS = -d true</pre><p>While you can specify the output directory for the release
 in the Relx options directly, Erlang.mk provides a specific
 variable for it: <code class="literal">RELX_OUTPUT_DIR</code>. It defaults to the <span class="emphasis"><em>_rel</em></span>

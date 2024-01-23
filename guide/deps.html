@@ -81,7 +81,12 @@ target <code class="literal">deps::</code> before including <span class="emphasi
 deps
 </span></dt><dd>
 $(CURDIR)/deps/triq
-</dd></dl></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_modifying_the_dependency_source_or_version"></a>7.2.1. Modifying the dependency source or version</h3></div></div></div><p>By default, Erlang.mk will look into its package index to
+</dd></dl></div><p>Sometimes dependencies are allowed to be missing. However, your application
+may depend on an optional application being started. To ensure that an
+optional dependency is started before your application, the variable
+<code class="literal">OPTIONAL_DEPS</code> may be used:</p><pre class="programlisting">OPTIONAL_DEPS = quicer</pre><p>The top-level project can then decide whether to include this
+application by adding it to its <code class="literal">BUILD_DEPS</code> and including
+it in the release dependencies.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_modifying_the_dependency_source_or_version"></a>7.2.1. Modifying the dependency source or version</h3></div></div></div><p>By default, Erlang.mk will look into its package index to
 find the project you are looking for, if you only provide
 its name. This is this case:</p><pre class="programlisting">DEPS = cowboy</pre><p>If you need a different version, you need to define another
 variable. There are two ways to do this, each being useful
@@ -89,7 +94,7 @@ for different reasons.</p><p>If you simply want to change the commit number, all
 need to do is to define the <code class="literal">dep_$(DEP_NAME)_commit</code>
 variable. In the case of Cowboy, this would look like this:</p><pre class="programlisting">DEPS = cowboy
 dep_cowboy_commit = 2.0.0-pre.2</pre><p>Erlang.mk will use the package index to get all information
-about Cowboy, except the commit number which will be overriden.</p><p>If you need to set the fetch method or repository information
+about Cowboy, except the commit number which will be overridden.</p><p>If you need to set the fetch method or repository information
 too, for example because you want to use your own fork, or
 simply because the project is missing from the index, you
 can define the <code class="literal">dep_$(DEP_NAME)</code> variable with everything:</p><pre class="programlisting">DEPS = cowboy
@@ -316,10 +321,8 @@ If it contains a <span class="emphasis"><em>configure</em></span> script, run it
 </li><li class="listitem">
 Run autopatch on the project
 </li></ul></div><p>Autopatch first checks if there is any project-specific patch
-enabled. There are currently three: <code class="literal">RABBITMQ_CLIENT_PATCH</code> for
-the <code class="literal">amqp_client</code> dependency (before 3.6.0), <code class="literal">RABBITMQ_SERVER_PATCH</code>
-for the <code class="literal">rabbit</code> dependency (before 3.6.0) and <code class="literal">ELIXIR_PATCH</code>
-for the <code class="literal">elixir</code> dependency.</p><p>Otherwise, autopatch performs different operations depending
+enabled. There are currently two: <code class="literal">ELIXIR_PATCH</code> for the <code class="literal">elixir</code>
+dependency and <code class="literal">HUT_PATCH</code> for the <code class="literal">hut</code> dependency.</p><p>Otherwise, autopatch performs different operations depending
 on the kind of project it finds the dependency to be.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 Rebar projects are automatically converted to use Erlang.mk
 as their build tool. This essentially patches Rebar out, and

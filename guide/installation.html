@@ -84,7 +84,7 @@ use the following commands to extract it:</p><pre class="screen">C:\&gt; 7z x ms
 C:\&gt; 7z x msys2.tar &gt; NUL</pre><p>Then you can run the two commands needed to perform the
 post-installation setup:</p><pre class="screen">C:\&gt; C:\msys64\usr\bin\bash -lc "pacman --needed --noconfirm -Sy bash pacman pacman-mirrors msys2-runtime"
 C:\&gt; C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syu"</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_installing_the_required_msys2_packages"></a>1.2.3. Installing the required MSYS2 packages</h3></div></div></div><p>After following these instructions, you can install GNU Make,
-Git and any other required softwares. From an MSYS2 shell,
+Git and any other required software. From an MSYS2 shell,
 you can call <code class="literal">pacman</code> directly:</p><pre class="programlisting">$ pacman -S git make</pre><p>You can use <code class="literal">pacman -Ss</code> to search packages. For example,
 to find all packages related to GCC:</p><pre class="programlisting">$ pacman -Ss gcc</pre><p>If you are going to compile C/C++ code, you will need to
 install this package, as Erlang.mk cannot use the normal
