@@ -224,7 +224,6 @@ define makedep.erl
 	end,
 	MakeDepend = fun
 		(F, Fd, Mod, StartLocation) ->
-			{ok, Filename} = file:pid2name(Fd),
 			case io:parse_erl_form(Fd, undefined, StartLocation) of
 				{ok, AbsData, EndLocation} ->
 					case AbsData of
