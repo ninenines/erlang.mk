@@ -82,13 +82,13 @@ MSYS2 in order to use Erlang.mk.
 
 Erlang.mk requires Erlang/OTP to be installed. The OTP team
 provides binaries of Erlang/OTP for all major and minor releases,
-available from the http://www.erlang.org/download.html[official download page].
+available from the https://www.erlang.org/downloads[official download page].
 It is recommended that you use the 64-bit installer unless
 technically impossible. Please follow the instructions from
 the installer to complete the installation.
 
 The OTP team also provides a short guide to
-http://www.erlang.org/download.html[installing Erlang/OTP on Windows]
+https://www.erlang.org/downloads[installing Erlang/OTP on Windows]
 if you need additional references.
 
 You can install Erlang/OTP silently using the `/S` switch
