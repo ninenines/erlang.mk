@@ -12,6 +12,8 @@ contain your project.
 $ mkdir hello_joe
 $ cd hello_joe
 
+The project directory names are allowed only alphabet chracter, numbers and `_`.
+
 Most people tend to put all their projects side by side in
 a common folder. We recommend keeping an organization similar
 to your remote repositories. For example, for GitHub users,
