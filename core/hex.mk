@@ -18,7 +18,7 @@ $(if $(filter hex_core,$(DEPS) $(BUILD_DEPS) $(DOC_DEPS) $(REL_DEPS) $(TEST_DEPS
 
 hex-core: $(DEPS_DIR)/hex_core
 	$(verbose) if [ ! -e $(DEPS_DIR)/hex_core/ebin/dep_built ]; then \
-		$(MAKE) -C $(DEPS_DIR)/hex_core IS_DEP=1; \
+		$(MAKE) -C $(DEPS_DIR)/hex_core IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
 		touch $(DEPS_DIR)/hex_core/ebin/dep_built; \
 	fi
 

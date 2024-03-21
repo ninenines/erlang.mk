@@ -16,5 +16,5 @@ ifneq ($(SKIP_DEPS),)
 doc-deps:
 else
 doc-deps: $(ALL_DOC_DEPS_DIRS)
-	$(verbose) set -e; for dep in $(ALL_DOC_DEPS_DIRS) ; do $(MAKE) -C $$dep IS_DEP=1; done
+	$(verbose) set -e; for dep in $(ALL_DOC_DEPS_DIRS) ; do $(MAKE) -C $$dep IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); done
 endif
