@@ -21,8 +21,10 @@ export DEPS_DIR
 REBAR_DEPS_DIR = $(DEPS_DIR)
 export REBAR_DEPS_DIR
 
+# When testing Erlang.mk and updating these, make sure
+# to delete test/test_rebar_git before running tests again.
 REBAR3_GIT ?= https://github.com/erlang/rebar3
-REBAR3_COMMIT ?= 06aaecd51b0ce828b66bb65a74d3c1fd7833a4ba # 3.22.1 + OTP-27 fixes
+REBAR3_COMMIT ?= bde4b54248d16280b2c70a244aca3bb7566e2033 # 3.23.0
 
 CACHE_DEPS ?= 0
 
