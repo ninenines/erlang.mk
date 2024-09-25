@@ -450,6 +450,12 @@ define dep_autopatch_rebar.erl
 			GetHexVsn3Common(N, NP, S0);
 		(N, NP, S) -> {N, {hex, NP, S}}
 	end,
+	ConvertCommit = fun
+		({branch, C}) -> C;
+		({ref, C}) -> C;
+		({tag, C}) -> C;
+		(C) -> C
+	end,
 	fun() ->
 		File = case lists:keyfind(deps, 1, Conf) of
 			false -> [];
@@ -465,16 +471,15 @@ define dep_autopatch_rebar.erl
 							_ -> false
 						end of
 					false -> ok;
+					{Name, {git_subdir, Repo, Commit, SubDir}} ->
+						Write(io_lib:format("DEPS += ~s\ndep_~s = git-subfolder ~s ~s ~s~n", [Name, Name, Repo, ConvertCommit(Commit), SubDir]));
 					{Name, Source} ->
 						{Method, Repo, Commit} = case Source of
 							{hex, NPV, V} -> {hex, V, NPV};
 							{git, R} -> {git, R, master};
-							{M, R, {branch, C}} -> {M, R, C};
-							{M, R, {ref, C}} -> {M, R, C};
-							{M, R, {tag, C}} -> {M, R, C};
 							{M, R, C} -> {M, R, C}
 						end,
-						Write(io_lib:format("DEPS += ~s\ndep_~s = ~s ~s ~s~n", [Name, Name, Method, Repo, Commit]))
+						Write(io_lib:format("DEPS += ~s\ndep_~s = ~s ~s ~s~n", [Name, Name, Method, Repo, ConvertCommit(Commit)]))
 				end end || Dep <- Deps]
 		end
 	end(),
