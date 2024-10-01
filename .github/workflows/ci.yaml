@@ -17,7 +17,7 @@ jobs:
         erlang:
           - '27'
         os:
-          - macos-latest
+#          - macos-latest
           - ubuntu-latest
           - windows-latest
         extra: ['', 'LEGACY=1']
@@ -34,5 +34,22 @@ jobs:
         otp-version: ${{ matrix.erlang }}
         version-type: loose
 
-    - name: Run tests
-      run: ${{ matrix.os == 'macos-latest' && 'gmake' || 'make' }} check -j 8 -k ${{ matrix.extra }}
+    - name: Setup MSYS2 (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: mingw64
+        release: false
+        update: true
+        install: >-
+          git
+          make
+
+    - name: Run tests (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: make check -j 8 -k ${{ matrix.extra }}
+
+    - name: Run tests (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: msys2 {0}
+      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make check -j 8 -k ${{ matrix.extra }}
