@@ -1,0 +1,38 @@
+name: Check Erlang.mk
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  schedule:
+      ## Every Monday at 4am.
+      - cron: 0 4 * * 1
+
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        erlang:
+          - '27'
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        extra: ['', 'LEGACY=1']
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Erlang/OTP
+      uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{ matrix.erlang }}
+        version-type: loose
+
+    - name: Run tests
+      run: ${{ matrix.os == 'macos-latest' && 'gmake' || 'make' }} check -j 8 -k ${{ matrix.extra }}
