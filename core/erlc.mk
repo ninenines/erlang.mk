@@ -53,7 +53,7 @@ ifneq ($(wildcard src/),)
 
 # Targets.
 
-app:: $(if $(wildcard ebin/test),clean) deps
+app:: $(if $(wildcard ebin/test),beam-cache-restore-app) deps
 	$(verbose) $(MAKE) --no-print-directory $(PROJECT).d
 	$(verbose) $(MAKE) --no-print-directory app-build
 

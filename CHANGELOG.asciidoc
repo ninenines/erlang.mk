@@ -49,3 +49,7 @@
             `CACHE_DEPS=1` to enable.
 
 2023/05/16: Remove support for HiPE and ErlLLVM.
+
+2024/10/01: Initial beam-cache implementation. This is used
+            to cache beam files when switching from/to test
+            builds.
