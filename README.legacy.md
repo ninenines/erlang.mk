@@ -20,16 +20,3 @@ will be compiled into `a_b_templatename_dtl.beam`.
 Additional ErlyDTL options can be specified as a comma-separated list
 by defining the `DTL_OPTS` variable. Those options will be prepended
 to the options specified by the plugin itself.
-
-Xref plugin
-------------
-
-This plugin is available by default. It adds the following
-target:
-
-`xref` Erlang Xref Runner (inspired in rebar's rebar_xref)
-
-The `XREF_CONFIG` variable specifies the location of the
-configuration file which holds the checks to be applied.
-If there is no `xref.config` all `xref` checks will be
-applied to the binaries located in the `/ebin` directory.
