@@ -150,7 +150,7 @@ endif
 
 # Core targets.
 
-ALL_APPS_DIRS_TO_BUILD = $(if $(filter-out $(ELIXIR_BUILTINS),$(LOCAL_DEPS_DIRS))$(IS_APP),$(filter-out $(ELIXIR_BUILTINS),$(LOCAL_DEPS_DIRS)),$(ALL_APPS_DIRS))
+ALL_APPS_DIRS_TO_BUILD = $(if $(LOCAL_DEPS_DIRS)$(IS_APP),$(LOCAL_DEPS_DIRS),$(ALL_APPS_DIRS))
 
 apps:: $(ALL_APPS_DIRS) clean-tmp-deps.log | $(ERLANG_MK_TMP)
 # Create ebin directory for all apps to make sure Erlang recognizes them

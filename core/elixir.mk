@@ -260,7 +260,6 @@ define dep_autopatch_mix
 endef
 
 ifneq ($(USES_ELIXIR),)
-LOCAL_DEPS_DIRS += $(ELIXIR_BUILTINS)
 LOCAL_DEPS += eex elixir logger mix
 
 ebin/$(PROJECT).app:: $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
