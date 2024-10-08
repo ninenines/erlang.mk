@@ -1,7 +1,3 @@
-ifeq ($(pkg_elixir_commit),master)
-pkg_elixir_commit = main
-endif
-
 ELIXIR_USE_SYSTEM ?= 1
 
 ifeq ($(ELIXIR_USE_SYSTEM),1)
