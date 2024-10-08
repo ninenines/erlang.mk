@@ -53,13 +53,6 @@ define app_file
 endef
 
 app:: $(if $(wildcard ebin/test),clean) deps
-	$(verbose) $(MAKE) --no-print-directory $(PROJECT).d
-	$(verbose) $(MAKE) --no-print-directory app-build
-
-app-build:: ebin/$(PROJECT).app
-	$(verbose) :
-
-$(PROJECT).d:: ebin/$(PROJECT).app
 
 define validate_app_file
 	case file:consult("ebin/$(PROJECT).app") of
