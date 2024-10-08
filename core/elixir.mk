@@ -291,10 +291,10 @@ ebin/$(PROJECT).app:: $(EX_FILES)
 		|| git describe --dirty --abbrev=7 --tags --always 2>/dev/null || true))
 	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename \
 		$(filter-out $(ELIXIRC_EXCLUDE_PATHS), $(ERL_FILES) $(CORE_FILES) $(BEAM_FILES)))))))
-	$(eval MODULES := $(call UNIQUE,$(MODULES) $(foreach file, \
+	$(eval MODULES := $(foreach file, \
 		$(EX_FILES), \
 		$(call get_elixir_mod,$(file)) \
-	)))
+	))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
 	$(app_verbose) printf "$(subst %,%%,$(subst $(newline),\n,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))))" \
 		> ebin/$(PROJECT).app
