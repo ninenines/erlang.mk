@@ -86,7 +86,7 @@ define app_file
 endef
 endif
 
-app-build: ebin/$(PROJECT).app
+app-build:: ebin/$(PROJECT).app
 	$(verbose) :
 
 # Source files.
