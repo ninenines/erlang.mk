@@ -90,77 +90,6 @@ LFirst = fun
 				F(T, Pred)
 		end
 end,
-GetDeps = 
-	fun(Deps) ->
-		GetVer = fun(Name, Req) ->
-			application:ensure_all_started(ssl),
-			application:ensure_all_started(inets),
-			{ok, PackageInfo} =
-				case hex_repo:get_package(hex_core:default_config(), atom_to_binary(Name)) of
-					{ok, {200, _RespHeaders, Decoded}} ->
-						LFirst(Decoded, fun(#{version := Vsn}) -> 'Elixir.Version':'match?'(Vsn, Req) end);
-					Other ->
-						io:format(standard_error, "Unexpected response for Dep ~p", [Name]),
-						erlang:halt(1)
-				end,
-			maps:get(version, PackageInfo)
-		end,
-		(fun
-			F([], DEPS_Acc0, DEP_Acc0) ->
-				[DEPS_Acc0, "\n", DEP_Acc0];
-			F([H|T], DEPS_Acc0, DEP_Acc0) ->
-				{DEPS_Acc1, DEP_Acc1} =
-					case H of
-						{Name, Req} when is_binary(Req) ->
-							{
-								[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-								[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, GetVer(Name, Req), Name])]
-							};
-						{Name, Opts} when is_list(Opts) ->
-							Path = proplists:get_value(path, Opts),
-							IsRequired = proplists:get_value(optional, Opts) =/= true,
-							IsProdOnly = case proplists:get_value(only, Opts, prod) of
-								prod -> true;
-								L when is_list(L) -> lists:member(prod, L);
-								_ -> false
-							end,
-							case IsRequired andalso IsProdOnly of
-								true when Path =/= undefined ->
-									{
-										[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-										[DEP_Acc0, io_lib:format("dep_~p = ln ~s~n", [Name, Path])]
-									};
-								true when Path =:= undefined ->
-									io:format(standard_error, "Skipping 'dep_~p' as no vsn given.", [Name]),
-									{
-										[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-										DEP_Acc0
-									};
-								false ->
-									{DEPS_Acc0, DEP_Acc0}
-							end;
-						{Name, Req, Opts} ->
-							IsRequired = proplists:get_value(optional, Opts) =/= true,
-							IsProdOnly = case proplists:get_value(only, Opts, prod) of
-								prod -> true;
-								L when is_list(L) -> lists:member(prod, L);
-								_ -> false
-							end,
-							case IsRequired andalso IsProdOnly of
-								true ->
-									{
-										[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-										[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, GetVer(Name, Req), Name])]
-									};
-								false ->
-									{DEPS_Acc0, DEP_Acc0}
-							end;
-						_ ->
-							{DEPS_Acc0, DEP_Acc0}
-					end,
-				F(T, DEPS_Acc1, DEP_Acc1)
-		end)(Deps, [], [])
-	end,
 StartMod =
 	case lists:keyfind(mod, 1, Application) of
 		{mod, {StartMod_, _StartArgs}} ->
@@ -215,7 +144,7 @@ Args = [
 	StartMod,
 	proplists:get_value(env, Application, []),
 	ExtraApps,
-	GetDeps(Deps),
+	$(call elixir_get_deps.erl, Deps),
 	ExtraMakeLines
 ],
 Str = io_lib:format(Fmt, Args),
