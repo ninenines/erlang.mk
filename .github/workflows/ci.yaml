@@ -9,6 +9,10 @@ on:
       ## Every Monday at 4am.
       - cron: 0 4 * * 1
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     strategy:
@@ -19,8 +23,47 @@ jobs:
         os:
 #          - macos-latest
           - ubuntu-latest
-          - windows-latest
+#          - windows-latest
+        suite:
+          - core-app
+          - core-apps
+          - core-autopatch
+          - core-compat
+          - core-deps
+          - core-makedep
+          - core-misc
+          - core-plugins
+          - core-query
+          - core-upgrade
+          - asciidoc
+          - bootstrap
+          - concuerror
+          - cover
+          - c-src
+          - ct
+          - dialyzer
+          - edoc
+          - erlydtl
+          - escript
+          - eunit
+          - hex
+          - proper
+          - protobuffs
+          - relx
+          - shell
+          - sphinx
+          - triq
+          - xref
         extra: ['', 'LEGACY=1']
+        exclude:
+          # We disable proper/triq tests until ubuntu-latest includes GNU Make 4.4 or later.
+          - os: ubuntu-latest
+            suite: proper
+          - os: ubuntu-latest
+            suite: triq
+          # We disable Concuerror as it doesn't seem to compile on Windows.
+          - os: windows-latest
+            suite: concuerror
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -44,13 +87,23 @@ jobs:
         install: >-
           git
           make
+          mingw-w64-x86_64-gcc
+          gnu-netcat
           diffutils
 
     - name: Run tests (Linux)
       if: matrix.os == 'ubuntu-latest'
-      run: make check -j 8 -k ${{ matrix.extra }}
+      run: make check c=${{ matrix.suite }} -k ${{ matrix.extra }}
 
     - name: Run tests (Windows)
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
-      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make check -j 8 -k ${{ matrix.extra }}
+      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make check c=${{ matrix.suite }} -k V=3 ${{ matrix.extra }}
+
+    - name: Upload artifacts
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }} OTP-${{ matrix.erlang }} ${{ matrix.suite }} ${{ matrix.extra }}
+        path: |
+          test/test_*/
