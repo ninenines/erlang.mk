@@ -745,7 +745,7 @@ endef
 else
 
 define dep_fetch_git
-	git clone -q -n -- $(call dep_repo,$1) $(DEPS_DIR)/$(call dep_name,$1); \
+	git clone -q -n $(if $(filter elixir,$1), --depth 1 ,) -- $(call dep_repo,$1) $(DEPS_DIR)/$(call dep_name,$1); \
 	cd $(DEPS_DIR)/$(call dep_name,$1) && git checkout -q $(call dep_commit,$1);
 endef
 
@@ -820,7 +820,10 @@ define dep_fetch_legacy
 endef
 
 define dep_target
-$(DEPS_DIR)/$(call dep_name,$1): | $(ERLANG_MK_TMP)
+prefetch-$1::
+	@
+
+$(DEPS_DIR)/$(call dep_name,$1): prefetch-$1 | $(ERLANG_MK_TMP)
 	$(eval DEP_NAME := $(call dep_name,$1))
 	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
