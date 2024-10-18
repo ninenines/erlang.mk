@@ -41,7 +41,7 @@ define app_file
 	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
 	{id$(comma)$(space)"$(1)"}$(comma))
 	{modules, [$(call comma_list,$(2))]},
-	{registered, [$(call comma_list,$(PROJECT)_sup $(PROJECT_REGISTERED))]},
+	{registered, [$(if $(wildcard src/*/$(PROJECT_SUP).erl),$(call comma_list,$(PROJECT)_sup $(PROJECT_REGISTERED)),)]},
 	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(LOCAL_DEPS) $(foreach dep,$(DEPS),$(call dep_name,$(dep))))]},
 	$(if $(PROJECT_MOD),{mod$(comma) {'$(PROJECT_MOD)'$(comma) []}}$(comma),)
 	{env, $(subst \,\\,$(PROJECT_ENV))}$(if $(findstring {,$(PROJECT_APP_EXTRA_KEYS)),$(comma)$(newline)$(tab)$(subst \,\\,$(PROJECT_APP_EXTRA_KEYS)),)
@@ -78,7 +78,7 @@ Fmt =
 	"~n~n~s~n~n"
 	"~n~s~n"
 	"ERLC_OPTS = +debug_info~n"
-	"include ../../erlang.mk",
+	"include $$(if $$(ERLANG_MK_FILENAME),$$(ERLANG_MK_FILENAME),erlang.mk)",
 LFirst = fun
 	F([], Pred) -> 
 		false;
@@ -169,9 +169,10 @@ $(if $(verbose),,$(info [SHELL_ASSERT] $(call SHELL_ASSERT_,$(1),$(2)))) $(call 
 endef
 
 define dep_autopatch_mix
-	$(MAKE) $(ELIXIRC) hex-core; \
-	sed 's|\(defmodule.*do\)|\1\nCode.compiler_options(on_undefined_variable: :warn)\n|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
-	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" $(ERL) -pa $(DEPS_DIR)/hex_core $(addprefix -pa ,$(addsuffix /ebin,$(ELIXIR_BUILTINS))) \
+	$(MAKE) $(ELIXIRC) hex-core || exit 1; \
+	sed 's|\(defmodule.*do\)|\1\ntry do\nCode.compiler_options(on_undefined_variable: :warn)\nrescue _ -> :ok\nend|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
+	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" \
+		$(ERL) -pa $(DEPS_DIR)/hex_core $(addprefix -pa ,$(addsuffix /ebin,$(ELIXIR_BUILTINS))) \
 		-eval "$(subst ",\",$(subst $(newline), ,$(subst $$,\$$,$(call Mix_Makefile.erl,$(1)))))." \
 		-eval "halt(0)." || exit 1 \
 	mkdir $(DEPS_DIR)/$1/src || exit 1
@@ -186,11 +187,13 @@ endif
 $(ELIXIRC): $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
 
 $(addsuffix /ebin,$(ELIXIR_BUILTINS)): $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
-	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir IS_DEP=1D)
+	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir IS_DEP=1)
 
 define compile_ex
-ERL_COMPILER_OPTIONS="[$(call comma_list,$(patsubst '%',%,$(patsubst +%,%,$(filter +%,$(ELIXIRC_OPTS)))))]" $(ELIXIRC) \
-	--verbose $(if $(IS_DEP),,$(if $(filter -Werror,$(ELIXIRC_OPTS)),--warnings-as-errors)) -o ebin/ $(filter-out $(ELIXIRC_EXCLUDE_PATHS),$(ELIXIR_COMPILE_FIRST_PATHS)) $(1) --  -pa ebin/ -I include/
+$(elixirc_verbose) ERL_COMPILER_OPTIONS="[$(call comma_list,$(patsubst '%',%,$(patsubst +%,%,$(filter +%,$(ELIXIRC_OPTS))))), {pa, \"ebin/\"}, {i, \"include/\"}]" $(ELIXIRC) \
+	--verbose $(if $(IS_DEP),,$(if $(filter -Werror,$(ELIXIRC_OPTS)),--warnings-as-errors)) \
+	-o ebin/ \
+	$(filter-out $(ELIXIRC_EXCLUDE_PATHS),$(ELIXIR_COMPILE_FIRST_PATHS)) $(1) 
 endef
 
 # Currently doesn't account for nested modules
@@ -202,13 +205,13 @@ $(foreach module,$(strip \
 endef
 
 ebin/$(PROJECT).app:: $(EX_FILES)
-	$(gen_verbose) $(if $(strip $(EX_FILES)),$(call compile_ex,$(EX_FILES)))
+	$(if $(strip $(EX_FILES)),$(call compile_ex,$(EX_FILES)))
 # Older git versions do not have the --first-parent flag. Do without in that case.
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null \
 		|| git describe --dirty --abbrev=7 --tags --always 2>/dev/null || true))
 	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename \
 		$(filter-out $(ELIXIRC_EXCLUDE_PATHS), $(ERL_FILES) $(CORE_FILES) $(BEAM_FILES)))))))
-	$(eval MODULES := $(foreach file, \
+	$(eval MODULES := $(MODULES) $(foreach file, \
 		$(EX_FILES), \
 		$(call get_elixir_mod,$(file)) \
 	))
@@ -246,6 +249,21 @@ autopatch-elixir::
 	$(verbose) sed 's|"$$(MAKE)"|"$$(MAKE)" -f $$(CURDIR)/Makefile.orig|g' -i $(DEPS_DIR)/elixir/Makefile.orig
 
 ifneq ($(USES_ELIXIR),)
+elixir-check-crypto:
+	$(verbose) OUTPUT=`$(ERL) -eval 'code:load_file(crypto), init:stop().'`; \
+		if test -n "$$OUTPUT"; then \
+			echo "  Crypto is required to use Elixir!  "; \
+			echo "$$OUTPUT"; \
+			exit 1; \
+		fi;
+
+prefetch-elixir:: elixir-check-crypto
+	$(verbose) echo " Fetching Elixir (this may take a while)  "
+
 ebin/$(PROJECT).app:: $(eval $(call dep_target,elixir)) $(addsuffix /ebin,$(ELIXIR_BUILTINS))
 	@
+
+iex:
+	$(verbose) $(dir $(ELIXIRC))/iex
+#$(addprefix -pa ,$(CURDIR)/ebin $(wildcard $(ELIXIR_PATH)/lib/*/ebin) $(wildcard $(DEPS_DIR)/*/ebin))
 endif
