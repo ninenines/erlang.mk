@@ -97,7 +97,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         tar -xf otp_win32_installer.zip
-        otp_win64_28.0-rc0.exe /S /D=otp
+        ./otp_win64_28.0-rc0.exe /S /D=otp
         echo "INSTALL_DIR_FOR_OTP=$PWD/otp" >> $GITHUB_ENV
 
     - name: Run tests (Linux)
