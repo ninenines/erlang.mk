@@ -35,7 +35,10 @@ div.navfooter{margin-bottom:1em}
 
 <div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="installation.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="overview.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="getting_started"></a>Chapter 2. Getting started</h1></div></div></div><p>This chapter explains how to get started using Erlang.mk.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_creating_a_folder_for_your_project"></a>2.1. Creating a folder for your project</h2></div></div></div><p>The first step is always to create a new folder that will
 contain your project.</p><pre class="programlisting">$ mkdir hello_joe
-$ cd hello_joe</pre><p>Most people tend to put all their projects side by side in
+$ cd hello_joe</pre><p>Note that the project directory name must match the name of
+your application for some of the functionality to work (such
+as OTP releases). The name should only include letters, numbers
+or underscore as well for better compatibility.</p><p>Most people tend to put all their projects side by side in
 a common folder. We recommend keeping an organization similar
 to your remote repositories. For example, for GitHub users,
 put all your projects in a common folder with the same name
