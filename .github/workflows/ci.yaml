@@ -103,7 +103,7 @@ jobs:
     - if: matrix.os == 'windows-latest'
       shell: msys2 {0}
       run: |
-        sleep 60
+        sleep 300
         ls -la
         ls -la /c/
         ls -la /c/otp
