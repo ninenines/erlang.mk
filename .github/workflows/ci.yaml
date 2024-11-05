@@ -100,6 +100,12 @@ jobs:
         ./otp_win64_28.0-rc0.exe /S /D=otp
         echo "INSTALL_DIR_FOR_OTP=$PWD/otp" >> $GITHUB_ENV
 
+    - if: matrix.os == 'windows-latest'
+      shell: msys2 {0}
+      run: |
+        ls -la
+        ls -la otp
+
     - name: Run tests (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: make check c=${{ matrix.suite }} -k ${{ matrix.extra }}
