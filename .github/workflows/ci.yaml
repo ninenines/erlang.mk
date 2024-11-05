@@ -22,38 +22,38 @@ jobs:
           - '27'
         os:
 #          - macos-latest
-          - ubuntu-latest
+#          - ubuntu-latest
           - windows-latest
         suite:
           - core-app
-          - core-apps
-          - core-autopatch
-          - core-compat
-          - core-deps
-          - core-makedep
-          - core-misc
-          - core-plugins
-          - core-query
-          - core-upgrade
-          - asciidoc
-          - bootstrap
-          - concuerror
-          - cover
-          - c-src
-          - ct
-          - dialyzer
-          - edoc
-          - erlydtl
-          - escript
-          - eunit
-          - hex
-          - proper
-          - protobuffs
-          - relx
-          - shell
-          - sphinx
-          - triq
-          - xref
+#          - core-apps
+#          - core-autopatch
+#          - core-compat
+#          - core-deps
+#          - core-makedep
+#          - core-misc
+#          - core-plugins
+#          - core-query
+#          - core-upgrade
+#          - asciidoc
+#          - bootstrap
+#          - concuerror
+#          - cover
+#          - c-src
+#          - ct
+#          - dialyzer
+#          - edoc
+#          - erlydtl
+#          - escript
+#          - eunit
+#          - hex
+#          - proper
+#          - protobuffs
+#          - relx
+#          - shell
+#          - sphinx
+#          - triq
+#          - xref
         extra: ['', 'LEGACY=1']
         exclude:
           # We disable proper/triq tests until ubuntu-latest includes GNU Make 4.4 or later.
@@ -97,14 +97,16 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         tar -xf otp_win32_installer.zip
-        ./otp_win64_28.0-rc0.exe /S /D=otp
-        echo "INSTALL_DIR_FOR_OTP=$PWD/otp" >> $GITHUB_ENV
+        ./otp_win64_28.0-rc0.exe /S
+        dir
 
     - if: matrix.os == 'windows-latest'
       shell: msys2 {0}
+      if: always()
       run: |
         ls -la
-        ls -la otp
+        ls -la /c/
+        ls -la /c/Program*
 
     - name: Run tests (Linux)
       if: matrix.os == 'ubuntu-latest'
@@ -113,7 +115,7 @@ jobs:
     - name: Run tests (Windows)
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
-      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make check c=${{ matrix.suite }} -k V=3 ${{ matrix.extra }}
+      run: PATH=C:/PROGRAM~1/ERLANG~1/bin:$PATH make check c=${{ matrix.suite }} -k V=3 ${{ matrix.extra }}
 
     - name: Upload artifacts
       if: failure()
