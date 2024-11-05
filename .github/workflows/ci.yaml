@@ -97,7 +97,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
       run: |
-        wget https://github.com/erlang/otp/actions/runs/11672658635/artifacts/2143454155
+        wget -O otp_win32_installer.zip "https://productionresultssa14.blob.core.windows.net/actions-results/3741c51f-2f3f-4797-bd27-b3e9d473862c/workflow-job-run-e28b990d-30d9-58ba-42da-3bf39bd8b515/artifacts/dbc1d65e0ca17f8ae7719a6d2e38613d589c038560279f982c7fd17ae9034ae9.zip?rscd=attachment%3B+filename%3D%22otp_win32_installer.zip%22&se=2024-11-05T10%3A02%3A44Z&sig=94ZWhACHY6fRLL4jyWXC6UHitNmDRQ2hvnq3rGUXvK0%3D&ske=2024-11-05T18%3A40%3A12Z&skoid=ca7593d4-ee42-46cd-af88-8b886a2f84eb&sks=b&skt=2024-11-05T06%3A40%3A12Z&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skv=2024-08-04&sp=r&spr=https&sr=b&st=2024-11-05T09%3A52%3A39Z&sv=2024-08-04"
         unzip otp_win32_installer.zip
         ./otp_win64_28.0-rc0.exe /S
 
