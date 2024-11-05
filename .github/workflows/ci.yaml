@@ -105,7 +105,8 @@ jobs:
       run: |
         ls -la
         ls -la /c/
-        ls -la /c/Program*
+        ls -la /c/otp
+        ls -la /c/otp/bin
 
     - name: Run tests (Linux)
       if: matrix.os == 'ubuntu-latest'
