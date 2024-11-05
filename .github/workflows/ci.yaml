@@ -97,7 +97,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         tar -xf otp_win32_installer.zip
-        ./otp_win64_28.0-rc0.exe /S
+        ./otp_win64_28.0-rc0.exe /S /D=C:\otp
         dir
 
     - if: matrix.os == 'windows-latest'
@@ -114,7 +114,7 @@ jobs:
     - name: Run tests (Windows)
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
-      run: PATH=C:/PROGRAM~1/ERLANG~1/bin:$PATH make check c=${{ matrix.suite }} -k V=3 ${{ matrix.extra }}
+      run: PATH=/c/otp/bin:$PATH make check c=${{ matrix.suite }} -k V=3 ${{ matrix.extra }}
 
     - name: Upload artifacts
       if: failure()
