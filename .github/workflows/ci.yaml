@@ -91,6 +91,7 @@ jobs:
           mingw-w64-x86_64-gcc
           gnu-netcat
           diffutils
+          unzip
 
     # When debugging Windows issues.
     - name: Install custom Erlang/OTP
