@@ -23,7 +23,7 @@ jobs:
         os:
 #          - macos-latest
           - ubuntu-latest
-#          - windows-latest
+          - windows-latest
         suite:
           - core-app
           - core-apps
@@ -72,6 +72,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install Erlang/OTP
+      if: matrix.os == 'ubuntu-latest'
       uses: erlef/setup-beam@v1
       with:
         otp-version: ${{ matrix.erlang }}
@@ -90,6 +91,15 @@ jobs:
           mingw-w64-x86_64-gcc
           gnu-netcat
           diffutils
+
+    # When debugging Windows issues.
+    - name: Install custom Erlang/OTP
+      if: matrix.os == 'windows-latest'
+      shell: msys2 {0}
+      run: |
+        wget https://github.com/erlang/otp/actions/runs/11672658635/artifacts/2143454155
+        unzip otp_win32_installer.zip
+        ./otp_win64_28.0-rc0.exe /S
 
     - name: Run tests (Linux)
       if: matrix.os == 'ubuntu-latest'
