@@ -91,7 +91,71 @@ core-compat-rebar: init
 	$i "Use rebar3 to build the application"
 	$t cd $(APP) && ./rebar3 compile $v
 
-core-compat-rebar-deps-git: init
+core-compat-rebar-deps-git-branch: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy as a dependency"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = git https://github.com/ninenines/cowboy master\n"}' $(APP)/Makefile
+
+	$i "Run 'make rebar.config'"
+	$t $(MAKE) -C $(APP) rebar.config $v
+
+	$i "Check that rebar.config was created"
+	$t test -f $(APP)/rebar.config
+
+	$i "Check that Cowboy is listed in rebar.config with a branch"
+	$t $(ERL) -eval " \
+		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
+		{_, [{cowboy, _, {git, _, {branch, \"master\"}}}]} = lists:keyfind(deps, 1, C), \
+		halt()"
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Download rebar3"
+	$t curl --retry 5 -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
+	$t chmod +x $(APP)/rebar3
+
+	$i "Use rebar3 to build the application"
+	$t cd $(APP) && ./rebar3 compile $v
+
+core-compat-rebar-deps-git-ref: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy as a dependency"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = git https://github.com/ninenines/cowboy 7e160b49\n"}' $(APP)/Makefile
+
+	$i "Run 'make rebar.config'"
+	$t $(MAKE) -C $(APP) rebar.config $v
+
+	$i "Check that rebar.config was created"
+	$t test -f $(APP)/rebar.config
+
+	$i "Check that Cowboy is listed in rebar.config with a branch"
+	$t $(ERL) -eval " \
+		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
+		{_, [{cowboy, _, {git, _, {ref, \"7e160b49\"}}}]} = lists:keyfind(deps, 1, C), \
+		halt()"
+
+	$i "Distclean the application"
+	$t $(MAKE) -C $(APP) distclean $v
+
+	$i "Download rebar3"
+	$t curl --retry 5 -s -L -o $(APP)/rebar3 $(REBAR3_BINARY)
+	$t chmod +x $(APP)/rebar3
+
+	$i "Use rebar3 to build the application"
+	$t cd $(APP) && ./rebar3 compile $v
+
+core-compat-rebar-deps-git-tag: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -107,10 +171,10 @@ core-compat-rebar-deps-git: init
 	$i "Check that rebar.config was created"
 	$t test -f $(APP)/rebar.config
 
-	$i "Check that Cowboy is listed in rebar.config"
+	$i "Check that Cowboy is listed in rebar.config with a tag"
 	$t $(ERL) -eval " \
 		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
-		{_, [{cowboy, _, {git, _, \"2.9.0\"}}]} = lists:keyfind(deps, 1, C), \
+		{_, [{cowboy, _, {git, _, {tag, \"2.9.0\"}}}]} = lists:keyfind(deps, 1, C), \
 		halt()"
 
 	$i "Distclean the application"
@@ -174,7 +238,7 @@ core-compat-rebar-deps-pkg: init
 	$i "Check that Cowboy is listed in rebar.config"
 	$t $(ERL) -eval " \
 		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
-		{_, [{cowboy, _, {git, \"https://github.com/\" ++ _, _}}]} = lists:keyfind(deps, 1, C), \
+		{_, [{cowboy, _, {git, \"https://github.com/\" ++ _, {branch, _}}}]} = lists:keyfind(deps, 1, C), \
 		halt()"
 
 	$i "Distclean the application"

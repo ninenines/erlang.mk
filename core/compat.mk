@@ -3,6 +3,8 @@
 
 .PHONY: rebar.config
 
+compat_ref = {$(shell (git -C $(DEPS_DIR)/$1 show-ref -q --verify "refs/heads/$2" && echo branch) || (git -C $(DEPS_DIR)/$1 show-ref -q --verify "refs/tags/$2" && echo tag) || echo ref),"$2"}
+
 # We strip out -Werror because we don't want to fail due to
 # warnings when used as a dependency.
 
@@ -23,10 +25,10 @@ define compat_rebar_config
 $(call comma_list,$(foreach d,$(DEPS),\
 	$(if $(filter hex,$(call dep_fetch,$d)),\
 		{$(call dep_name,$d)$(comma)"$(call dep_repo,$d)"},\
-		{$(call dep_name,$d)$(comma)".*"$(comma){git,"$(call dep_repo,$d)"$(comma)"$(call dep_commit,$d)"}})))
+		{$(call dep_name,$d)$(comma)".*"$(comma){git,"$(call dep_repo,$d)"$(comma)$(call compat_ref,$(call dep_name,$d),$(call dep_commit,$d))}})))
 ]}.
 {erl_opts, $(call compat_erlc_opts_to_list,$(ERLC_OPTS))}.
 endef
 
-rebar.config:
+rebar.config: deps
 	$(gen_verbose) $(call core_render,compat_rebar_config,rebar.config)

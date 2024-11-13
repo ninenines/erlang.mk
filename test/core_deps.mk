@@ -1281,8 +1281,8 @@ core-deps-order-first: init
 	$t cp ../erlang.mk $(APP)/my_dep/
 	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
 
-	$i "Add Cowlib 1.0.0 to the list of dependencies for my_dep"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git https://github.com/ninenines/cowlib 1.0.0\n"}' $(APP)/my_dep/Makefile
+	$i "Add Cowlib 2.0.0 to the list of dependencies for my_dep"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git https://github.com/ninenines/cowlib 2.0.0\n"}' $(APP)/my_dep/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy and my_dep to the applications key in the .app.src file"
@@ -1303,7 +1303,7 @@ endif
 		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, my_dep, ranch]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(cowboy, Deps), \
-		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
+		{ok, \"2.0.0\"} = application:get_key(cowlib, vsn), \
 		halt()"
 
 # A higher-level dependency always wins.
@@ -1314,8 +1314,8 @@ core-deps-order-top: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add Cowboy package and Cowlib 1.0.0 to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy cowlib\ndep_cowlib = git https://github.com/ninenines/cowlib 1.0.0\n"}' $(APP)/Makefile
+	$i "Add Cowboy package and Cowlib 2.0.0 to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy cowlib\ndep_cowlib = git https://github.com/ninenines/cowlib 2.0.0\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
@@ -1335,7 +1335,7 @@ endif
 		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(cowboy, Deps), \
-		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
+		{ok, \"2.0.0\"} = application:get_key(cowlib, vsn), \
 		halt()"
 
 ifndef LEGACY
