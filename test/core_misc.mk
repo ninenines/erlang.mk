@@ -2,11 +2,11 @@
 #
 # The miscellaneous tests use the prefix "core-", not "core-misc-".
 
-CORE_MISC_TARGETS = $(filter-out core-misc,$(call list_targets,core))
+core_misc_TARGETS = $(filter-out core-misc,$(call list_targets,core))
 
-.PHONY: core-misc $(CORE_MISC_TARGETS)
+.PHONY: core-misc $(core_misc_TARGETS)
 
-core-misc: $(CORE_MISC_TARGETS)
+core-misc: $(core_misc_TARGETS)
 
 core-clean-crash-dump: init
 

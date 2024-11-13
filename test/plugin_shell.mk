@@ -1,10 +1,10 @@
 # Shell plugin.
 
-SHELL_TARGETS = $(call list_targets,shell)
+shell_TARGETS = $(call list_targets,shell)
 
-.PHONY: shell $(C_SRC_TARGETS)
+.PHONY: shell $(shell_TARGETS)
 
-shell: $(SHELL_TARGETS)
+shell: $(shell_TARGETS)
 
 shell-compile: init
 

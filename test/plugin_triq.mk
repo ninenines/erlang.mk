@@ -1,10 +1,10 @@
 # Triq plugin.
 
-TRIQ_TARGETS = $(call list_targets,triq)
+triq_TARGETS = $(call list_targets,triq)
 
-.PHONY: triq $(TRIQ_TARGETS)
+.PHONY: triq $(triq_TARGETS)
 
-triq: $(TRIQ_TARGETS)
+triq: $(triq_TARGETS)
 
 triq-test-dir: init
 

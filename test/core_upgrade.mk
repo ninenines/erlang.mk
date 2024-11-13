@@ -1,10 +1,10 @@
 # Core: Erlang.mk upgrade.
 
-CORE_UPGRADE_TARGETS = $(call list_targets,core-upgrade)
+core_upgrade_TARGETS = $(call list_targets,core-upgrade)
 
-.PHONY: core-upgrade $(CORE_UPGRADE_TARGETS)
+.PHONY: core-upgrade $(core_upgrade_TARGETS)
 
-core-upgrade: $(CORE_UPGRADE_TARGETS)
+core-upgrade: $(core_upgrade_TARGETS)
 
 core-upgrade-changelog: init
 

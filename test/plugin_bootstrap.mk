@@ -1,10 +1,10 @@
 # Bootstrap plugin.
 
-BOOTSTRAP_TARGETS = $(call list_targets,bootstrap)
+bootstrap_TARGETS = $(call list_targets,bootstrap)
 
-.PHONY: bootstrap $(BOOTSTRAP_TARGETS)
+.PHONY: bootstrap $(bootstrap_TARGETS)
 
-bootstrap: $(BOOTSTRAP_TARGETS)
+bootstrap: $(bootstrap_TARGETS)
 
 bootstrap-app: init
 

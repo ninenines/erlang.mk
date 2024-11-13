@@ -1,10 +1,10 @@
 # Core: Packages and dependencies.
 
-CORE_DEPS_TARGETS = $(call list_targets,core-deps)
+core_deps_TARGETS = $(call list_targets,core-deps)
 
-.PHONY: core-deps $(CORE_DEPS_TARGETS)
+.PHONY: core-deps $(core_deps_TARGETS)
 
-core-deps: $(CORE_DEPS_TARGETS)
+core-deps: $(core_deps_TARGETS)
 
 ifneq ($(PLATFORM),msys2)
 core-deps-build-c-8cc: init

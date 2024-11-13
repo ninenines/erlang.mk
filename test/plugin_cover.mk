@@ -1,10 +1,10 @@
 # Common Test plugin.
 
-COVER_TARGETS = $(call list_targets,cover)
+cover_TARGETS = $(call list_targets,cover)
 
-.PHONY: cover $(COVER_TARGETS)
+.PHONY: cover $(cover_TARGETS)
 
-cover: $(COVER_TARGETS)
+cover: $(cover_TARGETS)
 
 cover-ct: init
 

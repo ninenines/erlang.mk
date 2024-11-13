@@ -1,14 +1,14 @@
 # Dialyzer plugin.
 
-DIALYZER_TARGETS = $(call list_targets,dialyzer)
+dialyzer_TARGETS = $(call list_targets,dialyzer)
 
 ifneq ($(shell which sem 2>/dev/null),)
 	DIALYZER_MUTEX = sem --fg --id dialyzer
 endif
 
-.PHONY: dialyzer $(DIALYZER_TARGETS)
+.PHONY: dialyzer $(dialyzer_TARGETS)
 
-dialyzer: $(DIALYZER_TARGETS)
+dialyzer: $(dialyzer_TARGETS)
 
 dialyzer-app: init
 

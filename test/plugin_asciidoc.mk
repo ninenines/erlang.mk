@@ -1,10 +1,10 @@
 # AsciiDoc plugin.
 
-ASCIIDOC_TARGETS = $(call list_targets,asciidoc)
+asciidoc_TARGETS = $(call list_targets,asciidoc)
 
-.PHONY: asciidoc $(ASCIIDOC_TARGETS)
+.PHONY: asciidoc $(asciidoc_TARGETS)
 
-asciidoc: $(ASCIIDOC_TARGETS)
+asciidoc: $(asciidoc_TARGETS)
 
 # Disable the Asciidoc tests requiring the DocBook toolchain
 # when Asciidoc is not installed. The toolchain is too heavy for CI.

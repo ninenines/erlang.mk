@@ -1,10 +1,10 @@
 # Protocol buffers plugin.
 
-PROTOBUFFS_TARGETS = $(call list_targets,protobuffs)
+protobuffs_TARGETS = $(call list_targets,protobuffs)
 
-.PHONY: protobuffs $(PROTOBUFFS_TARGETS)
+.PHONY: protobuffs $(protobuffs_TARGETS)
 
-protobuffs: $(PROTOBUFFS_TARGETS)
+protobuffs: $(protobuffs_TARGETS)
 
 PROTOBUFFS_URL = https://raw.githubusercontent.com/basho/erlang_protobuffs/master/test/erlang_protobuffs_SUITE_data
 
@@ -47,7 +47,7 @@ protobuffs-compile-imports: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add protobuffs to the list of dependencies"
+	$i "Add gpb to the list of dependencies"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = gpb\n"}' $(APP)/Makefile
 
 	$i "Download two proto files with an import"
@@ -110,7 +110,7 @@ protobuffs-makefile-change: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add protobuffs to the list of dependencies"
+	$i "Add gpb to the list of dependencies"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = gpb\n"}' $(APP)/Makefile
 
 	$i "Download two proto files"

@@ -1,10 +1,10 @@
 # Core: Autopatch.
 
-CORE_AUTOPATCH_TARGETS = $(call list_targets,core-autopatch)
+core_autopatch_TARGETS = $(call list_targets,core-autopatch)
 
-.PHONY: core-autopatch $(CORE_AUTOPATCH_TARGETS)
+.PHONY: core-autopatch $(core_autopatch_TARGETS)
 
-core-autopatch: $(CORE_AUTOPATCH_TARGETS)
+core-autopatch: $(core_autopatch_TARGETS)
 
 core-autopatch-extended: init
 

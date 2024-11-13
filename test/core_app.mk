@@ -1,10 +1,10 @@
 # Core: Building applications.
 
-CORE_APP_TARGETS = $(call list_targets,core-app)
+core_app_TARGETS = $(call list_targets,core-app)
 
-.PHONY: core-app $(CORE_APP_TARGETS)
+.PHONY: core-app $(core_app_TARGETS)
 
-core-app: $(CORE_APP_TARGETS)
+core-app: $(core_app_TARGETS)
 
 ifdef LEGACY
 core-app-appsrc-change: init

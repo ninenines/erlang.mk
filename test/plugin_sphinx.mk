@@ -2,14 +2,14 @@
 
 # Disable this test suite when sphinx is not installed.
 ifeq ($(shell which sphinx-build),)
-SPHINX_TARGETS =
+sphinx_TARGETS =
 else
-SPHINX_TARGETS = $(call list_targets,sphinx)
+sphinx_TARGETS = $(call list_targets,sphinx)
 endif
 
-.PHONY: sphinx $(SPHINX_TARGETS)
+.PHONY: sphinx $(sphinx_TARGETS)
 
-sphinx: $(SPHINX_TARGETS)
+sphinx: $(sphinx_TARGETS)
 
 sphinx-build: init
 

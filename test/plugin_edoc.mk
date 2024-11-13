@@ -1,10 +1,10 @@
 # EDoc plugin.
 
-EDOC_TARGETS = $(call list_targets,edoc)
+edoc_TARGETS = $(call list_targets,edoc)
 
-.PHONY: edoc $(EDOC_TARGETS)
+.PHONY: edoc $(edoc_TARGETS)
 
-edoc: $(EDOC_TARGETS)
+edoc: $(edoc_TARGETS)
 
 edoc-build: init
 

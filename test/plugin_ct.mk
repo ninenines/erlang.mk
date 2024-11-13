@@ -1,10 +1,10 @@
 # Common Test plugin.
 
-CT_TARGETS = $(call list_targets,ct)
+ct_TARGETS = $(call list_targets,ct)
 
-.PHONY: ct $(CT_TARGETS)
+.PHONY: ct $(ct_TARGETS)
 
-ct: $(CT_TARGETS)
+ct: $(ct_TARGETS)
 
 ct-all: init
 

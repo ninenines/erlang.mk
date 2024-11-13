@@ -1,10 +1,10 @@
 # EUnit plugin.
 
-EUNIT_TARGETS = $(call list_targets,eunit)
+eunit_TARGETS = $(call list_targets,eunit)
 
-.PHONY: eunit $(EUNIT_TARGETS)
+.PHONY: eunit $(eunit_TARGETS)
 
-eunit: $(EUNIT_TARGETS)
+eunit: $(eunit_TARGETS)
 
 eunit-all: init
 

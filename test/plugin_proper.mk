@@ -1,10 +1,10 @@
 # PropEr plugin.
 
-PROPER_TARGETS = $(call list_targets,proper)
+proper_TARGETS = $(call list_targets,proper)
 
-.PHONY: proper $(PROPER_TARGETS)
+.PHONY: proper $(proper_TARGETS)
 
-proper: $(PROPER_TARGETS)
+proper: $(proper_TARGETS)
 
 proper-test-dir: init
 

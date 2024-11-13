@@ -2,13 +2,13 @@
 #
 # Note: autopatch functionality is covered separately.
 
-CORE_COMPAT_TARGETS = $(call list_targets,core-compat)
+core_compat_TARGETS = $(call list_targets,core-compat)
 
 REBAR3_BINARY = https://s3.amazonaws.com/rebar3/rebar3
 
-.PHONY: core-compat $(CORE_COMPAT_TARGETS)
+.PHONY: core-compat $(core_compat_TARGETS)
 
-core-compat: $(CORE_COMPAT_TARGETS)
+core-compat: $(core_compat_TARGETS)
 
 core-compat-auto-rebar: init
 

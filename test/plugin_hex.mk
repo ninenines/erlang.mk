@@ -4,11 +4,11 @@
 # be started and available on port 4000, and the HEX=1 variable
 # must be set.
 
-HEX_TARGETS = $(call list_targets,hex)
+hex_TARGETS = $(call list_targets,hex)
 
-.PHONY: hex $(HEX_TARGETS)
+.PHONY: hex $(hex_TARGETS)
 
-hex: $(HEX_TARGETS)
+hex: $(hex_TARGETS)
 
 ifeq ($(shell netcat -z localhost 4000 && echo ok),ok)
 hex-user-create: init

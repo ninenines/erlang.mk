@@ -1,10 +1,10 @@
 # ErlyDTL plugin.
 
-ERLYDTL_TARGETS = $(call list_targets,erlydtl)
+erlydtl_TARGETS = $(call list_targets,erlydtl)
 
-.PHONY: erlydtl $(ERLYDTL_TARGETS)
+.PHONY: erlydtl $(erlydtl_TARGETS)
 
-erlydtl: $(ERLYDTL_TARGETS)
+erlydtl: $(erlydtl_TARGETS)
 
 erlydtl-compile: init
 

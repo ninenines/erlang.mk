@@ -3,9 +3,9 @@
 # Sleeps when interacting with relx script are necessary after start and upgrade
 # as both of those interactions are not synchronized.
 
-RELX_TARGETS = $(call list_targets,relx)
+relx_TARGETS = $(call list_targets,relx)
 
-.PHONY: relx $(RELX_TARGETS)
+.PHONY: relx $(relx_TARGETS)
 
 ifeq ($(PLATFORM),msys2)
 RELX_REL_EXT = .cmd
@@ -13,7 +13,7 @@ else
 RELX_REL_EXT =
 endif
 
-relx: $(RELX_TARGETS)
+relx: $(relx_TARGETS)
 
 relx-rel: init
 

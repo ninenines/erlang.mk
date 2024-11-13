@@ -1,10 +1,10 @@
 # Concuerror plugin.
 
-CONCUERROR_TARGETS = $(call list_targets,concuerror)
+concuerror_TARGETS = $(call list_targets,concuerror)
 
-.PHONY: concuerror $(CONCUERROR_TARGETS)
+.PHONY: concuerror $(concuerror_TARGETS)
 
-concuerror: $(CONCUERROR_TARGETS)
+concuerror: $(concuerror_TARGETS)
 
 concuerror-app: init
 

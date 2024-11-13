@@ -1,10 +1,10 @@
 # Escript plugin.
 
-ESCRIPT_TARGETS = $(call list_targets,escript)
+escript_TARGETS = $(call list_targets,escript)
 
-.PHONY: escript $(ESCRIPT_TARGETS)
+.PHONY: escript $(escript_TARGETS)
 
-escript: $(ESCRIPT_TARGETS)
+escript: $(escript_TARGETS)
 
 escript-build: init
 

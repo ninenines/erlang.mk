@@ -1,10 +1,10 @@
 # Core: External plugins.
 
-CORE_PLUGINS_TARGETS = $(call list_targets,core-plugins)
+core_plugins_TARGETS = $(call list_targets,core-plugins)
 
-.PHONY: core-plugins $(CORE_PLUGINS_TARGETS)
+.PHONY: core-plugins $(core_plugins_TARGETS)
 
-core-plugins: $(CORE_PLUGINS_TARGETS)
+core-plugins: $(core_plugins_TARGETS)
 
 core-plugins-all: init
 

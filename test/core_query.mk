@@ -1,10 +1,10 @@
 # Core: Querying dependencies.
 
-CORE_QUERY_TARGETS = $(call list_targets,core-query)
+core_query_TARGETS = $(call list_targets,core-query)
 
-.PHONY: core-query $(CORE_QUERY_TARGETS)
+.PHONY: core-query $(core_query_TARGETS)
 
-core-query: $(CORE_QUERY_TARGETS)
+core-query: $(core_query_TARGETS)
 
 core-query-deps: init
 

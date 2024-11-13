@@ -1,10 +1,10 @@
 # Xref plugin.
 
-XREF_TARGETS = $(call list_targets,xref)
+xref_TARGETS = $(call list_targets,xref)
 
-.PHONY: xref $(XREF_TARGETS)
+.PHONY: xref $(xref_TARGETS)
 
-xref: $(XREF_TARGETS)
+xref: $(xref_TARGETS)
 
 xref-check: init
 

@@ -1,10 +1,10 @@
 # Core: COMPILE_FIRST dependencies generation.
 
-CORE_MAKEDEP_TARGETS = $(call list_targets,core-makedep)
+core_makedep_TARGETS = $(call list_targets,core-makedep)
 
-.PHONY: core-makedep $(CORE_MAKEDEP_TARGETS)
+.PHONY: core-makedep $(core_makedep_TARGETS)
 
-core-makedep: $(CORE_MAKEDEP_TARGETS)
+core-makedep: $(core_makedep_TARGETS)
 
 core-makedep-behavior: init
 

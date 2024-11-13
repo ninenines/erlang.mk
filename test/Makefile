@@ -125,7 +125,8 @@ endef
 
 .PHONY: all clean init
 
-all:: core
+all::
+	$t :
 
 clean::
 	$t rm -rf erl_crash.dump packages/ $(filter-out test_rebar_git/,$(wildcard test_*/))
@@ -146,10 +147,13 @@ export REBAR3_GIT
 
 .PHONY: core
 
-define include_core
-core:: core-$1
+CORE_TARGETS :=
+PLUGINS_TARGETS :=
 
+define include_core
 include core_$1.mk
+
+CORE_TARGETS += $$(core_$1_TARGETS)
 
 endef
 
@@ -158,13 +162,17 @@ $(eval $(foreach t,$(patsubst %.mk,%,$(patsubst core_%,%,$(wildcard core_*.mk)))
 # Plugins.
 
 define include_plugin
-all:: $1
-
 include plugin_$1.mk
+
+PLUGINS_TARGETS += $$($1_TARGETS)
 
 endef
 
 $(eval $(foreach t,$(patsubst %.mk,%,$(patsubst plugin_%,%,$(wildcard plugin_*.mk))),$(call include_plugin,$t)))
+
+core:: $(CORE_TARGETS)
+
+all:: $(CORE_TARGETS) $(PLUGINS_TARGETS)
 
 # Packages.
 

@@ -1,10 +1,10 @@
 # C source plugin.
 
-C_SRC_TARGETS = $(call list_targets,c-src)
+c_src_TARGETS = $(call list_targets,c-src)
 
-.PHONY: c-src $(C_SRC_TARGETS)
+.PHONY: c-src $(c_src_TARGETS)
 
-c-src: $(C_SRC_TARGETS)
+c-src: $(c_src_TARGETS)
 c_src: c-src
 
 ifeq ($(PLATFORM),msys2)

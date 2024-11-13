@@ -1,10 +1,10 @@
 # Core: Multi-applications.
 
-CORE_APPS_TARGETS = $(call list_targets,core-apps)
+core_apps_TARGETS = $(call list_targets,core-apps)
 
-.PHONY: core-apps $(CORE_APPS_TARGETS)
+.PHONY: core-apps $(core_apps_TARGETS)
 
-core-apps: $(CORE_APPS_TARGETS)
+core-apps: $(core_apps_TARGETS)
 
 core-apps-build: init
 
