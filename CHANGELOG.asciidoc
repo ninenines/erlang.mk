@@ -1,33 +1,3 @@
-2022/03/25: The -Wrace_conditions Dialyzer flag was removed
-            as it is no longer available starting from OTP 25.
-
-2022/05/20: Relx has been updated to v4. Relx v4 is no longer
-            an escript, therefore breaking changes were
-            introduced. The `RELX`, `RELX_URL` and `RELX_OPTS`
-            variables were removed. The `relx` project must
-            be added as a `DEPS`, `BUILD_DEPS` or `REL_DEPS`
-            dependency to enable building releases. For example:
-            `REL_DEPS = relx`. Relx itself has had some
-            additional changes: the `start` command has
-            been replaced by `daemon`, and configuration
-            defaults have changed so that you may need
-            to add the following to your relx.config file:
-
-            ``` erlang
-            {dev_mode, false}.
-            {include_erts, true}.
-            ```
-
-2022/05/31: Xref support has been rewritten. Erlang.mk no
-            longer uses the xref_runner, instead implementing
-            its own interface. This new interface is more
-            flexible and more powerful: it supports both
-            checks and informational analyses as well as
-            the Xref query functions that use the powerful
-            Xref language to perform custom queries. Erlang.mk
-            can also run analyses and queries against all
-            dependencies as well as Erlang/OTP applications.
-
 2023/05/12: Rebar3 is now used for autopatch instead of
             Rebar2. `make distclean` or `rm -rf .erlang.mk`
             might be required after updating Erlang.mk.
@@ -53,3 +23,13 @@
 2024/10/01: Initial beam-cache implementation. This is used
             to cache beam files when switching from/to test
             builds.
+
+2024/11/14: Most packages in the Erlang.mk package index
+            have been removed. To ensure that existing
+            projects continue working, please add the
+            relevant dep_* lines to your projects. If
+            you were using dep_*_commit lines make sure
+            to update them as well. Note that projects
+            that have corresponding Erlang.mk functionality,
+            as well as Cowboy, Ranch, Gun and Cowlib remain
+            in the index.
