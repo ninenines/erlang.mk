@@ -98,7 +98,7 @@ jobs:
     - name: Run tests (Windows)
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
-      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make check c=${{ matrix.suite }} -k V=3 ${{ matrix.extra }}
+      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make check c=${{ matrix.suite }} -k ${{ matrix.extra }}
 
     - name: Upload artifacts
       if: failure()
@@ -107,3 +107,58 @@ jobs:
         name: ${{ matrix.os }} OTP-${{ matrix.erlang }} ${{ matrix.suite }} ${{ matrix.extra }}
         path: |
           test/test_*/
+
+  packages:
+    strategy:
+      fail-fast: false
+      matrix:
+        erlang:
+          - '27'
+        os:
+#          - macos-latest
+          - ubuntu-latest
+#          - windows-latest
+        extra: ['', 'LEGACY=1']
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Erlang/OTP
+      uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{ matrix.erlang }}
+        version-type: loose
+
+    - name: Setup MSYS2 (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: mingw64
+        release: false
+        update: true
+        install: >-
+          git
+          make
+          mingw-w64-x86_64-gcc
+          gnu-netcat
+          diffutils
+
+    - name: Run tests (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: make packages -k ${{ matrix.extra }}
+
+    - name: Run tests (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: msys2 {0}
+      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make packages -k ${{ matrix.extra }}
+
+    - name: Upload artifacts
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }} OTP-${{ matrix.erlang }} packages ${{ matrix.extra }}
+        path: |
+          test/packages/
