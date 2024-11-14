@@ -2,7 +2,7 @@
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 HEX_CORE_GIT ?= https://github.com/hexpm/hex_core
-HEX_CORE_COMMIT ?= v0.7.0
+HEX_CORE_COMMIT ?= v0.10.1
 
 PACKAGES += hex_core
 pkg_hex_core_name = hex_core
