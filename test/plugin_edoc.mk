@@ -100,7 +100,7 @@ edoc-opts: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
 	$i "Add edown doclet for EDoc"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = edown\nEDOC_OPTS = {doclet, edown_doclet}\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = edown\ndep_edown = git https://github.com/uwiger/edown master\nEDOC_OPTS = {doclet, edown_doclet}\n"}' $(APP)/Makefile
 
 	$i "Run EDoc"
 	$t $(MAKE) -C $(APP) edoc $v

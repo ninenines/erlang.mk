@@ -312,7 +312,7 @@ core-compat-rebar-pt: init
 	$t echo "-module(girl)." > $(APP)/src/girl.erl
 
 	$i "Add lager to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\ndep_lager = git https://github.com/erlang-lager/lager master\n"}' $(APP)/Makefile
 
 	$i "Add the lager_transform parse_transform to ERLC_OPTS"
 	$t echo "ERLC_OPTS += +'{parse_transform, lager_transform}' +'{lager_truncation_size, 1234}'" >> $(APP)/Makefile

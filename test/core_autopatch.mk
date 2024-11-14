@@ -34,7 +34,7 @@ core-autopatch-extended-erlc-opts: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add couchbeam to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = couchbeam\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = couchbeam\ndep_couchbeam = git https://github.com/benoitc/couchbeam master\n"}' $(APP)/Makefile
 
 	$i "Extend autopatch-couchbeam to add options to its ERLC_OPTS"
 	$t echo "autopatch-couchbeam:: ; echo >> \$$(DEPS_DIR)/couchbeam/Makefile; echo 'ERLC_OPTS += -DWITH_JIFFY' >> \$$(DEPS_DIR)/couchbeam/Makefile" >> $(APP)/Makefile
@@ -93,7 +93,7 @@ core-autopatch-no-autopatch-erlang-mk: init
 #	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 #
 #	$i "Add Lager to the list of dependencies and to the NO_AUTOPATCH list"
-#	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\nNO_AUTOPATCH = lager\n"}' $(APP)/Makefile
+#	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\ndep_lager = git https://github.com/erlang-lager/lager master\nNO_AUTOPATCH = lager\n"}' $(APP)/Makefile
 #
 #	$i "Build the application"
 #	$t $(MAKE) -C $(APP) $v
@@ -151,7 +151,7 @@ core-autopatch-rebar: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add erlsha2 to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = erlsha2\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = erlsha2\ndep_erlsha2 = git https://github.com/vinoski/erlsha2 master\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -172,7 +172,7 @@ core-autopatch-two-rebar: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add two Rebar projects to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = epgsql mochiweb\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = epgsql mochiweb\ndep_epgsql = git https://github.com/epgsql/epgsql master\ndep_mochiweb = git https://github.com/mochi/mochiweb main\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v

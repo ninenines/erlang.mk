@@ -467,7 +467,7 @@ core-deps-doc: init
 	$t echo "-module(girl)." > $(APP)/src/girl.erl
 
 	$i "Add Edown as a documentation building dependency"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = edown\nEDOC_OPTS = {doclet, edown_doclet}\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DOC_DEPS = edown\ndep_edown = git https://github.com/uwiger/edown master\nEDOC_OPTS = {doclet, edown_doclet}\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -1223,7 +1223,7 @@ core-deps-mv-rebar: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Lager to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\ndep_lager = git https://github.com/erlang-lager/lager master\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -1401,7 +1401,7 @@ core-deps-rel: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib bootstrap-rel $v
 
 	$i "Add Recon to the list of release dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = recon\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "REL_DEPS = recon\ndep_recon = git https://github.com/ferd/recon master\n"}' $(APP)/Makefile
 
 	$i "Add Recon to the relx.config file"
 	$t $(ERL) -eval " \

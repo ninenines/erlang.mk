@@ -105,7 +105,7 @@ dialyzer-beam: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
 	$i "Add lager to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\ndep_lager = git https://github.com/erlang-lager/lager master\n"}' $(APP)/Makefile
 
 	$i "Add lager_transform to ERLC_OPTS"
 	$t echo "ERLC_OPTS += +'{parse_transform, lager_transform}'" >> $(APP)/Makefile
@@ -308,7 +308,7 @@ dialyzer-plt-swallow-warnings: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
 
 	$i "Add LFE version referring to a missing function to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lfe\ndep_lfe_commit = d656987dc5f5e08306531ad1ce13bf9ca9ec9e5a\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lfe\ndep_lfe = git https://github.com/rvirding/lfe d656987dc5f5e08306531ad1ce13bf9ca9ec9e5a\n"}' $(APP)/Makefile
 
 	$i "Create the PLT file"
 	$t $(DIALYZER_MUTEX) $(MAKE) -C $(APP) plt $v

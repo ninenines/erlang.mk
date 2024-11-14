@@ -444,7 +444,7 @@ core-apps-local-deps: init
 	$t $(MAKE) -C $(APP) new-app in=my_app_1 $v
 
 	$i "Add Lager to the list of dependencies of my_app_1, and add the lager parse_transform"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\nERLC_OPTS+=+{parse_transform,lager_transform}\n"}' $(APP)/apps/my_app_1/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\ndep_lager = git https://github.com/erlang-lager/lager master\nERLC_OPTS+=+{parse_transform,lager_transform}\n"}' $(APP)/apps/my_app_1/Makefile
 
 	$i "Add a lager:error/2 call to my_app_1_app.erl that will fail if the parse_transform doesn't run"
 	$t perl -ni.bak -e 'print;if (/^-export/){print "\n-export([log/0]).\n"} if (eof) {print "\nlog() -> lager:error(\"test\", []).\n"}' $(APP)/apps/my_app_1/src/my_app_1_app.erl
@@ -485,7 +485,7 @@ core-apps-local-deps: init
 
 	$i "Add Lager to the list of dependencies of my_app_2, and add the lager parse_transform"
 	$t mv $(APP)/apps/my_app_2/Makefile.bak $(APP)/apps/my_app_2/Makefile
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\nERLC_OPTS+=+{parse_transform,lager_transform}\n"}' $(APP)/apps/my_app_2/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\ndep_lager = git https://github.com/erlang-lager/lager master\nERLC_OPTS+=+{parse_transform,lager_transform}\n"}' $(APP)/apps/my_app_2/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
