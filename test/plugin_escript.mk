@@ -97,8 +97,8 @@ escript-deps-with-deps: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add Cowboy 1.0.0 to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy_commit = 1.0.0\n"}' $(APP)/Makefile
+	$i "Add Cowboy 2.12.0 to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy_commit = 2.12.0\n"}' $(APP)/Makefile
 
 	$i "Generate a module containing a function main/1"
 	$t printf "%s\n" \

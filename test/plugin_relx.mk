@@ -63,8 +63,8 @@ relx-apps-with-deps: init
 	$i "Include my_app in the release"
 	$t perl -pi.bak -e 's/$(APP),/$(APP), my_app,/' $(APP)/relx.config
 
-	$i "Add Cowlib to the list of dependencies for my_app"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/apps/my_app/Makefile
+	$i "Add Cowlib 2.13.0 to the list of dependencies for my_app"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib_commit = 2.13.0\n"}' $(APP)/apps/my_app/Makefile
 
 ifdef LEGACY
 	$i "Add Cowlib to the applications key in the my_app.app.src file"
@@ -82,7 +82,7 @@ endif
 	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
 
 	$i "Check that Cowlib was included in the release"
-	$t test -d $(APP)/_rel/test_relx_apps_with_deps_release/lib/cowlib-1.0.2
+	$t test -d $(APP)/_rel/test_relx_apps_with_deps_release/lib/cowlib-2.13.0
 
 relx-bare-rel: init
 

@@ -195,7 +195,7 @@ core-compat-rebar-deps-hex: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy as a dependency"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = hex 1.0.0\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = hex 2.12.0\n"}' $(APP)/Makefile
 
 	$i "Run 'make rebar.config'"
 	$t $(MAKE) -C $(APP) rebar.config $v
@@ -206,7 +206,7 @@ core-compat-rebar-deps-hex: init
 	$i "Check that Cowboy is listed in rebar.config"
 	$t $(ERL) -eval " \
 		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
-		{_, [{cowboy, \"1.0.0\"}]} = lists:keyfind(deps, 1, C), \
+		{_, [{cowboy, \"2.12.0\"}]} = lists:keyfind(deps, 1, C), \
 		halt()"
 
 	$i "Distclean the application"
