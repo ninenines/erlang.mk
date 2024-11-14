@@ -1,17 +1,6 @@
 # Copyright (c) 2020, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-HEX_CORE_GIT ?= https://github.com/hexpm/hex_core
-HEX_CORE_COMMIT ?= v0.10.1
-
-PACKAGES += hex_core
-pkg_hex_core_name = hex_core
-pkg_hex_core_description = Reference implementation of Hex specifications
-pkg_hex_core_homepage = $(HEX_CORE_GIT)
-pkg_hex_core_fetch = git
-pkg_hex_core_repo = $(HEX_CORE_GIT)
-pkg_hex_core_commit = $(HEX_CORE_COMMIT)
-
 # We automatically depend on hex_core when the project isn't already.
 $(if $(filter hex_core,$(DEPS) $(BUILD_DEPS) $(DOC_DEPS) $(REL_DEPS) $(TEST_DEPS)),,\
 	$(eval $(call dep_target,hex_core)))
