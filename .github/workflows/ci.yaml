@@ -41,7 +41,10 @@ jobs:
           - cover
           - c-src
           - ct
-          - dialyzer
+          - dialyzer SET=1
+          - dialyzer SET=2
+          - dialyzer SET=3
+          - dialyzer SET=4
           - edoc
           - erlydtl
           - escript

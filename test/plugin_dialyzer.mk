@@ -2,6 +2,19 @@
 
 dialyzer_TARGETS = $(call list_targets,dialyzer)
 
+dialyzer_TARGETS_SET_1 = dialyzer-app dialyzer-apps-only dialyzer-apps-with-local-deps
+dialyzer_TARGETS_SET_2 = dialyzer-beam dialyzer-check dialyzer-custom-plt dialyzer-deps
+dialyzer_TARGETS_SET_3 = dialyzer-erlc-opts dialyzer-local-deps dialyzer-opts dialyzer-plt-apps
+dialyzer_TARGETS_SET_4 = dialyzer-plt-ebin-only dialyzer-plt-swallow-warnings dialyzer-pt
+
+ifneq ($(filter-out $(dialyzer_TARGETS_SET_1) $(dialyzer_TARGETS_SET_2) $(dialyzer_TARGETS_SET_3) $(dialyzer_TARGETS_SET_4),$(dialyzer_TARGETS)),)
+$(error Dialyzer target missing from dialyzer_TARGETS_SET_* variables.)
+endif
+
+ifdef SET
+dialyzer_TARGETS := $(dialyzer_TARGETS_SET_$(SET))
+endif
+
 ifneq ($(shell which sem 2>/dev/null),)
 	DIALYZER_MUTEX = sem --fg --id dialyzer
 endif
