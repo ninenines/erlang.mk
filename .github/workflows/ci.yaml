@@ -59,7 +59,7 @@ jobs:
           - sphinx
           - triq
           - xref
-        extra: ['', 'LEGACY=1']
+        extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
         exclude:
           # We disable proper/triq tests until ubuntu-latest includes GNU Make 4.4 or later.
           - os: ubuntu-latest

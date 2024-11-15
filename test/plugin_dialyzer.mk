@@ -298,6 +298,10 @@ dialyzer-plt-ebin-only: init
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
+# @todo Temporary measure to make CACHE_DEPS=1 tests work again.
+	$i "Patch Cowlib's Erlang.mk"
+	$t cp ../erlang.mk $(APP)/deps/cowlib/
+
 	$i "Build Cowlib for tests to fetch autopatched dependencies"
 	$t $(MAKE) -C $(APP)/deps/cowlib test-build $v
 

@@ -726,7 +726,8 @@ define dep_cache_fetch_git
 	else \
 		git clone -q -n -- $(call dep_repo,$1) $(join $(CACHE_DIR)/git/,$(call dep_name,$1)); \
 	fi; \
-	git clone -q --branch $(call dep_commit,$1) --single-branch -- $(join $(CACHE_DIR)/git/,$(call dep_name,$1)) $2
+	git clone -q --single-branch -- $(join $(CACHE_DIR)/git/,$(call dep_name,$1)) $2; \
+	cd $2 && git checkout -q $(call dep_commit,$1)
 endef
 
 define dep_fetch_git

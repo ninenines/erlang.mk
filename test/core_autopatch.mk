@@ -172,7 +172,7 @@ core-autopatch-two-rebar: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add two Rebar projects to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = epgsql mochiweb\ndep_epgsql = git https://github.com/epgsql/epgsql master\ndep_mochiweb = git https://github.com/mochi/mochiweb main\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = epgsql mochiweb\ndep_epgsql = git https://github.com/epgsql/epgsql devel\ndep_mochiweb = git https://github.com/mochi/mochiweb main\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
