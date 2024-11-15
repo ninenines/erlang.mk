@@ -29,7 +29,8 @@ jobs:
           - core-apps
           - core-autopatch
           - core-compat
-          - core-deps
+          # Trick GH runners into picking this slower job early.
+          - ACME=1 c=core-deps
           - core-makedep
           - core-misc
           - core-plugins
@@ -52,7 +53,8 @@ jobs:
           - hex
           - proper
           - protobuffs
-          - relx
+          # Trick GH runners into picking this slower job early.
+          - ACME=1 c=relx
           - shell
           - sphinx
           - triq
