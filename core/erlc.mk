@@ -49,7 +49,7 @@ mib_verbose_0 = @echo " MIB   " $(filter %.bin %.mib,$(?F));
 mib_verbose_2 = set -x;
 mib_verbose = $(mib_verbose_$(V))
 
-ifneq ($(wildcard src/),)
+ifneq ($(wildcard src/)$(wildcard lib/),)
 
 # Targets.
 
@@ -86,7 +86,7 @@ define app_file
 endef
 endif
 
-app-build: ebin/$(PROJECT).app
+app-build:: ebin/$(PROJECT).app
 	$(verbose) :
 
 # Source files.
@@ -271,21 +271,21 @@ define makedep.erl
 endef
 
 ifeq ($(if $(NO_MAKEDEP),$(wildcard $(PROJECT).d),),)
-$(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl) $(MAKEFILE_LIST)
+$(PROJECT).d:: $(ERL_FILES) $(EX_FILES) $(call core_find,include/,*.hrl) $(MAKEFILE_LIST)
 	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))
 endif
 
 ifeq ($(IS_APP)$(IS_DEP),)
-ifneq ($(words $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES)),0)
+ifneq ($(words $(ERL_FILES) $(EX_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES)),0)
 # Rebuild everything when the Makefile changes.
 $(ERLANG_MK_TMP)/last-makefile-change: $(MAKEFILE_LIST) | $(ERLANG_MK_TMP)
 	$(verbose) if test -f $@; then \
-		touch $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES); \
+		touch $(ERL_FILES) $(EX_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES); \
 		touch -c $(PROJECT).d; \
 	fi
 	$(verbose) touch $@
 
-$(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES):: $(ERLANG_MK_TMP)/last-makefile-change
+$(ERL_FILES) $(EX_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES):: $(ERLANG_MK_TMP)/last-makefile-change
 ebin/$(PROJECT).app:: $(ERLANG_MK_TMP)/last-makefile-change
 endif
 endif
