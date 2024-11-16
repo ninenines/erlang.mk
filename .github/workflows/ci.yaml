@@ -30,6 +30,8 @@ jobs:
           - core-autopatch
           - core-compat
           - core-deps
+          - core-elixir
+          - core-hex
           - core-makedep
           - core-misc
           - core-plugins
@@ -46,7 +48,6 @@ jobs:
           - erlydtl
           - escript
           - eunit
-          - hex
           - proper
           - protobuffs
           - relx
