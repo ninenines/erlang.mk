@@ -2,4 +2,5 @@ doc/guide.pdf
 doc/html
 test/logs/
 test/packages/
+test/test_hex_core_git/
 test/test_rebar_git/

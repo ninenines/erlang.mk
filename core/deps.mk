@@ -31,6 +31,15 @@ CACHE_DEPS ?= 0
 CACHE_DIR ?= $(if $(XDG_CACHE_HOME),$(XDG_CACHE_HOME),$(HOME)/.cache)/erlang.mk
 export CACHE_DIR
 
+HEX_CONFIG ?=
+
+define hex_config.erl
+	begin
+		Config0 = hex_core:default_config(),
+		Config0$(HEX_CONFIG)
+	end
+endef
+
 # External "early" plugins (see core/plugins.mk for regular plugins).
 # They both use the core_dep_plugin macro.
 
@@ -781,14 +790,29 @@ define dep_fetch_ln
 	ln -s $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1));
 endef
 
+define hex_get_tarball.erl
+	{ok, _} = application:ensure_all_started(ssl),
+	{ok, _} = application:ensure_all_started(inets),
+	Config = $(hex_config.erl),
+	case hex_repo:get_tarball(Config, <<"$1">>, <<"$(strip $2)">>) of
+		{ok, {200, _, Tarball}} ->
+			ok = file:write_file("$3", Tarball),
+			halt(0);
+		{ok, {Status, _, Errors}} ->
+			io:format("Error ~b: ~0p~n", [Status, Errors]),
+			halt(79)
+	end
+endef
+
 ifeq ($(CACHE_DEPS),1)
 
 # Hex only has a package version. No need to look in the Erlang.mk packages.
 define dep_fetch_hex
 	mkdir -p $(CACHE_DIR)/hex $(DEPS_DIR)/$1; \
-	$(eval hex_tar_name=$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar) \
-	$(if $(wildcard $(CACHE_DIR)/hex/$(hex_tar_name)),,$(call core_http_get,$(CACHE_DIR)/hex/$(hex_tar_name),\
-		https://repo.hex.pm/tarballs/$(hex_tar_name);)) \
+	$(eval hex_pkg_name := $(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)) \
+	$(eval hex_tar_name := $(hex_pkg_name)-$(strip $(word 2,$(dep_$1))).tar) \
+	$(if $(wildcard $(CACHE_DIR)/hex/$(hex_tar_name)),,\
+		$(call erlang,$(call hex_get_tarball.erl,$(hex_pkg_name),$(word 2,$(dep_$1)),$(CACHE_DIR)/hex/$(hex_tar_name)));) \
 	tar -xOf $(CACHE_DIR)/hex/$(hex_tar_name) contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
 
@@ -797,8 +821,7 @@ else
 # Hex only has a package version. No need to look in the Erlang.mk packages.
 define dep_fetch_hex
 	mkdir -p $(ERLANG_MK_TMP)/hex $(DEPS_DIR)/$1; \
-	$(call core_http_get,$(ERLANG_MK_TMP)/hex/$1.tar,\
-		https://repo.hex.pm/tarballs/$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)-$(strip $(word 2,$(dep_$1))).tar); \
+	$(call erlang,$(call hex_get_tarball.erl,$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1),$(word 2,$(dep_$1)),$(ERLANG_MK_TMP)/hex/$1.tar)); \
 	tar -xOf $(ERLANG_MK_TMP)/hex/$1.tar contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
 
@@ -817,7 +840,7 @@ define dep_fetch_legacy
 endef
 
 define dep_target
-$(DEPS_DIR)/$(call dep_name,$1): | $(ERLANG_MK_TMP)
+$(DEPS_DIR)/$(call dep_name,$1): $(if $(filter hex,$(call query_fetch_method,$1)),hex-core) | $(ERLANG_MK_TMP)
 	$(eval DEP_NAME := $(call dep_name,$1))
 	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
@@ -848,6 +871,16 @@ autopatch-$(call dep_name,$1)::
 		$$(call dep_autopatch,$(call dep_name,$1)) \
 	fi
 endef
+
+# We automatically depend on hex_core when the project isn't already.
+$(if $(filter hex_core,$(DEPS) $(BUILD_DEPS) $(DOC_DEPS) $(REL_DEPS) $(TEST_DEPS)),,\
+	$(eval $(call dep_target,hex_core)))
+
+hex-core: $(DEPS_DIR)/hex_core
+	$(verbose) if [ ! -e $(DEPS_DIR)/hex_core/ebin/dep_built ]; then \
+		$(MAKE) -C $(DEPS_DIR)/hex_core IS_DEP=1; \
+		touch $(DEPS_DIR)/hex_core/ebin/dep_built; \
+	fi
 
 $(foreach dep,$(BUILD_DEPS) $(DEPS),$(eval $(call dep_target,$(dep))))
 

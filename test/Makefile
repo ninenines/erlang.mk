@@ -129,16 +129,24 @@ all::
 	$t :
 
 clean::
-	$t rm -rf erl_crash.dump packages/ $(filter-out test_rebar_git/,$(wildcard test_*/))
+	$t rm -rf erl_crash.dump packages/ $(filter-out test_hex_core_git/ test_rebar_git/,$(wildcard test_*/))
 
 init: clean
-	$i "Prefetch Rebar if necessary"
+	$i "Prefetch hex_core if necessary"
+	$t if [ ! -d test_hex_core_git ]; then \
+		git clone -q -n -- https://github.com/hexpm/hex_core test_hex_core_git; \
+	fi
+
+	$i "Prefetch rebar if necessary"
 	$t if [ ! -d test_rebar_git ]; then \
 		git clone -q -n -- https://github.com/erlang/rebar3 test_rebar_git; \
 	fi
 
 	$i "Generate a bleeding edge Erlang.mk"
 	$t cd .. && $(MAKE) $v
+
+HEX_CORE_GIT = file://$(CURDIR)/test_hex_core_git
+export HEX_CORE_GIT
 
 REBAR3_GIT = file://$(CURDIR)/test_rebar_git
 export REBAR3_GIT

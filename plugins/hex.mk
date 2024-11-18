@@ -1,26 +1,6 @@
 # Copyright (c) 2020, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-# We automatically depend on hex_core when the project isn't already.
-$(if $(filter hex_core,$(DEPS) $(BUILD_DEPS) $(DOC_DEPS) $(REL_DEPS) $(TEST_DEPS)),,\
-	$(eval $(call dep_target,hex_core)))
-
-hex-core: $(DEPS_DIR)/hex_core
-	$(verbose) if [ ! -e $(DEPS_DIR)/hex_core/ebin/dep_built ]; then \
-		$(MAKE) -C $(DEPS_DIR)/hex_core IS_DEP=1; \
-		touch $(DEPS_DIR)/hex_core/ebin/dep_built; \
-	fi
-
-# @todo This must also apply to fetching.
-HEX_CONFIG ?=
-
-define hex_config.erl
-	begin
-		Config0 = hex_core:default_config(),
-		Config0$(HEX_CONFIG)
-	end
-endef
-
 define hex_user_create.erl
 	{ok, _} = application:ensure_all_started(ssl),
 	{ok, _} = application:ensure_all_started(inets),
