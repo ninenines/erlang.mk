@@ -19,7 +19,7 @@ ci-setup::
 ci-extra::
 	$(verbose) :
 
-ci_verbose_0 = @echo " CI    " $(1);
+ci_verbose_0 = @echo " CI    " $1;
 ci_verbose = $(ci_verbose_$(V))
 
 define ci_target

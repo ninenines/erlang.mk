@@ -41,7 +41,7 @@ test_erlc_verbose = $(test_erlc_verbose_$(V))
 
 define compile_test_erl
 	$(test_erlc_verbose) erlc -v $(TEST_ERLC_OPTS) -o $(TEST_DIR) \
-		-pa ebin/ -I include/ $(1)
+		-pa ebin/ -I include/ $1
 endef
 
 ERL_TEST_FILES = $(call core_find,$(TEST_DIR)/,*.erl)

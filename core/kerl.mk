@@ -21,10 +21,10 @@ KERL_MAKEFLAGS ?=
 OTP_GIT ?= https://github.com/erlang/otp
 
 define kerl_otp_target
-$(KERL_INSTALL_DIR)/$(1): $(KERL)
+$(KERL_INSTALL_DIR)/$1: $(KERL)
 	$(verbose) if [ ! -d $$@ ]; then \
-		MAKEFLAGS="$(KERL_MAKEFLAGS)" $(KERL) build git $(OTP_GIT) $(1) $(1); \
-		$(KERL) install $(1) $(KERL_INSTALL_DIR)/$(1); \
+		MAKEFLAGS="$(KERL_MAKEFLAGS)" $(KERL) build git $(OTP_GIT) $1 $1; \
+		$(KERL) install $1 $(KERL_INSTALL_DIR)/$1; \
 	fi
 endef
 

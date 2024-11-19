@@ -107,14 +107,14 @@ list-deps list-doc-deps list-rel-deps list-test-deps list-shell-deps:
 QUERY ?= name fetch_method repo version
 
 define query_target
-$(1): $(2) clean-tmp-query.log
+$1: $2 clean-tmp-query.log
 ifeq ($(IS_APP)$(IS_DEP),)
-	$(verbose) rm -f $(4)
+	$(verbose) rm -f $4
 endif
-	$(verbose) $(foreach dep,$(3),\
-		echo $(PROJECT): $(foreach q,$(QUERY),$(call query_$(q),$(dep))) >> $(4) ;)
-	$(if $(filter-out query-deps,$(1)),,\
-		$(verbose) set -e; for dep in $(3) ; do \
+	$(verbose) $(foreach dep,$3,\
+		echo $(PROJECT): $(foreach q,$(QUERY),$(call query_$(q),$(dep))) >> $4 ;)
+	$(if $(filter-out query-deps,$1),,\
+		$(verbose) set -e; for dep in $3 ; do \
 			if grep -qs ^$$$$dep$$$$ $(ERLANG_MK_TMP)/query.log; then \
 				:; \
 			else \
@@ -123,8 +123,8 @@ endif
 			fi \
 		done)
 ifeq ($(IS_APP)$(IS_DEP),)
-	$(verbose) touch $(4)
-	$(verbose) cat $(4)
+	$(verbose) touch $4
+	$(verbose) cat $4
 endif
 endef
 

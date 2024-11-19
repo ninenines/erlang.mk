@@ -47,7 +47,7 @@ verbose_0 = @
 verbose_2 = set -x;
 verbose = $(verbose_$(V))
 
-ifeq ($(V),3)
+ifeq ($V,3)
 SHELL := $(SHELL) -x
 endif
 
@@ -162,7 +162,7 @@ define newline
 endef
 
 define comma_list
-$(subst $(space),$(comma),$(strip $(1)))
+$(subst $(space),$(comma),$(strip $1))
 endef
 
 define escape_dquotes
@@ -180,23 +180,23 @@ else
 core_native_path = $1
 endif
 
-core_http_get = curl -Lf$(if $(filter-out 0,$(V)),,s)o $(call core_native_path,$1) $2
+core_http_get = curl -Lf$(if $(filter-out 0,$V),,s)o $(call core_native_path,$1) $2
 
-core_eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
+core_eq = $(and $(findstring $1,$2),$(findstring $2,$1))
 
 # We skip files that contain spaces because they end up causing issues.
 # Files that begin with a dot are already ignored by the wildcard function.
 core_find = $(foreach f,$(wildcard $(1:%/=%)/*),$(if $(wildcard $f/.),$(call core_find,$f,$2),$(if $(filter $(subst *,%,$2),$f),$(if $(wildcard $f),$f))))
 
-core_lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$(1)))))))))))))))))))))))))))
+core_lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$1))))))))))))))))))))))))))
 
-core_ls = $(filter-out $(1),$(shell echo $(1)))
+core_ls = $(filter-out $1,$(shell echo $1))
 
 # @todo Use a solution that does not require using perl.
 core_relpath = $(shell perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"' $1 $2)
 
 define core_render
-	printf -- '$(subst $(newline),\n,$(subst %,%%,$(subst ','\'',$(subst $(tab),$(WS),$(call $(1))))))\n' > $(2)
+	printf -- '$(subst $(newline),\n,$(subst %,%%,$(subst ','\'',$(subst $(tab),$(WS),$(call $1)))))\n' > $2
 endef
 
 # Automated update.

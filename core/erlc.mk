@@ -62,8 +62,8 @@ define app_file
 {application, '$(PROJECT)', [
 	{description, "$(PROJECT_DESCRIPTION)"},
 	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
-	{id$(comma)$(space)"$(1)"}$(comma))
-	{modules, [$(call comma_list,$(2))]},
+	{id$(comma)$(space)"$1"}$(comma))
+	{modules, [$(call comma_list,$2)]},
 	{registered, []},
 	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(LOCAL_DEPS) $(OPTIONAL_DEPS) $(foreach dep,$(DEPS),$(call query_name,$(dep))))]},
 	{optional_applications, [$(call comma_list,$(OPTIONAL_DEPS))]},
@@ -75,8 +75,8 @@ define app_file
 {application, '$(PROJECT)', [
 	{description, "$(PROJECT_DESCRIPTION)"},
 	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
-	{id$(comma)$(space)"$(1)"}$(comma))
-	{modules, [$(call comma_list,$(2))]},
+	{id$(comma)$(space)"$1"}$(comma))
+	{modules, [$(call comma_list,$2)]},
 	{registered, [$(call comma_list,$(PROJECT)_sup $(PROJECT_REGISTERED))]},
 	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(LOCAL_DEPS) $(OPTIONAL_DEPS) $(foreach dep,$(DEPS),$(call query_name,$(dep))))]},
 	{optional_applications, [$(call comma_list,$(OPTIONAL_DEPS))]},
@@ -104,7 +104,7 @@ ERL_FILES += $(addprefix src/,$(patsubst %.asn1,%.erl,$(notdir $(ASN1_FILES))))
 
 define compile_asn1
 	$(verbose) mkdir -p include/
-	$(asn1_verbose) erlc -v -I include/ -o asn1/ +noobj $(ERLC_ASN1_OPTS) $(1)
+	$(asn1_verbose) erlc -v -I include/ -o asn1/ +noobj $(ERLC_ASN1_OPTS) $1
 	$(verbose) mv asn1/*.erl src/
 	-$(verbose) mv asn1/*.hrl include/
 	$(verbose) mv asn1/*.asn1db include/
@@ -266,7 +266,7 @@ define makedep.erl
 		[233] -> unicode:characters_to_binary(Output0);
 		_ -> Output0
 	end,
-	ok = file:write_file("$(1)", Output),
+	ok = file:write_file("$1", Output),
 	halt()
 endef
 
@@ -302,7 +302,7 @@ ebin/:
 
 define compile_erl
 	$(erlc_verbose) erlc -v $(if $(IS_DEP),$(filter-out -Werror,$(ERLC_OPTS)),$(ERLC_OPTS)) -o ebin/ \
-		-pa ebin/ -I include/ $(filter-out $(ERLC_EXCLUDE_PATHS),$(COMPILE_FIRST_PATHS) $(1))
+		-pa ebin/ -I include/ $(filter-out $(ERLC_EXCLUDE_PATHS),$(COMPILE_FIRST_PATHS) $1)
 endef
 
 define validate_app_file

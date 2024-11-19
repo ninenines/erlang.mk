@@ -44,12 +44,12 @@ endef
 # They both use the core_dep_plugin macro.
 
 define core_dep_plugin
-ifeq ($(2),$(PROJECT))
--include $$(patsubst $(PROJECT)/%,%,$(1))
+ifeq ($2,$(PROJECT))
+-include $$(patsubst $(PROJECT)/%,%,$1)
 else
--include $(DEPS_DIR)/$(1)
+-include $(DEPS_DIR)/$1
 
-$(DEPS_DIR)/$(1): $(DEPS_DIR)/$(2) ;
+$(DEPS_DIR)/$1: $(DEPS_DIR)/$2 ;
 endif
 endef
 
@@ -62,42 +62,42 @@ $(foreach p,$(DEP_EARLY_PLUGINS),\
 
 # Query functions.
 
-query_fetch_method = $(if $(dep_$(1)),$(call _qfm_dep,$(word 1,$(dep_$(1)))),$(call _qfm_pkg,$(1)))
-_qfm_dep = $(if $(dep_fetch_$(1)),$(1),fail)
+query_fetch_method = $(if $(dep_$(1)),$(call _qfm_dep,$(word 1,$(dep_$(1)))),$(call _qfm_pkg,$1))
+_qfm_dep = $(if $(dep_fetch_$(1)),$1,fail)
 _qfm_pkg = $(if $(pkg_$(1)_fetch),$(pkg_$(1)_fetch),fail)
 
-query_name = $(if $(dep_$(1)),$(1),$(if $(pkg_$(1)_name),$(pkg_$(1)_name),$(1)))
+query_name = $(if $(dep_$(1)),$1,$(if $(pkg_$(1)_name),$(pkg_$(1)_name),$1))
 
-query_repo = $(call _qr,$(1),$(call query_fetch_method,$(1)))
-_qr = $(if $(query_repo_$(2)),$(call query_repo_$(2),$(1)),$(call query_repo_git,$(1)))
+query_repo = $(call _qr,$1,$(call query_fetch_method,$1))
+_qr = $(if $(query_repo_$(2)),$(call query_repo_$(2),$1),$(call query_repo_git,$1))
 
 query_repo_default = $(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo))
-query_repo_git = $(patsubst git://github.com/%,https://github.com/%,$(call query_repo_default,$(1)))
-query_repo_git-subfolder = $(call query_repo_git,$(1))
+query_repo_git = $(patsubst git://github.com/%,https://github.com/%,$(call query_repo_default,$1))
+query_repo_git-subfolder = $(call query_repo_git,$1)
 query_repo_git-submodule = -
-query_repo_hg = $(call query_repo_default,$(1))
-query_repo_svn = $(call query_repo_default,$(1))
-query_repo_cp = $(call query_repo_default,$(1))
-query_repo_ln = $(call query_repo_default,$(1))
-query_repo_hex = https://hex.pm/packages/$(if $(word 3,$(dep_$(1))),$(word 3,$(dep_$(1))),$(1))
+query_repo_hg = $(call query_repo_default,$1)
+query_repo_svn = $(call query_repo_default,$1)
+query_repo_cp = $(call query_repo_default,$1)
+query_repo_ln = $(call query_repo_default,$1)
+query_repo_hex = https://hex.pm/packages/$(if $(word 3,$(dep_$(1))),$(word 3,$(dep_$(1))),$1)
 query_repo_fail = -
 
-query_version = $(call _qv,$(1),$(call query_fetch_method,$(1)))
-_qv = $(if $(query_version_$(2)),$(call query_version_$(2),$(1)),$(call query_version_default,$(1)))
+query_version = $(call _qv,$1,$(call query_fetch_method,$1))
+_qv = $(if $(query_version_$(2)),$(call query_version_$(2),$1),$(call query_version_default,$1))
 
 query_version_default = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 3,$(dep_$(1))),$(pkg_$(1)_commit)))
-query_version_git = $(call query_version_default,$(1))
-query_version_git-subfolder = $(call query_version_default,$(1))
+query_version_git = $(call query_version_default,$1)
+query_version_git-subfolder = $(call query_version_default,$1)
 query_version_git-submodule = -
-query_version_hg = $(call query_version_default,$(1))
+query_version_hg = $(call query_version_default,$1)
 query_version_svn = -
 query_version_cp = -
 query_version_ln = -
 query_version_hex = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_commit)))
 query_version_fail = -
 
-query_extra = $(call _qe,$(1),$(call query_fetch_method,$(1)))
-_qe = $(if $(query_extra_$(2)),$(call query_extra_$(2),$(1)),-)
+query_extra = $(call _qe,$1,$(call query_fetch_method,$1))
+_qe = $(if $(query_extra_$(2)),$(call query_extra_$(2),$1),-)
 
 query_extra_git = -
 query_extra_git-subfolder = $(if $(dep_$(1)),subfolder=$(word 4,$(dep_$(1))),-)
@@ -109,11 +109,11 @@ query_extra_ln = -
 query_extra_hex = $(if $(dep_$(1)),package-name=$(word 3,$(dep_$(1))),-)
 query_extra_fail = -
 
-query_absolute_path = $(addprefix $(DEPS_DIR)/,$(call query_name,$(1)))
+query_absolute_path = $(addprefix $(DEPS_DIR)/,$(call query_name,$1))
 
 # Application directories.
 
-LOCAL_DEPS_DIRS = $(foreach a,$(LOCAL_DEPS),$(if $(wildcard $(APPS_DIR)/$(a)),$(APPS_DIR)/$(a)))
+LOCAL_DEPS_DIRS = $(foreach a,$(LOCAL_DEPS),$(if $(wildcard $(APPS_DIR)/$a),$(APPS_DIR)/$a))
 ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(foreach dep,$(filter-out $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)),$(call query_name,$(dep))))
 
 # When we are calling an app directly we don't want to include it here
@@ -236,25 +236,25 @@ endif
 # While Makefile file could be GNUmakefile or makefile,
 # in practice only Makefile is needed so far.
 define dep_autopatch
-	if [ -f $(DEPS_DIR)/$(1)/erlang.mk ]; then \
+	if [ -f $(DEPS_DIR)/$1/erlang.mk ]; then \
 		rm -rf $(DEPS_DIR)/$1/ebin/; \
-		$(call erlang,$(call dep_autopatch_appsrc.erl,$(1))); \
-		$(call dep_autopatch_erlang_mk,$(1)); \
-	elif [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
+		$(call erlang,$(call dep_autopatch_appsrc.erl,$1)); \
+		$(call dep_autopatch_erlang_mk,$1); \
+	elif [ -f $(DEPS_DIR)/$1/Makefile ]; then \
 		if [ -f $(DEPS_DIR)/$1/rebar.lock ]; then \
 			$(call dep_autopatch2,$1); \
-		elif [ 0 != `grep -c "include ../\w*\.mk" $(DEPS_DIR)/$(1)/Makefile` ]; then \
-			$(call dep_autopatch2,$(1)); \
-		elif [ 0 != `grep -ci "^[^#].*rebar" $(DEPS_DIR)/$(1)/Makefile` ]; then \
-			$(call dep_autopatch2,$(1)); \
-		elif [ -n "`find $(DEPS_DIR)/$(1)/ -type f -name \*.mk -not -name erlang.mk -exec grep -i "^[^#].*rebar" '{}' \;`" ]; then \
-			$(call dep_autopatch2,$(1)); \
+		elif [ 0 != `grep -c "include ../\w*\.mk" $(DEPS_DIR)/$1/Makefile` ]; then \
+			$(call dep_autopatch2,$1); \
+		elif [ 0 != `grep -ci "^[^#].*rebar" $(DEPS_DIR)/$1/Makefile` ]; then \
+			$(call dep_autopatch2,$1); \
+		elif [ -n "`find $(DEPS_DIR)/$1/ -type f -name \*.mk -not -name erlang.mk -exec grep -i "^[^#].*rebar" '{}' \;`" ]; then \
+			$(call dep_autopatch2,$1); \
 		fi \
 	else \
-		if [ ! -d $(DEPS_DIR)/$(1)/src/ ]; then \
-			$(call dep_autopatch_noop,$(1)); \
+		if [ ! -d $(DEPS_DIR)/$1/src/ ]; then \
+			$(call dep_autopatch_noop,$1); \
 		else \
-			$(call dep_autopatch2,$(1)); \
+			$(call dep_autopatch2,$1); \
 		fi \
 	fi
 endef
@@ -264,19 +264,19 @@ define dep_autopatch2
 	mv -n $(DEPS_DIR)/$1/ebin/$1.app $(DEPS_DIR)/$1/src/$1.app.src; \
 	rm -f $(DEPS_DIR)/$1/ebin/$1.app; \
 	if [ -f $(DEPS_DIR)/$1/src/$1.app.src.script ]; then \
-		$(call erlang,$(call dep_autopatch_appsrc_script.erl,$(1))); \
+		$(call erlang,$(call dep_autopatch_appsrc_script.erl,$1)); \
 	fi; \
-	$(call erlang,$(call dep_autopatch_appsrc.erl,$(1))); \
-	if [ -f $(DEPS_DIR)/$(1)/rebar -o -f $(DEPS_DIR)/$(1)/rebar.config -o -f $(DEPS_DIR)/$(1)/rebar.config.script -o -f $(DEPS_DIR)/$1/rebar.lock ]; then \
+	$(call erlang,$(call dep_autopatch_appsrc.erl,$1)); \
+	if [ -f $(DEPS_DIR)/$1/rebar -o -f $(DEPS_DIR)/$1/rebar.config -o -f $(DEPS_DIR)/$1/rebar.config.script -o -f $(DEPS_DIR)/$1/rebar.lock ]; then \
 		$(call dep_autopatch_fetch_rebar); \
-		$(call dep_autopatch_rebar,$(1)); \
+		$(call dep_autopatch_rebar,$1); \
 	else \
-		$(call dep_autopatch_gen,$(1)); \
+		$(call dep_autopatch_gen,$1); \
 	fi
 endef
 
 define dep_autopatch_noop
-	printf "noop:\n" > $(DEPS_DIR)/$(1)/Makefile
+	printf "noop:\n" > $(DEPS_DIR)/$1/Makefile
 endef
 
 # Replace "include erlang.mk" with a line that will load the parent Erlang.mk
@@ -298,7 +298,7 @@ endif
 define dep_autopatch_gen
 	printf "%s\n" \
 		"ERLC_OPTS = +debug_info" \
-		"include ../../erlang.mk" > $(DEPS_DIR)/$(1)/Makefile
+		"include ../../erlang.mk" > $(DEPS_DIR)/$1/Makefile
 endef
 
 # We use flock/lockf when available to avoid concurrency issues.
@@ -323,11 +323,11 @@ define dep_autopatch_fetch_rebar2
 endef
 
 define dep_autopatch_rebar
-	if [ -f $(DEPS_DIR)/$(1)/Makefile ]; then \
-		mv $(DEPS_DIR)/$(1)/Makefile $(DEPS_DIR)/$(1)/Makefile.orig.mk; \
+	if [ -f $(DEPS_DIR)/$1/Makefile ]; then \
+		mv $(DEPS_DIR)/$1/Makefile $(DEPS_DIR)/$1/Makefile.orig.mk; \
 	fi; \
-	$(call erlang,$(call dep_autopatch_rebar.erl,$(1))); \
-	rm -f $(DEPS_DIR)/$(1)/ebin/$(1).app
+	$(call erlang,$(call dep_autopatch_rebar.erl,$1)); \
+	rm -f $(DEPS_DIR)/$1/ebin/$1.app
 endef
 
 define dep_autopatch_rebar.erl
@@ -700,7 +700,7 @@ define dep_autopatch_appsrc.erl
 	case filelib:is_regular(AppSrcIn) of
 		false -> ok;
 		true ->
-			{ok, [{application, $(1), L0}]} = file:consult(AppSrcIn),
+			{ok, [{application, $1, L0}]} = file:consult(AppSrcIn),
 			L1 = lists:keystore(modules, 1, L0, {modules, []}),
 			L2 = case lists:keyfind(vsn, 1, L1) of
 				{_, git} -> lists:keyreplace(vsn, 1, L1, {vsn, lists:droplast(os:cmd("git -C $(DEPS_DIR)/$1 describe --dirty --tags --always"))});
@@ -708,7 +708,7 @@ define dep_autopatch_appsrc.erl
 				_ -> L1
 			end,
 			L3 = case lists:keyfind(registered, 1, L2) of false -> [{registered, []}|L2]; _ -> L2 end,
-			ok = file:write_file(AppSrcOut, io_lib:format("~p.~n", [{application, $(1), L3}])),
+			ok = file:write_file(AppSrcOut, io_lib:format("~p.~n", [{application, $1, L3}])),
 			case AppSrcOut of AppSrcIn -> ok; _ -> ok = file:delete(AppSrcIn) end
 	end,
 	halt()
@@ -776,11 +776,11 @@ define dep_fetch_svn
 endef
 
 define dep_fetch_cp
-	cp -R $(call query_repo_cp,$(1)) $(DEPS_DIR)/$(call query_name,$1);
+	cp -R $(call query_repo_cp,$1) $(DEPS_DIR)/$(call query_name,$1);
 endef
 
 define dep_fetch_ln
-	ln -s $(call query_repo_ln,$(1)) $(DEPS_DIR)/$(call query_name,$1);
+	ln -s $(call query_repo_ln,$1) $(DEPS_DIR)/$(call query_name,$1);
 endef
 
 define hex_get_tarball.erl
@@ -821,7 +821,7 @@ endef
 endif
 
 define dep_fetch_fail
-	echo "Error: Unknown or invalid dependency: $(1)." >&2; \
+	echo "Error: Unknown or invalid dependency: $1." >&2; \
 	exit 78;
 endef
 
@@ -835,16 +835,16 @@ $(DEPS_DIR)/$(call query_name,$1): $(if $(filter hex,$(call query_fetch_method,$
 	fi
 	$(verbose) mkdir -p $(DEPS_DIR)
 	$(dep_verbose) $(call dep_fetch_$(strip $(call query_fetch_method,$1)),$1)
-	$(verbose) if [ -f $(DEPS_DIR)/$(1)/configure.ac -o -f $(DEPS_DIR)/$(1)/configure.in ] \
-			&& [ ! -f $(DEPS_DIR)/$(1)/configure ]; then \
+	$(verbose) if [ -f $(DEPS_DIR)/$1/configure.ac -o -f $(DEPS_DIR)/$1/configure.in ] \
+			&& [ ! -f $(DEPS_DIR)/$1/configure ]; then \
 		echo " AUTO  " $(DEP_STR); \
-		cd $(DEPS_DIR)/$(1) && autoreconf -Wall -vif -I m4; \
+		cd $(DEPS_DIR)/$1 && autoreconf -Wall -vif -I m4; \
 	fi
 	- $(verbose) if [ -f $(DEPS_DIR)/$(DEP_NAME)/configure ]; then \
 		echo " CONF  " $(DEP_STR); \
 		cd $(DEPS_DIR)/$(DEP_NAME) && ./configure; \
 	fi
-ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
+ifeq ($(filter $1,$(NO_AUTOPATCH)),)
 	$(verbose) $$(MAKE) --no-print-directory autopatch-$(DEP_NAME)
 endif
 

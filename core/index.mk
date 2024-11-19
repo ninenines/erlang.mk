@@ -5,7 +5,7 @@
 
 define pkg_print
 	$(verbose) printf "%s\n" \
-		$(if $(call core_eq,$(1),$(pkg_$(1)_name)),,"Pkg name:    $(1)") \
+		$(if $(call core_eq,$1,$(pkg_$(1)_name)),,"Pkg name:    $1") \
 		"App name:    $(pkg_$(1)_name)" \
 		"Description: $(pkg_$(1)_description)" \
 		"Home page:   $(pkg_$(1)_homepage)" \
@@ -19,8 +19,8 @@ endef
 search:
 ifdef q
 	$(foreach p,$(PACKAGES), \
-		$(if $(findstring $(call core_lc,$(q)),$(call core_lc,$(pkg_$(p)_name) $(pkg_$(p)_description))), \
-			$(call pkg_print,$(p))))
+		$(if $(findstring $(call core_lc,$q),$(call core_lc,$(pkg_$(p)_name) $(pkg_$(p)_description))), \
+			$(call pkg_print,$p)))
 else
-	$(foreach p,$(PACKAGES),$(call pkg_print,$(p)))
+	$(foreach p,$(PACKAGES),$(call pkg_print,$p))
 endif
