@@ -33,3 +33,7 @@
             that have corresponding Erlang.mk functionality,
             as well as Cowboy, Ranch, Gun and Cowlib remain
             in the index.
+
+2024/11/19: The deprecated defines `dep_fetch`, `dep_name`,
+            `dep_repo` and `dep_commit` have been removed
+            in favor of their `query_*` equivalents.

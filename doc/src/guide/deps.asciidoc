@@ -163,7 +163,7 @@ variable. In the case of Cowboy, this would look like this:
 
 [source,make]
 DEPS = cowboy
-dep_cowboy_commit = 2.0.0-pre.2
+dep_cowboy_commit = 2.12.0
 
 Erlang.mk will use the package index to get all information
 about Cowboy, except the commit number which will be overridden.
@@ -175,7 +175,7 @@ can define the `dep_$(DEP_NAME)` variable with everything:
 
 [source,make]
 DEPS = cowboy
-dep_cowboy = git https://github.com/essen/cowboy 2.0.0-pre.2
+dep_cowboy = git https://github.com/essen/cowboy 2.12.0
 
 This will fetch Cowboy from your fork at the given commit.
 
@@ -264,7 +264,7 @@ If none of the existing methods fit your use, you can simply
 define your own. Erlang.mk will consider all variables that
 are named as `dep_fetch_$(METHOD)` to be available fetch
 methods. You can do anything inside this variable, as long
-as you create a folder named '$(DEPS_DIR)/$(call dep_name,$1)'.
+as you create a folder named '$(DEPS_DIR)/$(call query_name,$1)'.
 Or in layman terms, if your dependency is Cowboy, this would
 become 'deps/cowboy'.
 
@@ -273,8 +273,8 @@ To give an example, this is what the Git method does:
 [source,make]
 ----
 define dep_fetch_git
-	git clone -q -n -- $(call dep_repo,$1) $(DEPS_DIR)/$(call dep_name,$1); \
-	cd $(DEPS_DIR)/$(call dep_name,$1) && git checkout -q $(call dep_commit,$1);
+	git clone -q -n -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1); \
+	cd $(DEPS_DIR)/$(call query_name,$1) && git checkout -q $(call query_version_git,$1);
 endef
 ----
 

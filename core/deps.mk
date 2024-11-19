@@ -69,7 +69,7 @@ _qfm_pkg = $(if $(pkg_$(1)_fetch),$(pkg_$(1)_fetch),fail)
 query_name = $(if $(dep_$(1)),$(1),$(if $(pkg_$(1)_name),$(pkg_$(1)_name),$(1)))
 
 query_repo = $(call _qr,$(1),$(call query_fetch_method,$(1)))
-_qr = $(if $(query_repo_$(2)),$(call query_repo_$(2),$(1)),$(call dep_repo,$(1)))
+_qr = $(if $(query_repo_$(2)),$(call query_repo_$(2),$(1)),$(call query_repo_git,$(1)))
 
 query_repo_default = $(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo))
 query_repo_git = $(patsubst git://github.com/%,https://github.com/%,$(call query_repo_default,$(1)))
@@ -84,11 +84,11 @@ query_repo_fail = -
 query_repo_legacy = -
 
 query_version = $(call _qv,$(1),$(call query_fetch_method,$(1)))
-_qv = $(if $(query_version_$(2)),$(call query_version_$(2),$(1)),$(call dep_commit,$(1)))
+_qv = $(if $(query_version_$(2)),$(call query_version_$(2),$(1)),$(call query_version_default,$(1)))
 
 query_version_default = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 3,$(dep_$(1))),$(pkg_$(1)_commit)))
 query_version_git = $(call query_version_default,$(1))
-query_version_git-subfolder = $(call query_version_git,$(1))
+query_version_git-subfolder = $(call query_version_default,$(1))
 query_version_git-submodule = -
 query_version_hg = $(call query_version_default,$(1))
 query_version_svn = -
@@ -114,14 +114,10 @@ query_extra_legacy = -
 
 query_absolute_path = $(addprefix $(DEPS_DIR)/,$(call query_name,$(1)))
 
-# Deprecated legacy query functions.
-dep_fetch = $(call query_fetch_method,$(1))
-dep_name = $(call query_name,$(1))
-dep_repo = $(call query_repo_git,$(1))
-dep_commit = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(if $(filter hex,$(word 1,$(dep_$(1)))),$(word 2,$(dep_$(1))),$(word 3,$(dep_$(1)))),$(pkg_$(1)_commit)))
+# Application directories.
 
 LOCAL_DEPS_DIRS = $(foreach a,$(LOCAL_DEPS),$(if $(wildcard $(APPS_DIR)/$(a)),$(APPS_DIR)/$(a)))
-ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(foreach dep,$(filter-out $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)),$(call dep_name,$(dep))))
+ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(foreach dep,$(filter-out $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)),$(call query_name,$(dep))))
 
 # When we are calling an app directly we don't want to include it here
 # otherwise it'll be treated both as an apps and a top-level project.
@@ -145,7 +141,7 @@ export NO_AUTOPATCH
 
 # Verbosity.
 
-dep_verbose_0 = @echo " DEP    $1 ($(call dep_commit,$1))";
+dep_verbose_0 = @echo " DEP    $1 ($(call query_version,$1))";
 dep_verbose_2 = set -x;
 dep_verbose = $(dep_verbose_$(V))
 
@@ -725,46 +721,46 @@ ifeq ($(CACHE_DEPS),1)
 
 define dep_cache_fetch_git
 	mkdir -p $(CACHE_DIR)/git; \
-	if test -d "$(join $(CACHE_DIR)/git/,$(call dep_name,$1))"; then \
-		cd $(join $(CACHE_DIR)/git/,$(call dep_name,$1)); \
-		if ! git checkout -q $(call dep_commit,$1); then \
-			git remote set-url origin $(call dep_repo,$1) && \
+	if test -d "$(join $(CACHE_DIR)/git/,$(call query_name,$1))"; then \
+		cd $(join $(CACHE_DIR)/git/,$(call query_name,$1)); \
+		if ! git checkout -q $(call query_version,$1); then \
+			git remote set-url origin $(call query_repo_git,$1) && \
 			git pull --all && \
-			git cat-file -e $(call dep_commit,$1) 2>/dev/null; \
+			git cat-file -e $(call query_version_git,$1) 2>/dev/null; \
 		fi; \
 	else \
-		git clone -q -n -- $(call dep_repo,$1) $(join $(CACHE_DIR)/git/,$(call dep_name,$1)); \
+		git clone -q -n -- $(call query_repo_git,$1) $(join $(CACHE_DIR)/git/,$(call query_name,$1)); \
 	fi; \
-	git clone -q --single-branch -- $(join $(CACHE_DIR)/git/,$(call dep_name,$1)) $2; \
-	cd $2 && git checkout -q $(call dep_commit,$1)
+	git clone -q --single-branch -- $(join $(CACHE_DIR)/git/,$(call query_name,$1)) $2; \
+	cd $2 && git checkout -q $(call query_version_git,$1)
 endef
 
 define dep_fetch_git
-	$(call dep_cache_fetch_git,$1,$(DEPS_DIR)/$(call dep_name,$1));
+	$(call dep_cache_fetch_git,$1,$(DEPS_DIR)/$(call query_name,$1));
 endef
 
 define dep_fetch_git-subfolder
 	mkdir -p $(ERLANG_MK_TMP)/git-subfolder; \
-	$(call dep_cache_fetch_git,$1,$(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)); \
-	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)/$(word 4,$(dep_$1)) \
-		$(DEPS_DIR)/$(call dep_name,$1);
+	$(call dep_cache_fetch_git,$1,$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)); \
+	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)/$(word 4,$(dep_$1)) \
+		$(DEPS_DIR)/$(call query_name,$1);
 endef
 
 else
 
 define dep_fetch_git
-	git clone -q -n -- $(call dep_repo,$1) $(DEPS_DIR)/$(call dep_name,$1); \
-	cd $(DEPS_DIR)/$(call dep_name,$1) && git checkout -q $(call dep_commit,$1);
+	git clone -q -n -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1); \
+	cd $(DEPS_DIR)/$(call query_name,$1) && git checkout -q $(call query_version_git,$1);
 endef
 
 define dep_fetch_git-subfolder
 	mkdir -p $(ERLANG_MK_TMP)/git-subfolder; \
-	git clone -q -n -- $(call dep_repo,$1) \
-		$(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1); \
-	cd $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1) \
-		&& git checkout -q $(call dep_commit,$1); \
-	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call dep_name,$1)/$(word 4,$(dep_$1)) \
-		$(DEPS_DIR)/$(call dep_name,$1);
+	git clone -q -n -- $(call query_repo_git-subfolder,$1) \
+		$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1); \
+	cd $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) \
+		&& git checkout -q $(call query_version_git-subfolder,$1); \
+	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)/$(word 4,$(dep_$1)) \
+		$(DEPS_DIR)/$(call query_name,$1);
 endef
 
 endif
@@ -774,20 +770,20 @@ define dep_fetch_git-submodule
 endef
 
 define dep_fetch_hg
-	hg clone -q -U $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1)); \
-	cd $(DEPS_DIR)/$(call dep_name,$(1)) && hg update -q $(call dep_commit,$(1));
+	hg clone -q -U $(call query_repo_hg,$1) $(DEPS_DIR)/$(call query_name,$1); \
+	cd $(DEPS_DIR)/$(call query_name,$1) && hg update -q $(call query_version_hg,$1);
 endef
 
 define dep_fetch_svn
-	svn checkout -q $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1));
+	svn checkout -q $(call query_repo_svn,$1) $(DEPS_DIR)/$(call query_name,$1);
 endef
 
 define dep_fetch_cp
-	cp -R $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1));
+	cp -R $(call query_repo_cp,$(1)) $(DEPS_DIR)/$(call query_name,$1);
 endef
 
 define dep_fetch_ln
-	ln -s $(call dep_repo,$(1)) $(DEPS_DIR)/$(call dep_name,$(1));
+	ln -s $(call query_repo_ln,$(1)) $(DEPS_DIR)/$(call query_name,$1);
 endef
 
 define hex_get_tarball.erl
@@ -840,15 +836,15 @@ define dep_fetch_legacy
 endef
 
 define dep_target
-$(DEPS_DIR)/$(call dep_name,$1): $(if $(filter hex,$(call query_fetch_method,$1)),hex-core) | $(ERLANG_MK_TMP)
-	$(eval DEP_NAME := $(call dep_name,$1))
+$(DEPS_DIR)/$(call query_name,$1): $(if $(filter hex,$(call query_fetch_method,$1)),hex-core) | $(ERLANG_MK_TMP)
+	$(eval DEP_NAME := $(call query_name,$1))
 	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
 		echo "Error: Dependency" $(DEP_STR) "conflicts with application found in $(APPS_DIR)/$(DEP_NAME)." >&2; \
 		exit 17; \
 	fi
 	$(verbose) mkdir -p $(DEPS_DIR)
-	$(dep_verbose) $(call dep_fetch_$(strip $(call dep_fetch,$(1))),$(1))
+	$(dep_verbose) $(call dep_fetch_$(strip $(call query_fetch_method,$1)),$1)
 	$(verbose) if [ -f $(DEPS_DIR)/$(1)/configure.ac -o -f $(DEPS_DIR)/$(1)/configure.in ] \
 			&& [ ! -f $(DEPS_DIR)/$(1)/configure ]; then \
 		echo " AUTO  " $(DEP_STR); \
@@ -862,13 +858,13 @@ ifeq ($(filter $(1),$(NO_AUTOPATCH)),)
 	$(verbose) $$(MAKE) --no-print-directory autopatch-$(DEP_NAME)
 endif
 
-.PHONY: autopatch-$(call dep_name,$1)
+.PHONY: autopatch-$(call query_name,$1)
 
-autopatch-$(call dep_name,$1)::
+autopatch-$(call query_name,$1)::
 	$(verbose) if [ "$1" = "elixir" -a "$(ELIXIR_PATCH)" ]; then \
 		ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/; \
 	else \
-		$$(call dep_autopatch,$(call dep_name,$1)) \
+		$$(call dep_autopatch,$(call query_name,$1)) \
 	fi
 endef
 

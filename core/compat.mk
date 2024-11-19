@@ -23,9 +23,9 @@ endef
 define compat_rebar_config
 {deps, [
 $(call comma_list,$(foreach d,$(DEPS),\
-	$(if $(filter hex,$(call dep_fetch,$d)),\
-		{$(call dep_name,$d)$(comma)"$(call dep_repo,$d)"},\
-		{$(call dep_name,$d)$(comma)".*"$(comma){git,"$(call dep_repo,$d)"$(comma)$(call compat_ref,$(call dep_name,$d),$(call dep_commit,$d))}})))
+	$(if $(filter hex,$(call query_fetch_method,$d)),\
+		{$(call query_name,$d)$(comma)"$(call query_version_hex,$d)"},\
+		{$(call query_name,$d)$(comma)".*"$(comma){git,"$(call query_repo,$d)"$(comma)$(call compat_ref,$(call query_name,$d),$(call query_version,$d))}})))
 ]}.
 {erl_opts, $(call compat_erlc_opts_to_list,$(ERLC_OPTS))}.
 endef
