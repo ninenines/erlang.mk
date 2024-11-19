@@ -63,7 +63,7 @@ $(foreach p,$(DEP_EARLY_PLUGINS),\
 # Query functions.
 
 query_fetch_method = $(if $(dep_$(1)),$(call _qfm_dep,$(word 1,$(dep_$(1)))),$(call _qfm_pkg,$(1)))
-_qfm_dep = $(if $(dep_fetch_$(1)),$(1),$(if $(IS_DEP),legacy,fail))
+_qfm_dep = $(if $(dep_fetch_$(1)),$(1),fail)
 _qfm_pkg = $(if $(pkg_$(1)_fetch),$(pkg_$(1)_fetch),fail)
 
 query_name = $(if $(dep_$(1)),$(1),$(if $(pkg_$(1)_name),$(pkg_$(1)_name),$(1)))
@@ -81,7 +81,6 @@ query_repo_cp = $(call query_repo_default,$(1))
 query_repo_ln = $(call query_repo_default,$(1))
 query_repo_hex = https://hex.pm/packages/$(if $(word 3,$(dep_$(1))),$(word 3,$(dep_$(1))),$(1))
 query_repo_fail = -
-query_repo_legacy = -
 
 query_version = $(call _qv,$(1),$(call query_fetch_method,$(1)))
 _qv = $(if $(query_version_$(2)),$(call query_version_$(2),$(1)),$(call query_version_default,$(1)))
@@ -96,7 +95,6 @@ query_version_cp = -
 query_version_ln = -
 query_version_hex = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_commit)))
 query_version_fail = -
-query_version_legacy = -
 
 query_extra = $(call _qe,$(1),$(call query_fetch_method,$(1)))
 _qe = $(if $(query_extra_$(2)),$(call query_extra_$(2),$(1)),-)
@@ -110,7 +108,6 @@ query_extra_cp = -
 query_extra_ln = -
 query_extra_hex = $(if $(dep_$(1)),package-name=$(word 3,$(dep_$(1))),-)
 query_extra_fail = -
-query_extra_legacy = -
 
 query_absolute_path = $(addprefix $(DEPS_DIR)/,$(call query_name,$(1)))
 
@@ -826,13 +823,6 @@ endif
 define dep_fetch_fail
 	echo "Error: Unknown or invalid dependency: $(1)." >&2; \
 	exit 78;
-endef
-
-# Kept for compatibility purposes with older Erlang.mk configuration.
-define dep_fetch_legacy
-	$(warning WARNING: '$(1)' dependency configuration uses deprecated format.) \
-	git clone -q -n -- $(word 1,$(dep_$(1))) $(DEPS_DIR)/$(1); \
-	cd $(DEPS_DIR)/$(1) && git checkout -q $(if $(word 2,$(dep_$(1))),$(word 2,$(dep_$(1))),master);
 endef
 
 define dep_target

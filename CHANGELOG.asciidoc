@@ -37,3 +37,9 @@
 2024/11/19: The deprecated defines `dep_fetch`, `dep_name`,
             `dep_repo` and `dep_commit` have been removed
             in favor of their `query_*` equivalents.
++
+            The deprecated legacy fetch method has also
+            been removed (`dep_cowboy = https://... ref`
+            without an explicit fetch method). Adding "git"
+            at the beginning of the dep line is the modern
+            equivalent.

@@ -770,23 +770,6 @@ endif
 #		{ok, \"4.0.3\"} = application:get_key(ehsa, vsn), \
 #		halt()"
 
-# Legacy must fail for the top-level application, but work for dependencies.
-core-deps-fetch-legacy: init
-
-	$i "Bootstrap a new OTP library named $(APP)"
-	$t mkdir $(APP)/
-	$t cp ../erlang.mk $(APP)/
-	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-
-	$i "Add Cowlib as a dependency using a non-existing fetch method named oops"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = https://github.com/ninenines/cowlib 1.0.0\n"}' $(APP)/Makefile
-
-	$i "Check that building the application fails"
-	$t ! $(MAKE) -C $(APP) $v
-
-	$i "Check that building the application works with IS_DEP=1"
-	$t $(MAKE) -C $(APP) IS_DEP=1 $v
-
 core-deps-fetch-ln: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
