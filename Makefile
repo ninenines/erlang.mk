@@ -29,7 +29,7 @@ ERLANG_MK_VERSION = $(shell git describe --dirty --tags --always)
 
 .PHONY: all check
 
-all:
+all: templates.mk
 # Temporarily force the printing of the CHANGELOG.
 # The required variable hadn't been introduced yet.
 #ifdef UPGRADE
@@ -39,6 +39,15 @@ all:
 	awk 'FNR==1 && NR!=1{print ""}1' $(patsubst %,%.mk,$(BUILD_CONFIG)) \
 		| sed 's/^ERLANG_MK_VERSION =.*/ERLANG_MK_VERSION = $(ERLANG_MK_VERSION)/' \
 		| sed 's:^ERLANG_MK_WITHOUT =.*:ERLANG_MK_WITHOUT = $(WITHOUT):' > $(ERLANG_MK)
+
+# Templates that end with .erl have the suffix removed. It is implied.
+templates.mk: Makefile templates/*
+	for f in templates/*; do \
+		echo define tpl_`basename $$f .erl`; \
+		cat $$f; \
+		echo endef; \
+		echo; \
+	done > $@
 
 lint: all
 	$(MAKE) -f erlang.mk --warn-undefined-variables

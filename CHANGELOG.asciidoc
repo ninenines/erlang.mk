@@ -43,3 +43,11 @@
             without an explicit fetch method). Adding "git"
             at the beginning of the dep line is the modern
             equivalent.
+
+2024/11/22: Templates no longer use Make variables for
+            substitution. Instead the strings template_name
+            and project_name get replaced by their equivalent.
+            Note that using variables in your own templates
+            should still work, but that this way of doing
+            things is deprecated. This change makes it
+            possible to have templates outside of Makefiles.
