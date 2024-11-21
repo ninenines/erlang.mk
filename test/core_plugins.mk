@@ -194,7 +194,7 @@ core-plugins-templates: init
 	$t mkdir -p $(APP)/plugin_dep
 	$t printf "%s\n" \
 		"define tpl_test_mk" \
-		"-module(test_mk)." \
+		"-module(template_name)." \
 		"endef" > $(APP)/plugin_dep/plugins.mk
 	$t cd $(APP)/plugin_dep && \
 		git init -q && \
@@ -262,6 +262,43 @@ core-plugins-templates-apps-only: init
 
 	$i "Check that the file was compiled correctly"
 	$t test -f $(APP)/apps/my_app/ebin/test_mk.beam
+
+core-plugins-templates-file: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a local git repository with a plugin containing a template file"
+	$t mkdir -p $(APP)/plugin_dep/templates
+	$t printf "%s\n" "-module(template_name)." > $(APP)/plugin_dep/templates/test_mk.erl
+	$t echo "THIS := \$$(dir \$$(realpath \$$(lastword \$$(MAKEFILE_LIST))))" > $(APP)/plugin_dep/plugins.mk
+	$t printf "%s\n" "tpl_test_mk = \$$(file < \$$(THIS)/templates/test_mk.erl)" >> $(APP)/plugin_dep/plugins.mk
+	$t cd $(APP)/plugin_dep && \
+		git init -q && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Tests"
+
+	$i "Add dependency and plugins to the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = plugin_dep\ndep_plugin_dep = git file://$(abspath $(APP)/plugin_dep) master\nDEP_PLUGINS = plugin_dep\n"}' $(APP)/Makefile
+
+	$i "Run 'make list-templates' and check that it prints test_mk"
+	$t $(MAKE) --no-print-directory -C $(APP) list-templates | grep -qw test_mk
+
+	$i "Create a new file using the template"
+	$t $(MAKE) --no-print-directory -C $(APP) new t=test_mk n=test_mk $v
+
+	$i "Confirm the file exists"
+	$t test -f $(APP)/src/test_mk.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the file was compiled correctly"
+	$t test -f $(APP)/ebin/test_mk.beam
 
 core-plugins-test: init
 

@@ -16,8 +16,6 @@ core-upgrade-changelog: init
 	$i "Fork erlang.mk locally and set a test CHANGELOG.asciidoc"
 	$t git clone -q https://github.com/ninenines/erlang.mk $(APP)/alt-erlangmk-repo
 	$t echo "$(APP)$(APP)" > $(APP)/alt-erlangmk-repo/CHANGELOG.asciidoc
-# Since part of this functionality needs the main Makefile, copy it.
-	$t cp ../Makefile $(APP)/alt-erlangmk-repo/
 	$t (cd $(APP)/alt-erlangmk-repo && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \

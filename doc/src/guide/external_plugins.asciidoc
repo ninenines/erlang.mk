@@ -90,7 +90,7 @@ help-plugins::
 Plugins declared in `DEP_PLUGINS` are loaded near the end of Erlang.mk.
 That's why you have access to all previously initialized variables.
 However, if you want your plugin to add common dependencies to
-your applications, a regular is loaded too late in the process.
+your applications, a regular plugin is loaded too late in the process.
 You need to use "Early-stage plugins". They are declared using the
 `DEP_EARLY_PLUGINS` variable instead. Plugins listed in this variable
 are loaded near the beginning of Erlang.mk Otherwise, they work exactly
@@ -111,7 +111,7 @@ DEPS += cowboy
 TEST_DEPS = ct_helper
 dep_ct_helper = git https://github.com/ninenines/ct_helper master
 
-=== Loading  plugins local to the application
+=== Loading plugins local to the application
 
 If the Erlang.mk plugin lives in the same directory or repository as your
 application or library, then you can load it exactly like an external
@@ -138,3 +138,27 @@ your application:
 DEP_EARLY_PLUGINS = $(PROJECT)
 # Loads ./plugins.mk
 DEP_PLUGINS = $(PROJECT)
+
+=== Adding templates via plugins
+
+Plugins may add templates either from within their Makefile or from
+an external file. The recommended method is to use an external file;
+however do note it only works for Make 4 and above:
+
+[source,make]
+THIS := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+tpl_test_mk = $(file < $(THIS)/templates/my_template.erl)
+
+With 'templates/my_template.erl' containing:
+
+[source,erlang]
+-module(template_name).
+
+Erlang.mk will do string substitution replacing the following
+strings with their equivalent:
+
+* `template_name`: the name provided by the user
+* `project_name`: either `$(PROJECT)` or the target application's name
+* `template_sp`: internal; propagates whitespace settings to Makefiles
+* `rel_deps_dir`: internal; path to deps/* from within an apps/* Makefile
+* `rel_root_dir`: internal; path to top-level directory from within an apps/* Makefile

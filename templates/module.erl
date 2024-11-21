@@ -1,0 +1,2 @@
+-module(template_name).
+-export([]).

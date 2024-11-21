@@ -303,12 +303,15 @@ bootstrap-templates: init
 	$t $(MAKE) -C $(APP) --no-print-directory new t=gen_statem n=my_statem
 	$t $(MAKE) -C $(APP) --no-print-directory new t=gen_server n=my_server
 	$t $(MAKE) -C $(APP) --no-print-directory new t=supervisor n=my_sup
-	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_http n=my_http
-	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_loop n=my_loop
-	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_rest n=my_rest
-	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_ws n=my_ws
+	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_http_h n=my_http_h
+	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_loop_h n=my_loop_h
+	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_rest_h n=my_rest_h
+	$t $(MAKE) -C $(APP) --no-print-directory new t=cowboy_websocket_h n=my_ws_h
 	$t $(MAKE) -C $(APP) --no-print-directory new t=ranch_protocol n=my_protocol
 	$t $(MAKE) -C $(APP) --no-print-directory new t=module n=my_module
+
+	$i "Confirm we can't overwrite existing files"
+	$t ! $(MAKE) -C $(APP) --no-print-directory new t=gen_server n=my_server $v
 
 # Here we disable warnings because templates contain missing behaviors.
 	$i "Build the application"
@@ -320,12 +323,17 @@ bootstrap-templates: init
 	$t test -f $(APP)/ebin/my_statem.beam
 	$t test -f $(APP)/ebin/my_server.beam
 	$t test -f $(APP)/ebin/my_sup.beam
+	$t test -f $(APP)/ebin/my_http_h.beam
+	$t test -f $(APP)/ebin/my_loop_h.beam
+	$t test -f $(APP)/ebin/my_rest_h.beam
+	$t test -f $(APP)/ebin/my_ws_h.beam
+	$t test -f $(APP)/ebin/my_protocol.beam
 	$t test -f $(APP)/ebin/my_module.beam
 
 	$i "Check that all the modules can be loaded"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:start($(APP)), \
-		{ok, Mods = [my_fsm, my_http, my_loop, my_module, my_protocol, my_rest, my_server, my_statem, my_sup, my_ws]} \
+		{ok, Mods = [my_fsm, my_http_h, my_loop_h, my_module, my_protocol, my_rest_h, my_server, my_statem, my_sup, my_ws_h]} \
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"

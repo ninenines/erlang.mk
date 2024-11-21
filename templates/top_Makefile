@@ -1,0 +1,5 @@
+PROJECT = project_name
+PROJECT_DESCRIPTION = New project
+PROJECT_VERSION = 0.1.0
+template_sp
+include erlang.mk
