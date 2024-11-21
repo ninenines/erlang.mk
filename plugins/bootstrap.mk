@@ -17,38 +17,6 @@ help::
 		"  new t=T n=N in=APP Generate a module NAME based on the template TPL in APP" \
 		"  list-templates     List available templates"
 
-# Bootstrap templates.
-
-define bs_appsrc
-{application, $p, [
-	{description, ""},
-	{vsn, "0.1.0"},
-	{id, "git"},
-	{modules, []},
-	{registered, []},
-	{applications, [
-		kernel,
-		stdlib
-	]},
-	{mod, {$p_app, []}},
-	{env, []}
-]}.
-endef
-
-define bs_appsrc_lib
-{application, $p, [
-	{description, ""},
-	{vsn, "0.1.0"},
-	{id, "git"},
-	{modules, []},
-	{registered, []},
-	{applications, [
-		kernel,
-		stdlib
-	]}
-]}.
-endef
-
 # To prevent autocompletion issues with ZSH, we add "include erlang.mk"
 # separately during the actual bootstrap.
 define bs_Makefile
@@ -77,327 +45,6 @@ DEPS_DIR ?= $(call core_relpath,$(DEPS_DIR),$(APPS_DIR)/app)
 include $$(ROOT_DIR)/erlang.mk
 endef
 
-define bs_app
--module($p_app).
--behaviour(application).
-
--export([start/2]).
--export([stop/1]).
-
-start(_Type, _Args) ->
-	$p_sup:start_link().
-
-stop(_State) ->
-	ok.
-endef
-
-define bs_relx_config
-{release, {$p_release, "1"}, [$p, sasl, runtime_tools]}.
-{dev_mode, false}.
-{include_erts, true}.
-{extended_start_script, true}.
-{sys_config, "config/sys.config"}.
-{vm_args, "config/vm.args"}.
-endef
-
-define bs_sys_config
-[
-].
-endef
-
-define bs_vm_args
--name $p@127.0.0.1
--setcookie $p
--heart
-endef
-
-# Normal templates.
-
-define tpl_supervisor
--module($(n)).
--behaviour(supervisor).
-
--export([start_link/0]).
--export([init/1]).
-
-start_link() ->
-	supervisor:start_link({local, ?MODULE}, ?MODULE, []).
-
-init([]) ->
-	Procs = [],
-	{ok, {{one_for_one, 1, 5}, Procs}}.
-endef
-
-define tpl_gen_server
--module($(n)).
--behaviour(gen_server).
-
-%% API.
--export([start_link/0]).
-
-%% gen_server.
--export([init/1]).
--export([handle_call/3]).
--export([handle_cast/2]).
--export([handle_info/2]).
--export([terminate/2]).
--export([code_change/3]).
-
--record(state, {
-}).
-
-%% API.
-
--spec start_link() -> {ok, pid()}.
-start_link() ->
-	gen_server:start_link(?MODULE, [], []).
-
-%% gen_server.
-
-init([]) ->
-	{ok, #state{}}.
-
-handle_call(_Request, _From, State) ->
-	{reply, ignored, State}.
-
-handle_cast(_Msg, State) ->
-	{noreply, State}.
-
-handle_info(_Info, State) ->
-	{noreply, State}.
-
-terminate(_Reason, _State) ->
-	ok.
-
-code_change(_OldVsn, State, _Extra) ->
-	{ok, State}.
-endef
-
-define tpl_module
--module($(n)).
--export([]).
-endef
-
-define tpl_cowboy_http
--module($(n)).
--behaviour(cowboy_http_handler).
-
--export([init/3]).
--export([handle/2]).
--export([terminate/3]).
-
--record(state, {
-}).
-
-init(_, Req, _Opts) ->
-	{ok, Req, #state{}}.
-
-handle(Req, State=#state{}) ->
-	{ok, Req2} = cowboy_req:reply(200, Req),
-	{ok, Req2, State}.
-
-terminate(_Reason, _Req, _State) ->
-	ok.
-endef
-
-define tpl_gen_fsm
--module($(n)).
--behaviour(gen_fsm).
-
-%% API.
--export([start_link/0]).
-
-%% gen_fsm.
--export([init/1]).
--export([state_name/2]).
--export([handle_event/3]).
--export([state_name/3]).
--export([handle_sync_event/4]).
--export([handle_info/3]).
--export([terminate/3]).
--export([code_change/4]).
-
--record(state, {
-}).
-
-%% API.
-
--spec start_link() -> {ok, pid()}.
-start_link() ->
-	gen_fsm:start_link(?MODULE, [], []).
-
-%% gen_fsm.
-
-init([]) ->
-	{ok, state_name, #state{}}.
-
-state_name(_Event, StateData) ->
-	{next_state, state_name, StateData}.
-
-handle_event(_Event, StateName, StateData) ->
-	{next_state, StateName, StateData}.
-
-state_name(_Event, _From, StateData) ->
-	{reply, ignored, state_name, StateData}.
-
-handle_sync_event(_Event, _From, StateName, StateData) ->
-	{reply, ignored, StateName, StateData}.
-
-handle_info(_Info, StateName, StateData) ->
-	{next_state, StateName, StateData}.
-
-terminate(_Reason, _StateName, _StateData) ->
-	ok.
-
-code_change(_OldVsn, StateName, StateData, _Extra) ->
-	{ok, StateName, StateData}.
-endef
-
-define tpl_gen_statem
--module($(n)).
--behaviour(gen_statem).
-
-%% API.
--export([start_link/0]).
-
-%% gen_statem.
--export([callback_mode/0]).
--export([init/1]).
--export([state_name/3]).
--export([handle_event/4]).
--export([terminate/3]).
--export([code_change/4]).
-
--record(state, {
-}).
-
-%% API.
-
--spec start_link() -> {ok, pid()}.
-start_link() ->
-	gen_statem:start_link(?MODULE, [], []).
-
-%% gen_statem.
-
-callback_mode() ->
-	state_functions.
-
-init([]) ->
-	{ok, state_name, #state{}}.
-
-state_name(_EventType, _EventData, StateData) ->
-	{next_state, state_name, StateData}.
-
-handle_event(_EventType, _EventData, StateName, StateData) ->
-	{next_state, StateName, StateData}.
-
-terminate(_Reason, _StateName, _StateData) ->
-	ok.
-
-code_change(_OldVsn, StateName, StateData, _Extra) ->
-	{ok, StateName, StateData}.
-endef
-
-define tpl_cowboy_loop
--module($(n)).
--behaviour(cowboy_loop_handler).
-
--export([init/3]).
--export([info/3]).
--export([terminate/3]).
-
--record(state, {
-}).
-
-init(_, Req, _Opts) ->
-	{loop, Req, #state{}, 5000, hibernate}.
-
-info(_Info, Req, State) ->
-	{loop, Req, State, hibernate}.
-
-terminate(_Reason, _Req, _State) ->
-	ok.
-endef
-
-define tpl_cowboy_rest
--module($(n)).
-
--export([init/3]).
--export([content_types_provided/2]).
--export([get_html/2]).
-
-init(_, _Req, _Opts) ->
-	{upgrade, protocol, cowboy_rest}.
-
-content_types_provided(Req, State) ->
-	{[{{<<"text">>, <<"html">>, '*'}, get_html}], Req, State}.
-
-get_html(Req, State) ->
-	{<<"<html><body>This is REST!</body></html>">>, Req, State}.
-endef
-
-define tpl_cowboy_ws
--module($(n)).
--behaviour(cowboy_websocket_handler).
-
--export([init/3]).
--export([websocket_init/3]).
--export([websocket_handle/3]).
--export([websocket_info/3]).
--export([websocket_terminate/3]).
-
--record(state, {
-}).
-
-init(_, _, _) ->
-	{upgrade, protocol, cowboy_websocket}.
-
-websocket_init(_, Req, _Opts) ->
-	Req2 = cowboy_req:compact(Req),
-	{ok, Req2, #state{}}.
-
-websocket_handle({text, Data}, Req, State) ->
-	{reply, {text, Data}, Req, State};
-websocket_handle({binary, Data}, Req, State) ->
-	{reply, {binary, Data}, Req, State};
-websocket_handle(_Frame, Req, State) ->
-	{ok, Req, State}.
-
-websocket_info(_Info, Req, State) ->
-	{ok, Req, State}.
-
-websocket_terminate(_Reason, _Req, _State) ->
-	ok.
-endef
-
-define tpl_ranch_protocol
--module($(n)).
--behaviour(ranch_protocol).
-
--export([start_link/4]).
--export([init/4]).
-
--type opts() :: [].
--export_type([opts/0]).
-
--record(state, {
-	socket :: inet:socket(),
-	transport :: module()
-}).
-
-start_link(Ref, Socket, Transport, Opts) ->
-	Pid = spawn_link(?MODULE, init, [Ref, Socket, Transport, Opts]),
-	{ok, Pid}.
-
--spec init(ranch:ref(), inet:socket(), module(), opts()) -> ok.
-init(Ref, Socket, Transport, _Opts) ->
-	ok = ranch:accept_ack(Ref),
-	loop(#state{socket=Socket, transport=Transport}).
-
-loop(State) ->
-	loop(State).
-endef
-
 # Plugin-specific targets.
 
 ifndef WS
@@ -415,15 +62,18 @@ endif
 	$(eval p := $(PROJECT))
 	$(if $(shell echo $p | LC_ALL=C grep -x "[a-z0-9_]*"),,\
 		$(error Error: Invalid characters in the application name))
-	$(eval n := $(PROJECT)_sup)
 	$(verbose) $(call core_render,bs_Makefile,Makefile)
 	$(verbose) echo "include erlang.mk" >> Makefile
 	$(verbose) mkdir src/
-ifdef LEGACY
-	$(verbose) $(call core_render,bs_appsrc,src/$(PROJECT).app.src)
-endif
-	$(verbose) $(call core_render,bs_app,src/$(PROJECT)_app.erl)
+	$(eval n := $(PROJECT)_sup)
 	$(verbose) $(call core_render,tpl_supervisor,src/$(PROJECT)_sup.erl)
+	$(eval n := $(PROJECT)_app)
+	$(eval sup := $(PROJECT)_sup)
+	$(verbose) $(call core_render,tpl_app,src/$(PROJECT)_app.erl)
+ifdef LEGACY
+	$(eval n := $(PROJECT))
+	$(verbose) $(call core_render,tpl_appsrc,src/$(PROJECT).app.src)
+endif
 
 bootstrap-lib:
 ifneq ($(wildcard src/),)
@@ -436,7 +86,8 @@ endif
 	$(verbose) echo "include erlang.mk" >> Makefile
 	$(verbose) mkdir src/
 ifdef LEGACY
-	$(verbose) $(call core_render,bs_appsrc_lib,src/$(PROJECT).app.src)
+	$(eval n := $(PROJECT))
+	$(verbose) $(call core_render,tpl_appsrc,src/$(PROJECT).app.src)
 endif
 
 bootstrap-rel:
@@ -446,65 +97,9 @@ endif
 ifneq ($(wildcard config/),)
 	$(error Error: config/ directory already exists)
 endif
-	$(eval p := $(PROJECT))
-	$(verbose) $(call core_render,bs_relx_config,relx.config)
-	$(verbose) mkdir config/
-	$(verbose) $(call core_render,bs_sys_config,config/sys.config)
-	$(verbose) $(call core_render,bs_vm_args,config/vm.args)
+	$(eval n := $(PROJECT))
+	$(verbose) $(call core_render,tpl_relx_config,relx.config)
+	$(verbose) mkdir config/	$(verbose) $(call core_render,tpl_sys_config,config/sys.config)
+	$(verbose) $(call core_render,tpl_vm_args,config/vm.args)
 	$(verbose) awk '/^include erlang.mk/ && !ins {print "REL_DEPS += relx";ins=1};{print}' Makefile > Makefile.bak
 	$(verbose) mv Makefile.bak Makefile
-
-new-app:
-ifndef in
-	$(error Usage: $(MAKE) new-app in=APP)
-endif
-ifneq ($(wildcard $(APPS_DIR)/$in),)
-	$(error Error: Application $in already exists)
-endif
-	$(eval p := $(in))
-	$(if $(shell echo $p | LC_ALL=C grep -x "[a-z0-9_]*"),,\
-		$(error Error: Invalid characters in the application name))
-	$(eval n := $(in)_sup)
-	$(verbose) mkdir -p $(APPS_DIR)/$p/src/
-	$(verbose) $(call core_render,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
-ifdef LEGACY
-	$(verbose) $(call core_render,bs_appsrc,$(APPS_DIR)/$p/src/$p.app.src)
-endif
-	$(verbose) $(call core_render,bs_app,$(APPS_DIR)/$p/src/$p_app.erl)
-	$(verbose) $(call core_render,tpl_supervisor,$(APPS_DIR)/$p/src/$p_sup.erl)
-
-new-lib:
-ifndef in
-	$(error Usage: $(MAKE) new-lib in=APP)
-endif
-ifneq ($(wildcard $(APPS_DIR)/$in),)
-	$(error Error: Application $in already exists)
-endif
-	$(eval p := $(in))
-	$(if $(shell echo $p | LC_ALL=C grep -x "[a-z0-9_]*"),,\
-		$(error Error: Invalid characters in the application name))
-	$(verbose) mkdir -p $(APPS_DIR)/$p/src/
-	$(verbose) $(call core_render,bs_apps_Makefile,$(APPS_DIR)/$p/Makefile)
-ifdef LEGACY
-	$(verbose) $(call core_render,bs_appsrc_lib,$(APPS_DIR)/$p/src/$p.app.src)
-endif
-
-new:
-ifeq ($(wildcard src/)$(in),)
-	$(error Error: src/ directory does not exist)
-endif
-ifndef t
-	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME [in=APP])
-endif
-ifndef n
-	$(error Usage: $(MAKE) new t=TEMPLATE n=NAME [in=APP])
-endif
-ifdef in
-	$(verbose) $(call core_render,tpl_$(t),$(APPS_DIR)/$(in)/src/$(n).erl)
-else
-	$(verbose) $(call core_render,tpl_$(t),src/$(n).erl)
-endif
-
-list-templates:
-	$(verbose) @echo Available templates:
-	$(verbose) printf "    %s\n" $(sort $(patsubst tpl_%,%,$(filter tpl_%,$(.VARIABLES))))
