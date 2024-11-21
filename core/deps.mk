@@ -111,6 +111,10 @@ query_extra_fail = -
 
 query_absolute_path = $(addprefix $(DEPS_DIR)/,$(call query_name,$1))
 
+# Deprecated legacy query function. Used by RabbitMQ and its third party plugins.
+# Can be removed once RabbitMQ has been updated and enough time has passed.
+dep_name = $(call query_name,$(1))
+
 # Application directories.
 
 LOCAL_DEPS_DIRS = $(foreach a,$(LOCAL_DEPS),$(if $(wildcard $(APPS_DIR)/$a),$(APPS_DIR)/$a))

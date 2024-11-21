@@ -34,9 +34,13 @@
             as well as Cowboy, Ranch, Gun and Cowlib remain
             in the index.
 
-2024/11/19: The deprecated defines `dep_fetch`, `dep_name`,
+2024/11/19: The deprecated defines `dep_fetch`,
             `dep_repo` and `dep_commit` have been removed
             in favor of their `query_*` equivalents.
++
+            The deprecated define `dep_name` will be
+            removed at a later date to give time to
+            users to upgrade.
 +
             The deprecated legacy fetch method has also
             been removed (`dep_cowboy = https://... ref`
