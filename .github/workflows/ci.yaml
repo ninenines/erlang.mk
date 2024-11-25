@@ -70,7 +70,6 @@ jobs:
           - os: windows-latest
             suite: concuerror
     runs-on: ${{ matrix.os }}
-
     steps:
 
     - name: Checkout repository
@@ -125,7 +124,6 @@ jobs:
 #          - windows-latest
         extra: ['', 'LEGACY=1']
     runs-on: ${{ matrix.os }}
-
     steps:
 
     - name: Checkout repository
@@ -167,3 +165,24 @@ jobs:
         name: ${{ matrix.os }} OTP-${{ matrix.erlang }} packages ${{ matrix.extra }}
         path: |
           test/packages/
+
+  templates:
+    strategy:
+      fail-fast: false
+      matrix:
+        erlang:
+          - '27'
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Erlang/OTP
+      uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{ matrix.erlang }}
+        version-type: loose
+
+    - name: Check templates
+      run: make check-templates

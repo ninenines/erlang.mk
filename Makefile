@@ -86,6 +86,9 @@ summary:
 	@sort test/packages/errors.log > test/logs/latest.log
 	@cp test/logs/latest.log "test/logs/$(shell date '+%F_%T%z')"
 
+check-templates:
+	$(MAKE) -C test templates
+
 search:
 	@$(MAKE) --no-print-directory \
 		-f core/core.mk $(addprefix -f,$(wildcard index/*.mk)) -f core/index.mk \

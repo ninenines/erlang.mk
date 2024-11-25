@@ -406,3 +406,18 @@ $(foreach pkg,$(shell grep -v '^#' hexpm_packages.txt | sed 's/ /@/'),$(eval $(c
 hexpm-packages: $(addprefix hexpm-pkg-,$(HEXPM_PACKAGES))
 
 endif
+
+# Templates.
+#
+# apps_Makefile, top_Makefile and vm.args are not currently tested here.
+
+templates: clean
+	$i "Compile Erlang modules"
+	$t mkdir test_templates/
+	$t cd test_templates/ && erlc +no_error_module_mismatch ../../templates/*.erl
+
+	$i "Load Erlang term files"
+	$t $(ERL) -eval '{ok, _} = file:consult("../templates/application.app.src"), halt()'
+	$t $(ERL) -eval '{ok, _} = file:consult("../templates/library.app.src"), halt()'
+	$t $(ERL) -eval '{ok, _} = file:consult("../templates/relx.config"), halt()'
+	$t $(ERL) -eval '{ok, _} = file:consult("../templates/sys.config"), halt()'
