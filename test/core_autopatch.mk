@@ -163,6 +163,33 @@ ifneq ($(PLATFORM),msys2)
 	$t test -f $(APP)/deps/erlsha2/priv/erlsha2_nif.so
 endif
 
+core-autopatch-rebar-git_subdir: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap application my_dep inside $(APP) that uses rebar"
+	$t mkdir $(APP)/my_dep
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap LEGACY=1 $v
+	$t rm $(APP)/my_dep/erlang.mk $(APP)/my_dep/Makefile
+
+	$i "Add a rebar.config file with git_subdir to my_dep"
+	$t echo '{deps, [{eqwalizer_support, {git_subdir, "https://github.com/whatsapp/eqwalizer.git", {branch, "main"}, "eqwalizer_support"}} ]}.' > $(APP)/my_dep/rebar.config
+
+	$i "Add my_dep to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = cp $(CURDIR)/$(APP)/my_dep/\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that eqwalizer_support was fetched and built"
+	$t test -d $(APP)/deps/eqwalizer_support
+	$t test -f $(APP)/deps/eqwalizer_support/ebin/eqwalizer.beam
+	$t test -f $(APP)/deps/eqwalizer_support/ebin/eqwalizer_specs.beam
+
 # This test is expected to fail when run in parallel and flock/lockf is not available.
 core-autopatch-two-rebar: init
 
