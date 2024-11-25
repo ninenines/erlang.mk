@@ -3,7 +3,7 @@
 # This script will scrape packages from hex.pm that are believed to be
 # Erlang packages. We do this by first walking through all packages and
 # then getting the most recent release of each package. If the build tools
-# listed contain "rebar3" or "make" we keep them and write the package
+# listed contain "rebar3" we keep them and write the package
 # name and version to a file.
 #
 # This script should only be run occasionally to refresh the file
@@ -12,8 +12,6 @@
 # @todo Some of the projects fetched are Elixir despite indicating
 #       "rebar3" or "make". We should ignore them here once identified
 #       so they don't make it to the output.
-# @todo Probably better to only check "rebar3" since many Elixir
-#       projects include "make".
 
 NUM=1
 
@@ -32,7 +30,7 @@ while true; do
 		NAME=$(echo $NAMEURL | awk '{print $1;}')
 		URL=$(echo $NAMEURL | awk '{print $2;}')
 
-		VERSION=$(curl -s "$URL" | jq 'select(.meta.build_tools | index("rebar3") or index("make")) | .version | tostring')
+		VERSION=$(curl -s "$URL" | jq 'select(.meta.build_tools | index("rebar3")) | .version | tostring')
 		VERSION=$(echo $VERSION | tr -d '"')
 
 		if [ -n "$VERSION" ]; then

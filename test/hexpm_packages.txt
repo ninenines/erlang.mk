@@ -4,8 +4,8 @@ accept 0.3.5
 acceptor_pool 1.0.0
 achlys 0.3.3
 acorn128 0.0.1
-active 7.11.0
 # Packages page 2
+active 7.11.0
 aebytecode 2.1.0
 ae_enacl 0.17.4
 ae_enoise 1.0.1
@@ -14,54 +14,64 @@ aequitas 1.3.0
 aeserialization 0.1.1
 agent 0.1.0
 # Packages page 3
-alcove 0.40.5
+aiml_model_wrapper 0.1.0
+alcove 0.40.6
 aleppo 0.9.0
+# Packages page 4
 alsa 0.2.3
 altworx_utils 0.0.5
 amf 0.1.4
-amqp10_client 3.12.0-rc.1
-amqp10_common 3.12.0-rc.1
-# Packages page 4
-amqp_client 3.11.13
+amoc 3.3.0
+amqp10_client 4.0.3
+amqp10_common 4.0.3
+amqp_client 4.0.3
 amqp_director 1.6.0
 amqp_filter 0.3.11
 anchor 0.3.1
 ansi 0.1.0
 antidotec_pb 0.2.9
 antidote_crdt 0.1.3
-antidote_pb_codec 0.1.2
-apdu 0.2.0
-apns4erl 2.5.0
 # Packages page 5
+antidote_pb_codec 0.1.2
+any 0.3.2
+apcl 0.1.0
+apdu 0.2.0
+apns4erl 2.6.0
 aqlc 1.0.2
-argon2 1.0.2
-argparse 1.2.4
-ascii_table 1.1.6
 # Packages page 6
+argo_graphql 1.0.10
+argon2 1.2.0
+argparse 2.0.0
+ascii_table 1.1.6
+# Packages page 7
+assert 0.1.0
 astranaut 0.10.1
 ast_walk 0.3.1
-aten 0.5.8
+aten 0.6.0
 atom_utils 1.0.13
-atomvm_packbeam 0.6.0
-atomvm_rebar3_plugin 0.6.0
+atomvm_packbeam 0.7.2
+atomvm_rebar3_plugin 0.7.3
+# Packages page 8
 augle 0.3.0
-# Packages page 7
 avlizer 0.4.0
 avm_scene 0.1.0
 aws_cli 0.1.0
-aws_credentials 0.1.11
-aws_erlang 1.0.1
+aws_credentials 0.3.2
+aws_erlang 1.0.6
 aws_http 0.2.4
-aws_signature 0.3.1
+aws_rds_castore 1.2.2
+aws_signature 0.3.2
+# Packages page 9
 b64fast 0.2.3
 b64_nif 0.1.4
 backoff 1.1.6
-backwater 3.5.0
-# Packages page 8
+backwater 3.6.0
 baleen 1.0.3
+banana_websocket_client 0.0.2
 bank 0.2.2
+# Packages page 10
 bare 0.1.1
-barista 0.3.2
+barista 0.3.4
 barrel_encoding 0.1.0
 barrel_ibrowse 4.3.1
 barrel_jiffy 0.14.5
@@ -70,9 +80,8 @@ barrel_unofficial 2.15.0
 base16 2.0.1
 base32 0.1.0
 base32_clockwork 2023.1.0
-base45 1.1.0
+base45 2.0.0
 base64url 1.0.1
-# Packages page 9
 basexerl 0.1.2
 basho_exometer_core 1.0.5
 basho_folsom 0.7.5
@@ -81,38 +90,45 @@ basho_poolboy 0.8.4
 basho_stats 1.0.3
 batiscaph_probe 0.1.1
 bbmustache 1.12.2
-bcrypt 1.2.1
+# Packages page 11
+bcrypt 1.2.2
+beamcache 0.7.9
 beamoji 0.1.0
 beam_olympics 1.2.3
-beanstalkd_consumer 3.0.5
-bear 1.0.0
+beanstalkd_consumer 3.0.7
+bear 1.1.0
 behavior3 2.0.1
 behavior3erl 1.0.0
 bellboy 2.0.0
-# Packages page 10
 bencoding 1.0.0
 bert 0.2.1
+betterstack_logger 1.0.2
+# Packages page 12
 binbo 4.0.3
 binpp 1.1.1
 bitcask 2.0.2
-# Packages page 11
 bit_utils 1.0.7
+# Packages page 13
 blas 1.0.0
+blockade 0.2.1
+blockfrost_erlang 0.1.1
 bloodbath 1.0.0
 blume 0.1.1
-# Packages page 12
+# Packages page 14
 bookish_spork 0.5.2
 bootstrap 1.1.0
 boto 0.0.1
 bottomer 0.1.1
-bpe 8.12.1
+boxer 0.1.0
+bpe 9.9.6
 branca_erl 0.3.0
-# Packages page 13
+# Packages page 15
 bristow 0.2.2
-brod 3.16.5
-brod_gssapi 0.1.0
-broen 3.0.2
-brotli 0.3.1
+brod 4.3.2
+brod_gssapi 0.1.3
+brod_oauth 0.1.0
+broen 3.0.3
+brotli 0.3.2
 browser_lang 0.1.0
 brucke 1.17.3
 brunhilde 2.0.1
@@ -122,143 +138,155 @@ bucs 1.1.0
 buffalo 2.1.0
 bugsnag_erl 1.1.6
 bugsnag_erlang 1.1.0
-# Packages page 14
+# Packages page 16
 buoy 0.1.2
 busytone 1.0.0
 cache 2.3.3
 cache_pegb 1.0.1
 cache_service 0.1.0
-cache_tab 1.0.30
+cache_tab 1.0.31
+# Packages page 17
 canal 0.4.2
 canister 0.1.1
-# Packages page 15
+captcherl 0.1.1
 cargo 0.1.3
-# Packages page 16
+# Packages page 18
+cerck 0.1.5
 cerlc 0.2.1
-certifi 2.11.0
+certifi 2.13.0
 cet 0.3.4
+cets 0.2.0
 cf 0.3.1
 cf_client 0.1.6
 cfg 17.12.26
 cf_worker 0.1.6
 cgolam 1.0.1
-cgroups 2.0.5
+cgroups 2.0.7
+# Packages page 19
 channel 0.1.0
 chash 0.1.2
+chatapp 0.1.0
 chatterbox 0.8.0
-# Packages page 17
 choke 1.0.0
+# Packages page 20
 chumak 1.4.0
 claws_fcm 0.1.0
 claws_kafka 0.4.1
 claws_rabbitmq 0.1.0
 claws_rest 0.1.0
-# Packages page 18
+# Packages page 21
 clique 3.0.1
 clje_core_specs_alpha 0.2.56
 clje_spec_alpha 0.2.194
 clje_test_check 1.1.1
 clojerl 0.9.0
-cloudi_core 2.0.5
-cloudi_service_api_batch 2.0.5
-cloudi_service_api_requests 2.0.5
-cloudi_service_cron 2.0.5
+cloudi_core 2.0.7
+cloudi_service_api_batch 2.0.7
+cloudi_service_api_requests 2.0.7
+cloudi_service_cron 2.0.7
 cloudi_service_db_http_elli 1.6.0
-cloudi_service_db_pgsql 2.0.5
-cloudi_service_filesystem 2.0.5
-cloudi_service_funnel 2.0.5
-cloudi_service_health_check 2.0.5
-cloudi_service_http_client 2.0.5
-cloudi_service_http_cowboy 2.0.5
-cloudi_service_http_cowboy1 2.0.5
-cloudi_service_http_elli 2.0.5
-cloudi_service_http_rest 2.0.5
-cloudi_service_map_reduce 2.0.5
-cloudi_service_monitoring 2.0.5
-cloudi_service_null 2.0.5
-cloudi_service_oauth1 2.0.5
-cloudi_service_queue 2.0.5
-cloudi_service_quorum 2.0.5
-cloudi_service_request_rate 2.0.5
-cloudi_service_router 2.0.5
-cloudi_service_send 2.0.5
-cloudi_service_shell 2.0.5
-cloudi_service_tcp 2.0.5
-cloudi_service_udp 2.0.5
-cloudi_service_validate 2.0.5
-cm17a 0.3.1
+cloudi_service_db_pgsql 2.0.7
+cloudi_service_filesystem 2.0.7
+cloudi_service_funnel 2.0.7
+cloudi_service_health_check 2.0.7
+cloudi_service_http_client 2.0.7
+cloudi_service_http_cowboy 2.0.7
+cloudi_service_http_cowboy1 2.0.7
+cloudi_service_http_elli 2.0.7
+cloudi_service_http_rest 2.0.7
+cloudi_service_map_reduce 2.0.7
+cloudi_service_monitoring 2.0.7
+cloudi_service_null 2.0.7
+cloudi_service_oauth1 2.0.7
+cloudi_service_queue 2.0.7
+cloudi_service_quorum 2.0.7
+cloudi_service_request_rate 2.0.7
+cloudi_service_router 2.0.7
+cloudi_service_send 2.0.7
+cloudi_service_shell 2.0.7
+cloudi_service_tcp 2.0.7
+cloudi_service_udp 2.0.7
+cloudi_service_validate 2.0.7
+cloudi_service_validate_config 2.0.7
+cm17a 0.3.2
 cmd 1.0.0
-# Packages page 19
+# Packages page 22
 code_utils 1.1.9
 coers 0.5.0
 coldstrap 0.1.0
-# Packages page 20
+# Packages page 23
 complex_math 0.2.0-rc1
 concha 0.1.0
 concuerror 0.21.0
 conduit_amqp_client 3.6.2
 conduit_rabbit_common 2.7.1
 conf 0.2.6
-conferl 0.0.1
-# Packages page 21
+# Packages page 24
 context 0.1.0
-couchbeam 1.4.2
+# Packages page 25
+couchbeam 1.5.3
 couchbeam_amuino 1.4.3-amuino.8
 couchdb 2.1.0-beta
 counters 0.2.1
 countries_erlang 0.5.0
 coveralls 2.2.0
-covertool 2.0.5
+covertool 2.0.7
 cowbell 1.0.1
-cowboy 2.10.0
+cowboy 2.12.0
+cowboy_graphql 0.2.1
 cowboy_oauth 0.2.14
-# Packages page 22
+cowboy_otel 0.2.0
 cowboy_session 1.0.0
-cowboy_swagger 2.5.1
+cowboy_swagger 2.7.0
 cowboy_telemetry 0.4.0
-cowlib 2.12.1
-cowmachine 1.10.3
-cpg 2.0.5
+cowlib 2.13.0
+cowmachine 1.13.0
+cozo 0.1.0
+cozodb 0.1.0
+cpg 2.0.7
 cpool 0.1.1
 cps 0.4.0
-cqerl 2.1.0
-crc 0.10.4
-crc32cer 0.1.10
+cqerl 2.1.3
+# Packages page 26
+crc 0.10.5
+crc32cer 0.1.11
 cre 0.1.8
 credentials_obfuscation 3.4.0
-crypt 1.0.2
-# Packages page 23
+crossover_io 0.1.0
+crypt 1.0.3
 cryptoapis 1.7.0
 crypto_ext 0.1.4
 crypto_rsassa_pss 2.0.0
 csh2fjhyll_rdb 1.5.6
+# Packages page 27
 csve 3.0.3
 csv_reader 1.0.0
+ct_containers 0.1.1
 ctdh 1.0.1
-cth_readable 1.5.1
-cttest 6.0.11
+ct_groups_summary_hook 0.1.1
+cth_readable 1.6.0
+cttest 6.0.18
 ctx 0.6.0
 cuckoo_cache 0.1.2
-cuckoo_filter 0.3.1
+cuckoo_filter 1.0.1
 cuneiform 3.0.4
 curry_erlang 0.1.0
-# Packages page 24
 customized_hdr_histogram 0.3.2
 cut 1.0.3
-cuttlefish 3.2.0
+cuttlefish 3.4.0
+# Packages page 28
 damm 0.1.0
 darcy 0.0.8
 dasherl 0.2.15
 datalog 2.0.2
 datum 4.6.1
-# Packages page 25
+# Packages page 29
 dbi 1.1.5
 dbi_mysql 0.1.1
 dbi_pgo 0.1.1
 dbi_pgsql 0.2.1
 dbi_sqlite 0.1.0
 dbschema 0.2.2
-dbus 0.8.0
 dbus_revived 0.8.0
 ddb_client 0.5.9
 ddb_connection 0.4.4
@@ -267,13 +295,15 @@ decorator_pt 1.0.3-alertlogic
 decorators 0.1.0
 deeperl 0.10.0
 deigma 1.2.0
-# Packages page 26
+# Packages page 30
 denrei 0.2.5
 depcache 1.10.0
+derby 0.2.0
 dflow 0.3.0
 dhcp 1.0.0
 dhcp_lib 1.0.0
 dh_date 1.0.0
+# Packages page 31
 diffy 1.1.2
 digraph_export 1.0.1
 digraph_viewer 0.1.0
@@ -281,21 +311,27 @@ diint_utilites_common_app 1.4.23
 dinerl 1.3.9
 director 18.9.30
 dirent 1.0.5
-# Packages page 27
+dirs 0.2.0
 discourse_as_sso_erlang 0.7.0
 dispatch_compiler 1.1.0
+# Packages page 32
 dj 0.3.0
+dll_loader_helper_beam 1.2.2
 dns_erlang 1.1.0
-do 1.10.2
+dnssec 0.1.2
+do 2.0.2
 docker_compose_cth 0.3.0
+dockerexec 2.0.3
 docsh 0.7.2
+doctest 0.9.3
 doctest_pg 1.2.3
-# Packages page 28
 dogstatsc 0.1.0
 dogstatsde 1.0.0
 doppler 0.1.0
 dorer 0.1.0
 doteki 1.1.0
+dotenv_config 2.3.3
+# Packages page 33
 dp_decoder 0.2.17
 dproto 0.5.6
 dqe 0.4.15
@@ -303,11 +339,14 @@ dqe_fun 0.2.1
 dqe_idx 0.4.4
 dqe_idx_ddb 0.5.2
 dqe_idx_pg 0.5.7
-# Packages page 29
+dragon_pubsub 0.0.0
+dragon_routes 0.0.0
 dtl 0.12.1
 dtrans 1.2.0
 dtu 0.1.3
 duoweb 1.0.0
+# Packages page 34
+e2h 0.4.2
 e2qc 1.2.1
 eaglesong 1.0.0
 eauthor 17.12.30
@@ -315,45 +354,51 @@ eavmlib 0.1.0
 eavro 0.0.5
 ebase32 1.0.1-2.86707d9
 ebase58 1.0.0-3.0c1b609
-ebeanstalkd 2.2.1
+ebeanstalkd 3.0.0
 ebils 0.1.1
 ebitmap 0.2.3
 eblake2 1.0.0
 eblurhash 1.2.2
+ebox 1.0.1
 ebpf 0.2.3
 ebs 2.1.0
+ecache 2.14.2
 ecaptcha 0.2.0
 ecat 1.0.0
+ecbor 0.7.1
 ecc_compact 1.1.1
 echc 0.1.0
-# Packages page 30
+ecies 1.1.0
 ecimd2 0.0.8
+ecms 1.0.0
 ecoap 0.1.0
 ecomm 1.0.2
 econfig 0.7.3
 ecpool 0.4.2
 ecql 5.1.3
-ecron 0.6.1
+ecron 1.0.0
+# Packages page 35
 ecrontab 0.6.1
 ecsv 1.4.2
-# Packages page 31
-# Packages page 32
+# Packages page 36
+# Packages page 37
 ecureuil 1.0.2
 edate 1.0.0
-edbg 0.1.4
+edbg 0.9.6
 edgar 1.0.2
+edifa 1.0.0
 ediff 1.0.0
 edis_proto 0.2.0
 edocmermaid 0.1.0
-edown 0.8.4
-educkdb 0.6.0
+edown 0.9.1
+educkdb 0.7.0
 eenv 0.1.1
 eesql 0.4.19
 eetcd 0.4.0
 efene 0.99.2
 effi 0.1.6
 efgrep 1.0.0
-efirebirdsql 0.9.3
+efirebirdsql 0.9.10
 eflambe 0.3.1
 efluentc 0.2.0
 efranc 0.0.1
@@ -363,31 +408,34 @@ efuse_filter 0.1.0
 egcache 0.1.0
 egeonames 0.1.1
 egetopt 1.2.0
+egit 0.1.9
 egithub 0.7.0
 egoc 0.1.1
 egoth 0.1.0
+# Packages page 38
 egssapi 0.1.0
+eharbor 1.0.0
 ehash 0.2.1
 ehashids 0.1.4
 eiconv 1.0.0
-eimp 1.0.22
+eimp 1.0.23
 eini 1.2.9
-eini_beam 2.2.3
-eipmi 4.0.0
-ejabberd 23.4.0
+eini_beam 2.2.4
+eipmi 4.1.0
+ejabberd 24.10.0
 ejpet 0.8.0
 ejsonpath 0.2.1
 ejwt 0.1.0
-# Packages page 33
 ekka 0.7.4
 elab 0.1.0
 elb 1.0.1
 eld 1.0.0-beta1
-elector 0.2.2
+elector 0.3.0
 eleveldb 2.2.20
 elib 0.0.1
-elibphonenumber 8.13.10
-# Packages page 34
+elibphonenumber 8.13.50
+# Packages page 39
+# Packages page 40
 elli 3.3.0
 elli_basicauth 0.1.0
 elli_cache 1.0.1
@@ -404,25 +452,25 @@ elli_ws_undertone 0.1.2
 elli_xpblfe 0.2.3
 elmdb 0.4.1
 elocaltime 1.4.1
-elogsene_logger 1.0.0
+elogsene_logger 1.0.2
 elogstash 1.0.0
 elogx 0.0.2
-# Packages page 35
 elru 1.1.0
-elvis 1.1.0
-elvis_core 3.0.0
+elvis 3.2.6
+elvis_core 3.2.5
 em 7.3.0
 email_validator 1.1.0
 emarkdown 0.1.0
 emeter 18.6.13
-eministat 0.10.1
-emmap 2.0.11
+emmap 2.1.1
 emo 0.3.1
+# Packages page 41
 emodel 1.6.0
 emojipoo 0.1.0
 emon 0.2.1
-emqtt 1.2.1
+emqtt 1.11.0
 emqx_ct_helpers 1.1.4
+emsgpack 0.8.0
 emv 0.7.0
 emysql 0.4.1
 emysql_orm 0.0.1
@@ -430,85 +478,89 @@ enacl 1.2.1
 enanoid 0.1.0
 encoding_utils 1.0.7
 eneo4j 1.0.0
+enet 1.0.0
 enoise 1.1.0
 enough 0.1.0
 ensq 0.1.7
 entropy_string_erl 1.1.1
-# Packages page 36
 eodbc 0.2.0
 ep 0.2.0
 epam 1.0.14
-epcap_compile 1.0.5
+epcap 1.1.3
+epcap_compile 1.0.6
 eper 0.99.1
 epgpool 1.1.1
-epgsql 4.7.0
+epgsql 4.7.1
 epgsql_decimal 1.0.0
 ephemeral 2.0.4
 ephp 0.3.1
 epipe 1.0.0
+# Packages page 42
 epl 0.2.0
 epmdless 0.3.0
 epmdlib 1.0.0
 epns 1.1.0
 epocxy 1.1.0
-epqueue 1.2.5
+epqueue 1.2.6
 epsql 0.1.0
 epubnub 0.1.0
 eql 0.2.0
-equery 0.16.0
+equery 0.17.2
 eradius 2.3.1
 erbloom 2.1.0-rc.2
 erc 0.1.1
-eredis 1.7.0
+eredis 1.7.1
 eredis_cluster 0.9.0
-eredis_pool 2.0.1
+eredis_pool 2.1.0
 eredis_streams 0.1.0
 eredis_sync 0.1.4
 ereturn 18.6.14
 ergb 0.2.8
+erg_unicode 0.1.0
 erlando 3.1.1
 erlang_base62 1.0.1
 erlang_behaviour_trees 0.5.22
 erlang_color 1.0.0
 erlang_commons 0.1.0
 erlang_dbus 0.2.0
-erlang_decimal 0.6.2
+erlang_decimal 0.6.3
 erlang_decorators 0.3.1
-erlang_doctor 0.1.0
+erlang_doctor 0.2.7
+erlang_ds 0.4.1
 erlang_exif 3.0.0
 erlang_json_logger 0.2.0
 erlang_localtime 1.0.0
 erlang_osc 1.0.1
+erlang_pbkdf2 2.0.5
 erlang_pmp 0.1.1
 erlang_psq 1.0.0
 erlang_rethinkdb 0.2.2
 erlang_skiplist 0.3.0
 erlang_svg 0.2.0
 erlang_tc 0.1.0
-erlang_term 2.0.5
+erlang_term 2.0.7
 erlang_tls 1.0.3
 erlang_version 0.2.0
 erlang_xxhash 0.2.0
 erlangzmq 1.1.2
 erlastic_search 1.5.0
-erlaudio 0.2.3
-erlavro 2.9.8
+erlavro 2.9.10
 erl_base58 0.0.1
 erl_bencode 1.0.2
 erlbus 0.3.0
 erl_cache 1.7.6
 erlcaptcha 2.0.0
 erlcard 1.1.1
-erlcass 4.1.0
+erlcass 4.1.3
 erl_cbor 2.0.1
 erlchronos 2.0.1
-erl_cidr 1.2.0
-erlcloud 3.6.8
+erl_cidr 1.2.1
+erlcloud 3.8.1
 erlcode 0.1.0
 erlcron 1.2.3
-# Packages page 37
-erl_csv 0.3.1
+erl_csv 0.3.2
 erldb 1.0.0
+erldist_filter 1.1.0
 erldn 1.0.6
 erldns 1.0.0
 erldocs 0.9.6
@@ -517,37 +569,40 @@ erldrasil 0.1.0
 erldyn 0.7.2
 erlesy 1.0.3
 erl_eval_records 1.0.0
-erlexec 2.0.2
-erl_exercism 0.1.2
+erlexec 2.0.7
+erl_exercism 0.2.0
+erlfdb 0.2.1
 erlffx 1.2.0
 erlflake 0.1.1
+# Packages page 43
 erlflow 0.1.0
-erlfmt 1.2.0
+erlfmt 1.5.0
 erlguten 1.0.0
 erl_hash 1.0.5
 erliam 1.0.1
-erlias 0.1.0
+erlias 0.2.0
 erljson 0.2.1
-erljwt 2.0.7
-erlkaf 2.1.3
+erljwt 2.1.0
+erlkaf 2.1.6
 erllambda 2.2.3
 erlmemfs 0.1.0
-erlmld 1.1.1
+erlmld 1.2.0
 erl_nbt 1.0.0
 erlogger 0.1.0
-erlpass 1.0.5
+erlogstash 0.10.7
+erlpass 1.0.7
 erlPass 0.3.0
 erl_pengine 0.1.1
-erlperf 2.2.0
+erlperf 2.3.0
 erl_pipeline 0.2.0
 erlpocket 2.1.0
-erlpool 1.4.3
+erlpool 1.4.4
 erlpop 2.3.1
-erlport 0.10.1
+erlport 0.11.0
 erlquad 1.1.2
 erlquery 0.4.0
 erlsass 1.1.1
-erlsci_getopt 0.8.4
+erlsci_getopt 1.1.0
 erlscrypt 1.2.2
 erl_snowflake 1.1.0
 erlsom 1.5.1
@@ -559,7 +614,7 @@ erltrace 0.1.6
 erluap 1.2.3
 erluca 0.1.1
 erlup 0.3.0
-erlware_commons 1.6.0
+erlware_commons 1.7.0
 erlwater 0.1.6
 erl_web_push 0.1.0
 erlxml 1.0.3-beta
@@ -571,30 +626,35 @@ erlz 0.1.0
 erlzk 0.6.4
 erlzk_pd 0.6.4
 erlzmq 3.0.1
-erlzmq_dnif 4.1.3
+erlzmq_dnif 4.1.4
 erlzord 1.1.0
 erocksdb 0.4.1
 erpcgen 1.1.1
-erqwest 0.2.4
-errors 0.1.0
+erqwest 0.2.5
 ersip 1.1.0
+erupt 0.1.0
+erupt_mysql 0.1.0
+erupt_postgres 0.1.0
+erupt_sqlite3 0.1.0
 erwatch 0.3.0
-esaml 4.5.0
-escalus 4.2.9
+esaml 4.6.0
 esel 0.1.2
 esimdjson 0.1.0
-esip 1.0.49
+esip 1.0.56
 esmpp 0.0.13
 esnowflake 0.4.3
 esockd 5.8.2
-# Packages page 38
 espace 0.8.0
+# Packages page 44
 esq 2.0.6
 esqlcipher 2.0.0-rc.3
-esqlite 0.8.6
-esss 1.0.2
+esqlite 0.8.8
+esss 1.0.3
 estdinout 1.0.0
 estore 0.1.10
+esvm 1.0.0
+esysevent 1.0.0
+etacacs_plus 0.1.3
 etcdc 0.3.1
 etcp 17.9.10
 etest 1.2.1
@@ -603,9 +663,12 @@ etls 1.2.0
 etoml 0.1.0
 etotp 1.0.1-6.c979c63
 etr 1.0.0
-etran 0.5.0
+etran 0.5.2
+etrie 1.1.0
 ets_cas 0.1.1
+etskv 0.2.0
 etsmgr 0.2.0
+euneus 2.4.0
 eunicode2gsm 1.1.0
 euniq 1.0.0
 eunit_addons 1.2.0
@@ -614,122 +677,128 @@ eunit_helper 0.0.4
 eunit_sugar 0.1.0
 eunzip 1.0.0
 euri 0.11.0
+# Packages page 45
 evaluator 0.1.3
 evel 0.1.2
-# Packages page 39
-event_store_db_gpb_protobufs 2.3.0
+event_store_db_gpb_protobufs 2.4.0
 evews 0.1.9
-evision 0.1.31
+evision 0.2.9
 ewc 1.0.0
-ewpcap 1.1.4
+ewpcap 1.1.5
+# Packages page 46
 exat 0.1.0
-# Packages page 40
-# Packages page 41
-# Packages page 42
-# Packages page 43
+# Packages page 47
+# Packages page 48
+# Packages page 49
 exe 7.11.0
 exec 1.0.1
-exemplar 0.5.0-rc1
-# Packages page 44
-# Packages page 45
-# Packages page 46
+exemplar 0.6.0
+exerl 0.2.2
+exerl_build 0.0.2
+exerl_dep 0.0.2
+# Packages page 50
+# Packages page 51
+# Packages page 52
+# Packages page 53
 exodus 0.1.0
 exodus_mysql 0.1.0
 exodus_postgres 0.1.0
 exodus_sqlite3 0.1.0
-exometer_core 1.6.2
+exometer_core 2.0.0
 exometer_fetch 0.1.0
 exometer_influxdb 0.6.0
 exometer_report_graphite 1.0.1
 exometer_report_lager 1.0.0
 exor_filter 0.8.2
-# Packages page 47
-# Packages page 48
-# Packages page 49
-# Packages page 50
-# Packages page 51
+# Packages page 54
+# Packages page 55
+# Packages page 56
+# Packages page 57
+# Packages page 58
+# Packages page 59
 ezic 0.2.3
-ezlib 1.0.12
-ezmq 0.2.0
-ezstd 1.0.8
-# Packages page 52
+ezlib 1.0.13
+ezstd 1.1.0
 fake_lager 1.0.0
-fake_turn 0.4.0
+fake_turn 0.4.3
 fast_base16 1.1.1
-fast_pbkdf2 1.0.3
-fast_scram 0.5.0
-fast_tls 1.1.16
-fast_xml 1.1.49
-fast_yaml 1.0.36
+# Packages page 60
+fast_pbkdf2 1.0.6
+fast_scram 0.6.0
+fast_tls 1.1.22
+fast_xml 1.1.53
+fast_yaml 1.0.37
 fcm 0.1.0
-feeder 2.3.2
 fernet 0.1.0
-# Packages page 53
 fieldmask 0.0.1
 fifocache 1.0.1
 fifo_db 0.2.8
+# Packages page 61
 fifo_dt 0.2.26
 fifo_lager 0.1.8
 fifo_s3 0.2.15
 fifo_spec 0.1.34
 fifo_utils 0.1.53
 file_signatures 0.1.9
-filezcache 1.1.0
+filezcache 2.2.0
 fire 0.1.4
 firebase_admin 0.1.3
 firebase_token 1.1.1
-# Packages page 54
 fixer 0.2.4
+# Packages page 62
 flatlog 0.1.2
 fling 1.0.1
+# Packages page 63
 fn 1.0.0
-# Packages page 55
 foil 0.1.3
 folsom 1.0.0
 folsom_ddb 0.3.1
 folsomite 1.3.0
+foodog 0.2.1
 form 8.3.0
 forms 0.0.1
 forseti 2.2.0
+# Packages page 64
 freshman_test 0.2.1
 fs 8.6.1
+fs_erlsci 8.7.1
 fs_event 1.0.0
 fs_sync 1.1.3
 fswitch 1.4.1
 ftpfilez 1.3.0
-# Packages page 56
 fusco 0.1.1
 fuse 2.5.0
+# Packages page 65
 gdminus 1.2.0
-geas 2.7.12
-geas_rebar3 1.4.12
-# Packages page 57
+geas 2.8.1
+geas_rebar3 1.4.16
 geminic 0.1.0
-gen_batch_server 0.8.8
+gen_batch_server 0.8.9
 gen_cycle 1.0.4
 gen_errand 0.0.1
 gen_flow 0.0.5
+# Packages page 66
 gen_fsm_compat 0.3.0
 gen_fw 18.6.2
-gen_icmp 0.5.6
+gen_icmp 0.6.2
 gen_ircclient 0.1.1
 gen_leader 0.1.0
-gen_logger 1.2.1
 gen_nbs 0.7.7
 gen_pnet 0.1.7
 gen_rest_client 17.12.24
 gen_rpc 2.1.0
 gen_smtp 1.2.0
 gen_smtp_temp_fix_ssl 0.14.0
-# Packages page 58
+gen_xml 0.1.0
 geocoding 0.3.1
 geo_gateway 0.2.0
+# Packages page 67
 geolite2data 1.0.0
-getopt 1.0.2
-gettexter 0.0.7
+getopt 1.0.3
+gettexter 0.1.0
 ghatest 0.10.0
 gisla 2.1.1
-# Packages page 59
+# Packages page 68
 giza 0.0.1
 gj 0.1.0
 gleam_beam 0.1.0
@@ -743,18 +812,21 @@ gleam_should_assertions 0.1.0
 gleam_string_builder 0.1.0
 gleam_uuid 0.1.1
 gleam_validator 0.2.0
+# Packages page 69
 glob 1.0.0
 global_flags 1.0.0
-# Packages page 60
+# Packages page 70
 gmo_pg 0.0.1
 goldrush 0.1.9
-# Packages page 61
-# Packages page 62
-# Packages page 63
+# Packages page 71
+# Packages page 72
+# Packages page 73
+# Packages page 74
 google_token 1.0.5
-gpb 4.19.7
+gourd 0.1.0
+gpb 4.21.1
 gpio 0.6.3
-gproc 0.9.0
+gproc 1.0.0
 gradualizer 0.2.0
 granderl 0.1.5
 graphiter 1.0.6
@@ -762,180 +834,205 @@ graphql_erl 0.16.1
 graphql_erlang 0.2.10
 graylog_lager 1.4.5
 grid 0.2.1
-# Packages page 64
-grisp 2.3.0
-grisp_cryptoauth 2.0.1
-grisp_emulation 0.2.0
-grisp_tools 2.5.0
-grpcbox 0.16.0
+# Packages page 75
+grisp 2.7.0
+grisp_connect 1.1.0
+grisp_cryptoauth 2.4.0
+grisp_emulation 0.2.2
+grisp_tools 2.7.1
+grisp_update_packager 1.0.0
+grisp_updater 2.1.0
+grisp_updater_grisp2 0.2.0
+grpcbox 0.17.1
 grpcbox_plugin 0.9.0
 grpc_cowlib 2.8.1
 grpc_gun 2.0.1
 grpc_lib 0.1.2
+grpc_update 2.0.0
 gruff 0.1.0
 gsm_coder 1.0.2
-gtplib 3.2.0
-gun 2.0.1
+gtp 0.2.1
+gtplib 3.4.0
+gun 2.1.0
+# Packages page 76
+gun_update 2.1.0
 gurka 0.1.8
 gustav 0.1.8
 h1 2.3.0
-h3 3.6.4
+h3 3.7.2-b
 hacker_news 0.0.3
-hackney 1.18.1
-hackney_telemetry 0.1.1
+hackney 1.20.1
+hackney_telemetry 0.2.0
 hairnet 1.0.0
 haki 0.3.2
-# Packages page 65
 hamcrest 0.1.3
 haproxy_protocol 0.1.2
 harness_erlang_murmurhash 1.0.0
-harness_ff_erlang_client_api 1.0.0
-harness_ff_erlang_server_sdk 1.0.0
+harness_ff_erlang_client_api 1.0.3
+harness_ff_erlang_server_sdk 3.0.2
 hasaki_emysql 0.5.1
 hashids_erlang 1.0.5
 hash_ring 0.4.2
+# Packages page 77
 havoc 0.2.3
 hdr_histogram 0.5.0
-# Packages page 66
+hearty 0.0.0
 heja 0.1.4
 helium 0.1.0
 hello_erl 0.1.2
+# Packages page 78
 heroku_crashdumps 0.1.0
 hex2bin 1.0.0
-hex_core 0.10.0
-hexml 3.3.3
+hex_core 0.10.3
+hexml 3.4.1
+hextree 0.1.6
 hkdf_erlang 1.0.0
 hlc 3.0.1
-# Packages page 67
 hoax 0.11.2
 holiday_jp_clje 0.1.1
+# Packages page 79
 homotopy 1.3.1
 hooks 2.1.0
 horatio 0.2.0-rc1
-horus 0.2.3
+horus 0.3.0
 host_triple 0.1.0
 hotp 1.0.2
-hpack_erl 0.2.3
+hpack_erl 0.3.0
 hterl 0.10.0
 htmerl 0.1.0
 htnerlang 0.1.0
 hts 1.3.1
 httpb 0.4.2
-http_cache 0.2.0
-http_cache_store_disk 0.2.0
+http_cache 0.3.1
+http_cache_store_behaviour 0.3.0
+http_cache_store_disk 0.3.1
+http_cache_store_memory 0.3.1
 http_cache_store_native 0.2.0
 httpc_aws 0.4.2
-# Packages page 68
+# Packages page 80
+http_message_signatures 1.0.0-alpha.1
 http_signature 2.0.0
+hund 0.1.1
 hut 1.4.0
 hydro 0.5.0
 hyper 1.0.1
 iam 0.0.1
+# Packages page 81
 iban 0.7.0
-# Packages page 69
-ibrowse 4.4.1
-iconv 1.0.13
+ibrowse 4.4.2
+iconv 1.0.14
+iconverl 3.0.21
 idl 1.0.1
 idna 6.1.1
 idris2 0.2.1-alpha.1
 ierl 0.4.0
 imap_utf7 1.0.0
+# Packages page 82
 inaka_aleppo 1.1.1
 inaka_emysql 0.5.0
 inaka_iso8601 1.1.2
 inaka_mixer 1.2.0
-# Packages page 70
-inert 1.0.4
+inert 1.0.5
 inet_ext 1.0.0
 influxdb 0.2.1
 influx_udp 1.1.2
 inotify 0.4.3
+# Packages page 83
 intercept 1.0.0
 interval_tree_clocks 1.0.1
-# Packages page 71
 ip2locationdata 0.0.5
 ip2region_erlang 0.1.0
 ipaddr 0.1.0
-ipinfo 1.0.1
+ipinfo 1.0.2
 iptables 0.1.6
 irc_parser 0.1.0
 is_auto_imported_bif 17.8.24
 ishikawa 0.0.3
-iso8583_erl 0.2.0
-iso8601 1.3.3
-# Packages page 72
+# Packages page 84
+iso8583_erl 0.4.1
+iso8601 1.3.4
 iso_erlang 0.11.0
 istype 0.2.3
 itc 0.4.0
+iterator 0.0.4
 jaeger_passage 0.1.14
 jam 1.0.0
+# Packages page 85
+jargon 1.0.1
 jason_erl 1.2.2
 jaws3 0.1.1
 jb_private123 0.1.0
 jc 1.2.1
 jch 0.2.3
-jchash 0.1.3
-jesse 1.7.11
-jhn_stdlib 3.6.2
-jiffy 1.1.1
-# Packages page 73
+jchash 0.1.4
+jesse 1.8.1
+jhn_stdlib 5.3.2
+jiffy 1.1.2
 jobs 0.10.0
-jose 1.11.5
+jose 1.11.10
 jpparse 1.3.1
+# Packages page 86
 jsn 2.2.2
-jsone 1.8.0
+jsone 1.9.0
 jsonlog 0.1.0
+json_polyfill 0.1.4
+jsonpull 0.1.1
 jsx 3.1.0
 jsxd 0.2.4
-jsxrecord 1.2.0
-# Packages page 74
+jsxrecord 2.2.0
 jun 0.2.6
 jupyter 0.5.0
 justatimer 0.1.2
+# Packages page 87
 jwalk 1.2.0
 jwerl 1.2.0
 jwt 0.1.11
 k6_bytea 1.1.5
 kaa 0.2.26
 kafe 2.2.3
-kafka_protocol 4.1.3
+kafka_protocol 4.1.10
 kafkerl 2.1.0
+kairos 1.0.1
 kanin 0.6.0
 kashe 1.0.1
 katana 1.0.0
-katana_code 2.0.1
+katana_code 2.2.0
 katana_test 1.0.1
-katipo 1.1.0
+katipo 1.1.1
 katja 0.10.0
 katja_echo 0.1.1
 katja_vmstats 0.8.2
-katt 1.6.9
+katt 1.6.10
 kdtree 1.0.0
 keccak 2.0.0
-# Packages page 75
 keccakf1600 3.0.0
-keccakf1600_diode_fork 2.1.2
+keccakf1600_diode_fork 3.0.0
 keccakf1600_nash_fork 2.1.2
 keccakf1600_orig 2.1.0
+# Packages page 88
 keccakf1600_otp23 2.0.0
 ken 0.1.1
 kerlberos 2.0.1
-key2value 2.0.5
-keys1value 2.0.5
+key2value 2.0.7
+keys1value 2.0.7
 keyserver 1.0.0
+keysmith 0.5.0
 kflow 1.1.0
-khepri 0.7.0
+khepri 0.16.0
+khepri_mnesia_migration 0.7.1
 kinetic 1.3.11
-kivra_merlin 2.1.0
-kla 0.8.0-rc4
-# Packages page 76
+# Packages page 89
+kivra_merlin 3.0.1
+kla 0.9.1
 kraft 0.1.0
 kube_dist 0.0.2
 kuberl 0.2.0
-kvconf 2023.1.0
+kuberlnetes 0.1.0
+# Packages page 90
+kvconf 2024.3.1
 kv_index_tictactree 0.9.4
 kylie 1.0.1
-kyu 2.0.4
+kyu 2.0.5
 lager 3.9.2
 lager2json 1.0.2
 lager_cloudwatch 0.1.2
@@ -954,33 +1051,40 @@ lager_logtail 0.2.0
 lake 0.2.1
 lambda 0.1.1
 lambda_throttle 0.3.0
-lanes 0.1.3
-lanes_barista 0.1.0
-lanes_elli 0.1.3
-# Packages page 77
+lanes 0.3.3
+lanes_barista 0.3.3
+lanes_elli 0.3.3
 lasp 0.10.0
 lasp_bench 0.0.1
 lasp_pb 0.0.4
 lasp_pg 0.1.0
 lasp_support 0.1.0
-launchdarkly_server_sdk 2.0.1
+launchdarkly_server_sdk 3.5.0
 lazy 0.0.1
 lazy_lists 0.1.0
 lb 17.6.12
+# Packages page 91
 lbm_kv 0.0.2
 lc 0.3.2
 lcfg 0.5.0-rc3
+lcli 0.1.1
 ldb 0.0.18
 ledis 0.3.0
 lee 0.1.0
 lejson 0.8.0
 levaindoc 0.7.0
-leveled 0.9.4
-lfe 2.1.1
+leveled 1.1.0-hex
+leveled_lz4 1.9.4-leveled-hex.4
+leveled_zstd 1.5.4-leveled-hex.2
+lfe 2.1.5
+lfe_dragon 0.0.0
+lfe_http 0.5.4
 lfe_machine_tv 3.0.1
-lhttpc 1.6.2
+lfe_yuri 0.3.2
+lhc 0.4.0
+lhttpc 1.7.1
 libchunter 0.1.52
-# Packages page 78
+# Packages page 92
 lib_combin 0.1.5
 lib_conf 0.1.5
 libdecaf 2.1.1
@@ -991,78 +1095,79 @@ libleofs 0.1.3
 libp2p_crypto 1.4.1
 libp2p_peerbook 0.2.0
 lib_parallel 0.1.1
-libphonenumber_erlang 0.2.0
-libsecp256k1 0.1.10
-libsecp256k1_diode_fork 0.1.14
-libsecp256k1_luisguilhermemsalmeida_fork 0.1.14
-libsecp256k1_nash_fork 0.1.14
+libphonenumber_erlang 0.2.1
 libsecp256k1_nif 0.0.3
 libsnarl 0.3.55
 libsnarlmatch 0.1.8
 libsniffle 0.3.71
 libsodium 2.0.1
+liburi 3.0.1
 libvxe_erl 0.1.0
-# Packages page 79
+# Packages page 93
 ljson 0.6.0-rc1
 lldp 0.1.0
 llists 1.2.0
+# Packages page 94
+lmug 0.2.8
+lmug_inets 0.1.1
 local 0.2.1
 locker 1.0.8
 locks 0.2.0
-locus 2.3.6
+locus 2.3.10
 logflare_erl 0.2.0
 logger_colorful 0.1.0
-# Packages page 80
-logger_formatter_json 0.7.0
-logger_journald 0.3.0
+logger_debug_h 0.2.0
+logger_formatter_json 0.8.4
+logger_journald 0.3.1
 logger_logstash 0.1.3
 logger_webhook_h 1.1.0
-logi 0.5.6
+# Packages page 95
+logi 0.5.8
 logi_prometheus 0.1.2
 logi_stdlib 0.1.2
-logjam 1.0.5
-logstasher 1.0.0
-loise 1.3.0-rc5
+logjam 1.2.4
+logstasher 1.1.0
+loise 1.3.0
 lpr 0.1.2
 lric 0.3.0
 lru 2.4.0
 lrw 2.0.1
-ltest 0.13.3
-luaport 1.6.2
-luerl 1.0.0
-# Packages page 81
-lutil 0.13.1
-lxml 0.3.0
+ltest 0.13.9
+luaport 1.6.3
+luerl 1.2.3
+# Packages page 96
+lutil 0.15.0
+lxml 0.4.3
 lz4 0.2.4
-lz4b 0.0.9
+lz4b 0.0.11
 lz4_erl 0.2.4
 m3u8 0.2.1
 mach 4.7.0
 mad 7.1.1
 maildir_commander 0.6.5
-# Packages page 82
+# Packages page 97
 mapsd 0.2.0
 map_sets 1.1.0
 maps_in 0.2.0
 maputils 0.4.1
-mapz 2.3.0
+mapz 2.4.0
 markerl 0.1.0
-# Packages page 83
+# Packages page 98
 match_trie 0.1.0
 mbcs 1.1.1
 mcache 0.3.1
 mc_dactyl 1.0.1
 mc_eredis 2.6.2
 mc_gen_rpc 3.0.1
-mc_lhttpc 4.3.1
+mc_lhttpc 4.3.2
 mc_mustache 1.0.1
+# Packages page 99
 mc_pbkdf2 2.2.1
 mc_poolgirl 2.2.1
-mc_sbroker 1.1.1
+mc_sbroker 1.1.2
 mc_small_ints 1.1.1
 mc_vsn_transform 1.1.1
 md2 1.2.0
-# Packages page 84
 mdns_client 0.1.10
 mdns_client_lib 0.1.46
 mdns_server 0.2.0
@@ -1070,7 +1175,9 @@ mdns_server_lib 0.2.3
 meck 0.9.2
 medoc 1.0.0
 mekao 0.4.3
-# Packages page 85
+# Packages page 100
+# Packages page 101
+memdb 0.2.0
 memhash 0.1.0
 memstore 0.2.3
 merkerl 1.1.1
@@ -1078,44 +1185,48 @@ merklet 2.0.0
 merkletree 0.1.0
 mero 1.4.4
 meta 0.1.3
-# Packages page 86
 metal 0.1.1
 metrics 2.5.0
 metrics_reader 0.1.13
 metronome 0.0.2
+# Packages page 102
 mgmepi 0.9.0
 m_http 0.2.2
-midas 0.2.0
-midilib 0.5.0-rc2
+midilib 0.5.2
 miffy 2.0.0
 milenage 0.2.0
 mime_lookup 0.1.1
-mimerl 1.2.0
+mimerl 1.3.0
 mimetypes 1.1.0
 minikube 1.0.0
 minmay 1.2.0
-# Packages page 87
+mixactions 0.2.0
+# Packages page 103
 mls 0.1.4
 mmath 0.2.26
 mnesplit 0.0.1
-# Packages page 88
+mnkv 0.1.0
 mochicow 0.6.4
-mochiweb 3.1.2
+mochiweb 3.2.2
 mochiweb_html 2.15.0
 mochiweb_util 0.1.0
-mockgyver 1.6.0
+# Packages page 104
+mockgyver 1.8.0
 mongodb_client 3.2.0
 mongodb_erlang 3.4.0
-mongoose_jid 2.0.0
-# Packages page 89
+mongodriver 1.0.0
+mongoose_jid 2.2.0
+# Packages page 105
 mpgit 0.1.1
-mqtree 1.0.15
+mq 0.4.0
+mqtree 1.0.17
 mqtt 0.3.3
 mqtt_client 1.0.5
 mqtt_packet_map 1.1.0
-mqtt_sessions 2.1.0
-msgpack 0.7.0
+mqtt_sessions 2.6.0
+msgpack 0.8.1
 msgpack_rpc_erlang 0.6.4
+msmp 0.1.2
 msrpce 0.1.1
 mstore 0.3.7
 mstore_inspector 0.1.1
@@ -1123,9 +1234,12 @@ mtproto_proxy 0.7.1
 mtxmkt 0.1.0
 multiaddr 1.1.3
 multihash 2.1.0
-# Packages page 90
+# Packages page 106
+m_unicode 0.1.0
+mutagen 0.1.0
 mybench 0.0.0
 my_cargo 0.1.3-rc.1
+my_cowboy 2.12.0
 myesockd 5.9.4
 my_esockd 5.9.4
 mylib 0.1.1
@@ -1134,7 +1248,9 @@ my_rebar3_cargo 0.1.1-rc.1
 myriad 1.0.15
 mysql 1.8.0
 mysql_client 1.2.8
-n2o 10.3.3
+n2o 11.9.6
+# Packages page 107
+narcs 0.1.0
 nat 0.4.0
 natserl 0.1.3
 nats_msg 0.4.1
@@ -1143,49 +1259,56 @@ nconf 0.0.1
 nd_index 1.7.1
 ndisc_redis 0.0.4
 nebula 0.1.1
-# Packages page 91
 neo4j 0.3.0
-# Packages page 92
+# Packages page 108
+# Packages page 109
 nested 0.1.2
 netcdf_nif 0.1.2
 netflow 1.0.0
 netlink 1.1.0
 newrelic 0.1.0
-# Packages page 93
 nextroll_erlcloud 3.4.1
 nextroll_lhttpc 1.4.0
 nextroll_rebar3_gpb_plugin 3.0.0
 nextroll_zstd 1.1.0
-niffler 0.3.0
+niffler 0.3.2
 nifi_s2s 0.0.2
 nif_libsecp256k1 0.0.2
-nitro 8.2.4
-nitro_cache 0.4.1
-nitrogen_core 2.4.0
+# Packages page 110
+nine 0.2.0
+nine_cowboy 0.1.1
+nine_elli 0.1.0
+nitro 9.9.6
+nitro_cache 0.5.0
+nitrogen_core 3.0.0-alpha.13
+nitro_qrcode 1.1.0
 nkferl 0.1.2
 nlocks 1.1.2
+nm 0.0.1
 noble 0.0.4
-nodefinder 2.0.5
+nodefinder 2.0.7
 noise 0.0.5
 nopmd 0.1.0
-# Packages page 94
-nova 0.9.5
+# Packages page 111
+nova 0.10.2
 nova_modern 0.1.3
 nprocreg 0.3.0
-nuntius 0.0.3
+ns 1.6.4
+nuntius 1.0.0
 oauth 2.1.0
 oauth2c 1.0.1
 oauth2_erlang 0.6.1
-observer_cli 1.7.4
+# Packages page 112
+observer_cli 1.8.0
 oc_datadog 0.2.0
 oc_google_reporter 0.4.0
-# Packages page 95
 odi 0.1.0
-oidcc 2.0.0-alpha.2
-oidcc_cowboy 1.5.0
+oidcc 3.2.6
+oidcc_cowboy 2.0.0
+oidcc_cowboy_session 2.0.0
 ojson 1.0.0
+# Packages page 113
 oox 0.1.27
-# Packages page 96
 opcua 0.1.0
 opencensus 0.9.3
 opencensus_cowboy 0.3.0
@@ -1195,27 +1318,35 @@ opencensus_jaeger 0.0.1
 opencensus_service 0.1.0
 opencensus_telemetry 0.1.0
 opencensus_zipkin 0.3.0
+# Packages page 114
 openroad 1.0.0
-opentelemetry 1.3.0
-opentelemetry_api 1.2.1
-opentelemetry_api_experimental 0.3.0
-opentelemetry_cowboy 0.2.1
+opentelemetry 1.5.0
+opentelemetry_api 1.4.0
+opentelemetry_api_experimental 0.5.1
+opentelemetry_cowboy 1.0.0
 opentelemetry_elli 0.2.0
-opentelemetry_experimental 0.3.0
-opentelemetry_exporter 1.4.1
+opentelemetry_experimental 0.5.1
+opentelemetry_exporter 1.8.0
 opentelemetry_grpcbox 0.2.0
+opentelemetry_heroku 0.2.0
+opentelemetry_instrumentation_http 0.1.0
 opentelemetry_logger_metadata 0.1.0
 opentelemetry_logger_metadata_datadog 0.1.0
-opentelemetry_process_propagator 0.2.2
-opentelemetry_semantic_conventions 0.2.0
-opentelemetry_telemetry 1.0.0
+opentelemetry_process_propagator 0.3.0
+opentelemetry_semantic_conventions 1.27.0
+opentelemetry_telemetry 1.1.2
+opentelemetry_xray 0.7.3
 opentelemetry_zipkin 1.1.1
-# Packages page 97
 optic 3.1.0
+opuntia 1.1.0
+# Packages page 115
+ordered_mutex 0.1.2
 osc_lib 2.1.1
 osc_server 2.1.1
 otc 1.0.0
+otel_http 0.2.0
 otel_propagator_instana 1.1.0
+otpbp 7.6.0
 otpcl 0.2.0
 otp_passage 0.1.10
 otp_vsn 2.11.0
@@ -1223,117 +1354,124 @@ otter 0.4.0
 otter_lib 0.1.1
 otters 0.2.10
 otter_srv 0.1.0
-overworld 1.0.0
+overworld 2.0.0
 ovsdb 0.3.0
-owoify_erl 1.0.0
-p1_acme 1.0.22
-p1_mysql 1.0.21
-p1_oauth2 0.6.11
-p1_pgsql 1.1.22
+owoify_erl 1.1.2
+p1_acme 1.0.24
+p1_mysql 1.0.25
+p1_oauth2 0.6.14
+p1_pgsql 1.1.28
 p1_stringprep 1.0.1
-p1_utils 1.0.25
+p1_utils 1.0.26
 p1_xml 1.1.1
 p1_xmlrpc 1.15.1
-# Packages page 98
+# Packages page 116
+pact_erlang 0.2.2
 paillier 1.0.0
-parse_trans 3.4.1
+# Packages page 117
+parse_trans 3.4.2
 parsexml 1.0.0
-parthenon 0.8.0
+parthenon 0.10.1
 partial 1.2.0
-# Packages page 99
-partisan 5.0.0-beta.24
+partisan 5.0.0-rc.8
 passage 0.2.6
 pbkdf2 2.0.0
 pbkdf2_nif 0.4.0
-pc 1.14.0
+pc 1.15.0
 pcsc 1.3.1
 pd_erlzk 0.6.4
-pe4kin 0.2.2
-perc 1.0.1
-# Packages page 100
+pe4kin 0.2.4
+# Packages page 118
+perc 1.0.2
 pest 0.9.0
 pfcplib 3.0.0
 pgapp 0.0.2
+pge 0.2.6
 pgo 0.14.0
 pgpool 2.1.0
 pgsql 26.0.2
 pg_types 0.4.0
-# Packages page 101
-# Packages page 102
+# Packages page 119
+# Packages page 120
 phpass 0.1.0
+phrase 0.2.1
+# Packages page 121
 picosat 0.1.0
 pipe_line 1.0.0
-# Packages page 103
 pipes 2.0.1
-pkix 1.0.9
+# Packages page 122
+pkix 1.0.10
 pkt 0.6.0
 pl 18.1.31
-plain_fsm 1.4.2
+plain_fsm 1.4.5
+platybelodon 0.1.0
 plists 1.1.1
-# Packages page 104
+plottah 0.2.0
 plugerl 1.0.0
-# Packages page 105
+# Packages page 123
+# Packages page 124
 plumtree 0.6.0
 pmbag 1.0.0
 pmod_transform 1.1.0
 png 0.2.1
 pobox 1.2.0
+poise 0.2.0
+# Packages page 125
 poolboy 1.5.2
 pooler 1.6.0
 poolgirl 1.3.0
-# Packages page 106
-pop3client 1.3.1
-positive 13.3.7
+pop3client 1.4.0
+porter_stemming 1.0.1
 posthaste 18.10.14
 postman_smtp 0.0.1
 postman_transport 1.0.0
 pot 1.0.2
-power_shell 1.2.2
+power_shell 1.3.0
 ppg 0.1.3
 ppool 1.1.1
 ppplib 1.0.0
 pp_record 0.1.3
 pqclean 0.0.3
-pqueue 2.0.5
-# Packages page 107
+pqueue 2.0.7
+# Packages page 126
 pretty_print 0.1.0
 priq 0.2.0
 proc 1.1.2
 process_group 1.1.3
-procket 0.9.7
+procket 0.9.9
 proj_nif 0.1.4
-prometheus 4.10.0
+prometheus 4.11.0
 prometheus_cowboy 0.1.8
 prometheus_diameter_collector 1.2.1
+# Packages page 127
 prometheus_httpd 2.1.11
 prometheus_process_collector 1.6.0
 promexp 0.4.3
 proper 1.4.0
 proper_contrib 0.3.2
-protobuffs 0.8.4
-# Packages page 108
 protofy_test 1.0.0
-provider_asn1 0.3.0
+provider_asn1 0.4.1
 providers 1.9.0
-prx 0.16.3
+prx 0.16.4
 pulserl 0.1.3
+# Packages page 128
 pure_migrations 1.3.0
 pushover_error_logger 0.1.0
 pynchon 0.5.0
-qdate 0.7.0
+qdate 0.7.3
 qdate_localtime 1.2.1
-# Packages page 109
 qsp 0.1.0
 quantile_estimator 0.2.1
-quicer 0.0.17
-quickrand 2.0.5
+# Packages page 129
+quicer 0.0.308
+quickrand 2.0.7
 quintana 0.2.2
-ra 2.5.1
+ra 2.16.0-pre.2
 raabta 0.1.0
-rabbit_common 3.12.0-rc.1
+rabbit_common 4.0.3
 radius 0.0.13
-# Packages page 110
 ram 0.5.0
+# Packages page 130
 ranch 2.1.0
 ranch_proxy_protocol 2.1.1
 rand_compat 0.0.3
@@ -1342,97 +1480,105 @@ rankmatcher 0.1.6
 raterl 0.3.1
 rationals 0.2.0
 raven_erlang 0.4.3
-raw_sqlite3 1.0.9
-# Packages page 111
+raw_sqlite3 1.0.10
+# Packages page 131
 rcl_bench 0.1.0
 rcl_test 0.2.0
 re2 1.9.8
 realpath 1.3.6
 rebar3_abnf_compiler 0.1.3
 rebar3_applications_plugin 1.0.1
-rebar3_appup_plugin 2.4.4
+rebar3_appup_plugin 2.4.6
 rebar3_archive_plugin 0.0.2
 rebar3_asn1_compiler 1.0.0
-rebar3_auto 0.3.3
+rebar3_auto 0.5.1
 rebar3_auto_applications 1.0.0
 rebar3_autotdd 1.1.0
 rebar3_autotest 0.1.1
-rebar3_bench 0.2.2
+rebar3_bench 0.3.0
 rebar3_bitbake 0.1.0
 rebar3_bump 0.1.1
 rebar3_cargo 0.1.1
-rebar3_check_app_calls 0.1.0
+rebar3_check_app_calls 0.1.2
 rebar3_check_deps 0.1.0
+rebar3_checkshell 1.2.0
 rebar3_clojerl 0.8.8
 rebar3_cobertura 0.3.1
-rebar3_codecov 0.4.0
+rebar3_codecov 0.7.0
 rebar3_cuttlefish 0.16.0
 rebar3_deb 0.1.1
-rebar3_depup 0.3.1
+rebar3_depup 0.4.0
 rebar3_dialyzer_html 0.3.0
 rebar3_diameter_compiler 0.8.0
-rebar3_docker 0.1.0
+rebar3_dirs 0.1.0
+rebar3_docker 0.2.0
 rebar3_docs 0.2.1
+rebar3_dragon 0.0.0
 rebar3_edata_plugin 0.1.11
-rebar3_edoc_extensions 1.6.0
+rebar3_edoc_extensions 1.6.1
 rebar3_eep48 0.1.0
 rebar3_eetcd_plugin 0.3.2
 rebar3_efene 0.1.1
 rebar3_efene_compile 0.2.0
 rebar3_efene_ct 0.1.2
 rebar3_efene_shell 0.1.2
-rebar3_efmt 0.14.1
+rebar3_efmt 0.18.3
 rebar3_elixir 0.2.4
 rebar3_elixirc 0.1.0
 rebar3_elixir_compile 1.1.0
 rebar3_elixir_plugin 2.0.0
 rebar3_elvis_plugin 0.0.4
 rebar3_eqc 1.3.0
-# Packages page 112
 rebar3_erlesy 1.0.0
 rebar3_erllambda 1.1.2
 rebar3_erlquery 0.2.2
 rebar3_erlydtl_plugin 0.1.1
-rebar3_ex_doc 0.2.16
-rebar3_external 0.1.0
-rebar3_fmt 1.18.0
-rebar3_format 1.2.1
+# Packages page 132
+rebar3_ex_doc 0.2.24
+rebar3_external 0.2.0
+rebar3_exunit 0.1.1
+rebar3_fmt 1.19.0
+rebar3_format 1.3.0
 rebar3_git_vsn 1.1.1
-rebar3_gpb_plugin 2.22.1
+rebar3_gpb_plugin 2.23.2
 rebar3_gpb_rpc_plugin 1.3.1
-rebar3_grisp 2.5.0
-rebar3_hank 1.3.0
-rebar3_hex 7.0.6
+rebar3_grisp 2.8.0
+rebar3_grisp_io 0.1.0
+rebar3_hank 1.4.1
+rebar3_hex 7.0.8
 rebar3_hterl 0.2.0
 rebar3_idl_compiler 0.5.0
 rebar3_jorel 0.0.1
-rebar3_lfe 0.4.3
+rebar3_lfe 0.4.11
 rebar3_lfe_clean 0.4.0-rc2
 rebar3_lfe_compile 0.8.0-rc3
 rebar3_lfe_test 0.4.0-rc4
 rebar3_lfe_version 0.5.0-rc2
-rebar3_lint 3.0.0
+rebar3_lint 3.2.6
 rebar3_local_deps 0.1.2
 rebar3_neotoma_plugin 0.2.0
-rebar3_nova 0.3.4
+rebar3_nova 0.4.5
+rebar3_oscmd 0.5.0
 rebar3_path_deps 0.4.0
 rebar3_project_utils 0.1.0
 rebar3_proper 0.12.1
 rebar3_protobuffs 0.2.0
-rebar3_proto_plugin 0.1.11
+rebar3_proto_plugin 0.1.15
 rebar3_raw_deps 2.0.0
+rebar3_rdl 0.1.0
 rebar3_reloader 0.2.0
-rebar3_run 0.4.0
+rebar3_run 0.5.0
 rebar3_rustler 0.1.1
-rebar3_sbom 0.6.1
+rebar3_sbom 0.8.0
 rebar3_scuttler 0.4.1
-rebar3_sheldon 0.4.2
+rebar3_sheldon 0.4.3
 rebar3_shellcheck 1.0.1
 rebar3_shellrpc 0.1.0
+rebar3_sqlc 0.1.0
 rebar3_static_deps 2021.1.0
 rebar3_tailwind 1.0.3
 rebar3_tsung 0.1.4
-rebar3_typer 0.0.1
+rebar3_typer 0.1.1
 rebar3_undertone 0.1.0-rc1
 rebar3_vendor 0.4.0
 rebar3_yang_plugin 0.2.1
@@ -1447,12 +1593,13 @@ rebar_gleam 0.2.0
 rebar_mix 0.5.1
 rebar_protobuffs 0.1.0
 rebar_prv_mlfe 0.3.0
-rebar_raw_resource 0.10.0
+rebar_raw_resource 0.11.0
 recompile 0.1.0
-recon 2.5.3
+recon 2.5.6
 recordset 0.1.0
-redbug 2.0.9
-# Packages page 113
+redbug 2.1.0
+# Packages page 133
+redbug_clone 2.0.10
 redis_global 0.0.8
 reg 0.1.0
 regine 1.1.0
@@ -1462,16 +1609,20 @@ relflow 1.0.6
 relsync 0.1.1
 relsyncd 0.1.2
 relsync_lib 0.1.1
-reltool_util 2.0.5
-relx 4.7.0
-replayq 0.3.7
-# Packages page 114
+# Packages page 134
+reltool_util 2.0.7
+relx 4.10.0
+remedy_cowlib 2.11.1
+remedy_gun 2.0.1
+replayq 0.3.10
 repo 0.7.2
 rest 6.11.1
 restc 0.4.1
+# Packages page 135
+resulto 0.2.1
 results 0.2.0
 re_tuner 0.1.21
-# Packages page 115
+rfc3394 1.0.1
 riakc 2.5.3
 riak_client 2.5.3
 riak_core_lite 0.10.4
@@ -1485,128 +1636,145 @@ riak_pb 2.3.2
 riak_sysmon 2.1.7
 riax_hut 1.3.0
 ringbuffer 1.2.0
+# Packages page 136
 rlamb_publishtest 0.1.0
 rlp 1.1.0
 rmpc 18.5.9
-robots 1.1.1
+robots 1.1.2
 rocksdb 1.8.0
 rocksdb_cloud 1.0.1
 roni 1.0.1
 roster 3.4.0
-# Packages page 116
 router 1.0.4
-routing_tree 1.0.6
+routing_tree 1.0.9
 rpsls 1.0.0
+# Packages page 137
 rs_compile 0.1.0
 rsrc_pool 1.0.3
 rstats 1.0.4
 rtmpmsg 0.2.16
 rtrace 1.0.1-6.bc1a170
+ruapu 0.1.0
 s3filez 1.4.1
 safeio 0.1.6
 safetyvalve 2.5.2
-# Packages page 117
 salt 0.1.3
 samovar 1.0.2
+# Packages page 138
 sanitizer 0.0.2
-sasl_auth 2.0.2
+sasl_auth 2.3.3
 sbroker 1.0.0
 scheduler_utilization 0.1.1
-# Packages page 118
+# Packages page 139
+scran 0.2.0
 scrypt 2.1.0
-segmented_cache 0.2.0
-# Packages page 119
+# Packages page 140
+segmented_cache 0.4.0
 self_configer 0.1.1
 semver_erl 0.0.1
 serial_framing_protocol 1.1.0
 serverless 0.4.3
-seshat 0.4.0
-setup 2.1.0
-sext 1.8.0
+seshat 0.6.0
+setup 2.2.0
+# Packages page 141
+sext 1.9.0
 sfmt 0.14.0
 sf_transform 0.3.1
 sgi 0.6.0
 sha3 2.0.0
 shackle 0.6.15
-# Packages page 120
-shards 1.1.0
+shards 1.1.1
 sheldon 0.4.1
 shiguredo_crdt 2022.1.0
+shiguredo_jesse 2024.1.0
+shiguredo_jsone 2024.1.0
 shiguredo_redbug 2022.2.0
 shiguredo_riak_dt 2022.1.0
 shiguredo_sync 2022.1.0
 shine 0.1.0
 shot 1.1.1
-shotgun 0.5.3
-shq 0.1.0
-sidejob 2.1.0
-# Packages page 121
+shotgun 1.1.0
+shq 0.1.1
+# Packages page 142
+sidejob 2.2.0
+sigma_proplist 0.1.0
 simdjson 0.1.3
-simdjsone 0.1.0
-simple_bridge 2.3.0
+simdjsone 0.4.2
+simple_bridge 2.3.1
 simple_cache 1.2.0
 simple_global 0.1.4
+# Packages page 143
+simpler_cowboy_rest 1.0.0
 simpre 0.1.0
-# Packages page 122
-sleeplocks 1.1.2
+# Packages page 144
+sleeplocks 1.1.3
 slugerl 1.0.0
 small_ints 0.1.0
 smerl 0.0.1
 smokkfiskur 0.1.4
-# Packages page 123
-snabbkaffe 1.0.1
+snabbkaffe 1.0.10
 snapperl 1.1.3
 snappiest 1.2.0
 snappy 1.1.1
-snappyer 1.2.9
+snappyer 1.2.10
 snappy_nif 1.1.3
+# Packages page 145
 snatch 0.4.6
 snatch_php 0.2.1
 snatch_test_framework 0.6.4
+sntrup761_nif 1.0.0
 sockerl 17.9.10
 soda 1.1.1
 soos_sample_project 1.0.0
 soxe 0.1.1
-# Packages page 124
+# Packages page 146
+sparkler 0.2.0
 spartan 0.0.1
 spellerl 1.0.1
 spg 1.1.1
 sphinxsearch_giza 0.0.2
 spi 0.5.0
 spillway 1.3.0
+spinlock 0.2.1
 splay_tree 1.1.0
 splicer 0.5.5
+# Packages page 147
 sql_bridge 0.5.0
-# Packages page 125
+sqlc 0.1.0
 sqlite 2.0.0
-sqlite3 1.1.14
+sqlite3 1.1.15
 sqlmig 0.1.5
 sqlparse 4.6.3
 sqlparser 0.3.1
-srly 0.6.4
+srly 0.6.5
 ssh_agent 0.1.0
 ssh_signature 0.1.0
-ssl_verify_fun 1.1.6
-ssl_verify_hostname 1.0.6
+ssl_verify_fun 1.1.7
 stacktrace_compat 1.2.2
-stage 0.2.0
+stage 0.3.0
+# Packages page 148
 statman 0.5.0
 statsderl 0.6.1
-statsig 0.0.2
+statsig 0.0.3
 st_commons 1.2.1
 stdout_formatter 0.2.4
-# Packages page 126
 steady_vector 1.0.1
 steamroller 0.14.3
 stillir 1.1.0
+stk500 0.2.2
+# Packages page 149
 stout 1.0.0
+strata 0.1.0
+strata_mysql 0.1.0
+strata_postgres 0.1.0
+strata_sqlite3 0.1.0
 stream 0.1.0
 strftimerl 0.1.2
 string_compat 0.0.1
-stringprep 1.0.29
+stringprep 1.0.30
 string_utils 1.1.3
-# Packages page 127
-stun 1.2.7
+# Packages page 150
+stun 1.2.15
 subtree 0.1.0
 sui 0.1.0
 sumo_db 0.7.7
@@ -1615,123 +1783,124 @@ sumo_db_pgsql 0.2.0
 sumo_db_riak 0.1.0
 sumo_rest 0.3.4
 supervisor3 1.1.12
-supool 2.0.5
-surreal 1.0.0
-# Packages page 128
+supool 2.0.7
+surreal 2.1.0
+# Packages page 151
+sut 0.2.0
 swab 1.0.4
 swear 1.0.0
-swidden 2023.1.0
+swidden 2024.2.0
 switchboard 0.3.2
 syn 3.3.0
 sync 0.4.1
-syscall 0.1.0
 syslog 1.1.0
 syslog_app 4.0.0
 syslogger 0.3.0
-syslog_socket 2.0.5
+syslog_socket 2.0.7
 sysmon_handler 1.3.0
 systemd 0.6.2
 system_monitor 1.0.1
 t__ 0.1.0
-taglib 0.2.3
-# Packages page 129
-talib_ex_nif 0.1.0
+# Packages page 152
+tasker 0.1.0
 taskforce 1.2.3
 task_graph 0.3.1
+tbcd 0.3.6
 tcp_client 0.3.0
 tdata 1.1.3
 tdiff 0.1.2
-tdlib 0.0.2
 teacup 0.3.4
+# Packages page 153
 teacup_nats 0.4.1
-teal 0.1.1
-telemetry 1.2.1
-telemetry_influxdb 0.2.0
-telemetry_metrics_telegraf 0.3.0
-# Packages page 130
-telemetry_poller 1.0.0
-telemetry_registry 0.3.1
+telemetry 1.3.0
+telemetry_poller 1.1.0
+telemetry_registry 0.3.2
 teleport 0.6.2
 teleprom 0.1.0
 telex 0.0.2
-template_compiler 2.6.0
+template_compiler 2.10.1
 templaterl 0.2.4
-tensorflex 0.1.2
+tempo 0.4.4
+# Packages page 154
+termbox2 0.1.2
 termcap 0.1.0
 termit 2.0.1
+termseal 0.1.1
 tesla_api 1.0.0
 test_hex 1.1.2
-# Packages page 131
 test_package 1.0.0
 test_package_nogit 1.0.0
+testutils 0.0.1
 test_utils 1.1.1
+# Packages page 155
 textual 0.1.1
-tflite_beam 0.3.2
+tflite_beam 0.3.7
 the_f 1.0.0
-thoas 1.0.0
+thoas 1.2.1
 thrift_erl 0.13.0
 thrift_protocol 0.1.5
 throwdown 0.2.1
-tiling_game 0.1.0
 time_compat 0.0.1
-# Packages page 132
 time_utils 1.0.15
-tinymt 0.3.2
+# Packages page 156
 tivan 1.2.15
 tivan_rocksdb 1.0.0
-tls_certificate_check 1.18.1
+tls_certificate_check 1.24.0
 tomerl 0.5.0
-# Packages page 133
-torchx 0.5.3
+toml_bombadil 0.4.0
+# Packages page 157
 totp 0.0.3
 tqformat 0.1.4
 tql 1.10.0
 tracelog 0.1.0
+trace_runner 1.0.0
 traces 1.0.4
-trails 2.3.0
-transbank 0.1.0
-travianmap 0.4.1
+trails 2.3.1
+travianmap 1.1.0
+# Packages page 158
 treewalker 0.4.1
-trie 2.0.5
-# Packages page 134
+trie 2.0.7
 triq 1.3.0
 trooper 0.3.2
-ts_chatterbox 0.14.0
+ts_chatterbox 0.15.1
 tsuru 1.4.1
+tunctl 0.3.5
 tunnerl 1.3.0
+# Packages page 159
 twilio_sms 0.1.1
 typerefl 0.1.1
 types 0.1.8
-# Packages page 135
 u2f 0.1.5
 ua_classifier 1.0.0
-ucl 1.0.0
+ucl 1.1.1
 ucol 2.0.0
 ucol_nif 1.1.5
-# Packages page 136
+# Packages page 160
+# Packages page 161
 uef 2.6.0
+uf2tool 1.1.0
 ui 0.1.1
 uid 1.3.4
 ulitos 0.4.0
 undermidi 0.1.0
-undertheory 0.2.0-rc6
+undertheory 0.3.0
 undertone 0.4.0-rc3
 undertone_lib 0.4.0-rc3
 unicode_util_compat 0.7.0
 unistring 0.1.0
-unite 0.4.0
-# Packages page 137
+unite 0.4.3
+# Packages page 162
 uri 0.1.0
 urilib 0.5.0
 url 1.1.0
 usb 0.2.0
-util 1.3.2
+util 1.3.4
 utility 0.1.2
-uuid_erl 2.0.5
+uuid_erl 2.0.7
 uuidv4 1.0.0
 validerl 2.0.1
-# Packages page 138
-varpool 2.0.5
+# Packages page 163
+varpool 2.0.7
 vd_inet_ext 0.4.1
 vd_pkt 0.4.5
 vectorclock 0.2.0
@@ -1741,29 +1910,34 @@ verhoeff 0.1.2
 verl 1.1.1
 verx 0.5.4
 vice 0.1.0
+# Packages page 164
 vincenty 1.0.0
-# Packages page 139
 vmq_commons 1.0.0
 vmstats 2.4.0
 vptree 0.0.0
 vsn 1.1.0
+wait_helper 0.2.1
+# Packages page 165
 watch 0.2.2
-# Packages page 140
 webdavfilez 1.2.1
 webmachine 1.11.1
 webpage 1.0.0
 websocket_client 1.5.0
-# Packages page 141
+# Packages page 166
 wirerlhair 1.0.0
 wms 0.10.0
-wolff 1.7.4
+wolff 4.0.4
 wooper 2.0.9
-worker_pool 6.0.1
+# Packages page 167
+worker_pool 6.4.0
 workforce 0.1.0
+world_geojson 0.0.1
 wts 0.4.0
-# Packages page 142
+xlerl 0.1.0
+# Packages page 168
+xml_builderl 0.1.0
 xmlrat 0.0.10
-xmpp 1.6.2
+xmpp 1.9.0
 xorf 1.0.0
 xpath 1.0.2
 xprof 2.0.0-rc.5
@@ -1771,22 +1945,24 @@ xprof_core 2.0.0-rc.5
 xprof_gui 2.0.0-rc.5
 xqerl 0.2.0
 xqerl_merge_index 2.1.0
+xrepl 0.0.0
 xs_regex 0.1.0
 xtea 0.1.2
-xxh3 0.3.3
+xxh3 0.3.6
 yabko 1.0.0
 yaccety_sax 0.3.0
 yamerl 0.10.0
 yamerl_the_fork 0.3.3
-# Packages page 143
-yconf 1.0.15
+# Packages page 169
+yconf 1.0.16
 yctest 1.2.0
 yes_msg 0.1.0
 yubico 0.1.5
 yval 1.0.10
 zen 0.1.0
-# Packages page 144
-zlist 1.2.1
+# Packages page 170
+zipper 1.1.0
+zlist 1.3.0
 zlists 0.0.4
 zotonic_apps 1.0.0-rc.15
 zotonic_core 1.0.0-rc.15
@@ -1860,17 +2036,17 @@ zotonic_mod_survey 1.0.0-rc.15
 zotonic_mod_syslog 1.0.0-rc.15
 zotonic_mod_tkvstore 1.0.0-rc.15
 zotonic_mod_translation 1.0.0-rc.15
+# Packages page 171
 zotonic_mod_twitter 1.0.0-rc.15
 zotonic_mod_video 1.0.0-rc.15
 zotonic_mod_video_embed 1.0.0-rc.15
 zotonic_mod_wires 1.0.0-rc.15
 zotonic_mod_zotonic_site_management 1.0.0-rc.15
 zotonic_notifier 1.0.0-rc.15
-zotonic_rdf 1.0.1
+zotonic_rdf 1.1.0
 zotonic_site_status 1.0.0-rc.15
 zotonic_ssl 1.3.0
-zotonic_stdlib 1.14.0
+zotonic_stdlib 1.21.0
 zstd 0.2.0
 zucchini 0.1.0
-# Packages page 145
-# Packages page 146
+# Packages page 172
