@@ -71,7 +71,7 @@ HEX_TARBALL_FILES ?= \
 	$(sort $(call core_find,priv/,*)) \
 	$(wildcard README*) \
 	$(wildcard rebar.config) \
-	$(sort $(call core_find,src/,*))
+	$(sort $(if $(LEGACY),$(filter-out src/$(PROJECT).app.src,$(call core_find,src/,*)),$(call core_find,src/,*)))
 
 HEX_TARBALL_OUTPUT_FILE ?= $(ERLANG_MK_TMP)/$(PROJECT).tar
 

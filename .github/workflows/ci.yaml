@@ -50,7 +50,6 @@ jobs:
           - erlydtl
           - escript
           - eunit
-          - hex
           - proper
           - protobuffs
           # Trick GH runners into picking this slower job early.
@@ -103,6 +102,80 @@ jobs:
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
       run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }}
+
+    - name: Upload artifacts
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }} OTP-${{ matrix.erlang }} ${{ matrix.suite }} ${{ matrix.extra }}
+        path: |
+          test/test_*/
+
+  check-hex:
+    strategy:
+      fail-fast: false
+      matrix:
+        erlang:
+          - '27'
+        os:
+#          - macos-latest
+          - ubuntu-latest
+#          - windows-latest
+        extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    runs-on: ${{ matrix.os }}
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Erlang/OTP and Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{ matrix.erlang }}
+        elixir-version: 1.17
+        version-type: loose
+
+    - name: Setup MSYS2 (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: mingw64
+        release: false
+        update: true
+        install: >-
+          git
+          make
+          mingw-w64-x86_64-gcc
+          gnu-netcat
+          diffutils
+
+    - name: Setup local Hexpm
+      run: |
+        git clone https://github.com/hexpm/hexpm
+        cd hexpm
+        perl -ni.bak -e 'print;if ($.==3) {print "  user_confirm: false,\n"}' config/dev.exs
+        mix setup
+        mix phx.server &
+
+    - name: Run tests (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: make check c=hex -j4 -k ${{ matrix.extra }}
+
+    - name: Run tests (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: msys2 {0}
+      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make check c=hex -j4 -k ${{ matrix.extra }}
 
     - name: Upload artifacts
       if: failure()
