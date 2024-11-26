@@ -66,7 +66,7 @@ export ERLANG_MK_TMP
 
 # "erl" command.
 
-ERL = erl +A1 -noinput -boot no_dot_erlang
+ERL = erl -noinput -boot no_dot_erlang -kernel start_distribution false +P 1024 +Q 1024
 
 # Platform detection.
 

@@ -18,7 +18,7 @@ export CACHE_DIR
 
 # Erlang, quickly!
 
-ERL = erl +A0 -noinput -boot no_dot_erlang
+ERL = erl -noinput -boot no_dot_erlang -kernel start_distribution false +P 1024 +Q 1024
 
 # Platform detection, condensed version.
 
