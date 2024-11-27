@@ -55,3 +55,6 @@
             should still work, but that this way of doing
             things is deprecated. This change makes it
             possible to have templates outside of Makefiles.
+
+2024/11/27: $(ERL) has been updated. It no longer starts
+            the distribution, and limits processes/ports to 1024.
