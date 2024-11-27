@@ -99,17 +99,13 @@ endef
 relx-rel: rel-deps app
 	$(call erlang,$(call relx_release.erl),-pa ebin/)
 	$(verbose) $(MAKE) relx-post-rel
-ifeq ($(RELX_TAR),1)
-	$(call erlang,$(call relx_tar.erl),-pa ebin/)
-endif
+	$(if $(filter-out 0,$(RELX_TAR)),$(call erlang,$(call relx_tar.erl),-pa ebin/))
 
 relx-relup: rel-deps app
 	$(call erlang,$(call relx_release.erl),-pa ebin/)
 	$(MAKE) relx-post-rel
 	$(call erlang,$(call relx_relup.erl),-pa ebin/)
-ifeq ($(RELX_TAR),1)
-	$(call erlang,$(call relx_tar.erl),-pa ebin/)
-endif
+	$(if $(filter-out 0,$(RELX_TAR)),$(call erlang,$(call relx_tar.erl),-pa ebin/))
 
 distclean-relx-rel:
 	$(gen_verbose) rm -rf $(RELX_OUTPUT_DIR)
@@ -152,6 +148,7 @@ ifeq ($(PLATFORM),msys2)
 RELX_REL_EXT := .cmd
 endif
 
+run:: RELX_TAR := 0
 run:: all
 	$(verbose) $(RELX_OUTPUT_DIR)/$(RELX_REL_NAME)/bin/$(RELX_REL_NAME)$(RELX_REL_EXT) $(RELX_REL_CMD)
 
