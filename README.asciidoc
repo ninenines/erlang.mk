@@ -18,4 +18,4 @@ Tested and supported on
 http://erlang.mk/guide/installation.html#_on_unix[Linux, FreeBSD, OSX]
 and http://erlang.mk/guide/installation.html#_on_windows[Windows].
 
-Get help! https://discord.gg/x468ZsxG[Discord server].
+Get help! https://discord.gg/x25nNq2fFE[Discord server].
