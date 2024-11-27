@@ -70,7 +70,7 @@ in one go if they wish to do so.</p><p>Plugins can include some help text by ext
     $(verbose) printf "%s\n" "" "Run benchmark: $(MAKE) perfs"</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_early_stage_plugins"></a>28.4. Early-stage plugins</h2></div></div></div><p>Plugins declared in <code class="literal">DEP_PLUGINS</code> are loaded near the end of Erlang.mk.
 That’s why you have access to all previously initialized variables.
 However, if you want your plugin to add common dependencies to
-your applications, a regular is loaded too late in the process.
+your applications, a regular plugin is loaded too late in the process.
 You need to use "Early-stage plugins". They are declared using the
 <code class="literal">DEP_EARLY_PLUGINS</code> variable instead. Plugins listed in this variable
 are loaded near the beginning of Erlang.mk Otherwise, they work exactly
@@ -81,7 +81,7 @@ BUILD_DEPS = common_deps
 DEP_EARLY_PLUGINS = common_deps</pre><pre class="programlisting"># In the plugin's early-plugins.mk
 DEPS += cowboy
 TEST_DEPS = ct_helper
-dep_ct_helper = git https://github.com/ninenines/ct_helper master</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_loading_plugins_local_to_the_application"></a>28.5. Loading  plugins local to the application</h2></div></div></div><p>If the Erlang.mk plugin lives in the same directory or repository as your
+dep_ct_helper = git https://github.com/ninenines/ct_helper master</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_loading_plugins_local_to_the_application"></a>28.5. Loading plugins local to the application</h2></div></div></div><p>If the Erlang.mk plugin lives in the same directory or repository as your
 application or library, then you can load it exactly like an external
 plugin: the dependency name is simply the name of your application or
 library.</p><p>For example, the following Makefile loads a plugin in the <span class="emphasis"><em>mk</em></span>
@@ -90,7 +90,21 @@ defaults to <span class="emphasis"><em>plugins.mk</em></span> or <span class="em
 your application:</p><pre class="programlisting"># Loads ./early-plugins.mk
 DEP_EARLY_PLUGINS = $(PROJECT)
 # Loads ./plugins.mk
-DEP_PLUGINS = $(PROJECT)</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="plugins.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="plugins.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="plugins_list.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+DEP_PLUGINS = $(PROJECT)</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_adding_templates_via_plugins"></a>28.6. Adding templates via plugins</h2></div></div></div><p>Plugins may add templates either from within their Makefile or from
+an external file. The recommended method is to use an external file;
+however do note it only works for Make 4 and above:</p><pre class="programlisting">THIS := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+tpl_test_mk = $(file &lt; $(THIS)/templates/my_template.erl)</pre><p>With <span class="emphasis"><em>templates/my_template.erl</em></span> containing:</p><pre class="programlisting">-module(template_name).</pre><p>Erlang.mk will do string substitution replacing the following
+strings with their equivalent:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<code class="literal">template_name</code>: the name provided by the user
+</li><li class="listitem">
+<code class="literal">project_name</code>: either <code class="literal">$(PROJECT)</code> or the target application’s name
+</li><li class="listitem">
+<code class="literal">template_sp</code>: internal; propagates whitespace settings to Makefiles
+</li><li class="listitem">
+<code class="literal">rel_deps_dir</code>: internal; path to deps/* from within an apps/* Makefile
+</li><li class="listitem">
+<code class="literal">rel_root_dir</code>: internal; path to top-level directory from within an apps/* Makefile
+</li></ul></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="plugins.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="plugins.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="plugins_list.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>

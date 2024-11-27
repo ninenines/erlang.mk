@@ -142,7 +142,17 @@ boilerplate. It is rarely an issue of course, except when
 creating new modules. That’s why Erlang.mk not only comes with
 templates for generating projects, but also individual modules!</p><p>You can list all available templates with the <code class="literal">list-templates</code>
 target:</p><pre class="programlisting">$ make list-templates
-Available templates: cowboy_http cowboy_loop cowboy_rest cowboy_ws gen_fsm gen_server gen_statem ranch_protocol supervisor</pre><p>To generate a module, let’s say a <code class="literal">gen_server</code>, all you need to
+Available templates:
+    cowboy_http_h
+    cowboy_loop_h
+    cowboy_rest_h
+    cowboy_websocket_h
+    gen_fsm
+    gen_server
+    gen_statem
+    module
+    ranch_protocol
+    supervisor</pre><p>To generate a module, let’s say a <code class="literal">gen_server</code>, all you need to
 do is to call <code class="literal">make new</code> with the appropriate arguments:</p><pre class="programlisting">$ make new t=gen_server n=my_server</pre><p>This will create a module located in <span class="emphasis"><em>src/my_server.erl</em></span>
 using the <code class="literal">gen_server</code> template.</p><p>This module is automatically compiled the next time you run
 <code class="literal">make</code>:</p><pre class="programlisting">$ make
