@@ -58,3 +58,9 @@
 
 2024/11/27: $(ERL) has been updated. It no longer starts
             the distribution, and limits processes/ports to 1024.
+
+2024/11/28: Autopatching of dependencies that are using
+            Rebar2 is deprecated and will be removed in a
+            future update. Erlang.mk will always assume
+            that a Rebar project uses Rebar3 from that
+            point forward.
