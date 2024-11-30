@@ -32,8 +32,13 @@ makedep_verbose_0 = @echo " DEPEND" $(PROJECT).d;
 makedep_verbose_2 = set -x;
 makedep_verbose = $(makedep_verbose_$(V))
 
+ifeq ($(ERLC_USE_SERVER), true)
+erlc_verbose_0 = @echo " ERLC  " $(filter-out $(patsubst %,%.erl,$(ERLC_EXCLUDE)),\
+	$(filter %.erl %.core,$(^F)));
+else
 erlc_verbose_0 = @echo " ERLC  " $(filter-out $(patsubst %,%.erl,$(ERLC_EXCLUDE)),\
 	$(filter %.erl %.core,$(?F)));
+endif
 erlc_verbose_2 = set -x;
 erlc_verbose = $(erlc_verbose_$(V))
 
@@ -86,14 +91,17 @@ define app_file
 endef
 endif
 
+ifneq ($(ERLC_USE_SERVER), true)
 app-build: ebin/$(PROJECT).app
 	$(verbose) :
+endif
 
 # Source files.
 
 ALL_SRC_FILES := $(sort $(call core_find,src/,*))
 
 ERL_FILES := $(filter %.erl,$(ALL_SRC_FILES))
+ORIG_ERL_FILES := $(ERL_FILES)
 CORE_FILES := $(filter %.core,$(ALL_SRC_FILES))
 
 # ASN.1 files.
@@ -271,16 +279,25 @@ define makedep.erl
 endef
 
 ifeq ($(if $(NO_MAKEDEP),$(wildcard $(PROJECT).d),),)
+
+ifeq ($(ERLC_USE_SERVER), true)
+$(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl) $(MAKEFILE_LIST)
+	erlc -M -MG $(if $(IS_DEP),$(filter-out -Werror,$(ERLC_OPTS)),$(ERLC_OPTS)) -o ebin/ \
+		-pa ebin/ -I include/ $(filter-out $(ERLC_EXCLUDE_PATHS),$(COMPILE_FIRST_PATHS) $(1)) $(ERL_FILES) > $@
+else
 $(PROJECT).d:: $(ERL_FILES) $(call core_find,include/,*.hrl) $(MAKEFILE_LIST)
 	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))
 endif
 
+endif
+
 ifeq ($(IS_APP)$(IS_DEP),)
-ifneq ($(words $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES)),0)
+ORIG_ERL_FILES = $(filter-out $(GENERATED_ERL_FILES), $(ERL_FILES))
+ifneq ($(words $(ORIG_ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES)),0)
 # Rebuild everything when the Makefile changes.
 $(ERLANG_MK_TMP)/last-makefile-change: $(MAKEFILE_LIST) | $(ERLANG_MK_TMP)
 	$(verbose) if test -f $@; then \
-		touch $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES); \
+		touch $(ORIG_ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES); \
 		touch -c $(PROJECT).d; \
 	fi
 	$(verbose) touch $@
@@ -312,9 +329,22 @@ define validate_app_file
 	end
 endef
 
+ifeq ($(ERLC_USE_SERVER), true)
+ebin/%.beam: src/%.erl
+	$(verbose) mkdir -p $(dir $@)
+	$(call compile_erl, $<)
+
+ERL_BEAM_FILES += $(patsubst src/%.erl, ebin/%.beam, $(ERL_FILES))
+
+app:: $(ERL_BEAM_FILES)
+app-build: ebin/$(PROJECT).app $(ERL_BEAM_FILES)
+endif
+
 ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES) $(wildcard src/$(PROJECT).app.src)
 	$(eval FILES_TO_COMPILE := $(filter-out src/$(PROJECT).app.src,$?))
+ifneq ($(ERLC_USE_SERVER), true)
 	$(if $(strip $(FILES_TO_COMPILE)),$(call compile_erl,$(FILES_TO_COMPILE)))
+endif
 # Older git versions do not have the --first-parent flag. Do without in that case.
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null \
 		|| git describe --dirty --abbrev=7 --tags --always 2>/dev/null || true))
