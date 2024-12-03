@@ -58,6 +58,67 @@ define validate_app_file
 endef
 endif
 
+define elixir_get_deps.erl
+(fun(Deps) ->
+	$(call hex_version_resolver.erl),
+	(fun
+		F([], DEPS_Acc0, DEP_Acc0) ->
+			[DEPS_Acc0, "\n", DEP_Acc0];
+		F([H|T], DEPS_Acc0, DEP_Acc0) ->
+			{DEPS_Acc1, DEP_Acc1} =
+				case H of
+					{Name, Req} when is_binary(Req) ->
+						{
+							[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+							[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, HexVersionResolve(Name, Req), Name])]
+						};
+					{Name, Opts} when is_list(Opts) ->
+						Path = proplists:get_value(path, Opts),
+						IsRequired = proplists:get_value(optional, Opts) =/= true,
+						IsProdOnly = case proplists:get_value(only, Opts, prod) of
+							prod -> true;
+							L when is_list(L) -> lists:member(prod, L);
+							_ -> false
+						end,
+						case IsRequired andalso IsProdOnly of
+							true when Path =/= undefined ->
+								{
+									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+									[DEP_Acc0, io_lib:format("dep_~p = ln ~s~n", [Name, Path])]
+								};
+							true when Path =:= undefined ->
+								io:format(standard_error, "Skipping 'dep_~p' as no vsn given.", [Name]),
+								{
+									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+									DEP_Acc0
+								};
+							false ->
+								{DEPS_Acc0, DEP_Acc0}
+						end;
+					{Name, Req, Opts} ->
+						IsRequired = proplists:get_value(optional, Opts) =/= true,
+						IsProdOnly = case proplists:get_value(only, Opts, prod) of
+							prod -> true;
+							L when is_list(L) -> lists:member(prod, L);
+							_ -> false
+						end,
+						case IsRequired andalso IsProdOnly of
+							true ->
+								{
+									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
+									[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, HexVersionResolve(Name, Req), Name])]
+								};
+							false ->
+								{DEPS_Acc0, DEP_Acc0}
+						end;
+					_ ->
+						{DEPS_Acc0, DEP_Acc0}
+				end,
+			F(T, DEPS_Acc1, DEP_Acc1)
+	end)(Deps, [], [])
+end)($1)
+endef
+
 define Mix_Makefile.erl
 {ok, _} = application:ensure_all_started(elixir),
 {ok, _} = application:ensure_all_started(mix),
@@ -189,32 +250,22 @@ $(ELIXIRC): $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
 $(addsuffix /ebin,$(ELIXIR_BUILTINS)): $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
 	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir IS_DEP=1)
 
-define compile_ex
-$(elixirc_verbose) ERL_COMPILER_OPTIONS="[$(call comma_list,$(patsubst '%',%,$(patsubst +%,%,$(filter +%,$(ELIXIRC_OPTS))))), {pa, \"ebin/\"}, {i, \"include/\"}]" $(ELIXIRC) \
-	--verbose $(if $(IS_DEP),,$(if $(filter -Werror,$(ELIXIRC_OPTS)),--warnings-as-errors)) \
-	-o ebin/ \
-	$(filter-out $(ELIXIRC_EXCLUDE_PATHS),$(ELIXIR_COMPILE_FIRST_PATHS)) $(1) 
-endef
-
-# Currently doesn't account for nested modules
-define get_elixir_mod
-$(foreach module,$(strip \
-	$(patsubst %do,%,$(patsubst defmodule%,%,\
-		$(shell grep 'defmodule' $(1))\
-	))),'Elixir.$(module)')
+define compile_ex.erl
+	{ok, _} = application:ensure_all_started(elixir),
+	Mod = list_to_atom("Elixir.Kernel.ParallelCompiler"),
+	{ok, Modules, _} = Mod:compile_to_path([$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))], <<"ebin/">>),
+	lists:foreach(fun(E) -> io:format("~p ", [E]) end, Modules),
+	halt()
 endef
 
 ebin/$(PROJECT).app:: $(EX_FILES)
-	$(if $(strip $(EX_FILES)),$(call compile_ex,$(EX_FILES)))
+	$(if $(strip $(EX_FILES)),$(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES)),-pa $(ELIXIR_PATH)/lib/elixir/ebin))))
 # Older git versions do not have the --first-parent flag. Do without in that case.
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null \
 		|| git describe --dirty --abbrev=7 --tags --always 2>/dev/null || true))
-	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename \
-		$(filter-out $(ELIXIRC_EXCLUDE_PATHS), $(ERL_FILES) $(CORE_FILES) $(BEAM_FILES)))))))
-	$(eval MODULES := $(MODULES) $(foreach file, \
-		$(EX_FILES), \
-		$(call get_elixir_mod,$(file)) \
-	))
+	$(eval MODULES2 := $(patsubst %,'%',$(sort $(notdir $(basename \
+		$(filter-out $(ELIXIRC_EXCLUDE_PATHS),$(ERL_FILES) $(CORE_FILES) $(BEAM_FILES)) \
+		$(shell find ebin -type f -name Elixir.\*.beam))))))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
 	$(app_verbose) printf "$(subst %,%%,$(subst $(newline),\n,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))))" \
 		> ebin/$(PROJECT).app
@@ -249,17 +300,6 @@ autopatch-elixir::
 	$(verbose) sed 's|"$$(MAKE)"|"$$(MAKE)" -f $$(CURDIR)/Makefile.orig|g' -i $(DEPS_DIR)/elixir/Makefile.orig
 
 ifneq ($(USES_ELIXIR),)
-elixir-check-crypto:
-	$(verbose) OUTPUT=`$(ERL) -eval 'code:load_file(crypto), init:stop().'`; \
-		if test -n "$$OUTPUT"; then \
-			echo "  Crypto is required to use Elixir!  "; \
-			echo "$$OUTPUT"; \
-			exit 1; \
-		fi;
-
-prefetch-elixir:: elixir-check-crypto
-	$(verbose) echo " Fetching Elixir (this may take a while)  "
-
 ebin/$(PROJECT).app:: $(eval $(call dep_target,elixir)) $(addsuffix /ebin,$(ELIXIR_BUILTINS))
 	@
 
