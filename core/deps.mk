@@ -236,79 +236,6 @@ endif
 
 # Deps related targets.
 
-define elixir_get_deps.erl
-(fun(Deps) ->
-	GetVer = fun(Name, Req) ->
-		application:ensure_all_started(ssl),
-		application:ensure_all_started(inets),
-		{ok, PackageInfo} =
-			case hex_repo:get_package(hex_core:default_config(), atom_to_binary(Name)) of
-				{ok, {200, _RespHeaders, Decoded}} ->
-					LFirst(Decoded, fun(#{version := Vsn}) -> 'Elixir.Version':'match?'(Vsn, Req) end);
-				Other ->
-					io:format(standard_error, "Unexpected response for Dep ~p", [Name]),
-					erlang:halt(1)
-			end,
-		maps:get(version, PackageInfo)
-	end,
-	(fun
-		F([], DEPS_Acc0, DEP_Acc0) ->
-			[DEPS_Acc0, "\n", DEP_Acc0];
-		F([H|T], DEPS_Acc0, DEP_Acc0) ->
-			{DEPS_Acc1, DEP_Acc1} =
-				case H of
-					{Name, Req} when is_binary(Req) ->
-						{
-							[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-							[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, GetVer(Name, Req), Name])]
-						};
-					{Name, Opts} when is_list(Opts) ->
-						Path = proplists:get_value(path, Opts),
-						IsRequired = proplists:get_value(optional, Opts) =/= true,
-						IsProdOnly = case proplists:get_value(only, Opts, prod) of
-							prod -> true;
-							L when is_list(L) -> lists:member(prod, L);
-							_ -> false
-						end,
-						case IsRequired andalso IsProdOnly of
-							true when Path =/= undefined ->
-								{
-									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-									[DEP_Acc0, io_lib:format("dep_~p = ln ~s~n", [Name, Path])]
-								};
-							true when Path =:= undefined ->
-								io:format(standard_error, "Skipping 'dep_~p' as no vsn given.", [Name]),
-								{
-									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-									DEP_Acc0
-								};
-							false ->
-								{DEPS_Acc0, DEP_Acc0}
-						end;
-					{Name, Req, Opts} ->
-						IsRequired = proplists:get_value(optional, Opts) =/= true,
-						IsProdOnly = case proplists:get_value(only, Opts, prod) of
-							prod -> true;
-							L when is_list(L) -> lists:member(prod, L);
-							_ -> false
-						end,
-						case IsRequired andalso IsProdOnly of
-							true ->
-								{
-									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-									[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, GetVer(Name, Req), Name])]
-								};
-							false ->
-								{DEPS_Acc0, DEP_Acc0}
-						end;
-					_ ->
-						{DEPS_Acc0, DEP_Acc0}
-				end,
-			F(T, DEPS_Acc1, DEP_Acc1)
-	end)(Deps, [], [])
-end)($1)
-endef
-
 # @todo rename GNUmakefile and makefile into Makefile first, if they exist
 # While Makefile file could be GNUmakefile or makefile,
 # in practice only Makefile is needed so far.
@@ -881,6 +808,37 @@ define hex_get_tarball.erl
 	end
 endef
 
+# Unfortunately this currently requires Elixir.
+define hex_version_resolver.erl
+	HexVersionResolve = fun(Name, Req) ->
+		application:ensure_all_started(ssl),
+		application:ensure_all_started(inets),
+		Config = $(hex_config.erl),
+		case hex_repo:get_package(Config, Name) of
+			{ok, {200, _RespHeaders, Package}} ->
+				#{releases := List} = Package,
+				{value, #{version := Version}} = lists:search(fun(#{version := Vsn}) ->
+					M = list_to_atom("Elixir.Version"),
+					F = list_to_atom("match?"),
+					M:F(Vsn, Req)
+				end, List),
+				{ok, Version};
+			{ok, {Status, _, Errors}} ->
+				{error, Status, Errors}
+		end
+	end,
+	HexVersionResolveAndPrint = fun(Name, Req) ->
+		case HexVersionResolve(Name, Req) of
+			{ok, Version} ->
+				io:format("~s", [Version]),
+				halt(0);
+			{error, Status, Errors} ->
+				io:format("Error ~b: ~0p~n", [Status, Errors]),
+				halt(77)
+		end
+	end
+endef
+
 ifeq ($(CACHE_DEPS),1)
 
 # Hex only has a package version. No need to look in the Erlang.mk packages.
@@ -910,10 +868,7 @@ define dep_fetch_fail
 endef
 
 define dep_target
-prefetch-$1::
-	@
-
-$(DEPS_DIR)/$(call query_name,$1): prefetch-$1 | $(if $(filter hex,$(call query_fetch_method,$1)),hex-core) $(ERLANG_MK_TMP)
+$(DEPS_DIR)/$(call query_name,$1): | $(if $(filter hex,$(call query_fetch_method,$1)),hex-core) $(ERLANG_MK_TMP)
 	$(eval DEP_NAME := $(call query_name,$1))
 	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
