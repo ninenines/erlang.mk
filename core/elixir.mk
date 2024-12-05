@@ -16,8 +16,6 @@ endif
 ELIXIRC := $(abspath $(ELIXIRC))
 ELIXIR_PATH := $(abspath $(ELIXIR_PATH))
 
-ELIXIR_COMPILE_FIRST_PATHS = $(addprefix src/,$(addsuffix .ex,$(COMPILE_FIRST))) $(addprefix lib/,$(addsuffix .ex,$(COMPILE_FIRST)))
-ELIXIRC_EXCLUDE_PATHS = $(addprefix src/,$(addsuffix .ex,$(ERLC_EXCLUDE))) $(addprefix lib/,$(addsuffix .ex,$(ERLC_EXCLUDE)))
 ELIXIRC_OPTS += $(ERLC_OPTS)
 
 elixirc_verbose_0 = @echo " ELIXIRC  " $(filter-out $(patsubst %,%.ex,$(ERLC_EXCLUDE)),\
@@ -29,24 +27,11 @@ ALL_LIB_FILES := $(sort $(call core_find,lib/,*))
 
 EX_FILES := $(filter-out lib/mix/%,$(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES)))
 ELIXIR_BUILTINS = $(addprefix $(ELIXIR_PATH)/lib/,eex elixir logger mix)
-USES_ELIXIR = $(if $(EX_FILES)$(shell find $(DEPS_DIR) -name '*.ex' 2>/dev/null),1,)
+USES_ELIXIR = $(if $(EX_FILES),1,)
 
 ifneq ($(USES_ELIXIR),)
 ERL_LIBS := $(ERL_LIBS):$(ELIXIR_PATH)/lib/
 export ERL_LIBS
-
-define app_file
-{application, '$(PROJECT)', [
-	{description, "$(PROJECT_DESCRIPTION)"},
-	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
-	{id$(comma)$(space)"$(1)"}$(comma))
-	{modules, [$(call comma_list,$(2))]},
-	{registered, [$(if $(wildcard src/*/$(PROJECT_SUP).erl),$(call comma_list,$(PROJECT)_sup $(PROJECT_REGISTERED)),)]},
-	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(LOCAL_DEPS) $(foreach dep,$(DEPS),$(call dep_name,$(dep))))]},
-	$(if $(PROJECT_MOD),{mod$(comma) {'$(PROJECT_MOD)'$(comma) []}}$(comma),)
-	{env, $(subst \,\\,$(PROJECT_ENV))}$(if $(findstring {,$(PROJECT_APP_EXTRA_KEYS)),$(comma)$(newline)$(tab)$(subst \,\\,$(PROJECT_APP_EXTRA_KEYS)),)
-]}.
-endef
 
 app:: $(if $(wildcard ebin/test),clean) deps
 
@@ -230,7 +215,7 @@ $(if $(verbose),,$(info [SHELL_ASSERT] $(call SHELL_ASSERT_,$(1),$(2)))) $(call 
 endef
 
 define dep_autopatch_mix
-	$(MAKE) $(ELIXIRC) hex-core || exit 1; \
+	$(MAKE) $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app hex-core || exit 1; \
 	sed 's|\(defmodule.*do\)|\1\ntry do\nCode.compiler_options(on_undefined_variable: :warn)\nrescue _ -> :ok\nend|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
 	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" \
 		$(ERL) -pa $(DEPS_DIR)/hex_core $(addprefix -pa ,$(addsuffix /ebin,$(ELIXIR_BUILTINS))) \
@@ -245,47 +230,18 @@ LOCAL_DEPS += eex elixir logger mix
 ebin/$(PROJECT).app:: $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
 endif
 
-$(ELIXIRC): $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
-
 $(addsuffix /ebin,$(ELIXIR_BUILTINS)): $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
 	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir IS_DEP=1)
 
 define compile_ex.erl
 	{ok, _} = application:ensure_all_started(elixir),
-	Mod = list_to_atom("Elixir.Kernel.ParallelCompiler"),
-	{ok, Modules, _} = Mod:compile_to_path([$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))], <<"ebin/">>),
+	ModCode = list_to_atom("Elixir.Code"),
+	ModCode:put_compiler_option(ignore_module_conflict, true),
+	ModComp = list_to_atom("Elixir.Kernel.ParallelCompiler"),
+	{ok, Modules, _} = ModComp:compile_to_path([$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))], <<"ebin/">>),
 	lists:foreach(fun(E) -> io:format("~p ", [E]) end, Modules),
 	halt()
 endef
-
-ebin/$(PROJECT).app:: $(EX_FILES)
-	$(if $(strip $(EX_FILES)),$(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES)),-pa $(ELIXIR_PATH)/lib/elixir/ebin))))
-# Older git versions do not have the --first-parent flag. Do without in that case.
-	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null \
-		|| git describe --dirty --abbrev=7 --tags --always 2>/dev/null || true))
-	$(eval MODULES2 := $(patsubst %,'%',$(sort $(notdir $(basename \
-		$(filter-out $(ELIXIRC_EXCLUDE_PATHS),$(ERL_FILES) $(CORE_FILES) $(BEAM_FILES)) \
-		$(shell find ebin -type f -name Elixir.\*.beam))))))
-ifeq ($(wildcard src/$(PROJECT).app.src),)
-	$(app_verbose) printf "$(subst %,%%,$(subst $(newline),\n,$(subst ",\",$(call app_file,$(GITDESCRIBE),$(MODULES)))))" \
-		> ebin/$(PROJECT).app
-	$(verbose) if ! $(call erlang,$(call validate_app_file)); then \
-		echo "The .app file produced is invalid. Please verify the value of PROJECT_ENV." >&2; \
-		exit 1; \
-	fi
-else
-	$(verbose) if [ -z "$$(grep -e '^[^%]*{\s*modules\s*,' src/$(PROJECT).app.src)" ]; then \
-		echo "Empty modules entry not found in $(PROJECT).app.src. Please consult the erlang.mk documentation for instructions." >&2; \
-		exit 1; \
-	fi
-	$(appsrc_verbose) cat src/$(PROJECT).app.src \
-		| sed "s/{[[:space:]]*modules[[:space:]]*,[[:space:]]*\[\]}/{modules, \[$(call comma_list,$(MODULES))\]}/" \
-		| sed "s/{id,[[:space:]]*\"git\"}/{id, \"$(subst /,\/,$(GITDESCRIBE))\"}/" \
-		> ebin/$(PROJECT).app
-endif
-ifneq ($(wildcard src/$(PROJECT).appup),)
-	$(verbose) cp src/$(PROJECT).appup ebin/
-endif
 
 $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app: $(ELIXIR_PATH)
 ifeq ($(ELIXIR_USE_SYSTEM),1)
@@ -302,8 +258,4 @@ autopatch-elixir::
 ifneq ($(USES_ELIXIR),)
 ebin/$(PROJECT).app:: $(eval $(call dep_target,elixir)) $(addsuffix /ebin,$(ELIXIR_BUILTINS))
 	@
-
-iex:
-	$(verbose) $(dir $(ELIXIRC))/iex
-#$(addprefix -pa ,$(CURDIR)/ebin $(wildcard $(ELIXIR_PATH)/lib/*/ebin) $(wildcard $(DEPS_DIR)/*/ebin))
 endif

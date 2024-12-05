@@ -57,34 +57,21 @@ app:: $(if $(wildcard ebin/test),beam-cache-restore-app) deps
 	$(verbose) $(MAKE) --no-print-directory $(PROJECT).d
 	$(verbose) $(MAKE) --no-print-directory app-build
 
-ifeq ($(wildcard src/$(PROJECT_MOD).erl),)
+PROJECT_MOD := $(if $(PROJECT_MOD),$(PROJECT_MOD),$(if $(wildcard src/$(PROJECT_MOD)_app.erl),$(PROJECT_MOD)_app))
+
 define app_file
 {application, '$(PROJECT)', [
 	{description, "$(PROJECT_DESCRIPTION)"},
 	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
 	{id$(comma)$(space)"$1"}$(comma))
 	{modules, [$(call comma_list,$2)]},
-	{registered, []},
+	{registered, [$(if $(PROJECT_MOD),$(call comma_list,$(PROJECT)_sup $(PROJECT_REGISTERED)))]},
 	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(LOCAL_DEPS) $(OPTIONAL_DEPS) $(foreach dep,$(DEPS),$(call query_name,$(dep))))]},
-	{optional_applications, [$(call comma_list,$(OPTIONAL_DEPS))]},
+	{optional_applications, [$(call comma_list,$(OPTIONAL_DEPS))]},$(if $(PROJECT_MOD),
+	{mod$(comma)$(space){$(PROJECT_MOD)$(comma)$(space)[]}}$(comma))
 	{env, $(subst \,\\,$(PROJECT_ENV))}$(if $(findstring {,$(PROJECT_APP_EXTRA_KEYS)),$(comma)$(newline)$(tab)$(subst \,\\,$(PROJECT_APP_EXTRA_KEYS)),)
 ]}.
 endef
-else
-define app_file
-{application, '$(PROJECT)', [
-	{description, "$(PROJECT_DESCRIPTION)"},
-	{vsn, "$(PROJECT_VERSION)"},$(if $(IS_DEP),
-	{id$(comma)$(space)"$1"}$(comma))
-	{modules, [$(call comma_list,$2)]},
-	{registered, [$(call comma_list,$(PROJECT)_sup $(PROJECT_REGISTERED))]},
-	{applications, [$(call comma_list,kernel stdlib $(OTP_DEPS) $(LOCAL_DEPS) $(OPTIONAL_DEPS) $(foreach dep,$(DEPS),$(call query_name,$(dep))))]},
-	{optional_applications, [$(call comma_list,$(OPTIONAL_DEPS))]},
-	{mod, {$(PROJECT_MOD), []}},
-	{env, $(subst \,\\,$(PROJECT_ENV))}$(if $(findstring {,$(PROJECT_APP_EXTRA_KEYS)),$(comma)$(newline)$(tab)$(subst \,\\,$(PROJECT_APP_EXTRA_KEYS)),)
-]}.
-endef
-endif
 
 app-build:: ebin/$(PROJECT).app
 	$(verbose) :
@@ -312,13 +299,14 @@ define validate_app_file
 	end
 endef
 
-ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES) $(wildcard src/$(PROJECT).app.src)
+ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES) $(wildcard src/$(PROJECT).app.src) $(EX_FILES)
 	$(eval FILES_TO_COMPILE := $(filter-out src/$(PROJECT).app.src,$?))
 	$(if $(strip $(FILES_TO_COMPILE)),$(call compile_erl,$(FILES_TO_COMPILE)))
+	$(if $(strip $(EX_FILES)),$(elixirc_verbose) $(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES)),-pa $(ELIXIR_PATH)/lib/elixir/ebin))))
 # Older git versions do not have the --first-parent flag. Do without in that case.
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null \
 		|| git describe --dirty --abbrev=7 --tags --always 2>/dev/null || true))
-	$(eval MODULES := $(patsubst %,'%',$(sort $(notdir $(basename \
+	$(eval MODULES := $(MODULES) $(patsubst %,'%',$(sort $(notdir $(basename \
 		$(filter-out $(ERLC_EXCLUDE_PATHS),$(ERL_FILES) $(CORE_FILES) $(BEAM_FILES)))))))
 ifeq ($(wildcard src/$(PROJECT).app.src),)
 	$(app_verbose) printf '$(subst %,%%,$(subst $(newline),\n,$(subst ','\'',$(call app_file,$(GITDESCRIBE),$(MODULES)))))' \
