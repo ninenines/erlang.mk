@@ -1,47 +1,32 @@
-ELIXIR_USE_SYSTEM ?= 1
+ALL_LIB_FILES := $(sort $(call core_find,lib/,*))
+EX_FILES := $(filter-out lib/mix/%,$(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES)))
 
-ifeq ($(ELIXIR_USE_SYSTEM),1)
-ELIXIRC := $(shell which elixirc)
-ifneq ($(ELIXIRC),)
-ELIXIR_PATH := $(shell $(dir $(ELIXIRC))/elixir -e 'IO.puts(:code.lib_dir(:elixir))')/../../
+#ifneq ($(strip $(EX_FILES)),)
+
+ELIXIR ?= system
+export ELIXIR
+
+ifeq ($(ELIXIR),system)
+# We expect 'elixir' to be on the path.
+ELIXIR_LIBS := $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))
+ERL_LIBS := $(ERL_LIBS):$(ELIXIR_LIBS)
 endif
-endif
-
-ifeq ($(ELIXIRC),)
-ELIXIR_USE_SYSTEM = 0
-ELIXIRC := $(DEPS_DIR)/$(call dep_name,elixir)/bin/elixirc
-ELIXIR_PATH = $(DEPS_DIR)/$(call dep_name,elixir)
-endif
-
-ELIXIRC := $(abspath $(ELIXIRC))
-ELIXIR_PATH := $(abspath $(ELIXIR_PATH))
-
-ELIXIRC_OPTS += $(ERLC_OPTS)
 
 elixirc_verbose_0 = @echo " ELIXIRC  " $(filter-out $(patsubst %,%.ex,$(ERLC_EXCLUDE)),\
 	$(filter %.ex %.core,$(?F)));
 elixirc_verbose_2 = set -x;
 elixirc_verbose = $(elixirc_verbose_$(V))
 
-ALL_LIB_FILES := $(sort $(call core_find,lib/,*))
+ELIXIR_PATH := $(dir $(ELIXIR_LIBS))
 
-EX_FILES := $(filter-out lib/mix/%,$(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES)))
+#endif
+
+ELIXIR_USE_SYSTEM ?= $(if $(filter system,$(ELIXIR)),1)
+
+ELIXIRC_OPTS += $(ERLC_OPTS)
+
 ELIXIR_BUILTINS = $(addprefix $(ELIXIR_PATH)/lib/,eex elixir logger mix)
 USES_ELIXIR = $(if $(EX_FILES),1,)
-
-ifneq ($(USES_ELIXIR),)
-ERL_LIBS := $(ERL_LIBS):$(ELIXIR_PATH)/lib/
-export ERL_LIBS
-
-app:: $(if $(wildcard ebin/test),clean) deps
-
-define validate_app_file
-	case file:consult("ebin/$(PROJECT).app") of
-		{ok, _} -> halt();
-		_ -> halt(1)
-	end
-endef
-endif
 
 define elixir_get_deps.erl
 (fun(Deps) ->
@@ -203,19 +188,8 @@ case file:write_file("$(DEPS_DIR)/$(1)/Makefile", Str) of
 end
 endef
 
-define SHELL_ASSERT_
-if ! $(1); then \
-	echo "$(2)" >&2; \
-	exit 1; \
-fi
-endef
-
-define SHELL_ASSERT
-$(if $(verbose),,$(info [SHELL_ASSERT] $(call SHELL_ASSERT_,$(1),$(2)))) $(call SHELL_ASSERT_,$(1),$(2))
-endef
-
 define dep_autopatch_mix
-	$(MAKE) $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app hex-core || exit 1; \
+	$(MAKE) hex-core || exit 1; \
 	sed 's|\(defmodule.*do\)|\1\ntry do\nCode.compiler_options(on_undefined_variable: :warn)\nrescue _ -> :ok\nend|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
 	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" \
 		$(ERL) -pa $(DEPS_DIR)/hex_core $(addprefix -pa ,$(addsuffix /ebin,$(ELIXIR_BUILTINS))) \
@@ -226,11 +200,9 @@ endef
 
 ifneq ($(USES_ELIXIR),)
 LOCAL_DEPS += eex elixir logger mix
-
-ebin/$(PROJECT).app:: $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
 endif
 
-$(addsuffix /ebin,$(ELIXIR_BUILTINS)): $(ELIXIR_PATH)/lib/elixir/ebin/elixir.app
+$(addsuffix /ebin,$(ELIXIR_BUILTINS)):
 	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir IS_DEP=1)
 
 define compile_ex.erl
@@ -242,18 +214,6 @@ define compile_ex.erl
 	lists:foreach(fun(E) -> io:format("~p ", [E]) end, Modules),
 	halt()
 endef
-
-$(ELIXIR_PATH)/lib/elixir/ebin/elixir.app: $(ELIXIR_PATH)
-ifeq ($(ELIXIR_USE_SYSTEM),1)
-	@
-else
-	$(verbose) $(MAKE) -C $(DEPS_DIR)/elixir -f Makefile.orig compile Q="$(verbose)"
-endif
-
-# We need the original makefile so that we can compile the elixir compiler
-autopatch-elixir::
-	$(verbose) cp $(DEPS_DIR)/elixir/Makefile $(DEPS_DIR)/elixir/Makefile.orig
-	$(verbose) sed 's|"$$(MAKE)"|"$$(MAKE)" -f $$(CURDIR)/Makefile.orig|g' -i $(DEPS_DIR)/elixir/Makefile.orig
 
 ifneq ($(USES_ELIXIR),)
 ebin/$(PROJECT).app:: $(eval $(call dep_target,elixir)) $(addsuffix /ebin,$(ELIXIR_BUILTINS))

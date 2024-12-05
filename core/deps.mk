@@ -244,7 +244,7 @@ define dep_autopatch
 		rm -rf $(DEPS_DIR)/$1/ebin/; \
 		$(call erlang,$(call dep_autopatch_appsrc.erl,$1)); \
 		$(call dep_autopatch_erlang_mk,$1); \
-	elif [ -f $(DEPS_DIR)/$1/mix.exs -a -f $(DEPS_DIR)/$1/lib ]; then \
+	elif [ -f $(DEPS_DIR)/$1/mix.exs -a -d $(DEPS_DIR)/$1/lib ]; then \
 		$(call dep_autopatch_mix,$1); \
 	elif [ -f $(DEPS_DIR)/$1/Makefile ]; then \
 		if [ -f $(DEPS_DIR)/$1/rebar.lock ]; then \
