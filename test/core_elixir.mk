@@ -16,10 +16,11 @@ core-elixir-test-project_library: init
 
 	$i "Configure Makefile"
 	$t echo "ERLC_OPTS += +debug_info +'{parse_transform,lager_transform}'" >> $(APP)/Makefile
-	$t echo "ELIXIR_USE_SYSTEM = 0" >> $(APP)/Makefile
+	$t echo "DEPS += elixir" >> $(APP)/Makefile
 	$t echo "DEPS += lager" >> $(APP)/Makefile
 	$t echo "DEPS += jason" >> $(APP)/Makefile
 	$t echo "DEPS += phoenix" >> $(APP)/Makefile
+	$t echo "dep_elixir_commit = v1.17.3" >> $(APP)/Makefile
 	$t echo "dep_lager = git https://github.com/erlang-lager/lager master" >> $(APP)/Makefile
 	$t echo "dep_jason = git https://github.com/michalmuskala/jason.git master" >> $(APP)/Makefile
 	$t echo "dep_phoenix = hex 1.7.2" >> $(APP)/Makefile
@@ -63,7 +64,6 @@ ifneq ($(shell which elixirc),)
 
 	$i "Configure Makefile"
 	$t echo "ERLC_OPTS += +debug_info +'{parse_transform,lager_transform}'" >> $(APP)/Makefile
-	$t echo "ELIXIR_USE_SYSTEM = 1" >> $(APP)/Makefile
 	$t echo "DEPS += lager" >> $(APP)/Makefile
 	$t echo "DEPS += jason" >> $(APP)/Makefile
 	$t echo "DEPS += phoenix" >> $(APP)/Makefile
@@ -112,7 +112,6 @@ core-elixir-test-project-rel: init
 
 	$i "Configure Makefile"
 	$t echo "ERLC_OPTS += +debug_info +'{parse_transform,lager_transform}'" >> $(APP)/Makefile
-	$t echo "ELIXIR_USE_SYSTEM = 1" >> $(APP)/Makefile
 	$t echo "DEPS += lager" >> $(APP)/Makefile
 	$t echo "DEPS += jason" >> $(APP)/Makefile
 	$t echo "DEPS += phoenix" >> $(APP)/Makefile

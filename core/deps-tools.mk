@@ -71,7 +71,6 @@ endif
 			 $$dep/GNUmakefile $$dep/makefile $$dep/Makefile; then \
 				$(MAKE) -C $$dep fetch-deps \
 				 IS_DEP=1 \
-				 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM) \
 				 ERLANG_MK_RECURSIVE_TMP_LIST=$(ERLANG_MK_RECURSIVE_TMP_LIST); \
 			fi \
 		fi \
@@ -120,7 +119,7 @@ endif
 				:; \
 			else \
 				echo $$$$dep >> $(ERLANG_MK_TMP)/query.log; \
-				$(MAKE) -C $(DEPS_DIR)/$$$$dep $$@ QUERY="$(QUERY)" IS_DEP=1 ELIXIR_USE_SYSTEM=$$(ELIXIR_USE_SYSTEM) || true; \
+				$(MAKE) -C $(DEPS_DIR)/$$$$dep $$@ QUERY="$(QUERY)" IS_DEP=1 || true; \
 			fi \
 		done)
 ifeq ($(IS_APP)$(IS_DEP),)

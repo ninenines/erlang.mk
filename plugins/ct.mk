@@ -54,7 +54,7 @@ endif
 ifneq ($(ALL_APPS_DIRS),)
 define ct_app_target
 apps-ct-$1: test-build
-	$$(MAKE) -C $1 ct IS_APP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM)
+	$$(MAKE) -C $1 ct IS_APP=1
 endef
 
 $(foreach app,$(ALL_APPS_DIRS),$(eval $(call ct_app_target,$(app))))

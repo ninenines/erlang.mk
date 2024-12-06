@@ -178,7 +178,7 @@ ifneq ($(ALL_APPS_DIRS_TO_BUILD),)
 			:; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/apps.log; \
-			$(MAKE) -C $$dep $(if $(IS_TEST),test-build-app) IS_APP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
+			$(MAKE) -C $$dep $(if $(IS_TEST),test-build-app) IS_APP=1; \
 		fi \
 	done
 endif
@@ -220,10 +220,10 @@ ifneq ($(ALL_DEPS_DIRS),)
 			if [ -z "$(strip $(FULL))" ] $(if $(force_rebuild_dep),&& ! ($(call force_rebuild_dep,$$dep)),) && [ ! -L $$dep ] && [ -f $$dep/ebin/dep_built ]; then \
 				:; \
 			elif [ "$$dep" = "$(DEPS_DIR)/hut" -a "$(HUT_PATCH)" ]; then \
-				$(MAKE) -C $$dep app IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
+				$(MAKE) -C $$dep app IS_DEP=1; \
 				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
 			elif [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
-				$(MAKE) -C $$dep IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
+				$(MAKE) -C $$dep IS_DEP=1; \
 				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
 			else \
 				echo "Error: No Makefile to build dependency $$dep." >&2; \
@@ -663,7 +663,7 @@ define dep_autopatch_rebar.erl
 								_ ->
 									Path = "$(call core_native_path,$(DEPS_DIR)/)" ++ atom_to_list(P),
 									io:format("~s", [os:cmd("$(MAKE) -C $(call core_native_path,$(DEPS_DIR)/$1) " ++ Path)]),
-									io:format("~s", [os:cmd("$(MAKE) -C " ++ Path ++ " IS_DEP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM)")]),
+									io:format("~s", [os:cmd("$(MAKE) -C " ++ Path ++ " IS_DEP=1")]),
 									code:add_patha(Path ++ "/ebin")
 							end
 					end
@@ -757,7 +757,7 @@ endef
 else
 
 define dep_fetch_git
-	git clone -q -n $(if $(filter elixir,$1), --depth 1 ,) -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1); \
+	git clone -q -n -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1); \
 	cd $(DEPS_DIR)/$(call query_name,$1) && git checkout -q $(call query_version_git,$1);
 endef
 
@@ -919,14 +919,14 @@ clean:: clean-apps
 
 clean-apps:
 	$(verbose) set -e; for dep in $(ALL_APPS_DIRS) ; do \
-		$(MAKE) -C $$dep clean IS_APP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
+		$(MAKE) -C $$dep clean IS_APP=1; \
 	done
 
 distclean:: distclean-apps
 
 distclean-apps:
 	$(verbose) set -e; for dep in $(ALL_APPS_DIRS) ; do \
-		$(MAKE) -C $$dep distclean IS_APP=1 ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); \
+		$(MAKE) -C $$dep distclean IS_APP=1; \
 	done
 endif
 

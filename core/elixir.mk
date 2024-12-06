@@ -3,13 +3,15 @@ EX_FILES := $(filter-out lib/mix/%,$(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILE
 
 #ifneq ($(strip $(EX_FILES)),)
 
-ELIXIR ?= system
+ELIXIR ?= $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),dep,system)
 export ELIXIR
 
 ifeq ($(ELIXIR),system)
 # We expect 'elixir' to be on the path.
 ELIXIR_LIBS := $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))
 ERL_LIBS := $(ERL_LIBS):$(ELIXIR_LIBS)
+else
+ERL_LIBS := $(ERL_LIBS):$(DEPS_DIR)/elixir/lib/
 endif
 
 elixirc_verbose_0 = @echo " ELIXIRC  " $(filter-out $(patsubst %,%.ex,$(ERLC_EXCLUDE)),\
@@ -17,15 +19,10 @@ elixirc_verbose_0 = @echo " ELIXIRC  " $(filter-out $(patsubst %,%.ex,$(ERLC_EXC
 elixirc_verbose_2 = set -x;
 elixirc_verbose = $(elixirc_verbose_$(V))
 
-ELIXIR_PATH := $(dir $(ELIXIR_LIBS))
-
 #endif
-
-ELIXIR_USE_SYSTEM ?= $(if $(filter system,$(ELIXIR)),1)
 
 ELIXIRC_OPTS += $(ERLC_OPTS)
 
-ELIXIR_BUILTINS = $(addprefix $(ELIXIR_PATH)/lib/,eex elixir logger mix)
 USES_ELIXIR = $(if $(EX_FILES),1,)
 
 define elixir_get_deps.erl
@@ -191,6 +188,7 @@ end
 endef
 
 define dep_autopatch_mix
+	if test -d $(DEPS_DIR)/elixir; then $(MAKE) -C $(DEPS_DIR)/elixir || exit 1; fi; \
 	$(MAKE) hex-core || exit 1; \
 	sed 's|\(defmodule.*do\)|\1\ntry do\nCode.compiler_options(on_undefined_variable: :warn)\nrescue _ -> :ok\nend|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
 	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" \
@@ -199,9 +197,6 @@ define dep_autopatch_mix
 		-eval "halt(0)." || exit 1 \
 	mkdir $(DEPS_DIR)/$1/src || exit 1
 endef
-
-$(addsuffix /ebin,$(ELIXIR_BUILTINS)):
-	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir IS_DEP=1)
 
 define compile_ex.erl
 	{ok, _} = application:ensure_all_started(elixir),
@@ -212,8 +207,3 @@ define compile_ex.erl
 	lists:foreach(fun(E) -> io:format("~p ", [E]) end, Modules),
 	halt()
 endef
-
-ifneq ($(USES_ELIXIR),)
-ebin/$(PROJECT).app:: $(eval $(call dep_target,elixir)) $(addsuffix /ebin,$(ELIXIR_BUILTINS))
-	@
-endif
