@@ -814,7 +814,7 @@ define hex_version_resolver.erl
 		application:ensure_all_started(ssl),
 		application:ensure_all_started(inets),
 		Config = $(hex_config.erl),
-		case hex_repo:get_package(Config, Name) of
+		case hex_repo:get_package(Config, atom_to_binary(Name)) of
 			{ok, {200, _RespHeaders, Package}} ->
 				#{releases := List} = Package,
 				{value, #{version := Version}} = lists:search(fun(#{version := Vsn}) ->
