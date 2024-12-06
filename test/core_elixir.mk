@@ -20,6 +20,7 @@ core-elixir-test-project_library: init
 	$t echo "DEPS += lager" >> $(APP)/Makefile
 	$t echo "DEPS += jason" >> $(APP)/Makefile
 	$t echo "DEPS += phoenix" >> $(APP)/Makefile
+	$t echo "dep_lager = git https://github.com/erlang-lager/lager master" >> $(APP)/Makefile
 	$t echo "dep_jason = git https://github.com/michalmuskala/jason.git master" >> $(APP)/Makefile
 	$t echo "dep_phoenix = hex 1.7.2" >> $(APP)/Makefile
 	$t echo "$$(grep -v 'include erlang.mk' $(APP)/Makefile)" > $(APP)/Makefile
@@ -66,6 +67,7 @@ ifneq ($(shell which elixirc),)
 	$t echo "DEPS += lager" >> $(APP)/Makefile
 	$t echo "DEPS += jason" >> $(APP)/Makefile
 	$t echo "DEPS += phoenix" >> $(APP)/Makefile
+	$t echo "dep_lager = git https://github.com/erlang-lager/lager master" >> $(APP)/Makefile
 	$t echo "dep_jason = git https://github.com/michalmuskala/jason.git master" >> $(APP)/Makefile
 	$t echo "dep_phoenix = hex 1.7.2" >> $(APP)/Makefile
 	$t echo "$$(grep -v 'include erlang.mk' $(APP)/Makefile)" > $(APP)/Makefile
@@ -114,6 +116,7 @@ core-elixir-test-project-rel: init
 	$t echo "DEPS += lager" >> $(APP)/Makefile
 	$t echo "DEPS += jason" >> $(APP)/Makefile
 	$t echo "DEPS += phoenix" >> $(APP)/Makefile
+	$t echo "dep_lager = git https://github.com/erlang-lager/lager master" >> $(APP)/Makefile
 	$t echo "dep_jason = git https://github.com/michalmuskala/jason.git master" >> $(APP)/Makefile
 	$t echo "dep_phoenix = hex 1.7.2" >> $(APP)/Makefile
 	$t echo "$$(grep -v 'include erlang.mk' $(APP)/Makefile)" > $(APP)/Makefile

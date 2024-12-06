@@ -38,9 +38,10 @@ define elixir_get_deps.erl
 			{DEPS_Acc1, DEP_Acc1} =
 				case H of
 					{Name, Req} when is_binary(Req) ->
+						{ok, Vsn} = HexVersionResolve(Name, Req),
 						{
 							[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-							[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, HexVersionResolve(Name, Req), Name])]
+							[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, Vsn, Name])]
 						};
 					{Name, Opts} when is_list(Opts) ->
 						Path = proplists:get_value(path, Opts),
@@ -74,9 +75,10 @@ define elixir_get_deps.erl
 						end,
 						case IsRequired andalso IsProdOnly of
 							true ->
+								{ok, Vsn} = HexVersionResolve(Name, Req),
 								{
 									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-									[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, HexVersionResolve(Name, Req), Name])]
+									[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, Vsn, Name])]
 								};
 							false ->
 								{DEPS_Acc0, DEP_Acc0}
@@ -197,10 +199,6 @@ define dep_autopatch_mix
 		-eval "halt(0)." || exit 1 \
 	mkdir $(DEPS_DIR)/$1/src || exit 1
 endef
-
-ifneq ($(USES_ELIXIR),)
-LOCAL_DEPS += eex elixir logger mix
-endif
 
 $(addsuffix /ebin,$(ELIXIR_BUILTINS)):
 	$(verbose) $(if $(ELIXIR_USE_SYSTEM),@,$(MAKE) -C $(DEPS_DIR)/elixir IS_DEP=1)
