@@ -15,5 +15,5 @@ ifneq ($(SKIP_DEPS),)
 rel-deps:
 else
 rel-deps: $(ALL_REL_DEPS_DIRS)
-	$(verbose) set -e; for dep in $(ALL_REL_DEPS_DIRS) ; do $(MAKE) -C $$dep ELIXIR_USE_SYSTEM=$(ELIXIR_USE_SYSTEM); done
+	$(verbose) set -e; for dep in $(ALL_REL_DEPS_DIRS) ; do $(MAKE) -C $$dep; done
 endif
