@@ -892,12 +892,13 @@ endif
 
 .PHONY: autopatch-$(call query_name,$1)
 
+ifeq ($1,elixir)
+autopatch-elixir::
+	ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/
+else
 autopatch-$(call query_name,$1)::
-	$(verbose) if [ "$1" = "elixir" ]; then \
-		ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/; \
-	else \
-		$$(call dep_autopatch,$(call query_name,$1)) \
-	fi
+	$$(call dep_autopatch,$(call query_name,$1))
+endif
 endef
 
 # We automatically depend on hex_core when the project isn't already.

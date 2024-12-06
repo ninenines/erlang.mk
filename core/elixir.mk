@@ -21,10 +21,6 @@ elixirc_verbose = $(elixirc_verbose_$(V))
 
 #endif
 
-ELIXIRC_OPTS += $(ERLC_OPTS)
-
-USES_ELIXIR = $(if $(EX_FILES),1,)
-
 define elixir_get_deps.erl
 (fun(Deps) ->
 	$(call hex_version_resolver.erl),
@@ -188,11 +184,14 @@ end
 endef
 
 define dep_autopatch_mix
-	if test -d $(DEPS_DIR)/elixir; then $(MAKE) -C $(DEPS_DIR)/elixir || exit 1; fi; \
+	if test -d $(DEPS_DIR)/elixir; then \
+		$(MAKE) -C $(DEPS_DIR)/elixir; \
+		touch $(DEPS_DIR)/hex_core/ebin/dep_built; \
+	fi; \
 	$(MAKE) hex-core || exit 1; \
 	sed 's|\(defmodule.*do\)|\1\ntry do\nCode.compiler_options(on_undefined_variable: :warn)\nrescue _ -> :ok\nend|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
 	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" \
-		$(ERL) -pa $(DEPS_DIR)/hex_core $(addprefix -pa ,$(addsuffix /ebin,$(ELIXIR_BUILTINS))) \
+		$(ERL) \
 		-eval "$(subst ",\",$(subst $(newline), ,$(subst $$,\$$,$(call Mix_Makefile.erl,$(1)))))." \
 		-eval "halt(0)." || exit 1 \
 	mkdir $(DEPS_DIR)/$1/src || exit 1
