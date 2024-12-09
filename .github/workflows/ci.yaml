@@ -31,7 +31,7 @@ jobs:
 #          - core-compat
 #          # Trick GH runners into picking this slower job early.
 #          - ACME=1 c=core-deps
-          - core-elixir-test-project_library V=3
+          - core-elixir-test-project_system V=3
 #          - core-makedep
 #          - core-misc
 #          - core-plugins
