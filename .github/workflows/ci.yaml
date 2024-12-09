@@ -75,6 +75,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - run: which lockf || true
+
+    - run: which flock || true
+
     - name: Install Erlang/OTP
       uses: erlef/setup-beam@v1
       with:
