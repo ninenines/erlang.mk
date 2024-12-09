@@ -239,11 +239,21 @@ endif
 define dep_autopatch_detect
 	if [ -f $(DEPS_DIR)/$1/erlang.mk ]; then \
 		echo erlang.mk; \
-	elif [ -f $(DEPS_DIR)/$1/rebar.config -o -f $(DEPS_DIR)/$1/rebar.config.script -o -f $(DEPS_DIR)/$1/rebar.lock ]; then \
-		echo rebar3; \
 	elif [ -f $(DEPS_DIR)/$1/mix.exs -a -d $(DEPS_DIR)/$1/lib ]; then \
 		echo mix; \
-	elif [ ! -f $(DEPS_DIR)/$1/Makefile ]; then \
+	elif [ -f $(DEPS_DIR)/$1/Makefile ]; then \
+		if [ -f $(DEPS_DIR)/$1/rebar.lock ]; then \
+			echo rebar3; \
+		elif [ 0 != \`grep -c "include ../\w*\.mk" $(DEPS_DIR)/$1/Makefile\` ]; then \
+			echo rebar3; \
+		elif [ 0 != \`grep -ci "^[^#].*rebar" $(DEPS_DIR)/$1/Makefile\` ]; then \
+			echo rebar3; \
+		elif [ -n "\`find $(DEPS_DIR)/$1/ -type f -name \*.mk -not -name erlang.mk -exec grep -i "^[^#].*rebar" '{}' \;\`" ]; then \
+			echo rebar3; \
+		else \
+			echo noop; \
+		fi \
+	elif [ ! -d $(DEPS_DIR)/$1/src/ ]; then \
 		echo noop; \
 	else \
 		echo rebar3; \
@@ -285,7 +295,7 @@ define dep_autopatch2
 endef
 
 define dep_autopatch_noop
-	printf "noop:\n" > $(DEPS_DIR)/$1/Makefile
+	test -f $(DEPS_DIR)/$1/Makefile || printf "noop:\n" > $(DEPS_DIR)/$1/Makefile
 endef
 
 # Replace "include erlang.mk" with a line that will load the parent Erlang.mk
