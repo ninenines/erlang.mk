@@ -19,7 +19,7 @@ define hex_user_create.erl
 endef
 
 # The $(info ) call inserts a new line after the password prompt.
-hex-user-create: hex-core
+hex-user-create: $(DEPS_DIR)/hex_core/ebin/dep_built
 	$(if $(HEX_USERNAME),,$(eval HEX_USERNAME := $(shell read -p "Username: " username; echo $$username)))
 	$(if $(HEX_PASSWORD),,$(eval HEX_PASSWORD := $(shell stty -echo; read -p "Password: " password; stty echo; echo $$password) $(info )))
 	$(if $(HEX_EMAIL),,$(eval HEX_EMAIL := $(shell read -p "Email: " email; echo $$email)))
@@ -49,7 +49,7 @@ define hex_key_add.erl
 	end
 endef
 
-hex-key-add: hex-core
+hex-key-add: $(DEPS_DIR)/hex_core/ebin/dep_built
 	$(if $(HEX_USERNAME),,$(eval HEX_USERNAME := $(shell read -p "Username: " username; echo $$username)))
 	$(if $(HEX_PASSWORD),,$(eval HEX_PASSWORD := $(shell stty -echo; read -p "Password: " password; stty echo; echo $$password) $(info )))
 	$(gen_verbose) $(call erlang,$(call hex_key_add.erl,$(HEX_USERNAME),$(HEX_PASSWORD),\
@@ -127,7 +127,7 @@ hex_tar_verbose_0 = @echo " TAR    $(notdir $(ERLANG_MK_TMP))/$(@F)";
 hex_tar_verbose_2 = set -x;
 hex_tar_verbose = $(hex_tar_verbose_$(V))
 
-$(HEX_TARBALL_OUTPUT_FILE): hex-core app
+$(HEX_TARBALL_OUTPUT_FILE): $(DEPS_DIR)/hex_core/ebin/dep_built app
 	$(hex_tar_verbose) $(call erlang,$(call hex_tarball_create.erl))
 
 hex-tarball-create: $(HEX_TARBALL_OUTPUT_FILE)
@@ -178,14 +178,14 @@ define hex_release_publish.erl
 	end
 endef
 
-hex-release-tarball: hex-core $(HEX_TARBALL_OUTPUT_FILE)
+hex-release-tarball: $(DEPS_DIR)/hex_core/ebin/dep_built $(HEX_TARBALL_OUTPUT_FILE)
 	$(verbose) $(call erlang,$(call hex_release_publish_summary.erl))
 
-hex-release-publish: hex-core hex-release-tarball
+hex-release-publish: $(DEPS_DIR)/hex_core/ebin/dep_built hex-release-tarball
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
 	$(gen_verbose) $(call erlang,$(call hex_release_publish.erl,$(HEX_SECRET),false))
 
-hex-release-replace: hex-core hex-release-tarball
+hex-release-replace: $(DEPS_DIR)/hex_core/ebin/dep_built hex-release-tarball
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
 	$(gen_verbose) $(call erlang,$(call hex_release_publish.erl,$(HEX_SECRET),true))
 
@@ -204,7 +204,7 @@ define hex_release_delete.erl
 	end
 endef
 
-hex-release-delete: hex-core
+hex-release-delete: $(DEPS_DIR)/hex_core/ebin/dep_built
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
 	$(gen_verbose) $(call erlang,$(call hex_release_delete.erl,$(HEX_SECRET)))
 
@@ -224,7 +224,7 @@ define hex_release_retire.erl
 	end
 endef
 
-hex-release-retire: hex-core
+hex-release-retire: $(DEPS_DIR)/hex_core/ebin/dep_built
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
 	$(gen_verbose) $(call erlang,$(call hex_release_retire.erl,$(HEX_SECRET),\
 		$(if $(HEX_VERSION),$(HEX_VERSION),$(PROJECT_VERSION)),\
@@ -246,7 +246,7 @@ define hex_release_unretire.erl
 	end
 endef
 
-hex-release-unretire: hex-core
+hex-release-unretire: $(DEPS_DIR)/hex_core/ebin/dep_built
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
 	$(gen_verbose) $(call erlang,$(call hex_release_unretire.erl,$(HEX_SECRET),\
 		$(if $(HEX_VERSION),$(HEX_VERSION),$(PROJECT_VERSION))))
@@ -255,7 +255,7 @@ HEX_DOCS_DOC_DIR ?= doc/
 HEX_DOCS_TARBALL_FILES ?= $(sort $(call core_find,$(HEX_DOCS_DOC_DIR),*))
 HEX_DOCS_TARBALL_OUTPUT_FILE ?= $(ERLANG_MK_TMP)/$(PROJECT)-docs.tar.gz
 
-$(HEX_DOCS_TARBALL_OUTPUT_FILE): hex-core app docs
+$(HEX_DOCS_TARBALL_OUTPUT_FILE): $(DEPS_DIR)/hex_core/ebin/dep_built app docs
 	$(hex_tar_verbose) tar czf $(HEX_DOCS_TARBALL_OUTPUT_FILE) -C $(HEX_DOCS_DOC_DIR) \
 		$(HEX_DOCS_TARBALL_FILES:$(HEX_DOCS_DOC_DIR)%=%)
 
@@ -279,7 +279,7 @@ define hex_docs_publish.erl
 	end
 endef
 
-hex-docs-publish: hex-core hex-docs-tarball-create
+hex-docs-publish: $(DEPS_DIR)/hex_core/ebin/dep_built hex-docs-tarball-create
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
 	$(gen_verbose) $(call erlang,$(call hex_docs_publish.erl,$(HEX_SECRET)))
 
@@ -299,7 +299,7 @@ define hex_docs_delete.erl
 	end
 endef
 
-hex-docs-delete: hex-core
+hex-docs-delete: $(DEPS_DIR)/hex_core/ebin/dep_built
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
 	$(gen_verbose) $(call erlang,$(call hex_docs_delete.erl,$(HEX_SECRET),\
 		$(if $(HEX_VERSION),$(HEX_VERSION),$(PROJECT_VERSION))))
