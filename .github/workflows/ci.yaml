@@ -20,6 +20,8 @@ jobs:
       matrix:
         erlang:
           - '27'
+		elixir:
+		  - '1.17'
         os:
 #          - macos-latest
           - ubuntu-latest
@@ -79,6 +81,7 @@ jobs:
       uses: erlef/setup-beam@v1
       with:
         otp-version: ${{ matrix.erlang }}
+        elixir-version: ${{ matrix.elixir }}
         version-type: loose
 
     - name: Setup MSYS2 (Windows)
@@ -144,7 +147,7 @@ jobs:
       uses: erlef/setup-beam@v1
       with:
         otp-version: ${{ matrix.erlang }}
-        elixir-version: 1.17
+        elixir-version: '1.17'
         version-type: loose
 
     - name: Setup MSYS2 (Windows)
