@@ -57,6 +57,7 @@ core-elixir-test-project_library: init
 		halt()\""
 
 core-elixir-test-project_system: init
+# @todo
 ifneq ($(shell which elixirc),)
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -130,6 +131,7 @@ core-elixir-test-project-rel: init
 	$t $(MAKE) -C $(APP) rel
 
 core-elixir-nif: init
+# @todo
 ifneq ($(shell which cpp >/dev/null && echo '#include "sodium.h"' | cpp -H -o /dev/null 2>&1 | head -n1 | grep -v 'No such file or directory'),)
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
