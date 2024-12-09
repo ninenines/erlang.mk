@@ -28,6 +28,11 @@ core-elixir-test-project_library: init
 	$t echo "$$(grep -v 'include erlang.mk' $(APP)/Makefile)" > $(APP)/Makefile
 	$t echo "include erlang.mk" >> $(APP)/Makefile
 
+ifdef LEGACY
+	$i "Add Elixir, Lager, Jason and Phoenix to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\telixir,\n\t\tlager,\n\t\tjason,\n\t\tphoenix,\n"}' $(APP)/src/$(APP).app.src
+endif
+
 	$i "Make deps"
 	$t $(MAKE) -C $(APP) deps $v
 
