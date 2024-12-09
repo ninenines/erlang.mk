@@ -184,17 +184,11 @@ end
 endef
 
 define dep_autopatch_mix
-	if test -d $(DEPS_DIR)/elixir; then \
-		$(MAKE) -C $(DEPS_DIR)/elixir; \
-		touch $(DEPS_DIR)/hex_core/ebin/dep_built; \
-	fi; \
-	$(MAKE) hex-core || exit 1; \
 	sed 's|\(defmodule.*do\)|\1\ntry do\nCode.compiler_options(on_undefined_variable: :warn)\nrescue _ -> :ok\nend|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
 	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" \
 		$(ERL) \
 		-eval "$(subst ",\",$(subst $(newline), ,$(subst $$,\$$,$(call Mix_Makefile.erl,$(1)))))." \
-		-eval "halt(0)." || exit 1 \
-	mkdir $(DEPS_DIR)/$1/src || exit 1
+		-eval "halt(0)."
 endef
 
 define compile_ex.erl
