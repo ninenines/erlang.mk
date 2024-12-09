@@ -8,6 +8,7 @@ CORE_ELIXIR_TARGETS = $(call list_targets,core-elixir)
 
 core-elixir: $(CORE_ELIXIR_TARGETS)
 
+# @todo This one doesn't work with LEGACY=1
 core-elixir-test-project_library: init
 	$i "Bootstrap a new OTP library named $(APP)"
 	$t mkdir $(APP)/
@@ -41,7 +42,6 @@ core-elixir-test-project_library: init
 	$i "Get started apps"
 	$t $(MAKE) -C $(APP) shell SHELL_OPTS="$(filter-out erl,$(ERL)) -pa $(APP)/deps/*/ebin/ $(APP)/ebin/ $(APP)/apps/*/ebin/ -eval \" \
 		{ok, Apps} = application:ensure_all_started('$(APP)'), \
-		erlang:display(Apps), \
 		true = lists:member(lager, Apps), \
 		true = lists:member(jason, Apps), \
 		true = lists:member(phoenix, Apps), \
