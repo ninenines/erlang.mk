@@ -922,16 +922,18 @@ endef
 $(if $(filter hex_core,$(DEPS) $(BUILD_DEPS) $(DOC_DEPS) $(REL_DEPS) $(TEST_DEPS)),,\
 	$(eval $(call dep_target,hex_core)))
 
-$(DEPS_DIR)/hex_core/ebin/dep_built: | $(DEPS_DIR)/hex_core $(ERLANG_MK_TMP)
+$(DEPS_DIR)/hex_core/ebin/dep_built: | $(ERLANG_MK_TMP)
 	$(verbose) $(call maybe_flock,$(ERLANG_MK_TMP)/hex_core.lock,\
 		if [ ! -e $(DEPS_DIR)/hex_core/ebin/dep_built ]; then \
+			$(MAKE) $(DEPS_DIR)/hex_core; \
 			$(MAKE) -C $(DEPS_DIR)/hex_core IS_DEP=1; \
 			touch $(DEPS_DIR)/hex_core/ebin/dep_built; \
 		fi)
 
-$(DEPS_DIR)/elixir/ebin/dep_built: | $(DEPS_DIR)/elixir $(ERLANG_MK_TMP)
+$(DEPS_DIR)/elixir/ebin/dep_built: | $(ERLANG_MK_TMP)
 	$(verbose) $(call maybe_flock,$(ERLANG_MK_TMP)/elixir.lock,\
 		if [ ! -e $(DEPS_DIR)/elixir/ebin/dep_built ]; then \
+			$(MAKE) $(DEPS_DIR)/elixir; \
 			$(MAKE) -C $(DEPS_DIR)/elixir; \
 			touch $(DEPS_DIR)/elixir/ebin/dep_built; \
 		fi)
