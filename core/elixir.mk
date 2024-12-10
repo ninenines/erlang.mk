@@ -123,7 +123,8 @@ StartMod =
 		_ ->
 			""
 	end,
-ExtraApps = [io_lib:format("LOCAL_DEPS += ~p~n", [App]) || App <- proplists:get_value(extra_applications, Application, [])],
+ExtraApps0 = lists:usort([eex, elixir, logger, mix] ++ proplists:get_value(extra_applications, Application, [])),
+ExtraApps = [io_lib:format("LOCAL_DEPS += ~p~n", [App]) || App <- ExtraApps0],
 ProjectCompilers = proplists:get_value(compilers, Project, []),
 "https://hexdocs.pm/elixir_make/Mix.Tasks.Compile.ElixirMake.html",
 ExtraMakeLines = 
