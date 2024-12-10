@@ -236,34 +236,37 @@ endif
 
 # Deps related targets.
 
-# @todo rename GNUmakefile and makefile into Makefile first, if they exist
-# While Makefile file could be GNUmakefile or makefile,
-# in practice only Makefile is needed so far.
-define dep_autopatch
+define dep_autopatch_detect
 	if [ -f $(DEPS_DIR)/$1/erlang.mk ]; then \
-		rm -rf $(DEPS_DIR)/$1/ebin/; \
-		$(call erlang,$(call dep_autopatch_appsrc.erl,$1)); \
-		$(call dep_autopatch_erlang_mk,$1); \
+		echo erlang.mk; \
+	elif [ -f $(DEPS_DIR)/$1/mix.exs -a -d $(DEPS_DIR)/$1/lib ]; then \
+		echo mix; \
 	elif [ -f $(DEPS_DIR)/$1/Makefile ]; then \
 		if [ -f $(DEPS_DIR)/$1/rebar.lock ]; then \
-			$(call dep_autopatch2,$1); \
-		elif [ 0 != `grep -c "include ../\w*\.mk" $(DEPS_DIR)/$1/Makefile` ]; then \
-			$(call dep_autopatch2,$1); \
-		elif [ 0 != `grep -ci "^[^#].*rebar" $(DEPS_DIR)/$1/Makefile` ]; then \
-			$(call dep_autopatch2,$1); \
-		elif [ -n "`find $(DEPS_DIR)/$1/ -type f -name \*.mk -not -name erlang.mk -exec grep -i "^[^#].*rebar" '{}' \;`" ]; then \
-			$(call dep_autopatch2,$1); \
-		fi \
-	else \
-		if [ ! -d $(DEPS_DIR)/$1/src/ ]; then \
-			$(call dep_autopatch_noop,$1); \
+			echo rebar3; \
+		elif [ 0 != \`grep -c "include ../\w*\.mk" $(DEPS_DIR)/$1/Makefile\` ]; then \
+			echo rebar3; \
+		elif [ 0 != \`grep -ci "^[^#].*rebar" $(DEPS_DIR)/$1/Makefile\` ]; then \
+			echo rebar3; \
+		elif [ -n "\`find $(DEPS_DIR)/$1/ -type f -name \*.mk -not -name erlang.mk -exec grep -i "^[^#].*rebar" '{}' \;\`" ]; then \
+			echo rebar3; \
 		else \
-			$(call dep_autopatch2,$1); \
+			echo noop; \
 		fi \
+	elif [ ! -d $(DEPS_DIR)/$1/src/ ]; then \
+		echo noop; \
+	else \
+		echo rebar3; \
 	fi
 endef
 
-define dep_autopatch2
+define dep_autopatch_for_erlang.mk
+	rm -rf $(DEPS_DIR)/$1/ebin/; \
+	$(call erlang,$(call dep_autopatch_appsrc.erl,$1)); \
+	$(call dep_autopatch_erlang_mk,$1)
+endef
+
+define dep_autopatch_for_rebar3
 	! test -f $(DEPS_DIR)/$1/ebin/$1.app || \
 	mv -n $(DEPS_DIR)/$1/ebin/$1.app $(DEPS_DIR)/$1/src/$1.app.src; \
 	rm -f $(DEPS_DIR)/$1/ebin/$1.app; \
@@ -279,8 +282,22 @@ define dep_autopatch2
 	fi
 endef
 
-define dep_autopatch_noop
-	printf "noop:\n" > $(DEPS_DIR)/$1/Makefile
+define dep_autopatch_for_mix
+	$(call dep_autopatch_mix,$1)
+endef
+
+define dep_autopatch_for_noop
+	test -f $(DEPS_DIR)/$1/Makefile || printf "noop:\n" > $(DEPS_DIR)/$1/Makefile
+endef
+
+define maybe_flock
+	if command -v flock >/dev/null; then \
+		flock $1 sh -c "$2"; \
+	elif command -v lockf >/dev/null; then \
+		lockf $1 sh -c "$2"; \
+	else \
+		$2; \
+	fi
 endef
 
 # Replace "include erlang.mk" with a line that will load the parent Erlang.mk
@@ -307,13 +324,7 @@ endef
 
 # We use flock/lockf when available to avoid concurrency issues.
 define dep_autopatch_fetch_rebar
-	if command -v flock >/dev/null; then \
-		flock $(ERLANG_MK_TMP)/rebar.lock sh -c "$(call dep_autopatch_fetch_rebar2)"; \
-	elif command -v lockf >/dev/null; then \
-		lockf $(ERLANG_MK_TMP)/rebar.lock sh -c "$(call dep_autopatch_fetch_rebar2)"; \
-	else \
-		$(call dep_autopatch_fetch_rebar2); \
-	fi
+	$(call maybe_flock,$(ERLANG_MK_TMP)/rebar.lock,$(call dep_autopatch_fetch_rebar2))
 endef
 
 define dep_autopatch_fetch_rebar2
@@ -806,6 +817,37 @@ define hex_get_tarball.erl
 	end
 endef
 
+# Unfortunately this currently requires Elixir.
+define hex_version_resolver.erl
+	HexVersionResolve = fun(Name, Req) ->
+		application:ensure_all_started(ssl),
+		application:ensure_all_started(inets),
+		Config = $(hex_config.erl),
+		case hex_repo:get_package(Config, atom_to_binary(Name)) of
+			{ok, {200, _RespHeaders, Package}} ->
+				#{releases := List} = Package,
+				{value, #{version := Version}} = lists:search(fun(#{version := Vsn}) ->
+					M = list_to_atom("Elixir.Version"),
+					F = list_to_atom("match?"),
+					M:F(Vsn, Req)
+				end, List),
+				{ok, Version};
+			{ok, {Status, _, Errors}} ->
+				{error, Status, Errors}
+		end
+	end,
+	HexVersionResolveAndPrint = fun(Name, Req) ->
+		case HexVersionResolve(Name, Req) of
+			{ok, Version} ->
+				io:format("~s", [Version]),
+				halt(0);
+			{error, Status, Errors} ->
+				io:format("Error ~b: ~0p~n", [Status, Errors]),
+				halt(77)
+		end
+	end
+endef
+
 ifeq ($(CACHE_DEPS),1)
 
 # Hex only has a package version. No need to look in the Erlang.mk packages.
@@ -835,7 +877,7 @@ define dep_fetch_fail
 endef
 
 define dep_target
-$(DEPS_DIR)/$(call query_name,$1): | $(if $(filter hex,$(call query_fetch_method,$1)),hex-core) $(ERLANG_MK_TMP)
+$(DEPS_DIR)/$(call query_name,$1): $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),$(if $(filter-out elixir,$1),$(DEPS_DIR)/elixir/ebin/dep_built)) $(if $(filter hex,$(call query_fetch_method,$1)),$(DEPS_DIR)/hex_core/ebin/dep_built) | $(ERLANG_MK_TMP)
 	$(eval DEP_NAME := $(call query_name,$1))
 	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
@@ -854,30 +896,39 @@ $(DEPS_DIR)/$(call query_name,$1): | $(if $(filter hex,$(call query_fetch_method
 		cd $(DEPS_DIR)/$(DEP_NAME) && ./configure; \
 	fi
 ifeq ($(filter $1,$(NO_AUTOPATCH)),)
-	$(verbose) $$(MAKE) --no-print-directory autopatch-$(DEP_NAME)
+	$(verbose) $$(MAKE) --no-print-directory autopatch-$(DEP_NAME) AUTOPATCH_METHOD=`$(call dep_autopatch_detect,$1)`
 endif
 
 .PHONY: autopatch-$(call query_name,$1)
 
+ifeq ($1,elixir)
+autopatch-elixir::
+	ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/
+else
 autopatch-$(call query_name,$1)::
-	$(verbose) if [ "$1" = "elixir" -a "$(ELIXIR_PATCH)" ]; then \
-		ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/; \
-	else \
-		$$(call dep_autopatch,$(call query_name,$1)) \
-	fi
+	$$(call dep_autopatch_for_$(AUTOPATCH_METHOD),$(call query_name,$1))
+endif
 endef
 
 # We automatically depend on hex_core when the project isn't already.
 $(if $(filter hex_core,$(DEPS) $(BUILD_DEPS) $(DOC_DEPS) $(REL_DEPS) $(TEST_DEPS)),,\
 	$(eval $(call dep_target,hex_core)))
 
-.PHONY: hex-core
+$(DEPS_DIR)/hex_core/ebin/dep_built: | $(ERLANG_MK_TMP)
+	$(verbose) $(call maybe_flock,$(ERLANG_MK_TMP)/hex_core.lock,\
+		if [ ! -e $(DEPS_DIR)/hex_core/ebin/dep_built ]; then \
+			$(MAKE) $(DEPS_DIR)/hex_core; \
+			$(MAKE) -C $(DEPS_DIR)/hex_core IS_DEP=1; \
+			touch $(DEPS_DIR)/hex_core/ebin/dep_built; \
+		fi)
 
-hex-core: $(DEPS_DIR)/hex_core
-	$(verbose) if [ ! -e $(DEPS_DIR)/hex_core/ebin/dep_built ]; then \
-		$(MAKE) -C $(DEPS_DIR)/hex_core IS_DEP=1; \
-		touch $(DEPS_DIR)/hex_core/ebin/dep_built; \
-	fi
+$(DEPS_DIR)/elixir/ebin/dep_built: | $(ERLANG_MK_TMP)
+	$(verbose) $(call maybe_flock,$(ERLANG_MK_TMP)/elixir.lock,\
+		if [ ! -e $(DEPS_DIR)/elixir/ebin/dep_built ]; then \
+			$(MAKE) $(DEPS_DIR)/elixir; \
+			$(MAKE) -C $(DEPS_DIR)/elixir; \
+			touch $(DEPS_DIR)/elixir/ebin/dep_built; \
+		fi)
 
 $(foreach dep,$(BUILD_DEPS) $(DEPS),$(eval $(call dep_target,$(dep))))
 

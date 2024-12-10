@@ -36,7 +36,7 @@ PROJECT ?= $(notdir $(CURDIR))
 PROJECT := $(strip $(PROJECT))
 
 PROJECT_VERSION ?= rolling
-PROJECT_MOD ?= $(PROJECT)_app
+PROJECT_MOD ?=
 PROJECT_ENV ?= []
 
 # Verbosity.
