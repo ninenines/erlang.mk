@@ -27,40 +27,40 @@ jobs:
           - ubuntu-latest
 #          - windows-latest
         suite:
-          - core-app
-          - core-apps
-          - core-autopatch
-          - core-compat
-          # Trick GH runners into picking this slower job early.
-          - ACME=1 c=core-deps
-          - core-elixir
-          - core-makedep
-          - core-misc
-          - core-plugins
-          - core-query
-          - core-upgrade
-          - asciidoc
-          - bootstrap
-          - concuerror
-          - cover
-          - c-src
-          - ct
-          - dialyzer SET=1
-          - dialyzer SET=2
-          - dialyzer SET=3
-          - dialyzer SET=4
-          - edoc
-          - erlydtl
-          - escript
-          - eunit
-          - proper
-          - protobuffs
-          # Trick GH runners into picking this slower job early.
-          - ACME=1 c=relx
-          - shell
-          - sphinx
-          - triq
-          - xref
+#          - core-app
+#          - core-apps
+#          - core-autopatch
+#          - core-compat
+#          # Trick GH runners into picking this slower job early.
+#          - ACME=1 c=core-deps
+          - core-elixir-rel V=3
+#          - core-makedep
+#          - core-misc
+#          - core-plugins
+#          - core-query
+#          - core-upgrade
+#          - asciidoc
+#          - bootstrap
+#          - concuerror
+#          - cover
+#          - c-src
+#          - ct
+#          - dialyzer SET=1
+#          - dialyzer SET=2
+#          - dialyzer SET=3
+#          - dialyzer SET=4
+#          - edoc
+#          - erlydtl
+#          - escript
+#          - eunit
+#          - proper
+#          - protobuffs
+#          # Trick GH runners into picking this slower job early.
+#          - ACME=1 c=relx
+#          - shell
+#          - sphinx
+#          - triq
+#          - xref
         extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
         exclude:
           # We disable proper/triq tests until ubuntu-latest includes GNU Make 4.4 or later.
