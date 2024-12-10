@@ -267,18 +267,6 @@ define dep_autopatch_for_erlang.mk
 endef
 
 define dep_autopatch_for_rebar3
-	$(call dep_autopatch2,$1)
-endef
-
-define dep_autopatch_for_mix
-	$(call dep_autopatch_mix,$1)
-endef
-
-define dep_autopatch_for_noop
-	$(call dep_autopatch_noop,$1)
-endef
-
-define dep_autopatch2
 	! test -f $(DEPS_DIR)/$1/ebin/$1.app || \
 	mv -n $(DEPS_DIR)/$1/ebin/$1.app $(DEPS_DIR)/$1/src/$1.app.src; \
 	rm -f $(DEPS_DIR)/$1/ebin/$1.app; \
@@ -294,8 +282,22 @@ define dep_autopatch2
 	fi
 endef
 
-define dep_autopatch_noop
+define dep_autopatch_for_mix
+	$(call dep_autopatch_mix,$1)
+endef
+
+define dep_autopatch_for_noop
 	test -f $(DEPS_DIR)/$1/Makefile || printf "noop:\n" > $(DEPS_DIR)/$1/Makefile
+endef
+
+define maybe_flock
+	if command -v flock >/dev/null; then \
+		flock $1 sh -c "$2"; \
+	elif command -v lockf >/dev/null; then \
+		lockf $1 sh -c "$2"; \
+	else \
+		$2; \
+	fi
 endef
 
 # Replace "include erlang.mk" with a line that will load the parent Erlang.mk
@@ -318,16 +320,6 @@ define dep_autopatch_gen
 	printf "%s\n" \
 		"ERLC_OPTS = +debug_info" \
 		"include ../../erlang.mk" > $(DEPS_DIR)/$1/Makefile
-endef
-
-define maybe_flock
-	if command -v flock >/dev/null; then \
-		flock $1 sh -c "$2"; \
-	elif command -v lockf >/dev/null; then \
-		lockf $1 sh -c "$2"; \
-	else \
-		$2; \
-	fi
 endef
 
 # We use flock/lockf when available to avoid concurrency issues.

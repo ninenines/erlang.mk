@@ -1,7 +1,9 @@
+# Copyright (c) 2024, Tyler Hughes <artman41@gmail.com>
+# Copyright (c) 2024, Loïc Hoguin <essen@ninenines.eu>
+# This file is part of erlang.mk and subject to the terms of the ISC License.
+
 ALL_LIB_FILES := $(sort $(call core_find,lib/,*))
 EX_FILES := $(filter-out lib/mix/%,$(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES)))
-
-#ifneq ($(strip $(EX_FILES)),)
 
 ELIXIR ?= $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),dep,system)
 export ELIXIR
@@ -18,8 +20,6 @@ elixirc_verbose_0 = @echo " ELIXIRC  " $(filter-out $(patsubst %,%.ex,$(ERLC_EXC
 	$(filter %.ex %.core,$(?F)));
 elixirc_verbose_2 = set -x;
 elixirc_verbose = $(elixirc_verbose_$(V))
-
-#endif
 
 define elixir_get_deps.erl
 (fun(Deps) ->
