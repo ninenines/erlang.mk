@@ -98,6 +98,10 @@ jobs:
           gnu-netcat
           diffutils
 
+    - name: Install libsodium (Linux, Elixir)
+      if: matrix.os == 'ubuntu-latest' && matrix.suite == 'core-elixir'
+      run: sudo apt-get -y install libsodium-dev
+
     - name: Run tests (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }}
