@@ -120,7 +120,7 @@ dep_name = $(call query_name,$(1))
 LOCAL_DEPS_DIRS = $(foreach a,$(LOCAL_DEPS),$(if $(wildcard $(APPS_DIR)/$a),$(APPS_DIR)/$a))
 # Elixir is handled specially as it must be built before all other deps
 # when Mix autopatching is necessary.
-ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(foreach dep,$(filter-out elixir $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)),$(call query_name,$(dep))))
+ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(foreach dep,$(filter-out $(if $(filter-out elixir,$(BUILD_DEPS) $(DEPS)),elixir) $(IGNORE_DEPS),$(BUILD_DEPS) $(DEPS)),$(call query_name,$(dep))))
 
 # When we are calling an app directly we don't want to include it here
 # otherwise it'll be treated both as an apps and a top-level project.
