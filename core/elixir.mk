@@ -21,175 +21,117 @@ elixirc_verbose_0 = @echo " ELIXIRC  " $(filter-out $(patsubst %,%.ex,$(ERLC_EXC
 elixirc_verbose_2 = set -x;
 elixirc_verbose = $(elixirc_verbose_$(V))
 
-define elixir_get_deps.erl
-(fun(Deps) ->
+define dep_autopatch_mix.erl
 	$(call hex_version_resolver.erl),
-	(fun
-		F([], DEPS_Acc0, DEP_Acc0) ->
-			[DEPS_Acc0, "\n", DEP_Acc0];
-		F([H|T], DEPS_Acc0, DEP_Acc0) ->
-			{DEPS_Acc1, DEP_Acc1} =
-				case H of
-					{Name, Req} when is_binary(Req) ->
-						{ok, Vsn} = HexVersionResolve(Name, Req),
-						{
-							[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-							[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, Vsn, Name])]
-						};
-					{Name, Opts} when is_list(Opts) ->
-						Path = proplists:get_value(path, Opts),
-						IsRequired = proplists:get_value(optional, Opts) =/= true,
-						IsProdOnly = case proplists:get_value(only, Opts, prod) of
-							prod -> true;
-							L when is_list(L) -> lists:member(prod, L);
-							_ -> false
-						end,
-						case IsRequired andalso IsProdOnly of
-							true when Path =/= undefined ->
-								{
-									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-									[DEP_Acc0, io_lib:format("dep_~p = ln ~s~n", [Name, Path])]
-								};
-							true when Path =:= undefined ->
-								io:format(standard_error, "Skipping 'dep_~p' as no vsn given.", [Name]),
-								{
-									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-									DEP_Acc0
-								};
-							false ->
-								{DEPS_Acc0, DEP_Acc0}
-						end;
-					{Name, Req, Opts} ->
-						IsRequired = proplists:get_value(optional, Opts) =/= true,
-						IsProdOnly = case proplists:get_value(only, Opts, prod) of
-							prod -> true;
-							L when is_list(L) -> lists:member(prod, L);
-							_ -> false
-						end,
-						case IsRequired andalso IsProdOnly of
-							true ->
-								{ok, Vsn} = HexVersionResolve(Name, Req),
-								{
-									[DEPS_Acc0, io_lib:format("DEPS += ~p~n", [Name])],
-									[DEP_Acc0, io_lib:format("dep_~p = hex ~s ~p~n", [Name, Vsn, Name])]
-								};
-							false ->
-								{DEPS_Acc0, DEP_Acc0}
-						end;
-					_ ->
-						{DEPS_Acc0, DEP_Acc0}
-				end,
-			F(T, DEPS_Acc1, DEP_Acc1)
-	end)(Deps, [], [])
-end)($1)
-endef
-
-define Mix_Makefile.erl
-{ok, _} = application:ensure_all_started(elixir),
-{ok, _} = application:ensure_all_started(mix),
-File = <<"$(DEPS_DIR)/$(1)/mix.exs">>,
-[{Mod, Bin}] = elixir_compiler:file(File, fun(_File, _LexerPid) -> ok end),
-{module, Mod} = code:load_binary(Mod, binary_to_list(File), Bin),
-Project = Mod:project(),
-Application = try Mod:application() catch error:undef -> [] end,
-Fmt =
-	"PROJECT = ~p~n"
-	"PROJECT_DESCRIPTION = ~s~n"
-	"PROJECT_VERSION = ~s~n"
-	"PROJECT_MOD = ~s~n"
-	"define PROJECT_ENV~n"
-	"~p~n"
-	"endef~n"
-	"~n~n~s~n~n"
-	"~n~n~s~n~n"
-	"~n~s~n"
-	"ERLC_OPTS = +debug_info~n"
-	"include $$(if $$(ERLANG_MK_FILENAME),$$(ERLANG_MK_FILENAME),erlang.mk)",
-LFirst = fun
-	F([], Pred) -> 
-		false;
-	F([H|T], Pred) ->
-		case catch Pred(H) of
-			true ->
-				{ok, H};
-			false ->
-				F(T, Pred)
-		end
-end,
-StartMod =
-	case lists:keyfind(mod, 1, Application) of
-		{mod, {StartMod_, _StartArgs}} ->
-			atom_to_list(StartMod_);
+	{ok, _} = application:ensure_all_started(elixir),
+	{ok, _} = application:ensure_all_started(mix),
+	MixFile = <<"$(call core_native_path,$(DEPS_DIR)/$1/mix.exs)">>,
+	[{Mod, Bin}] = elixir_compiler:file(MixFile, fun(_File, _LexerPid) -> ok end),
+	{module, Mod} = code:load_binary(Mod, binary_to_list(MixFile), Bin),
+	Project = Mod:project(),
+	Application = try Mod:application() catch error:undef -> [] end,
+	StartMod = case lists:keyfind(mod, 1, Application) of
+		{mod, {StartMod0, _StartArgs}} ->
+			StartMod0;
 		_ ->
 			""
 	end,
-ExtraApps0 = lists:usort([eex, elixir, logger, mix] ++ proplists:get_value(extra_applications, Application, [])),
-ExtraApps = [io_lib:format("LOCAL_DEPS += ~p~n", [App]) || App <- ExtraApps0],
-ProjectCompilers = proplists:get_value(compilers, Project, []),
-"https://hexdocs.pm/elixir_make/Mix.Tasks.Compile.ElixirMake.html",
-ExtraMakeLines = 
-	case lists:member(elixir_make, ProjectCompilers) of
+	Write = fun (Text) ->
+		file:write_file("$(call core_native_path,$(DEPS_DIR)/$1/Makefile)", Text, [append])
+	end,
+	Write([
+		"PROJECT = ", atom_to_list(proplists:get_value(app, Project)), "\n"
+		"PROJECT_DESCRIPTION = ", proplists:get_value(description, Project, ""), "\n"
+		"PROJECT_VERSION = ", proplists:get_value(version, Project, ""), "\n"
+		"PROJECT_MOD = ", StartMod, "\n"
+		"define PROJECT_ENV\n",
+		io_lib:format("~p", [proplists:get_value(env, Application, [])]), "\n"
+		"endef\n\n"]),
+	ExtraApps = lists:usort([eex, elixir, logger, mix] ++ proplists:get_value(extra_applications, Application, [])),
+	Write(["LOCAL_DEPS += ", lists:join(" ", [atom_to_list(App) || App <- ExtraApps]), "\n\n"]),
+	Deps = proplists:get_value(deps, Project, []) -- [elixir_make],
+	IsRequiredProdDep = fun(Opts) ->
+		(proplists:get_value(optional, Opts) =/= true)
+		andalso
+		case proplists:get_value(only, Opts, prod) of
+			prod -> true;
+			L when is_list(L) -> lists:member(prod, L);
+			_ -> false
+		end
+	end,
+	lists:foreach(fun
+		({Name, Req}) when is_binary(Req) ->
+			{ok, Vsn} = HexVersionResolve(Name, Req),
+			Write(["DEPS += ", atom_to_list(Name), "\n"]),
+			Write(["dep_", atom_to_list(Name), " = hex ", Vsn, " ", atom_to_list(Name), "\n"]);
+		({Name, Opts}) when is_list(Opts) ->
+			Path = proplists:get_value(path, Opts),
+			case IsRequiredProdDep(Opts) of
+				true when Path =/= undefined ->
+					Write(["DEPS += ", atom_to_list(Name), "\n"]),
+					Write(["dep_", atom_to_list(Name), " = ln ", Path, "\n"]);
+				true when Path =:= undefined ->
+					Write(["DEPS += ", atom_to_list(Name), "\n"]),
+					io:format(standard_error, "Warning: No version given for ~p.", [Name]);
+				false ->
+					ok
+			end;
+		({Name, Req, Opts}) ->
+			case IsRequiredProdDep(Opts) of
+				true ->
+					{ok, Vsn} = HexVersionResolve(Name, Req),
+					Write(["DEPS += ", atom_to_list(Name), "\n"]),
+					Write(["dep_", atom_to_list(Name), " = hex ", Vsn, " ", atom_to_list(Name), "\n"]);
+				false ->
+					ok
+			end;
+		(_) ->
+			ok
+	end, Deps),
+	case lists:member(elixir_make, proplists:get_value(compilers, Project, [])) of
 		false -> 
-			"";
+			ok;
 		true ->
-			Fetch = fun(Key, Proplist, DefaultVal, DefaultReplacement) ->
+			Write("# https://hexdocs.pm/elixir_make/Mix.Tasks.Compile.ElixirMake.html\n"),
+			MakeVal = fun(Key, Proplist, DefaultVal, DefaultReplacement) ->
 				case proplists:get_value(Key, Proplist, DefaultVal) of
 					DefaultVal -> DefaultReplacement;
 					Value -> Value
 				end
 			end,
-			case file:copy("$(DEPS_DIR)/$(1)/" ++ Fetch(make_makefile, Project, default, "Makefile"), "$(DEPS_DIR)/$(1)/elixir_make.mk") of
-				{ok, _} -> ok;
+			MakeMakefile = binary_to_list(MakeVal(make_makefile, Project, default, <<"Makefile">>)),
+			MakeExe = MakeVal(make_executable, Project, default, "$$\(MAKE)"),
+			MakeCwd = MakeVal(make_cwd, Project, undefined, <<".">>),
+			MakeTargets = MakeVal(make_targets, Project, [], []),
+			MakeArgs = MakeVal(make_args, Project, undefined, []),
+			case file:rename("$(DEPS_DIR)/$1/" ++ MakeMakefile, "$(DEPS_DIR)/$1/elixir_make.mk") of
+				ok -> ok;
 				Err = {error, _} ->
 					io:format(standard_error, "Failed to copy Makefile with error ~p~n", [Err]),
-					halt(1)
+					halt(90)
 			end,
-			[
-				io_lib:format("app::~n\t~s -C \"~s\" -f \"$(DEPS_DIR)/$(1)/elixir_make.mk\" ~s ~s~n", [
-					Fetch(make_executable, Project, default, "$(MAKE)"),
-					Fetch(make_cwd, Project, undefined, <<".">>),
-					lists:join(" ", Fetch(make_targets, Project, [], [])),
-					lists:join(" ", Fetch(make_args, Project, undefined, []))
-				]),
-				"\n",
-				case Fetch(make_clean, Project, nil, undefined) of
-					undefined -> 
-						"";
-					Clean ->
-						io_lib:format("clean::~n\t~s~n", [Clean])
-				end
-			]
+			Write(["app::\n"
+				"\t", MakeExe, " -C ", MakeCwd, " -f $(DEPS_DIR)/$1/elixir_make.mk",
+				lists:join(" ", MakeTargets),
+				lists:join(" ", MakeArgs),
+				"\n\n"]),
+			case MakeVal(make_clean, Project, nil, undefined) of
+				undefined ->
+					ok;
+				Clean ->
+					Write(["clean::\n\t", Clean, "\n\n"])
+			end
 	end,
-Deps = 
-	lists:foldl(fun(DepToRemove, Acc) -> 
-		lists:keydelete(DepToRemove, 1, Acc)
-	end, proplists:get_value(deps, Project, []), [elixir_make]),
-Args = [
-	proplists:get_value(app, Project),
-	proplists:get_value(description, Project, ""),
-	proplists:get_value(version, Project, ""),
-	StartMod,
-	proplists:get_value(env, Application, []),
-	ExtraApps,
-	$(call elixir_get_deps.erl, Deps),
-	ExtraMakeLines
-],
-Str = io_lib:format(Fmt, Args),
-case file:write_file("$(DEPS_DIR)/$(1)/Makefile", Str) of
-	ok -> 
-		halt(0);
-	{error, Reason} -> 
-		io:format(standard_error, "Failed to create '$(DEPS_DIR)/$(1)/Makefile' with reason ~p~n", [Reason]),
-		halt(1)
-end
+	Write("ERLC_OPTS = +debug_info\n\n"),
+	Write("include $$\(if $$\(ERLANG_MK_FILENAME),$$\(ERLANG_MK_FILENAME),erlang.mk)"),
+	halt()
 endef
 
 define dep_autopatch_mix
-	sed 's|\(defmodule.*do\)|\1\ntry do\nCode.compiler_options(on_undefined_variable: :warn)\nrescue _ -> :ok\nend|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
+	sed 's|\(defmodule.*do\)|\1\n  try do\n    Code.compiler_options(on_undefined_variable: :warn)\n    rescue _ -> :ok\n  end\n|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
+	$(MAKE) $(DEPS_DIR)/hex_core/ebin/dep_built; \
 	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" \
-		$(ERL) \
-		-eval "$(subst ",\",$(subst $(newline), ,$(subst $$,\$$,$(call Mix_Makefile.erl,$(1)))))." \
-		-eval "halt(0)."
+		$(call erlang,$(call dep_autopatch_mix.erl,$1))
 endef
 
 define compile_ex.erl
