@@ -27,15 +27,15 @@ help::
 
 # Plugin-specific targets.
 
-escript-zip:: FULL=1
 escript-zip:: deps app
 	$(verbose) mkdir -p $(dir $(abspath $(ESCRIPT_ZIP_FILE)))
 	$(verbose) rm -f $(abspath $(ESCRIPT_ZIP_FILE))
 	$(gen_verbose) cd .. && $(ESCRIPT_ZIP) $(abspath $(ESCRIPT_ZIP_FILE)) $(PROJECT)/ebin/*
 ifneq ($(DEPS),)
+	$(MAKE) query-deps QUERY=name
 	$(verbose) cd $(DEPS_DIR) && $(ESCRIPT_ZIP) $(abspath $(ESCRIPT_ZIP_FILE)) \
 		$(subst $(DEPS_DIR)/,,$(addsuffix /*,$(wildcard \
-			$(addsuffix /ebin,$(shell cat $(ERLANG_MK_TMP)/deps.log)))))
+			$(addsuffix /ebin,$(shell cat $(ERLANG_MK_TMP)/query.log)))))
 endif
 
 escript:: escript-zip
