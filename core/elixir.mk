@@ -10,14 +10,15 @@ export ELIXIR
 
 ifeq ($(ELIXIR),system)
 # We expect 'elixir' to be on the path.
-ELIXIR_LIBS := $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))
+ELIXIR_LIBS ?= $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))
+ELIXIR_LIBS := $(ELIXIR_LIBS)
+export ELIXIR_LIBS
 ERL_LIBS := $(ERL_LIBS):$(ELIXIR_LIBS)
 else
 ERL_LIBS := $(ERL_LIBS):$(DEPS_DIR)/elixir/lib/
 endif
 
-elixirc_verbose_0 = @echo " ELIXIRC  " $(filter-out $(patsubst %,%.ex,$(ERLC_EXCLUDE)),\
-	$(filter %.ex %.core,$(?F)));
+elixirc_verbose_0 = @echo " EXC    $(words $(EX_FILES)) files"
 elixirc_verbose_2 = set -x;
 elixirc_verbose = $(elixirc_verbose_$(V))
 
