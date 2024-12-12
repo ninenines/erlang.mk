@@ -113,7 +113,7 @@ ifeq ($(IS_APP)$(IS_DEP),)
 endif
 	$(verbose) $(foreach dep,$3,\
 		echo $(PROJECT): $(foreach q,$(QUERY),$(call query_$(q),$(dep))) >> $4 ;)
-	$(if $(filter-out query-deps,$1),,\
+	$(if $(filter-out query-deps query-runtime-deps,$1),,\
 		$(verbose) set -e; for dep in $3 ; do \
 			if grep -qs ^$$$$dep$$$$ $(ERLANG_MK_TMP)/query.log; then \
 				:; \
@@ -134,6 +134,7 @@ ifeq ($(IS_DEP),)
 endif
 
 $(eval $(call query_target,query-deps,$(ERLANG_MK_RECURSIVE_DEPS_LIST),$(BUILD_DEPS) $(DEPS),$(ERLANG_MK_QUERY_DEPS_FILE)))
+$(eval $(call query_target,query-runtime-deps,$(ERLANG_MK_RECURSIVE_DEPS_LIST),$(DEPS),$(ERLANG_MK_QUERY_DEPS_FILE)))
 $(eval $(call query_target,query-doc-deps,$(ERLANG_MK_RECURSIVE_DOC_DEPS_LIST),$(DOC_DEPS),$(ERLANG_MK_QUERY_DOC_DEPS_FILE)))
 $(eval $(call query_target,query-rel-deps,$(ERLANG_MK_RECURSIVE_REL_DEPS_LIST),$(REL_DEPS),$(ERLANG_MK_QUERY_REL_DEPS_FILE)))
 $(eval $(call query_target,query-test-deps,$(ERLANG_MK_RECURSIVE_TEST_DEPS_LIST),$(TEST_DEPS),$(ERLANG_MK_QUERY_TEST_DEPS_FILE)))
