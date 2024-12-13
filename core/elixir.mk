@@ -2,14 +2,12 @@
 # Copyright (c) 2024, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-ALL_LIB_FILES := $(sort $(call core_find,lib/,*))
-EX_FILES := $(filter-out lib/mix/%,$(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES)))
-
 ELIXIR ?= $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),dep,system)
 export ELIXIR
 
 ifeq ($(ELIXIR),system)
 # We expect 'elixir' to be on the path.
+# @todo Only if there are EX_FILES
 ELIXIR_LIBS ?= $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))
 ELIXIR_LIBS := $(ELIXIR_LIBS)
 export ELIXIR_LIBS

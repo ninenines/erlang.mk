@@ -83,6 +83,10 @@ ALL_SRC_FILES := $(sort $(call core_find,src/,*))
 ERL_FILES := $(filter %.erl,$(ALL_SRC_FILES))
 CORE_FILES := $(filter %.core,$(ALL_SRC_FILES))
 
+# @todo Must be defined first.
+ALL_LIB_FILES := $(sort $(call core_find,lib/,*))
+EX_FILES := $(filter-out lib/mix/%,$(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES)))
+
 # ASN.1 files.
 
 ifneq ($(wildcard asn1/),)
@@ -263,11 +267,11 @@ $(PROJECT).d:: $(ERL_FILES) $(EX_FILES) $(call core_find,include/,*.hrl) $(MAKEF
 endif
 
 ifeq ($(IS_APP)$(IS_DEP),)
-ifneq ($(words $(ERL_FILES) $(EX_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES)),0)
+ifneq ($(words $(ERL_FILES) $(EX_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES) $(EX_FILES)),0)
 # Rebuild everything when the Makefile changes.
 $(ERLANG_MK_TMP)/last-makefile-change: $(MAKEFILE_LIST) | $(ERLANG_MK_TMP)
 	$(verbose) if test -f $@; then \
-		touch $(ERL_FILES) $(EX_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES); \
+		touch $(ERL_FILES) $(EX_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES) $(EX_FILES); \
 		touch -c $(PROJECT).d; \
 	fi
 	$(verbose) touch $@
@@ -300,9 +304,9 @@ define validate_app_file
 endef
 
 ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES) $(wildcard src/$(PROJECT).app.src) $(EX_FILES)
-	$(eval FILES_TO_COMPILE := $(filter-out src/$(PROJECT).app.src,$?))
+	$(eval FILES_TO_COMPILE := $(filter-out $(EX_FILES) src/$(PROJECT).app.src,$?))
 	$(if $(strip $(FILES_TO_COMPILE)),$(call compile_erl,$(FILES_TO_COMPILE)))
-	$(if $(strip $(EX_FILES)),$(elixirc_verbose) $(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES))))))
+	$(if $(filter $?,$(EX_FILES)),$(elixirc_verbose) $(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES))))))
 # Older git versions do not have the --first-parent flag. Do without in that case.
 	$(eval GITDESCRIBE := $(shell git describe --dirty --abbrev=7 --tags --always --first-parent 2>/dev/null \
 		|| git describe --dirty --abbrev=7 --tags --always 2>/dev/null || true))
