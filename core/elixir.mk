@@ -137,6 +137,7 @@ endef
 
 define compile_ex.erl
 	{ok, _} = application:ensure_all_started(elixir),
+	{ok, _} = application:ensure_all_started(mix),
 	ModCode = list_to_atom("Elixir.Code"),
 	ModCode:put_compiler_option(ignore_module_conflict, true),
 	ModComp = list_to_atom("Elixir.Kernel.ParallelCompiler"),

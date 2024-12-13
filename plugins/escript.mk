@@ -27,18 +27,42 @@ help::
 
 # Plugin-specific targets.
 
+ALL_ESCRIPT_DEPS_DIRS = $(LOCAL_DEPS_DIRS) $(addprefix $(DEPS_DIR)/,$(foreach dep,$(filter-out $(IGNORE_DEPS),$(DEPS)),$(call query_name,$(dep))))
+
+ESCRIPT_RUNTIME_DEPS_FILE ?= $(ERLANG_MK_TMP)/escript-deps.log
+
+escript-list-runtime-deps:
+ifeq ($(IS_DEP),)
+	$(verbose) rm -f $(ESCRIPT_RUNTIME_DEPS_FILE)
+endif
+	$(verbose) touch $(ESCRIPT_RUNTIME_DEPS_FILE)
+	$(verbose) set -e; for dep in $(ALL_ESCRIPT_DEPS_DIRS) ; do \
+		if ! grep -qs ^$$dep$$ $(ESCRIPT_RUNTIME_DEPS_FILE); then \
+			echo $$dep >> $(ESCRIPT_RUNTIME_DEPS_FILE); \
+			if grep -qs -E "^[[:blank:]]*include[[:blank:]]+(erlang\.mk|.*/erlang\.mk|.*ERLANG_MK_FILENAME.*)$$" \
+			 $$dep/GNUmakefile $$dep/makefile $$dep/Makefile; then \
+				$(MAKE) -C $$dep escript-list-runtime-deps \
+				 IS_DEP=1 \
+				 ESCRIPT_RUNTIME_DEPS_FILE=$(ESCRIPT_RUNTIME_DEPS_FILE); \
+			fi \
+		fi \
+	done
+ifeq ($(IS_DEP),)
+	$(verbose) sort < $(ESCRIPT_RUNTIME_DEPS_FILE) | uniq > $(ESCRIPT_RUNTIME_DEPS_FILE).sorted
+	$(verbose) mv $(ESCRIPT_RUNTIME_DEPS_FILE).sorted $(ESCRIPT_RUNTIME_DEPS_FILE)
+endif
+
 escript-prepare: deps app
-	$(MAKE) query-runtime-deps QUERY=name
+	$(MAKE) escript-list-runtime-deps
 
 escript-zip:: escript-prepare
 	$(verbose) mkdir -p $(dir $(abspath $(ESCRIPT_ZIP_FILE)))
 	$(verbose) rm -f $(abspath $(ESCRIPT_ZIP_FILE))
-	$(gen_verbose) cd .. && $(ESCRIPT_ZIP) $(abspath $(ESCRIPT_ZIP_FILE)) $(PROJECT)/ebin/*
+	$(gen_verbose) cd .. && $(ESCRIPT_ZIP) $(abspath $(ESCRIPT_ZIP_FILE)) $(notdir $(CURDIR))/ebin/*
 ifneq ($(DEPS),)
-	$(eval ESCRIPT_DEPS := $(shell cat $(ERLANG_MK_TMP)/query.log))
 	$(verbose) cd $(DEPS_DIR) && $(ESCRIPT_ZIP) $(abspath $(ESCRIPT_ZIP_FILE)) \
 		$(subst $(DEPS_DIR)/,,$(addsuffix /*,$(wildcard \
-		$(addprefix $(DEPS_DIR)/,$(addsuffix /ebin,$(ESCRIPT_DEPS))))))
+		$(addsuffix /ebin,$(shell cat $(ESCRIPT_RUNTIME_DEPS_FILE))))))
 endif
 
 escript:: escript-zip
