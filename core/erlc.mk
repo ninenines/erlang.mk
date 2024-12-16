@@ -57,7 +57,7 @@ app:: $(if $(wildcard ebin/test),beam-cache-restore-app) deps
 	$(verbose) $(MAKE) --no-print-directory $(PROJECT).d
 	$(verbose) $(MAKE) --no-print-directory app-build
 
-PROJECT_MOD := $(if $(PROJECT_MOD),$(PROJECT_MOD),$(if $(wildcard src/$(PROJECT_MOD)_app.erl),$(PROJECT_MOD)_app))
+PROJECT_MOD := $(if $(PROJECT_MOD),$(PROJECT_MOD),$(if $(wildcard src/$(PROJECT)_app.erl),$(PROJECT)_app))
 
 define app_file
 {application, '$(PROJECT)', [
