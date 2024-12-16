@@ -240,6 +240,10 @@ endif
 
 # Deps related targets.
 
+autopatch_verbose_0 = @echo " PATCH " $(subst autopatch-,,$@) "(method: $(AUTOPATCH_METHOD))";
+autopatch_verbose_2 = set -x;
+autopatch_verbose = $(autopatch_verbose_$(V))
+
 define dep_autopatch_detect
 	if [ -f $(DEPS_DIR)/$1/erlang.mk ]; then \
 		echo erlang.mk; \
@@ -412,7 +416,6 @@ define dep_autopatch_rebar.erl
 	GetHexVsn2 = fun(N, NP) ->
 		case file:consult("$(call core_native_path,$(DEPS_DIR)/$1/rebar.lock)") of
 			{ok, Lock} ->
-				io:format("~p~n", [Lock]),
 				LockPkgs = case lists:keyfind("1.2.0", 1, Lock) of
 					{_, LP} ->
 						LP;
@@ -426,10 +429,8 @@ define dep_autopatch_rebar.erl
 				end,
 				if
 					is_list(LockPkgs) ->
-						io:format("~p~n", [LockPkgs]),
 						case lists:keyfind(atom_to_binary(N, latin1), 1, LockPkgs) of
 							{_, {pkg, _, Vsn}, _} ->
-								io:format("~p~n", [Vsn]),
 								{N, {hex, NP, binary_to_list(Vsn)}};
 							_ ->
 								false
@@ -881,7 +882,7 @@ define dep_fetch_fail
 endef
 
 define dep_target
-$(DEPS_DIR)/$(call query_name,$1): $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),$(if $(filter-out elixir,$1),$(DEPS_DIR)/elixir/ebin/dep_built)) $(if $(filter hex,$(call query_fetch_method,$1)),$(DEPS_DIR)/hex_core/ebin/dep_built) | $(ERLANG_MK_TMP)
+$(DEPS_DIR)/$(call query_name,$1): $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),$(if $(filter-out elixir,$1),$(DEPS_DIR)/elixir/ebin/dep_built)) $(if $(filter hex,$(call query_fetch_method,$1)),$(if $(wildcard $(DEPS_DIR)/$(call query_name,$1)),,$(DEPS_DIR)/hex_core/ebin/dep_built)) | $(ERLANG_MK_TMP)
 	$(eval DEP_NAME := $(call query_name,$1))
 	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
@@ -910,7 +911,7 @@ autopatch-elixir::
 	ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/
 else
 autopatch-$(call query_name,$1)::
-	$$(call dep_autopatch_for_$(AUTOPATCH_METHOD),$(call query_name,$1))
+	$$(autopatch_verbose) $$(call dep_autopatch_for_$(AUTOPATCH_METHOD),$(call query_name,$1))
 endif
 endef
 
