@@ -8,7 +8,7 @@ export ELIXIR
 ifeq ($(ELIXIR),system)
 # We expect 'elixir' to be on the path.
 # @todo Only if there are EX_FILES
-ELIXIR_LIBS ?= $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))
+ELIXIR_LIBS ?= $(dir $(shell readlink -f `which elixir`))/../lib
 ELIXIR_LIBS := $(ELIXIR_LIBS)
 export ELIXIR_LIBS
 ERL_LIBS := $(ERL_LIBS):$(ELIXIR_LIBS)
