@@ -25,7 +25,11 @@ define dep_autopatch_mix.erl
 	{ok, _} = application:ensure_all_started(elixir),
 	{ok, _} = application:ensure_all_started(mix),
 	MixFile = <<"$(call core_native_path,$(DEPS_DIR)/$1/mix.exs)">>,
-	[{Mod, Bin}] = elixir_compiler:file(MixFile, fun(_File, _LexerPid) -> ok end),
+	{Mod, Bin} =
+		case elixir_compiler:file(MixFile, fun(_File, _LexerPid) -> ok end) of
+			[{T = {_, _}, _CheckerPid}] -> T
+			[T = {_, _}] -> T;
+		end,
 	{module, Mod} = code:load_binary(Mod, binary_to_list(MixFile), Bin),
 	Project = Mod:project(),
 	Application = try Mod:application() catch error:undef -> [] end,
