@@ -1,4 +1,4 @@
-# Copyright (c) 2024, Tyler Hughes <artman41@gmail.com>
+# Copyright (c) 2024, Tyler Hughes <tyler@tylerhughes.dev>
 # Copyright (c) 2024, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
