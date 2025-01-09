@@ -16,7 +16,7 @@ else
 ERL_LIBS := $(ERL_LIBS):$(DEPS_DIR)/elixir/lib/
 endif
 
-elixirc_verbose_0 = @echo " EXC    $(words $(EX_FILES)) files"
+elixirc_verbose_0 = @echo " EXC    $(words $(EX_FILES)) files";
 elixirc_verbose_2 = set -x;
 elixirc_verbose = $(elixirc_verbose_$(V))
 
@@ -139,7 +139,12 @@ define compile_ex.erl
 	ModCode = list_to_atom("Elixir.Code"),
 	ModCode:put_compiler_option(ignore_module_conflict, true),
 	ModComp = list_to_atom("Elixir.Kernel.ParallelCompiler"),
-	{ok, Modules, _} = ModComp:compile_to_path([$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))], <<"ebin/">>),
-	lists:foreach(fun(E) -> io:format("~p ", [E]) end, Modules),
-	halt()
+	case ModComp:compile_to_path([$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))], <<"ebin/">>) of
+		{ok, Modules, _} ->
+			halt(0);
+		{error, [], _WarnedModules} ->
+			halt(0);
+		{error, _ErroredModules, _WarnedModules} ->
+			halt(1)
+	end
 endef
