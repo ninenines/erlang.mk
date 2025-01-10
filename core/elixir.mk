@@ -35,7 +35,7 @@ define dep_autopatch_mix.erl
 	Application = try Mod:application() catch error:undef -> [] end,
 	StartMod = case lists:keyfind(mod, 1, Application) of
 		{mod, {StartMod0, _StartArgs}} ->
-			StartMod0;
+			atom_to_list(StartMod0);
 		_ ->
 			""
 	end,
