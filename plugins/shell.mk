@@ -37,5 +37,5 @@ build-shell-deps: $(ALL_SHELL_DEPS_DIRS)
 	done
 endif
 
-shell:: build-shell-deps
+shell:: build-shell-deps | app
 	$(gen_verbose) $(SHELL_ERL) -pa $(SHELL_PATHS) $(SHELL_OPTS)
