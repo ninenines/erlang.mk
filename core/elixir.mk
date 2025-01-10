@@ -143,12 +143,15 @@ define compile_ex.erl
 	ModCode = list_to_atom("Elixir.Code"),
 	ModCode:put_compiler_option(ignore_module_conflict, true),
 	ModComp = list_to_atom("Elixir.Kernel.ParallelCompiler"),
-	case ModComp:compile_to_path([$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))], <<"ebin/">>) of
-		{ok, Modules, _} ->
-			halt(0);
-		{error, [], _WarnedModules} ->
-			halt(0);
-		{error, _ErroredModules, _WarnedModules} ->
-			halt(1)
-	end
+	ModMixProject = list_to_atom("Elixir.Mix.Project"),
+	ModMixProject:in_project($(PROJECT), ".", [], fun(_MixFile) ->
+		case ModComp:compile_to_path([$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))], <<"ebin/">>) of
+			{ok, Modules, _} ->
+				halt(0);
+			{error, [], _WarnedModules} ->
+				halt(0);
+			{error, _ErroredModules, _WarnedModules} ->
+				halt(1)
+		end
+	end)
 endef
