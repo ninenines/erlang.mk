@@ -138,41 +138,21 @@ define dep_autopatch_mix
 endef
 
 define compile_ex.erl
-	{ok, _} = application:ensure_all_started(elixir),
+	{ok, _} = application:ensure_all_started(elixir),	
 	{ok, _} = application:ensure_all_started(mix),
 	ModCode = list_to_atom("Elixir.Code"),
 	ModCode:put_compiler_option(ignore_module_conflict, true),
 	ModComp = list_to_atom("Elixir.Kernel.ParallelCompiler"),
 	ModMixProject = list_to_atom("Elixir.Mix.Project"),
+	erlang:group_leader(whereis(standard_error), self()),
 	ModMixProject:in_project($(PROJECT), ".", [], fun(_MixFile) ->
 		case ModComp:compile_to_path([$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))], <<"ebin/">>) of
 			{ok, Modules, _} ->
-				halt(0);
-			{error, [], _WarnedModules} ->
+				lists:foreach(fun(E) -> io:format(user, "~p ", [E]) end, Modules),
 				halt(0);
 			{error, _ErroredModules, _WarnedModules} ->
+				io:format(user, "_ERROR_", []),
 				halt(1)
 		end
 	end)
-endef
-
-define get_ex_modules.erl
-	ModCode = list_to_atom("Elixir.Code"),
-	AtomAliases = list_to_atom("__aliases__"),
-	lists:foreach(
-		fun(Path) ->
-			{ok, Bin} = file:read_file(Path),
-			{ok, {_, _, AST}} = ModCode:string_to_quoted(Bin),
-			case lists:keyfind(AtomAliases, 1, AST) of
-				false -> ok;
-				{AtomAliases, _, Aliases} ->
-					case [[".", atom_to_list(A)] || A <- Aliases] of
-						[] -> ok;
-						Joined ->
-							Mod = list_to_atom(lists:flatten(["Elixir", Joined])),
-							io:format("~p ", [Mod])
-					end
-			end
-		end, [$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))]),
-	halt(0)
 endef
