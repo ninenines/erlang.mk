@@ -155,3 +155,24 @@ define compile_ex.erl
 		end
 	end)
 endef
+
+define get_ex_modules.erl
+	ModCode = list_to_atom("Elixir.Code"),
+	AtomAliases = list_to_atom("__aliases__"),
+	lists:foreach(
+		fun(Path) ->
+			{ok, Bin} = file:read_file(Path),
+			{ok, {_, _, AST}} = ModCode:string_to_quoted(Bin),
+			case lists:keyfind(AtomAliases, 1, AST) of
+				false -> ok;
+				{AtomAliases, _, Aliases} ->
+					case [[".", atom_to_list(A)] || A <- Aliases] of
+						[] -> ok;
+						Joined ->
+							Mod = list_to_atom(lists:flatten(["Elixir", Joined])),
+							io:format("~p ", [Mod])
+					end
+			end
+		end, [$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))]),
+	halt(0)
+endef
