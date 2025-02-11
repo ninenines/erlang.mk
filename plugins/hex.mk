@@ -91,7 +91,7 @@ define hex_tarball_create.erl
 			<<"$(if $(subst hex,,$(call query_fetch_method,$d)),$d,$(if $(word 3,$(dep_$d)),$(word 3,$(dep_$d)),$d))">> => #{
 				<<"app">> => <<"$d">>,
 				<<"optional">> => false,
-				<<"requirement">> => <<"$(call query_version,$d)">>
+				<<"requirement">> => <<"$(if $(hex_req_$d),$(strip $(hex_req_$d)),$(call query_version,$d))">>
 			},)
 		$(if $(DEPS),dummy => dummy)
 	},
