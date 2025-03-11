@@ -149,7 +149,7 @@ define compile_ex.erl
 	ModMixProject = list_to_atom("Elixir.Mix.Project"),
 	erlang:group_leader(whereis(standard_error), self()),
 	ModMixProject:in_project($(PROJECT), ".", [], fun(_MixFile) ->
-		case ModComp:compile_to_path([$(call comma_list,$(patsubst %,<<"%">>,$(EX_FILES)))], <<"ebin/">>) of
+		case ModComp:compile_to_path([$(call comma_list,$(patsubst %,<<"%">>,$1))], <<"ebin/">>) of
 			{ok, Modules, _} ->
 				lists:foreach(fun(E) -> io:format(user, "~p ", [E]) end, Modules),
 				halt(0);
