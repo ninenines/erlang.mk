@@ -36,7 +36,7 @@ endif
 	$t test -f $(APP)/deps/phoenix/ebin/dep_built
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(APP)/deps/elixir/lib/*/ebin -eval " \
+	$t cd $(APP); $(ERL) -pa ebin/ -pa deps/*/ebin -pa deps/elixir/lib/*/ebin -eval " \
 		{ok, Apps} = application:ensure_all_started('$(APP)'), \
 		true = lists:member(elixir, Apps), \
 		true = lists:member(lager, Apps), \
@@ -45,7 +45,7 @@ endif
 		halt()"
 
 	$i "Check that the Jason application depends on Elixir builtins"
-	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(APP)/deps/elixir/lib/*/ebin -eval " \
+	$t cd $(APP); $(ERL) -pa ebin/ -pa deps/*/ebin -pa deps/elixir/lib/*/ebin -eval " \
 		{ok, Apps} = application:ensure_all_started(jason), \
 		true = lists:member(elixir, Apps), \
 		true = lists:member(eex, Apps), \
@@ -81,7 +81,7 @@ endif
 	$t test -f $(APP)/deps/phoenix/ebin/dep_built
 
 	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+	$t cd $(APP); $(ERL) -pa ebin/ -pa deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
 		{ok, Apps} = application:ensure_all_started('$(APP)'), \
 		true = lists:member(lager, Apps), \
 		true = lists:member(jason, Apps), \
@@ -89,7 +89,7 @@ endif
 		halt()"
 
 	$i "Check that the Jason application depends on Elixir builtins"
-	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+	$t cd $(APP); $(ERL) -pa ebin/ -pa deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
 		{ok, Apps} = application:ensure_all_started(jason), \
 		true = lists:member(elixir, Apps), \
 		true = lists:member(eex, Apps), \
