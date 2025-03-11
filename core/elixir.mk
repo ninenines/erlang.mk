@@ -137,6 +137,9 @@ define dep_autopatch_mix
 		$(call erlang,$(call dep_autopatch_mix.erl,$1))
 endef
 
+# We change the group leader so the Elixir io:format output
+# isn't captured as we need to either print the modules on
+# success, or print _ERROR_ on failure.
 define compile_ex.erl
 	{ok, _} = application:ensure_all_started(elixir),
 	{ok, _} = application:ensure_all_started(mix),
