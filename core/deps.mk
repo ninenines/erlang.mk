@@ -908,7 +908,7 @@ endif
 
 ifeq ($1,elixir)
 autopatch-elixir::
-	ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/
+	$$(verbose) ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/
 else
 autopatch-$(call query_name,$1)::
 	$$(autopatch_verbose) $$(call dep_autopatch_for_$(AUTOPATCH_METHOD),$(call query_name,$1))
