@@ -822,37 +822,6 @@ define hex_get_tarball.erl
 	end
 endef
 
-# Unfortunately this currently requires Elixir.
-define hex_version_resolver.erl
-	HexVersionResolve = fun(Name, Req) ->
-		application:ensure_all_started(ssl),
-		application:ensure_all_started(inets),
-		Config = $(hex_config.erl),
-		case hex_repo:get_package(Config, atom_to_binary(Name)) of
-			{ok, {200, _RespHeaders, Package}} ->
-				#{releases := List} = Package,
-				{value, #{version := Version}} = lists:search(fun(#{version := Vsn}) ->
-					M = list_to_atom("Elixir.Version"),
-					F = list_to_atom("match?"),
-					M:F(Vsn, Req)
-				end, List),
-				{ok, Version};
-			{ok, {Status, _, Errors}} ->
-				{error, Status, Errors}
-		end
-	end,
-	HexVersionResolveAndPrint = fun(Name, Req) ->
-		case HexVersionResolve(Name, Req) of
-			{ok, Version} ->
-				io:format("~s", [Version]),
-				halt(0);
-			{error, Status, Errors} ->
-				io:format("Error ~b: ~0p~n", [Status, Errors]),
-				halt(77)
-		end
-	end
-endef
-
 ifeq ($(CACHE_DEPS),1)
 
 # Hex only has a package version. No need to look in the Erlang.mk packages.

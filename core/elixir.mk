@@ -2,23 +2,60 @@
 # Copyright (c) 2024, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-ELIXIR ?= $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),dep,system)
+ELIXIR ?= $(if $(EX_FILES),$(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),dep,system),disable)
 export ELIXIR
 
 ifeq ($(ELIXIR),system)
 # We expect 'elixir' to be on the path.
-# @todo Only if there are EX_FILES
 ELIXIR_LIBS ?= $(dir $(shell readlink -f `which elixir`))/../lib
 ELIXIR_LIBS := $(ELIXIR_LIBS)
 export ELIXIR_LIBS
 ERL_LIBS := $(ERL_LIBS):$(ELIXIR_LIBS)
 else
+ifeq ($(ELIXIR),dep)
 ERL_LIBS := $(ERL_LIBS):$(DEPS_DIR)/elixir/lib/
+endif
 endif
 
 elixirc_verbose_0 = @echo " EXC    $(words $(EX_FILES)) files";
 elixirc_verbose_2 = set -x;
 elixirc_verbose = $(elixirc_verbose_$(V))
+
+# Unfortunately this currently requires Elixir.
+# https://github.com/jelly-beam/verl is a good choice
+# for an Erlang implementation, but we already have to
+# pull hex_core and Rebar3 so adding yet another pull
+# is annoying, especially one that would be necessary
+# every time we autopatch Rebar projects. Wait and see.
+define hex_version_resolver.erl
+	HexVersionResolve = fun(Name, Req) ->
+		application:ensure_all_started(ssl),
+		application:ensure_all_started(inets),
+		Config = $(hex_config.erl),
+		case hex_repo:get_package(Config, atom_to_binary(Name)) of
+			{ok, {200, _RespHeaders, Package}} ->
+				#{releases := List} = Package,
+				{value, #{version := Version}} = lists:search(fun(#{version := Vsn}) ->
+					M = list_to_atom("Elixir.Version"),
+					F = list_to_atom("match?"),
+					M:F(Vsn, Req)
+				end, List),
+				{ok, Version};
+			{ok, {Status, _, Errors}} ->
+				{error, Status, Errors}
+		end
+	end,
+	HexVersionResolveAndPrint = fun(Name, Req) ->
+		case HexVersionResolve(Name, Req) of
+			{ok, Version} ->
+				io:format("~s", [Version]),
+				halt(0);
+			{error, Status, Errors} ->
+				io:format("Error ~b: ~0p~n", [Status, Errors]),
+				halt(77)
+		end
+	end
+endef
 
 define dep_autopatch_mix.erl
 	$(call hex_version_resolver.erl),
