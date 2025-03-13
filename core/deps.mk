@@ -798,7 +798,7 @@ define hex_get_tarball.erl
 	Config = $(hex_config.erl),
 	case hex_repo:get_tarball(Config, <<"$1">>, <<"$(strip $2)">>) of
 		{ok, {200, _, Tarball}} ->
-			ok = file:write_file("$3", Tarball),
+			ok = file:write_file("$(call core_native_path,$3)", Tarball),
 			halt(0);
 		{ok, {Status, _, Errors}} ->
 			io:format("Error ~b: ~0p~n", [Status, Errors]),
