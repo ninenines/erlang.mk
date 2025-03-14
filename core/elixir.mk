@@ -2,7 +2,10 @@
 # Copyright (c) 2024, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-ELIXIR ?= $(if $(EX_FILES),$(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),dep,system),disable)
+# Elixir is automatically enabled in all cases except when
+# an Erlang project uses an Elixir dependency. In that case
+# $(ELIXIR) must be set explicitly.
+ELIXIR ?= $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),dep,$(if $(EX_FILES),system,disable))
 export ELIXIR
 
 ifeq ($(ELIXIR),system)
@@ -168,6 +171,7 @@ define dep_autopatch_mix.erl
 endef
 
 define dep_autopatch_mix
+	if [ "$(ELIXIR)" = "disable" ]; then echo "Elixir is currently disabled. Please set 'ELIXIR = system' in the Makefile to enable"; exit 99; fi
 	sed 's|\(defmodule.*do\)|\1\n  try do\n    Code.compiler_options(on_undefined_variable: :warn)\n    rescue _ -> :ok\n  end\n|g' -i $(DEPS_DIR)/$(1)/mix.exs; \
 	$(MAKE) $(DEPS_DIR)/hex_core/ebin/dep_built; \
 	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" \
