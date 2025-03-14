@@ -78,9 +78,7 @@ endif
 ifeq ($(IS_APP)$(IS_DEP),)
 	$(verbose) sort < $(ERLANG_MK_RECURSIVE_TMP_LIST) | \
 		uniq > $(ERLANG_MK_RECURSIVE_TMP_LIST).sorted
-	$(verbose) cmp -s $(ERLANG_MK_RECURSIVE_TMP_LIST).sorted $@ \
-		|| mv $(ERLANG_MK_RECURSIVE_TMP_LIST).sorted $@
-	$(verbose) rm -f $(ERLANG_MK_RECURSIVE_TMP_LIST).sorted
+	$(verbose) mv $(ERLANG_MK_RECURSIVE_TMP_LIST).sorted $@
 	$(verbose) rm $(ERLANG_MK_RECURSIVE_TMP_LIST)
 endif
 endif # ifneq ($(SKIP_DEPS),)

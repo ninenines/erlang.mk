@@ -20,6 +20,8 @@ jobs:
       matrix:
         erlang:
           - '27'
+        elixir:
+          - '1.17'
         os:
 #          - macos-latest
           - ubuntu-latest
@@ -31,6 +33,7 @@ jobs:
           - core-compat
           # Trick GH runners into picking this slower job early.
           - ACME=1 c=core-deps
+          - core-elixir
           - core-makedep
           - core-misc
           - core-plugins
@@ -78,6 +81,7 @@ jobs:
       uses: erlef/setup-beam@v1
       with:
         otp-version: ${{ matrix.erlang }}
+        elixir-version: ${{ matrix.elixir }}
         version-type: loose
 
     - name: Setup MSYS2 (Windows)
@@ -93,6 +97,10 @@ jobs:
           mingw-w64-x86_64-gcc
           gnu-netcat
           diffutils
+
+    - name: Install libsodium (Linux, Elixir)
+      if: matrix.os == 'ubuntu-latest' && matrix.suite == 'core-elixir'
+      run: sudo apt-get -y install libsodium-dev
 
     - name: Run tests (Linux)
       if: matrix.os == 'ubuntu-latest'
@@ -143,7 +151,7 @@ jobs:
       uses: erlef/setup-beam@v1
       with:
         otp-version: ${{ matrix.erlang }}
-        elixir-version: 1.18
+        elixir-version: '1.18'
         version-type: loose
 
     - name: Setup MSYS2 (Windows)

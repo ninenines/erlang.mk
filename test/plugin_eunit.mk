@@ -235,6 +235,27 @@ eunit-check: init
 	$i "Check that EUnit runs on 'make check'"
 	$t $(MAKE) -C $(APP) check | grep -c "Test passed." | grep -q 1
 
+eunit-disable: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Set EUNIT = disable in the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "EUNIT = disable\n"}' $(APP)/Makefile
+
+	$i "Generate a module containing EUnit tests"
+	$t printf "%s\n" \
+		"-module($(APP))." \
+		"-ifdef(TEST)." \
+		"-include_lib(\"eunit/include/eunit.hrl\")." \
+		"ok_test() -> ok." \
+		"-endif." > $(APP)/src/$(APP).erl
+
+	$i "Check that EUnit is not run on 'make tests'"
+	$t $(MAKE) -C $(APP) tests | grep -c "Test passed." | grep -q 0
+
 eunit-erl-opts: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
