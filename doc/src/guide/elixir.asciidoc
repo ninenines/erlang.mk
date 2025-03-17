@@ -1,0 +1,86 @@
+[[elixir]]
+== Elixir modules and dependencies
+
+Erlang.mk has experimental support for building Elixir
+modules as well as dependencies. In this chapter we will
+cover the details and gotchas of the Elixir support.
+
+=== Selecting Elixir
+
+By default Elixir is disabled. This is to ensure that
+there's no negative impact to normal users of Erlang.mk.
+
+Erlang.mk can use either an Elixir installed in the
+system; or use Elixir as a dependency.
+
+Elixir will be automatically enabled when Elixir is
+used as a dependency. In that case all that is required
+is to depend on Elixir:
+
+[source,make]
+----
+DEPS = elixir
+dep_elixir_commit = v1.17.3
+----
+
+Alternatively, Erlang.mk will enable the system Elixir
+installation when Elixir files are found in the top-level
+project. In that case, Elixir is assumed to be in the path.
+
+In other cases, the system Elixir installation must be
+enabled manually in order to depend on Elixir applications.
+Note that this is only required for Elixir-only applications,
+not for applications that have both Erlang and Elixir code
+(as long as you only care about the Erlang side of things).
+The `ELIXIR` variable must be defined before including
+Erlang.mk:
+
+[source,make]
+ELIXIR = system
+
+Elixir can be explicitly disabled. In that case trying to
+depend on Elixir applications will result in failure
+during autopatch, unless the Elixir application has both
+Erlang and Elixir code.
+
+[source,make]
+ELIXIR = disable
+
+=== Elixir compilation
+
+There are currently no options.
+
+=== Elixir dependencies
+
+Erlang.mk will automatically autopatch Elixir dependencies
+by running Mix on the mix.exs file and producing a Makefile
+using the generated metadata.
+
+The following is an example of depending on Elixir
+applications from an Erlang-only application:
+
+[source,make]
+----
+DEPS = jose
+dep_jose = hex 1.11.10
+
+ELIXIR = system
+
+include erlang.mk
+----
+
+=== Dialyzer
+
+Dialyzer requires Elixir to be available in order to access
+the AST of the Elixir beam files. In most cases it will just
+work. When only enabling Elixir in a sub-application, Elixir
+will not always be available, so in that case we must tell
+Dialyzer where to find Elixir libraries. This can be done
+by adding the following rules to the relevant Makefiles,
+either as a plugin or after including Erlang.mk:
+
+[source,make]
+----
+dialyze: ELIXIR_LIBS = $(dir $(shell readlink -f `which elixir`))/../lib
+dialyze: ERL_LIBS = $(APPS_DIR):$(DEPS_DIR):$(ELIXIR_LIBS)
+----

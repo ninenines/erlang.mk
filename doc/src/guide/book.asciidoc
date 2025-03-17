@@ -36,6 +36,8 @@ include::cross_compiling.asciidoc[Cross compiling]
 
 include::compat.asciidoc[Compatibility with other build tools]
 
+include::elixir.asciidoc[Elixir modules and dependencies]
+
 [[docs]]
 = Documentation
 

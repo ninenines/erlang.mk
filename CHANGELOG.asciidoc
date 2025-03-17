@@ -64,3 +64,11 @@
             future update. Erlang.mk will always assume
             that a Rebar project uses Rebar3 from that
             point forward.
+
+2025/03/18: Native support for Elixir was added. Erlang.mk
+            will now properly handle most Elixir dependencies,
+            as well as compile Elixir code in Erlang.mk projects,
+            from both src/ and lib/ directories. This allows
+            mixing Erlang and Elixir in the same project.
+            Please refer to the user guide for more information.
+            Native Elixir support is considered experimental.
