@@ -33,11 +33,11 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="concuerror.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="plugins.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="xref"></a>Chapter 27. Xref</h2></div></div></div><p>Xref is a cross reference tool for analyzing dependencies
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="concuerror.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="plugins.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="xref"></a>Chapter 28. Xref</h2></div></div></div><p>Xref is a cross reference tool for analyzing dependencies
 between functions, modules, applications and releases.
 Erlang.mk provides an interface to analyzing all except
 the releases.</p><p>Both predefined checks and custom queries are supported
-in Erlang.mk.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_usage_8"></a>27.1. Usage</h2></div></div></div><p>To run Xref with the default predefined checks:</p><pre class="programlisting">$ make xref</pre><p>Erlang.mk will error out when warnings are found.</p><p>The following predefined checks can be used:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+in Erlang.mk.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_usage_8"></a>28.1. Usage</h2></div></div></div><p>To run Xref with the default predefined checks:</p><pre class="programlisting">$ make xref</pre><p>Erlang.mk will error out when warnings are found.</p><p>The following predefined checks can be used:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 <code class="literal">undefined_function_calls</code>
 </li><li class="listitem">
 <code class="literal">undefined_functions</code> (similar to the previous)
@@ -73,11 +73,11 @@ errors. To find all modules that call <code class="literal">cowboy_req</code> fu
 the complete results of informational checks. This is
 especially true for module and applications, with
 application results being dependent on the applications
-being added to the scope to be found.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_queries"></a>27.2. Queries</h2></div></div></div><p>Erlang.mk provides an interface to the Xref query
+being added to the scope to be found.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_queries"></a>28.2. Queries</h2></div></div></div><p>Erlang.mk provides an interface to the Xref query
 functions. To perform a query, the <code class="literal">q</code> variable
 must be used instead of <code class="literal">XREF_CHECKS</code>. For example,
 to obtain all unresolved calls:</p><pre class="programlisting">$ make xref q=UC</pre><p>The query language is documented at the top of the
-<a class="ulink" href="https://www.erlang.org/doc/man/xref.html" target="_top">Xref manual page</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_analysis_scope"></a>27.3. Analysis scope</h2></div></div></div><p>Erlang.mk will set the scope of analysis to the current
+<a class="ulink" href="https://www.erlang.org/doc/man/xref.html" target="_top">Xref manual page</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_analysis_scope"></a>28.3. Analysis scope</h2></div></div></div><p>Erlang.mk will set the scope of analysis to the current
 project by default. The scope can be automatically
 extended to the applications from multi-application
 repositories, to dependencies and to the built-in
@@ -106,7 +106,7 @@ applications will need to be compiled before they
 can be found by Xref.</p><p>Similarly, non-application directories can be
 added using <code class="literal">XREF_EXTRA_DIRS</code>. The directory
 to be provided must be the one that contains
-the beam files.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_ignoring_warnings"></a>27.4. Ignoring warnings</h2></div></div></div><p>Sometimes it is necessary to ignore warnings because
+the beam files.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_ignoring_warnings"></a>28.4. Ignoring warnings</h2></div></div></div><p>Sometimes it is necessary to ignore warnings because
 they are expected. This is the case for example
 when multiple Erlang/OTP versions must be supported
 and modules or functions have been added or removed.</p><p>Erlang.mk supports both project-wide configuration

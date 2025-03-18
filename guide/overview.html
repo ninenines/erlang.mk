@@ -47,24 +47,24 @@ meant to be used for discovery purposes.</p><p>No package is ever installed, the
 and are always project-specific. They can be thought of as a
 shortcut over plain dependencies.</p><p>You can get a list of all packages known to Erlang.mk by using
 the <code class="literal">search</code> target:</p><pre class="programlisting">$ make search</pre><p>You can also use this target to search across all packages, for
-example to find all packages related to Cowboy:</p><pre class="programlisting">$ make search q=cowboy</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_documentation"></a>3.3. Generating documentation</h2></div></div></div><p>Erlang.mk supports <span class="emphasis"><em>EDoc</em></span> and <span class="emphasis"><em>Asciidoc</em></span>.</p><p><a class="link" href="edoc.html" title="Chapter 16. EDoc comments">EDoc</a> generates HTML documentation directly from
+example to find all packages related to Cowboy:</p><pre class="programlisting">$ make search q=cowboy</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_documentation"></a>3.3. Generating documentation</h2></div></div></div><p>Erlang.mk supports <span class="emphasis"><em>EDoc</em></span> and <span class="emphasis"><em>Asciidoc</em></span>.</p><p><a class="link" href="edoc.html" title="Chapter 17. EDoc comments">EDoc</a> generates HTML documentation directly from
 your source code.</p><p>While it is convenient, ask yourself: if all the documentation is
 inside the source code, why not just open the source code directly?
-That’s where <span class="emphasis"><em>Asciidoc</em></span> comes in.</p><p>The <a class="link" href="asciidoc.html" title="Chapter 15. AsciiDoc documentation">Asciidoc</a> plugin expects all documentation
+That’s where <span class="emphasis"><em>Asciidoc</em></span> comes in.</p><p>The <a class="link" href="asciidoc.html" title="Chapter 16. AsciiDoc documentation">Asciidoc</a> plugin expects all documentation
 to be separate from source. It will generate HTML, PDF, man pages and
 more from the documentation you write in the <span class="emphasis"><em>doc/src/</em></span> folder in
 your repository.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_tests"></a>3.4. Running tests</h2></div></div></div><p>Erlang.mk supports a lot of different testing and static
-analysis tools.</p><p>The <a class="link" href="shell.html" title="Chapter 18. Erlang shell">make shell</a> command allows you
+analysis tools.</p><p>The <a class="link" href="shell.html" title="Chapter 19. Erlang shell">make shell</a> command allows you
 to test your project manually. You can automate these
-unit tests with <a class="link" href="eunit.html" title="Chapter 19. EUnit">EUnit</a> and test
-your entire system with <a class="link" href="ct.html" title="Chapter 20. Common Test">Common Test</a>.
-<a class="link" href="coverage.html" title="Chapter 23. Code coverage">Code coverage</a> can of course
+unit tests with <a class="link" href="eunit.html" title="Chapter 20. EUnit">EUnit</a> and test
+your entire system with <a class="link" href="ct.html" title="Chapter 21. Common Test">Common Test</a>.
+<a class="link" href="coverage.html" title="Chapter 24. Code coverage">Code coverage</a> can of course
 be enabled during tests.</p><p>Erlang.mk comes with features to make your life easier when
-setting up and using <a class="link" href="ci.html" title="Chapter 24. Continuous integration">Continuous integration</a>.</p><p>On the static analysis side of things, Erlang.mk comes with
-support for <a class="link" href="dialyzer.html" title="Chapter 25. Dialyzer">Dialyzer</a> and <a class="link" href="xref.html" title="Chapter 27. Xref">Xref</a>,
+setting up and using <a class="link" href="ci.html" title="Chapter 25. Continuous integration">Continuous integration</a>.</p><p>On the static analysis side of things, Erlang.mk comes with
+support for <a class="link" href="dialyzer.html" title="Chapter 26. Dialyzer">Dialyzer</a> and <a class="link" href="xref.html" title="Chapter 28. Xref">Xref</a>,
 to perform success typing analysis and cross referencing
-of the code.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_need_more"></a>3.5. Need more?</h2></div></div></div><p>Not convinced yet? You can read about <a class="link" href="why.html" title="Chapter 30. Why Erlang.mk">why you should use Erlang.mk</a>
-and its <a class="link" href="history.html" title="Chapter 31. Short history">history</a>. And if you’re still not
+of the code.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_need_more"></a>3.5. Need more?</h2></div></div></div><p>Not convinced yet? You can read about <a class="link" href="why.html" title="Chapter 31. Why Erlang.mk">why you should use Erlang.mk</a>
+and its <a class="link" href="history.html" title="Chapter 32. Short history">history</a>. And if you’re still not
 convinced after that, it’s OK! The world would be boring if
 everyone agreed on everything all the time.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="getting_started.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="updating.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
