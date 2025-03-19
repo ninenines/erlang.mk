@@ -10,7 +10,12 @@ export ELIXIR
 
 ifeq ($(ELIXIR),system)
 # We expect 'elixir' to be on the path.
-ELIXIR_LIBS ?= $(dir $(shell readlink -f `which elixir`))/../lib
+ELIXIR_BIN ?= $(shell readlink -f `which elixir`)
+ELIXIR_LIBS ?= $(abspath $(dir $(ELIXIR_BIN))/../lib)
+# Fallback in case 'elixir' is a shim.
+ifeq ($(wildcard $(ELIXIR_LIBS)/elixir/),)
+ELIXIR_LIBS = $(abspath $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))')/../)
+endif
 ELIXIR_LIBS := $(ELIXIR_LIBS)
 export ELIXIR_LIBS
 ERL_LIBS := $(ERL_LIBS):$(ELIXIR_LIBS)

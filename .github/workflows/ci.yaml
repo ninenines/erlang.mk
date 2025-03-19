@@ -119,6 +119,33 @@ jobs:
         path: |
           test/test_*/
 
+  check-asdf-elixir:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Erlang/OTP
+      uses: erlef/setup-beam@v1
+      with:
+        otp-version: 27
+        version-type: loose
+
+    - name: Install asdf along with Elixir
+      run: |
+        wget https://github.com/asdf-vm/asdf/releases/download/v0.16.5/asdf-v0.16.5-linux-amd64.tar.gz
+        tar xf asdf-v*-linux-amd64.tar.gz
+        ./asdf plugin add elixir
+        ./asdf install elixir latest
+        ./asdf set elixir latest
+
+    - name: Install libsodium
+      run: sudo apt-get -y install libsodium-dev
+
+    - name: Run tests
+      run: make check c=core-elixir -j4 -k PATH=$PWD:/home/runner/.asdf/shims:$PATH
+
   check-hex:
     strategy:
       fail-fast: false
