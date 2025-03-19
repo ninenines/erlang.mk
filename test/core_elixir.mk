@@ -117,6 +117,27 @@ core-elixir-disable-autopatch-fail: init
 	$i "Building the application should fail"
 	$t ! $(MAKE) -C $(APP) $v
 
+core-elixir-disable-autopatch-make: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Reloader to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = reloader\ndep_reloader = git https://github.com/2600hz/erlang-reloader de1e6c74204b61ccf3b3652f05c6a7dec9e8257d\n"}' $(APP)/Makefile
+
+	$i "Disable Elixir in the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ELIXIR = disable\n"}' $(APP)/Makefile
+
+	$i "Building the application should work as Reloader contains a proper Makefile"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Confirm Reloader was built"
+	$t test -f $(APP)/deps/reloader/ebin/dep_built
+	$t test -f $(APP)/deps/reloader/ebin/reloader.app
+	$t test -f $(APP)/deps/reloader/ebin/reloader.beam
+
 core-elixir-disable-autopatch-rebar3: init
 
 	$i "Bootstrap a new OTP library named $(APP)"

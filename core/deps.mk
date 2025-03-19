@@ -252,6 +252,8 @@ define dep_autopatch_detect
 			echo mix; \
 		elif [ -f $(DEPS_DIR)/$1/rebar.lock -o -f $(DEPS_DIR)/$1/rebar.config ]; then \
 			echo rebar3; \
+		elif [ -f $(DEPS_DIR)/$1/Makefile ]; then \
+			echo noop; \
 		else \
 			exit 99; \
 		fi \
