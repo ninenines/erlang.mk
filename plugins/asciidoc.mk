@@ -40,7 +40,7 @@ else
 
 MAN_INSTALL_PATH ?= /usr/local/share/man
 MAN_SECTIONS ?= 3 7
-MAN_PROJECT ?= $(shell echo $(PROJECT) | sed 's/^./\U&\E/')
+MAN_PROJECT ?= $(shell echo $(PROJECT) | awk '{ print toupper(substr($$0,1,1)) substr($$0,2) }')
 MAN_VERSION ?= $(PROJECT_VERSION)
 
 # Plugin-specific targets.
