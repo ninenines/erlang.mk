@@ -117,6 +117,22 @@ core-elixir-disable-autopatch-fail: init
 	$i "Building the application should fail"
 	$t ! $(MAKE) -C $(APP) $v
 
+core-elixir-disable-autopatch-erlang-mk: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Jose to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = jose\ndep_jose = git https://github.com/potatosalad/erlang-jose main\n"}' $(APP)/Makefile
+
+	$i "Disable Elixir in the Makefile"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ELIXIR = disable\n"}' $(APP)/Makefile
+
+	$i "Building the application should work as Jose is Erlang.mk-compatible"
+	$t $(MAKE) -C $(APP) $v
+
 core-elixir-disable-autopatch-make: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -145,13 +161,26 @@ core-elixir-disable-autopatch-rebar3: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add Jose to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = jose\ndep_jose = git https://github.com/potatosalad/erlang-jose main\n"}' $(APP)/Makefile
+	$i "Add OpenTelemetry_API to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = opentelemetry_api\ndep_opentelemetry_api = hex 1.3.0\n"}' $(APP)/Makefile
 
 	$i "Disable Elixir in the Makefile"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "ELIXIR = disable\n"}' $(APP)/Makefile
 
-	$i "Building the application should work as Jose is Rebar3-compatible"
+	$i "Building the application should work as OpenTelemetry_API is Rebar3-compatible"
+	$t $(MAKE) -C $(APP) $v
+
+core-elixir-disable-by-default-autopatch-rebar3: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add OpenTelemetry_API to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = opentelemetry_api\ndep_opentelemetry_api = hex 1.3.0\n"}' $(APP)/Makefile
+
+	$i "Building the application should work as OpenTelemetry_API is Rebar3-compatible"
 	$t $(MAKE) -C $(APP) $v
 
 core-elixir-from-dep: init

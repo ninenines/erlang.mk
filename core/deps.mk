@@ -142,6 +142,14 @@ export ERL_LIBS
 
 export NO_AUTOPATCH
 
+# Elixir.
+
+# Elixir is automatically enabled in all cases except when
+# an Erlang project uses an Elixir dependency. In that case
+# $(ELIXIR) must be set explicitly.
+ELIXIR ?= $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),dep,$(if $(EX_FILES),system,disable))
+export ELIXIR
+
 # Verbosity.
 
 dep_verbose_0 = @echo " DEP    $1 ($(call query_version,$1))";

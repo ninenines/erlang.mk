@@ -2,12 +2,6 @@
 # Copyright (c) 2024, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-# Elixir is automatically enabled in all cases except when
-# an Erlang project uses an Elixir dependency. In that case
-# $(ELIXIR) must be set explicitly.
-ELIXIR ?= $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),dep,$(if $(EX_FILES),system,disable))
-export ELIXIR
-
 ifeq ($(ELIXIR),system)
 # We expect 'elixir' to be on the path.
 ELIXIR_BIN ?= $(shell readlink -f `which elixir`)
