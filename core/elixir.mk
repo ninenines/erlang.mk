@@ -182,7 +182,7 @@ endef
 define compile_ex.erl
 	{ok, _} = application:ensure_all_started(elixir),
 	{ok, _} = application:ensure_all_started(mix),
-	$(foreach dep,$(LOCAL_DEPS),ok = application:load($(dep)),)
+	$(foreach dep,$(LOCAL_DEPS),_ = application:load($(dep)),)
 	ModCode = list_to_atom("Elixir.Code"),
 	ModCode:put_compiler_option(ignore_module_conflict, true),
 	ModComp = list_to_atom("Elixir.Kernel.ParallelCompiler"),
