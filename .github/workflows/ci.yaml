@@ -123,26 +123,22 @@ jobs:
         path: |
           test/test_*/
 
-  check-asdf-elixir:
+  check-elixir:
     runs-on: ubuntu-latest
     steps:
 
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install Erlang/OTP
-      uses: erlef/setup-beam@v1
-      with:
-        otp-version: 27
-        version-type: loose
-
-    - name: Install asdf along with Elixir
+    - name: Install Erlang/OTP and Elixir
       run: |
-        wget https://github.com/asdf-vm/asdf/releases/download/v0.16.5/asdf-v0.16.5-linux-amd64.tar.gz
-        tar xf asdf-v*-linux-amd64.tar.gz
-        ./asdf plugin add elixir
-        ./asdf install elixir latest
-        ./asdf set elixir latest
+        erlang_version=27.3.4.1
+        elixir_version=1.17.3
+        curl -fsSO https://elixir-lang.org/install.sh
+        sh install.sh elixir@$elixir_version otp@$erlang_version
+        export PATH=$(echo $HOME/.elixir-install/installs/otp/*/bin):$(echo $HOME/.elixir-install/installs/elixir/*-otp-*/bin):$PATH
+        erl -version
+        elixir --version
 
     - name: Install libsodium
       run: sudo apt-get -y install libsodium-dev
@@ -150,7 +146,7 @@ jobs:
     - name: Run tests
       run: |
         PATH=$PWD:$(echo $HOME/.elixir-install/installs/otp/*/bin):$PATH erl -sname init_cookie -run erlang halt
-        make check c=core-elixir -j4 -k PATH=$PWD:/home/runner/.asdf/shims:$PATH
+        make check c=core-elixir -j4 -k PATH=$PWD:$(echo $HOME/.elixir-install/installs/otp/*/bin):$(echo $HOME/.elixir-install/installs/elixir/*-otp-*/bin):$PATH
 
   check-hex:
     strategy:
