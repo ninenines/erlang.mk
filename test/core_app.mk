@@ -235,7 +235,7 @@ core-app-auto-git-id: init
 
 	$i "Make it a git repository"
 	$t cd $(APP) && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
