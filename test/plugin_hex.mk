@@ -10,7 +10,7 @@ hex_TARGETS = $(call list_targets,hex)
 
 hex: $(hex_TARGETS)
 
-ifeq ($(shell netcat -z localhost 4000 && echo ok),ok)
+ifeq ($(shell nc -z localhost 4000 && echo ok),ok)
 hex-user-create: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
