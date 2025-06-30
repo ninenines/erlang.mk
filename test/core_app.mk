@@ -1495,11 +1495,11 @@ core-app-xrl-include: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Download a .xrl file with numerous includes from Gordon"
-	$t curl -s -o $(APP)/src/xfl_lexer.xrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/formula_engine-1.0/priv/xfl_lexer.xrl
-	$t curl -s -o $(APP)/src/errvals.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/errvals.hrl
-	$t curl -s -o $(APP)/src/muin_proc_dict.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/muin_proc_dict.hrl
-	$t curl -s -o $(APP)/src/muin_records.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/muin_records.hrl
-	$t curl -s -o $(APP)/src/typechecks.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/typechecks.hrl
+	$t curl -s -o $(APP)/src/xfl_lexer.xrl https://raw.githubusercontent.com/essen/hypernumbers/master/lib/formula_engine-1.0/priv/xfl_lexer.xrl
+	$t curl -s -o $(APP)/src/errvals.hrl https://raw.githubusercontent.com/essen/hypernumbers/master/lib/hypernumbers-1.0/include/errvals.hrl
+	$t curl -s -o $(APP)/src/muin_proc_dict.hrl https://raw.githubusercontent.com/essen/hypernumbers/master/lib/hypernumbers-1.0/include/muin_proc_dict.hrl
+	$t curl -s -o $(APP)/src/muin_records.hrl https://raw.githubusercontent.com/essen/hypernumbers/master/lib/hypernumbers-1.0/include/muin_records.hrl
+	$t curl -s -o $(APP)/src/typechecks.hrl https://raw.githubusercontent.com/essen/hypernumbers/master/lib/hypernumbers-1.0/include/typechecks.hrl
 
 	$i "Generate unrelated .erl files"
 	$t echo "-module(boy)." > $(APP)/src/boy.erl
