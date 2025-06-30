@@ -23,7 +23,7 @@ core-plugins-all: init
 # We check that overriding THIS doesn't cause an error.
 	$t echo "THIS :=" >> $(APP)/plugin_dep/plugins.mk
 	$t cd $(APP)/plugin_dep && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
@@ -168,7 +168,7 @@ core-plugins-one: init
 # We check that overriding THIS doesn't cause an error.
 	$t echo "THIS :=" >> $(APP)/plugin_dep/plugins.mk
 	$t cd $(APP)/plugin_dep && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
@@ -197,7 +197,7 @@ core-plugins-templates: init
 		"-module(template_name)." \
 		"endef" > $(APP)/plugin_dep/plugins.mk
 	$t cd $(APP)/plugin_dep && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
@@ -238,7 +238,7 @@ core-plugins-templates-apps-only: init
 		"-module(test_mk)." \
 		"endef" > $(APP)/plugin_dep/plugins.mk
 	$t cd $(APP)/plugin_dep && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
@@ -276,7 +276,7 @@ core-plugins-templates-file: init
 	$t echo "THIS := \$$(dir \$$(realpath \$$(lastword \$$(MAKEFILE_LIST))))" > $(APP)/plugin_dep/plugins.mk
 	$t printf "%s\n" "tpl_test_mk = \$$(file < \$$(THIS)/templates/test_mk.erl)" >> $(APP)/plugin_dep/plugins.mk
 	$t cd $(APP)/plugin_dep && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
