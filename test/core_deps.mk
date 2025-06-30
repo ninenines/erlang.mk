@@ -624,7 +624,7 @@ core-deps-fetch-git-subfolder: init
 # Create an empty file so src/ gets committed.
 	$t touch $(APP)/git_repo/my_dep/src/README
 	$t cd $(APP)/git_repo && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
@@ -665,7 +665,7 @@ core-deps-fetch-git-submodule: init
 # Create an empty file so src/ gets committed.
 	$t touch $(APP)/my_dep/src/README
 	$t cd $(APP)/my_dep && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
@@ -674,7 +674,7 @@ core-deps-fetch-git-submodule: init
 	$i "Add the submodule to my_dep"
 	$t mkdir $(APP)/deps
 	$t cd $(APP) && \
-		git init -q && \
+		git init -q -b master && \
 		git -c protocol.file.allow=always submodule -q add file://$(abspath $(APP)/my_dep) deps/my_dep && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
@@ -870,7 +870,7 @@ define add_dep_and_subdep
 
 	$i "Create a Git repository for $(APP)_$(1)subdep"
 	$t (cd $(APP)_$(1)subdep && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.name "Testsuite" && \
 		git config user.email "testsuite@erlang.mk" && \
 		git add . && \
@@ -889,7 +889,7 @@ define add_dep_and_subdep
 
 	$i "Create a Git repository for $(APP)_$(1)dep"
 	$t (cd $(APP)_$(1)dep && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.name "Testsuite" && \
 		git config user.email "testsuite@erlang.mk" && \
 		git add . && \
@@ -928,7 +928,7 @@ dep_shelldep = git file://$(abspath $(APP)_shelldep) master\
 
 	$i "Create a Git repository for $(APP)"
 	$t (cd $(APP) && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.name "Testsuite" && \
 		git config user.email "testsuite@erlang.mk" && \
 		git add . && \
@@ -1033,7 +1033,7 @@ dep_dep = git file://$(abspath $(APP)_dep) master\
 
 	$i "Create a Git repository for $(APP)"
 	$t (cd $(APP) && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.name "Testsuite" && \
 		git config user.email "testsuite@erlang.mk" && \
 		git add . && \
@@ -1079,7 +1079,7 @@ dep_dep = git file://$(abspath $(APP)_dep) master\
 
 	$i "Create a Git repository for $(APP)"
 	$t (cd $(APP) && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.name "Testsuite" && \
 		git config user.email "testsuite@erlang.mk" && \
 		git add . && \
