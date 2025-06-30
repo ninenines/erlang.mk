@@ -161,8 +161,8 @@ core-deps-cache-git-reuse: init
 	$t cp ../erlang.mk $(APP)_2/
 	$t $(MAKE) -C $(APP)_2 -f erlang.mk bootstrap-lib $v
 
-	$i "Add Cowlib 2.0.0 to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git \$$(pkg_cowlib_repo) 2.0.0\n"}' $(APP)_2/Makefile
+	$i "Add Cowlib 2.15.0 to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git \$$(pkg_cowlib_repo) 2.15.0\n"}' $(APP)_2/Makefile
 
 	$i "Add CACHE_DEPS = 1 to the Makefile"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "CACHE_DEPS = 1\n"}' $(APP)_2/Makefile
@@ -182,8 +182,8 @@ core-deps-cache-git-reuse: init
 	$i "Check that $(APP)_1 cloned Cowlib 1.0.0"
 	$t test "$$(cat $(APP)_1/deps/cowlib/.git/HEAD)" = "d544a494af4dbc810fc9c15eaf5cc050cced1501"
 
-	$i "Check that $(APP)_2 cloned Cowlib 2.0.0"
-	$t test "$$(cat $(APP)_2/deps/cowlib/.git/HEAD)" = "bd37be4d3b065600c3b76b492535e76e5d413fc1"
+	$i "Check that $(APP)_2 cloned Cowlib 2.15.0"
+	$t test "$$(cat $(APP)_2/deps/cowlib/.git/HEAD)" = "f8d0ad7f19b5dddd33cbfb089ebd2e2be2a81a5d"
 
 core-deps-cache-hex: init
 
@@ -1264,8 +1264,8 @@ core-deps-order-first: init
 	$t cp ../erlang.mk $(APP)/my_dep/
 	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
 
-	$i "Add Cowlib 2.0.0 to the list of dependencies for my_dep"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git https://github.com/ninenines/cowlib 2.0.0\n"}' $(APP)/my_dep/Makefile
+	$i "Add Cowlib 2.15.0 to the list of dependencies for my_dep"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git https://github.com/ninenines/cowlib 2.15.0\n"}' $(APP)/my_dep/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy and my_dep to the applications key in the .app.src file"
@@ -1286,7 +1286,7 @@ endif
 		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, my_dep, ranch]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(cowboy, Deps), \
-		{ok, \"2.0.0\"} = application:get_key(cowlib, vsn), \
+		{ok, \"2.15.0\"} = application:get_key(cowlib, vsn), \
 		halt()"
 
 # A higher-level dependency always wins.
@@ -1297,8 +1297,8 @@ core-deps-order-top: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add Cowboy package and Cowlib 2.0.0 to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy cowlib\ndep_cowlib = git https://github.com/ninenines/cowlib 2.0.0\n"}' $(APP)/Makefile
+	$i "Add Cowboy package and Cowlib 2.15.0 to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy cowlib\ndep_cowlib = git https://github.com/ninenines/cowlib 2.15.0\n"}' $(APP)/Makefile
 
 ifdef LEGACY
 	$i "Add Cowboy to the applications key in the .app.src file"
@@ -1318,7 +1318,7 @@ endif
 		[ok = application:load(App) || App <- [$(APP), cowboy, cowlib, ranch]], \
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(cowboy, Deps), \
-		{ok, \"2.0.0\"} = application:get_key(cowlib, vsn), \
+		{ok, \"2.15.0\"} = application:get_key(cowlib, vsn), \
 		halt()"
 
 ifndef LEGACY
