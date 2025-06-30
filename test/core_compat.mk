@@ -163,7 +163,7 @@ core-compat-rebar-deps-git-tag: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Cowboy as a dependency"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = git https://github.com/ninenines/cowboy 2.9.0\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = git https://github.com/ninenines/cowboy 2.13.0\n"}' $(APP)/Makefile
 
 	$i "Run 'make rebar.config'"
 	$t $(MAKE) -C $(APP) rebar.config $v
@@ -174,7 +174,7 @@ core-compat-rebar-deps-git-tag: init
 	$i "Check that Cowboy is listed in rebar.config with a tag"
 	$t $(ERL) -eval " \
 		{ok, C} = file:consult(\"$(APP)/rebar.config\"), \
-		{_, [{cowboy, _, {git, _, {tag, \"2.9.0\"}}}]} = lists:keyfind(deps, 1, C), \
+		{_, [{cowboy, _, {git, _, {tag, \"2.13.0\"}}}]} = lists:keyfind(deps, 1, C), \
 		halt()"
 
 	$i "Distclean the application"
