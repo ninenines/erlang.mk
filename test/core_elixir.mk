@@ -295,7 +295,7 @@ ifdef LEGACY
 endif
 
 	$i "Build the application"
-	$t $(MAKE) -C $(APP) $v
+	$t $(MAKE) -C $(APP) $v CFLAGS=-I/usr/local/include
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
