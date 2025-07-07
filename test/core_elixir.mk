@@ -297,8 +297,12 @@ ifdef LEGACY
 	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tlibsalty2,\n"}' $(APP)/src/$(APP).app.src
 endif
 
+# Specify CFLAGS when building the Elixir NIF. On FreeBSD, libsodium's
+# `sodium.h` header is installed in `/usr/local/local`. The Makefile already
+# adds `/usr/local/include/sodium` to the compiler's `-I` search path, but it
+# doesn't cover the FreeBSD case.
 	$i "Build the application"
-	$t $(MAKE) -C $(APP) $v
+	$t $(MAKE) -C $(APP) $v CFLAGS=-I/usr/local/include
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
