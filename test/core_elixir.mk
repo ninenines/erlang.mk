@@ -146,6 +146,16 @@ core-elixir-disable-autopatch-make: init
 	$i "Disable Elixir in the Makefile"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "ELIXIR = disable\n"}' $(APP)/Makefile
 
+	$i "Fetch dependencies to patch 'reloader'"
+	$t $(MAKE) -C $(APP) fetch-deps $v
+
+# Patch `reloader` Makefile to be compatible with BSD sed. Its Makefile called
+# sed(1) in a way that was only compatible with GNU sed. As a consequence, the
+# build failed with BSD sed.
+	$i "Patch sed(1) use in Makefile"
+	$t test -f $(APP)/deps/reloader/Makefile
+	$t perl -pi.bak -e 's/\@sed/\@sed -E/;' -e 'if (/sed/) { s/{/\\{/g; s/}/\\}/g; s/\\s\*//; }' $(APP)/deps/reloader/Makefile
+
 	$i "Building the application should work as Reloader contains a proper Makefile"
 	$t $(MAKE) -C $(APP) $v
 
