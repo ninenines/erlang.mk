@@ -104,12 +104,17 @@ jobs:
 
     - name: Run tests (Linux)
       if: matrix.os == 'ubuntu-latest'
-      run: make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }}
+      run: |
+        erl -sname init_cookie -run erlang halt
+        make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }}
 
     - name: Run tests (Windows)
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
-      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }}
+      run: |
+        export PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH
+        erl -sname init_cookie -run erlang halt
+        make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }}
 
     - name: Upload artifacts
       if: failure()
@@ -144,7 +149,10 @@ jobs:
       run: sudo apt-get -y install libsodium-dev
 
     - name: Run tests
-      run: make check c=core-elixir -j4 -k PATH=$PWD:/home/runner/.asdf/shims:$PATH
+      run: |
+        export PATH=$PWD:/home/runner/.asdf/shims:$PATH
+        erl -sname init_cookie -run erlang halt
+        make check c=core-elixir -j4 -k
 
   check-hex:
     strategy:
@@ -205,12 +213,17 @@ jobs:
 
     - name: Run tests (Linux)
       if: matrix.os == 'ubuntu-latest'
-      run: make check c=hex -j4 -k ${{ matrix.extra }}
+      run: |
+        erl -sname init_cookie -run erlang halt
+        make check c=hex -j4 -k ${{ matrix.extra }}
 
     - name: Run tests (Windows)
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
-      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make check c=hex -j4 -k ${{ matrix.extra }}
+      run: |
+        export PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH
+        erl -sname init_cookie -run erlang halt
+        make check c=hex -j4 -k ${{ matrix.extra }}
 
     - name: Upload artifacts
       if: failure()
