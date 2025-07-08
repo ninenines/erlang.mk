@@ -235,7 +235,7 @@ core-app-auto-git-id: init
 
 	$i "Make it a git repository"
 	$t cd $(APP) && \
-		git init -q && \
+		git init -q -b master && \
 		git config user.email "testsuite@erlang.mk" && \
 		git config user.name "test suite" && \
 		git add . && \
@@ -1315,7 +1315,7 @@ core-app-pt: init
 		"-compile({parse_transform, my_pt})." > $(APP)/src/my_user.erl
 
 	$i "Build the application; confirm the parse_transform is used"
-	$t $(MAKE) -C $(APP) | grep "Running my_pt parse_transform."
+	$t $(MAKE) -C $(APP) 2>&1 | grep "Running my_pt parse_transform."
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
@@ -1355,7 +1355,7 @@ core-app-pt-erlc-opts: init
 	$t echo "ERLC_OPTS += +'{parse_transform, my_pt}'" >> $(APP)/Makefile
 
 	$i "Build the application; confirm the parse_transform is used"
-	$t $(MAKE) -C $(APP) | grep "Running my_pt parse_transform."
+	$t $(MAKE) -C $(APP) 2>&1 | grep "Running my_pt parse_transform."
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
@@ -1495,11 +1495,11 @@ core-app-xrl-include: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Download a .xrl file with numerous includes from Gordon"
-	$t curl -s -o $(APP)/src/xfl_lexer.xrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/formula_engine-1.0/priv/xfl_lexer.xrl
-	$t curl -s -o $(APP)/src/errvals.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/errvals.hrl
-	$t curl -s -o $(APP)/src/muin_proc_dict.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/muin_proc_dict.hrl
-	$t curl -s -o $(APP)/src/muin_records.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/muin_records.hrl
-	$t curl -s -o $(APP)/src/typechecks.hrl https://raw.githubusercontent.com/hypernumbers/hypernumbers/master/lib/hypernumbers-1.0/include/typechecks.hrl
+	$t curl -s -o $(APP)/src/xfl_lexer.xrl https://raw.githubusercontent.com/binarytemple/hypernumbers/master/lib/formula_engine-1.0/priv/xfl_lexer.xrl
+	$t curl -s -o $(APP)/src/errvals.hrl https://raw.githubusercontent.com/binarytemple/hypernumbers/master/lib/hypernumbers-1.0/include/errvals.hrl
+	$t curl -s -o $(APP)/src/muin_proc_dict.hrl https://raw.githubusercontent.com/binarytemple/hypernumbers/master/lib/hypernumbers-1.0/include/muin_proc_dict.hrl
+	$t curl -s -o $(APP)/src/muin_records.hrl https://raw.githubusercontent.com/binarytemple/hypernumbers/master/lib/hypernumbers-1.0/include/muin_records.hrl
+	$t curl -s -o $(APP)/src/typechecks.hrl https://raw.githubusercontent.com/binarytemple/hypernumbers/master/lib/hypernumbers-1.0/include/typechecks.hrl
 
 	$i "Generate unrelated .erl files"
 	$t echo "-module(boy)." > $(APP)/src/boy.erl
