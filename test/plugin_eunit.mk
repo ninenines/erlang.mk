@@ -275,7 +275,7 @@ eunit-erl-opts: init
 		"-endif." > $(APP)/src/$(APP).erl
 
 	$i "Check that EUnit uses EUNIT_ERL_OPTS"
-	$t $(MAKE) -C $(APP) eunit | grep -c "hello" | grep -q 1
+	$t $(MAKE) -C $(APP) eunit | grep -c "^hello" | grep -q 1
 
 eunit-fun: init
 

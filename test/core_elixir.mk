@@ -146,6 +146,13 @@ core-elixir-disable-autopatch-make: init
 	$i "Disable Elixir in the Makefile"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "ELIXIR = disable\n"}' $(APP)/Makefile
 
+	$i "Fetch dependencies to patch 'reloader'"
+	$t $(MAKE) -C $(APP) fetch-deps $v
+
+	$i "Patch sed(1) use in Makefile"
+	$t test -f $(APP)/deps/reloader/Makefile
+	$t perl -pi.bak -e 's/\@sed/\@sed -E/;' -e 'if (/sed/) { s/{/\\{/g; s/}/\\}/g; s/\\s\*//; }' $(APP)/deps/reloader/Makefile
+
 	$i "Building the application should work as Reloader contains a proper Makefile"
 	$t $(MAKE) -C $(APP) $v
 
@@ -288,7 +295,7 @@ ifdef LEGACY
 endif
 
 	$i "Build the application"
-	$t $(MAKE) -C $(APP) $v
+	$t $(MAKE) -C $(APP) $v CFLAGS=-I/usr/local/include
 
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
