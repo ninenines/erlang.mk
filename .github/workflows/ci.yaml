@@ -139,11 +139,11 @@ jobs:
 
     - name: Install asdf along with Elixir
       run: |
-        wget https://github.com/asdf-vm/asdf/releases/download/v0.16.5/asdf-v0.16.5-linux-amd64.tar.gz
+        wget https://github.com/asdf-vm/asdf/releases/download/v0.18.0/asdf-v0.18.0-linux-amd64.tar.gz
         tar xf asdf-v*-linux-amd64.tar.gz
         ./asdf plugin add elixir
-        ./asdf install elixir latest
-        ./asdf set elixir latest
+        ./asdf install elixir 1.18.4-otp-27
+        ./asdf set elixir 1.18.4-otp-27
 
     - name: Install libsodium
       run: sudo apt-get -y install libsodium-dev
