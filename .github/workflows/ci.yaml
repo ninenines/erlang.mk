@@ -438,3 +438,11 @@ jobs:
           erl -sname init_cookie -run erlang halt
 
           gmake check c=${{ matrix.suite }} -j4 USE_NODETOOL=1
+
+    - name: Upload artifacts
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }} ${{ matrix.suite }}
+        path: |
+          test/test_*/
