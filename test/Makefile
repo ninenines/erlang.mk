@@ -34,6 +34,9 @@ else
 PLATFORM = unix
 endif
 
+# export PLATFORM
+$(info Test platform: UNAME_S=$(UNAME_S) -> PLATFORM=$(PLATFORM))
+
 # Some systems do not have sub-second file times resolution.
 # This is the case for older systems like OSX that uses the HFS+
 # file system. HFS+ has a 1 second time resolution. This is a

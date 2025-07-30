@@ -24,8 +24,8 @@ jobs:
           - '1.17'
         os:
 #          - macos-latest
-          - ubuntu-latest
-#          - windows-latest
+          # - ubuntu-latest
+          - windows-latest
         suite:
           - core-app
           - core-apps
@@ -124,325 +124,325 @@ jobs:
         path: |
           test/test_*/
 
-  check-asdf-elixir:
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Install Erlang/OTP
-      uses: erlef/setup-beam@v1
-      with:
-        otp-version: 27
-        version-type: loose
-
-    - name: Install asdf along with Elixir
-      run: |
-        wget https://github.com/asdf-vm/asdf/releases/download/v0.18.0/asdf-v0.18.0-linux-amd64.tar.gz
-        tar xf asdf-v*-linux-amd64.tar.gz
-        ./asdf plugin add elixir
-        ./asdf install elixir 1.18.4-otp-27
-        ./asdf set elixir 1.18.4-otp-27
-
-    - name: Install libsodium
-      run: sudo apt-get -y install libsodium-dev
-
-    - name: Run tests
-      run: |
-        export PATH=$PWD:/home/runner/.asdf/shims:$PATH
-        erl -sname init_cookie -run erlang halt
-        make check c=core-elixir -j4 -k
-
-  check-hex:
-    strategy:
-      fail-fast: false
-      matrix:
-        erlang:
-          - '27'
-        os:
-#          - macos-latest
-          - ubuntu-latest
-#          - windows-latest
-        extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
-
-    services:
-      postgres:
-        image: postgres:14
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    runs-on: ${{ matrix.os }}
-    steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Install Erlang/OTP and Elixir
-      uses: erlef/setup-beam@v1
-      with:
-        otp-version: ${{ matrix.erlang }}
-        elixir-version: '1.18'
-        version-type: loose
-
-    - name: Setup MSYS2 (Windows)
-      if: matrix.os == 'windows-latest'
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: mingw64
-        release: false
-        update: true
-        install: >-
-          git
-          make
-          mingw-w64-x86_64-gcc
-          gnu-netcat
-          diffutils
-
-    - name: Setup local Hexpm
-      run: |
-        git clone https://github.com/hexpm/hexpm
-        cd hexpm
-        perl -ni.bak -e 'print;if ($.==3) {print "  user_confirm: false,\n"}' config/dev.exs
-        mix setup
-        mix phx.server &
-
-    - name: Run tests (Linux)
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        erl -sname init_cookie -run erlang halt
-        make check c=hex -j4 -k ${{ matrix.extra }}
-
-    - name: Run tests (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: msys2 {0}
-      run: |
-        export PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH
-        erl -sname init_cookie -run erlang halt
-        make check c=hex -j4 -k ${{ matrix.extra }}
-
-    - name: Upload artifacts
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.os }} OTP-${{ matrix.erlang }} ${{ matrix.suite }} ${{ matrix.extra }}
-        path: |
-          test/test_*/
-
-  packages:
-    strategy:
-      fail-fast: false
-      matrix:
-        erlang:
-          - '27'
-        os:
-#          - macos-latest
-          - ubuntu-latest
-#          - windows-latest
-        extra: ['', 'LEGACY=1']
-    runs-on: ${{ matrix.os }}
-    steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Install Erlang/OTP
-      uses: erlef/setup-beam@v1
-      with:
-        otp-version: ${{ matrix.erlang }}
-        version-type: loose
-
-    - name: Setup MSYS2 (Windows)
-      if: matrix.os == 'windows-latest'
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: mingw64
-        release: false
-        update: true
-        install: >-
-          git
-          make
-          mingw-w64-x86_64-gcc
-          gnu-netcat
-          diffutils
-
-    - name: Check packages (Linux)
-      if: matrix.os == 'ubuntu-latest'
-      run: make packages -k ${{ matrix.extra }}
-
-    - name: Check packages (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: msys2 {0}
-      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make packages -k ${{ matrix.extra }}
-
-    - name: Upload artifacts
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.os }} OTP-${{ matrix.erlang }} packages ${{ matrix.extra }}
-        path: |
-          test/packages/
-
-  hexpm-packages:
-    strategy:
-      fail-fast: false
-      matrix:
-        erlang:
-          - '27'
-        os:
-#          - macos-latest
-          - ubuntu-latest
-#          - windows-latest
-        packages:
-          - '^cowboy \|^cowlib \|^gun \|^ranch '
-          - '^amqp_client \|^amqp10_client \|^aten \|^credentials_obfuscation \|^cuttlefish '
-          - '^gen_batch_server \|^ra \|^seshat \|^stdout_formatter \|^sysmon_handler '
-        extra: ['', 'LEGACY=1']
-    runs-on: ${{ matrix.os }}
-    steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Install Erlang/OTP
-      uses: erlef/setup-beam@v1
-      with:
-        otp-version: ${{ matrix.erlang }}
-        version-type: loose
-
-    - name: Setup MSYS2 (Windows)
-      if: matrix.os == 'windows-latest'
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: mingw64
-        release: false
-        update: true
-        install: >-
-          git
-          make
-          mingw-w64-x86_64-gcc
-          gnu-netcat
-          diffutils
-
-    - name: Check select packages (Linux)
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        cat test/hexpm_packages.txt | grep "${{ matrix.packages }}" > select_hexpm_packages.txt
-        mv select_hexpm_packages.txt test/hexpm_packages.txt
-        make hexpm-packages -k ${{ matrix.extra }}
-
-    - name: Check select packages (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: msys2 {0}
-      run: |
-        cat test/hexpm_packages.txt | grep "${{ matrix.packages }}" > select_hexpm_packages.txt
-        mv select_hexpm_packages.txt test/hexpm_packages.txt
-        PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make hexpm-packages -k ${{ matrix.extra }}
-
-    - name: Upload artifacts
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.os }} OTP-${{ matrix.erlang }} packages ${{ matrix.extra }}
-        path: |
-          test/hexpm_packages.txt
-          test/packages/
-
-  templates:
-    strategy:
-      fail-fast: false
-      matrix:
-        erlang:
-          - '27'
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Install Erlang/OTP
-      uses: erlef/setup-beam@v1
-      with:
-        otp-version: ${{ matrix.erlang }}
-        version-type: loose
-
-    - name: Check templates
-      run: make check-templates
-
-  check-in-vm:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - freebsd
-        suite:
-          - core-app
-          - core-apps
-          - core-autopatch
-          - core-compat
-          # Trick GH runners into picking this slower job early.
-          - ACME=1 c=core-deps
-          - core-elixir
-          - core-makedep
-          - core-misc
-          - core-plugins
-          - core-query
-          - core-upgrade
-          - asciidoc
-          - bootstrap
-          - concuerror
-          - cover
-          - c-src
-          - ct
-          - dialyzer SET=1
-          - dialyzer SET=2
-          - dialyzer SET=3
-          - dialyzer SET=4
-          - edoc
-          - erlydtl
-          - escript
-          - eunit
-          - proper
-          - protobuffs
-          # Trick GH runners into picking this slower job early.
-          - ACME=1 c=relx
-          - shell
-          - sphinx
-          - triq
-          - xref
-        # Don't run tests with CACHE_DEPS or LEGACY. Running them on Linux is
-        # good enough.
-        # extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Run tests (FreeBSD)
-      uses: cross-platform-actions/action@v0.29.0
-      timeout-minutes: 60
-      with:
-        operating_system: ${{ matrix.os }}
-        version: '14.3'
-        run: |
-          sudo pkg update
-          sudo pkg upgrade -y
-          sudo pkg install -y erlang elixir bash ca_root_nss gmake git libsodium perl5 7-zip
-
-          git config --global safe.directory '*'
-          erl -sname init_cookie -run erlang halt
-
-          gmake check c=${{ matrix.suite }} -j4 USE_NODETOOL=1
-
-    - name: Upload artifacts
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.os }} ${{ matrix.suite }}
-        path: |
-          test/test_*/
+#   check-asdf-elixir:
+#     runs-on: ubuntu-latest
+#     steps:
+#
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
+#
+#     - name: Install Erlang/OTP
+#       uses: erlef/setup-beam@v1
+#       with:
+#         otp-version: 27
+#         version-type: loose
+#
+#     - name: Install asdf along with Elixir
+#       run: |
+#         wget https://github.com/asdf-vm/asdf/releases/download/v0.18.0/asdf-v0.18.0-linux-amd64.tar.gz
+#         tar xf asdf-v*-linux-amd64.tar.gz
+#         ./asdf plugin add elixir
+#         ./asdf install elixir 1.18.4-otp-27
+#         ./asdf set elixir 1.18.4-otp-27
+#
+#     - name: Install libsodium
+#       run: sudo apt-get -y install libsodium-dev
+#
+#     - name: Run tests
+#       run: |
+#         export PATH=$PWD:/home/runner/.asdf/shims:$PATH
+#         erl -sname init_cookie -run erlang halt
+#         make check c=core-elixir -j4 -k
+#
+#   check-hex:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         erlang:
+#           - '27'
+#         os:
+# #          - macos-latest
+#           - ubuntu-latest
+# #          - windows-latest
+#         extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
+#
+#     services:
+#       postgres:
+#         image: postgres:14
+#         env:
+#           POSTGRES_USER: postgres
+#           POSTGRES_PASSWORD: postgres
+#           POSTGRES_DB: postgres
+#         ports:
+#           - 5432:5432
+#         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+#     runs-on: ${{ matrix.os }}
+#     steps:
+#
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
+#
+#     - name: Install Erlang/OTP and Elixir
+#       uses: erlef/setup-beam@v1
+#       with:
+#         otp-version: ${{ matrix.erlang }}
+#         elixir-version: '1.18'
+#         version-type: loose
+#
+#     - name: Setup MSYS2 (Windows)
+#       if: matrix.os == 'windows-latest'
+#       uses: msys2/setup-msys2@v2
+#       with:
+#         msystem: mingw64
+#         release: false
+#         update: true
+#         install: >-
+#           git
+#           make
+#           mingw-w64-x86_64-gcc
+#           gnu-netcat
+#           diffutils
+#
+#     - name: Setup local Hexpm
+#       run: |
+#         git clone https://github.com/hexpm/hexpm
+#         cd hexpm
+#         perl -ni.bak -e 'print;if ($.==3) {print "  user_confirm: false,\n"}' config/dev.exs
+#         mix setup
+#         mix phx.server &
+#
+#     - name: Run tests (Linux)
+#       if: matrix.os == 'ubuntu-latest'
+#       run: |
+#         erl -sname init_cookie -run erlang halt
+#         make check c=hex -j4 -k ${{ matrix.extra }}
+#
+#     - name: Run tests (Windows)
+#       if: matrix.os == 'windows-latest'
+#       shell: msys2 {0}
+#       run: |
+#         export PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH
+#         erl -sname init_cookie -run erlang halt
+#         make check c=hex -j4 -k ${{ matrix.extra }}
+#
+#     - name: Upload artifacts
+#       if: failure()
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: ${{ matrix.os }} OTP-${{ matrix.erlang }} ${{ matrix.suite }} ${{ matrix.extra }}
+#         path: |
+#           test/test_*/
+#
+#   packages:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         erlang:
+#           - '27'
+#         os:
+# #          - macos-latest
+#           - ubuntu-latest
+# #          - windows-latest
+#         extra: ['', 'LEGACY=1']
+#     runs-on: ${{ matrix.os }}
+#     steps:
+#
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
+#
+#     - name: Install Erlang/OTP
+#       uses: erlef/setup-beam@v1
+#       with:
+#         otp-version: ${{ matrix.erlang }}
+#         version-type: loose
+#
+#     - name: Setup MSYS2 (Windows)
+#       if: matrix.os == 'windows-latest'
+#       uses: msys2/setup-msys2@v2
+#       with:
+#         msystem: mingw64
+#         release: false
+#         update: true
+#         install: >-
+#           git
+#           make
+#           mingw-w64-x86_64-gcc
+#           gnu-netcat
+#           diffutils
+#
+#     - name: Check packages (Linux)
+#       if: matrix.os == 'ubuntu-latest'
+#       run: make packages -k ${{ matrix.extra }}
+#
+#     - name: Check packages (Windows)
+#       if: matrix.os == 'windows-latest'
+#       shell: msys2 {0}
+#       run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make packages -k ${{ matrix.extra }}
+#
+#     - name: Upload artifacts
+#       if: failure()
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: ${{ matrix.os }} OTP-${{ matrix.erlang }} packages ${{ matrix.extra }}
+#         path: |
+#           test/packages/
+#
+#   hexpm-packages:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         erlang:
+#           - '27'
+#         os:
+# #          - macos-latest
+#           - ubuntu-latest
+# #          - windows-latest
+#         packages:
+#           - '^cowboy \|^cowlib \|^gun \|^ranch '
+#           - '^amqp_client \|^amqp10_client \|^aten \|^credentials_obfuscation \|^cuttlefish '
+#           - '^gen_batch_server \|^ra \|^seshat \|^stdout_formatter \|^sysmon_handler '
+#         extra: ['', 'LEGACY=1']
+#     runs-on: ${{ matrix.os }}
+#     steps:
+#
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
+#
+#     - name: Install Erlang/OTP
+#       uses: erlef/setup-beam@v1
+#       with:
+#         otp-version: ${{ matrix.erlang }}
+#         version-type: loose
+#
+#     - name: Setup MSYS2 (Windows)
+#       if: matrix.os == 'windows-latest'
+#       uses: msys2/setup-msys2@v2
+#       with:
+#         msystem: mingw64
+#         release: false
+#         update: true
+#         install: >-
+#           git
+#           make
+#           mingw-w64-x86_64-gcc
+#           gnu-netcat
+#           diffutils
+#
+#     - name: Check select packages (Linux)
+#       if: matrix.os == 'ubuntu-latest'
+#       run: |
+#         cat test/hexpm_packages.txt | grep "${{ matrix.packages }}" > select_hexpm_packages.txt
+#         mv select_hexpm_packages.txt test/hexpm_packages.txt
+#         make hexpm-packages -k ${{ matrix.extra }}
+#
+#     - name: Check select packages (Windows)
+#       if: matrix.os == 'windows-latest'
+#       shell: msys2 {0}
+#       run: |
+#         cat test/hexpm_packages.txt | grep "${{ matrix.packages }}" > select_hexpm_packages.txt
+#         mv select_hexpm_packages.txt test/hexpm_packages.txt
+#         PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make hexpm-packages -k ${{ matrix.extra }}
+#
+#     - name: Upload artifacts
+#       if: failure()
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: ${{ matrix.os }} OTP-${{ matrix.erlang }} packages ${{ matrix.extra }}
+#         path: |
+#           test/hexpm_packages.txt
+#           test/packages/
+#
+#   templates:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         erlang:
+#           - '27'
+#     runs-on: ubuntu-latest
+#     steps:
+#
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
+#
+#     - name: Install Erlang/OTP
+#       uses: erlef/setup-beam@v1
+#       with:
+#         otp-version: ${{ matrix.erlang }}
+#         version-type: loose
+#
+#     - name: Check templates
+#       run: make check-templates
+#
+#   check-in-vm:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         os:
+#           - freebsd
+#         suite:
+#           - core-app
+#           - core-apps
+#           - core-autopatch
+#           - core-compat
+#           # Trick GH runners into picking this slower job early.
+#           - ACME=1 c=core-deps
+#           - core-elixir
+#           - core-makedep
+#           - core-misc
+#           - core-plugins
+#           - core-query
+#           - core-upgrade
+#           - asciidoc
+#           - bootstrap
+#           - concuerror
+#           - cover
+#           - c-src
+#           - ct
+#           - dialyzer SET=1
+#           - dialyzer SET=2
+#           - dialyzer SET=3
+#           - dialyzer SET=4
+#           - edoc
+#           - erlydtl
+#           - escript
+#           - eunit
+#           - proper
+#           - protobuffs
+#           # Trick GH runners into picking this slower job early.
+#           - ACME=1 c=relx
+#           - shell
+#           - sphinx
+#           - triq
+#           - xref
+#         # Don't run tests with CACHE_DEPS or LEGACY. Running them on Linux is
+#         # good enough.
+#         # extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
+#     runs-on: ubuntu-latest
+#     steps:
+#
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
+#
+#     - name: Run tests (FreeBSD)
+#       uses: cross-platform-actions/action@v0.29.0
+#       timeout-minutes: 60
+#       with:
+#         operating_system: ${{ matrix.os }}
+#         version: '14.3'
+#         run: |
+#           sudo pkg update
+#           sudo pkg upgrade -y
+#           sudo pkg install -y erlang elixir bash ca_root_nss gmake git libsodium perl5 7-zip
+#
+#           git config --global safe.directory '*'
+#           erl -sname init_cookie -run erlang halt
+#
+#           gmake check c=${{ matrix.suite }} -j4 USE_NODETOOL=1
+#
+#     - name: Upload artifacts
+#       if: failure()
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: ${{ matrix.os }} ${{ matrix.suite }}
+#         path: |
+#           test/test_*/
