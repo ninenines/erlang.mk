@@ -7,6 +7,7 @@ c_src_TARGETS = $(call list_targets,c-src)
 c-src: $(c_src_TARGETS)
 c_src: c-src
 
+$(info PLATFORM=$(PLATFORM))
 ifeq ($(PLATFORM),msys2)
 C_SRC_OUTPUT_SHARED_EXTENSION = .dll
 C_SRC_OUTPUT_STATIC_EXTENSION = .lib
