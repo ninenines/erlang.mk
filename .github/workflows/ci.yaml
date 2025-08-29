@@ -301,6 +301,7 @@ jobs:
           - '^cowboy \|^cowlib \|^gun \|^ranch '
           - '^amqp_client \|^amqp10_client \|^aten \|^credentials_obfuscation \|^cuttlefish '
           - '^gen_batch_server \|^ra \|^seshat \|^stdout_formatter \|^sysmon_handler '
+          - '^rocksdb '
         extra: ['', 'LEGACY=1']
     runs-on: ${{ matrix.os }}
     steps:

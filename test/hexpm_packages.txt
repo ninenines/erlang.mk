@@ -1641,7 +1641,7 @@ rlamb_publishtest 0.1.0
 rlp 1.1.0
 rmpc 18.5.9
 robots 1.1.2
-rocksdb 1.8.0
+rocksdb 1.9.0
 rocksdb_cloud 1.0.1
 roni 1.0.1
 roster 3.4.0

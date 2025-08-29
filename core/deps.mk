@@ -531,10 +531,11 @@ define dep_autopatch_rebar.erl
 				Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
 		end
 	end(),
-	Write("\n\nrebar_dep: preprocess pre-deps deps pre-app app\n"),
+	Write("\n\nrebar_dep: preprocess pre-deps deps pre-app app post-app\n"),
 	Write("\npreprocess::\n"),
 	Write("\npre-deps::\n"),
 	Write("\npre-app::\n"),
+	Write("\npost-app::\n"),
 	PatchHook = fun(Cmd) ->
 		Cmd2 = re:replace(Cmd, "^([g]?make)(.*)( -C.*)", "\\\\1\\\\3\\\\2", [{return, list}]),
 		case Cmd2 of
@@ -559,6 +560,24 @@ define dep_autopatch_rebar.erl
 					{Regex, compile, Cmd} ->
 						case rebar_utils:is_arch(Regex) of
 							true -> Write("\npre-app::\n\tCC=$$\(CC) " ++ PatchHook(Cmd) ++ "\n");
+							false -> ok
+						end;
+					_ -> ok
+				end || H <- Hooks]
+		end
+	end(),
+	fun() ->
+		case lists:keyfind(post_hooks, 1, Conf) of
+			false -> ok;
+			{_, Hooks} ->
+				[case H of
+					{compile, Cmd} ->
+						Write("\npost-app::\n\tCC=$$\(CC) " ++ PatchHook(Cmd) ++ "\n");
+					{{pc, compile}, Cmd} ->
+						Write("\npost-app::\n\tCC=$$\(CC) " ++ PatchHook(Cmd) ++ "\n");
+					{Regex, compile, Cmd} ->
+						case rebar_utils:is_arch(Regex) of
+							true -> Write("\npost-app::\n\tCC=$$\(CC) " ++ PatchHook(Cmd) ++ "\n");
 							false -> ok
 						end;
 					_ -> ok
