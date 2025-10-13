@@ -1,0 +1,26 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "make-problem-matcher",
+      "pattern": [
+        {
+          "regexp": "^make\\[\\d+\\]: \\*\\*\\* (\\[(\\S+):(\\d+): .+)$$",
+          "file": 2,
+          "line": 3,
+          "message": 1
+        }
+      ]
+    },
+    {
+      "owner": "gmake-problem-matcher",
+      "pattern": [
+        {
+          "regexp": "^gmake\\[\\d+\\]: \\*\\*\\* (\\[(\\S+):(\\d+): .+)$$",
+          "file": 2,
+          "line": 3,
+          "message": 1
+        }
+      ]
+    }
+  ]
+}

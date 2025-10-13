@@ -102,11 +102,15 @@ jobs:
       if: matrix.os == 'ubuntu-latest' && matrix.suite == 'core-elixir'
       run: sudo apt-get -y install libsodium-dev
 
+    - name: Install problem matchers
+      run: echo "::add-matcher::.github/matchers/erlang-mk-matchers.json"
+
     - name: Run tests (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: |
         erl -sname init_cookie -run erlang halt
-        make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }}
+        set -o pipefail
+        make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }} 2>&1 | sed "s/\*\*\* \[/*** [test\//"
 
     - name: Run tests (Windows)
       if: matrix.os == 'windows-latest'
@@ -114,7 +118,8 @@ jobs:
       run: |
         export PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH
         erl -sname init_cookie -run erlang halt
-        make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }}
+        set -o pipefail
+        make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }} 2>&1 | sed "s/\*\*\* \[/*** [test\//"
 
     - name: Upload artifacts
       if: failure()
@@ -424,6 +429,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Install problem matchers
+      run: echo "::add-matcher::.github/matchers/erlang-mk-matchers.json"
+
     - name: Run tests (FreeBSD)
       uses: cross-platform-actions/action@v0.29.0
       timeout-minutes: 60
@@ -438,7 +446,8 @@ jobs:
           git config --global safe.directory '*'
           erl -sname init_cookie -run erlang halt
 
-          gmake check c=${{ matrix.suite }} -j4 USE_NODETOOL=1
+          set -o pipefail
+          gmake check c=${{ matrix.suite }} -j4 USE_NODETOOL=1 2>&1 | sed "s/\*\*\* \[/*** [test\//"
 
     - name: Upload artifacts
       if: failure()
