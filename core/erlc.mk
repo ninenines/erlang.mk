@@ -262,6 +262,12 @@ endef
 
 ifeq ($(if $(NO_MAKEDEP),$(wildcard $(PROJECT).d),),)
 $(PROJECT).d:: $(ERL_FILES) $(EX_FILES) $(call core_find,include/,*.hrl) $(MAKEFILE_LIST)
+# Rebuild everything when the .d file does not exist.
+# We touch $@ to make sure the command doesn't fail in empty projects.
+# The file will be generated with content immediately after.
+	$(verbose) if ! test -e $@; then \
+		touch $@ $(ERL_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES); \
+	fi
 	$(makedep_verbose) $(call erlang,$(call makedep.erl,$@))
 endif
 
