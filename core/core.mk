@@ -59,11 +59,6 @@ gen_verbose_esc_0 = @echo " GEN   " $$@;
 gen_verbose_esc_2 = set -x;
 gen_verbose_esc = $(gen_verbose_esc_$(V))
 
-# Temporary files directory.
-
-ERLANG_MK_TMP ?= $(CURDIR)/.erlang.mk
-export ERLANG_MK_TMP
-
 # "erl" command.
 
 ERL = erl -noinput -boot no_dot_erlang -kernel start_distribution false +P 1024 +Q 1024
@@ -97,6 +92,19 @@ endif
 
 export PLATFORM
 endif
+
+ifeq ($(PLATFORM),msys2)
+core_native_path = $(shell cygpath -m $1)
+else
+core_native_path = $1
+endif
+
+# Temporary files directory.
+
+ERLANG_MK_TMP ?= $(CURDIR)/.erlang.mk
+export ERLANG_MK_TMP
+
+NATIVE_ERLANG_MK_TMP = $(eval NATIVE_ERLANG_MK_TMP := $$(call core_native_path,$(ERLANG_MK_TMP)))$(NATIVE_ERLANG_MK_TMP)
 
 # Core targets.
 
@@ -173,12 +181,6 @@ endef
 define erlang
 $(ERL) $2 -pz $(ERLANG_MK_TMP)/rebar3/_build/prod/lib/*/ebin/ -eval "$(subst $(newline),,$(call escape_dquotes,$1))" -- erlang.mk
 endef
-
-ifeq ($(PLATFORM),msys2)
-core_native_path = $(shell cygpath -m $1)
-else
-core_native_path = $1
-endif
 
 core_http_get = curl -Lf$(if $(filter-out 0,$V),,s)o $(call core_native_path,$1) $2
 

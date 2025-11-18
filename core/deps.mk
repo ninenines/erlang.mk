@@ -31,6 +31,8 @@ CACHE_DEPS ?= 0
 CACHE_DIR ?= $(if $(XDG_CACHE_HOME),$(XDG_CACHE_HOME),$(HOME)/.cache)/erlang.mk
 export CACHE_DIR
 
+NATIVE_CACHE_DIR = $(eval NATIVE_CACHE_DIR := $$(call core_native_path,$(CACHE_DIR)))$(NATIVE_CACHE_DIR)
+
 HEX_CONFIG ?=
 
 define hex_config.erl
@@ -849,7 +851,7 @@ define hex_get_tarball.erl
 	Config = $(hex_config.erl),
 	case hex_repo:get_tarball(Config, <<"$1">>, <<"$(strip $2)">>) of
 		{ok, {200, _, Tarball}} ->
-			ok = file:write_file("$(call core_native_path,$3)", Tarball),
+			ok = file:write_file("$3", Tarball),
 			halt(0);
 		{ok, {Status, _, Errors}} ->
 			io:format("Error ~b: ~0p~n", [Status, Errors]),
@@ -865,7 +867,7 @@ define dep_fetch_hex
 	$(eval hex_pkg_name := $(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)) \
 	$(eval hex_tar_name := $(hex_pkg_name)-$(strip $(word 2,$(dep_$1))).tar) \
 	$(if $(wildcard $(CACHE_DIR)/hex/$(hex_tar_name)),,\
-		$(call erlang,$(call hex_get_tarball.erl,$(hex_pkg_name),$(word 2,$(dep_$1)),$(CACHE_DIR)/hex/$(hex_tar_name)));) \
+		$(call erlang,$(call hex_get_tarball.erl,$(hex_pkg_name),$(word 2,$(dep_$1)),$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name)));) \
 	tar -xOf $(CACHE_DIR)/hex/$(hex_tar_name) contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
 
@@ -874,7 +876,7 @@ else
 # Hex only has a package version. No need to look in the Erlang.mk packages.
 define dep_fetch_hex
 	mkdir -p $(ERLANG_MK_TMP)/hex $(DEPS_DIR)/$1; \
-	$(call erlang,$(call hex_get_tarball.erl,$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1),$(word 2,$(dep_$1)),$(ERLANG_MK_TMP)/hex/$1.tar)); \
+	$(call erlang,$(call hex_get_tarball.erl,$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1),$(word 2,$(dep_$1)),$(NATIVE_ERLANG_MK_TMP)/hex/$1.tar)); \
 	tar -xOf $(ERLANG_MK_TMP)/hex/$1.tar contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
 endef
 
