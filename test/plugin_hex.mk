@@ -22,7 +22,7 @@ hex-user-create: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Check that the user exists"
 	$t curl -sf http://localhost:4000/api/users/$(APP) >/dev/null
@@ -72,10 +72,10 @@ hex-user-create-password-with-space: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="123 567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="123 5678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Check that the user exists"
-	$t curl --user "$(APP):123 567" -sf http://localhost:4000/api/users/$(APP) >/dev/null
+	$t curl --user "$(APP):123 5678" -sf http://localhost:4000/api/users/$(APP) >/dev/null
 
 hex-key-add: init
 
@@ -88,13 +88,13 @@ hex-key-add: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" $v
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" $v
 
 	$i "Check that the key exists"
-	$t curl --user $(APP):1234567 -sf http://localhost:4000/api/keys/$(shell hostname)-erlang-mk >/dev/null
+	$t curl --user $(APP):12345678 -sf http://localhost:4000/api/keys/$(shell hostname)-erlang-mk >/dev/null
 
 hex-tarball-create: init
 
@@ -206,10 +206,10 @@ hex-release-publish: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
@@ -247,10 +247,10 @@ endif
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the Cowlib release"
 	$t cp ../erlang.mk $(APP)/deps/cowlib
@@ -277,10 +277,10 @@ hex-release-replace: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
@@ -308,10 +308,10 @@ hex-release-delete: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
@@ -336,10 +336,10 @@ hex-release-retire: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
@@ -364,10 +364,10 @@ hex-release-unretire: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
@@ -439,10 +439,10 @@ hex-docs-publish: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
@@ -475,10 +475,10 @@ hex-docs-delete: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" HEX_EMAIL=$(APP)@noone.nope $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.nope $v
 
 	$i "Create a key for that user"
-	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="1234567" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
