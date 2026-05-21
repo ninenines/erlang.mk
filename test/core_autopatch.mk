@@ -34,7 +34,7 @@ core-autopatch-extended-erlc-opts: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add couchbeam to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = couchbeam\ndep_couchbeam = git https://github.com/benoitc/couchbeam master\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = couchbeam\ndep_couchbeam = git https://github.com/benoitc/couchbeam 1.7.0\n"}' $(APP)/Makefile
 
 	$i "Extend autopatch-couchbeam to add options to its ERLC_OPTS"
 	$t echo "autopatch-couchbeam:: ; echo >> \$$(DEPS_DIR)/couchbeam/Makefile; echo 'ERLC_OPTS += -DWITH_JIFFY' >> \$$(DEPS_DIR)/couchbeam/Makefile" >> $(APP)/Makefile
