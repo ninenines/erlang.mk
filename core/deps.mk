@@ -156,14 +156,6 @@ dep_verbose_0 = @echo " DEP    $1 ($(call query_version,$1))";
 dep_verbose_2 = set -x;
 dep_verbose = $(dep_verbose_$(V))
 
-# Optimization: don't recompile deps unless truly necessary.
-
-ifndef IS_DEP
-ifneq ($(MAKELEVEL),0)
-$(shell rm -f ebin/dep_built)
-endif
-endif
-
 # Core targets.
 
 ALL_APPS_DIRS_TO_BUILD = $(if $(LOCAL_DEPS_DIRS)$(IS_APP),$(LOCAL_DEPS_DIRS),$(ALL_APPS_DIRS))
@@ -217,26 +209,29 @@ endef
 endif
 endif
 
+$(ERLANG_MK_TMP)/dep_built:
+	$(verbose) mkdir -p $(ERLANG_MK_TMP)/dep_built
+
 ifneq ($(SKIP_DEPS),)
 deps::
 else
 ALL_DEPS_DIRS_TO_BUILD = $(if $(filter-out $(DEPS_DIR)/elixir,$(ALL_DEPS_DIRS)),$(filter-out $(DEPS_DIR)/elixir,$(ALL_DEPS_DIRS)),$(ALL_DEPS_DIRS))
 
-deps:: $(ALL_DEPS_DIRS_TO_BUILD) apps clean-tmp-deps.log | $(ERLANG_MK_TMP)
+deps:: $(ALL_DEPS_DIRS_TO_BUILD) apps clean-tmp-deps.log | $(ERLANG_MK_TMP)/dep_built
 ifneq ($(ALL_DEPS_DIRS_TO_BUILD),)
 	$(verbose) set -e; for dep in $(ALL_DEPS_DIRS_TO_BUILD); do \
 		if grep -qs ^$$dep$$ $(ERLANG_MK_TMP)/deps.log; then \
 			:; \
 		else \
 			echo $$dep >> $(ERLANG_MK_TMP)/deps.log; \
-			if [ -z "$(strip $(FULL))" ] $(if $(force_rebuild_dep),&& ! ($(call force_rebuild_dep,$$dep)),) && [ ! -L $$dep ] && [ -f $$dep/ebin/dep_built ]; then \
+			if [ -z "$(strip $(FULL))" ] $(if $(force_rebuild_dep),&& ! ($(call force_rebuild_dep,$$dep)),) && [ ! -L $$dep ] && [ -f $(ERLANG_MK_TMP)/dep_built/`basename $$dep` ]; then \
 				:; \
 			elif [ "$$dep" = "$(DEPS_DIR)/hut" -a "$(HUT_PATCH)" ]; then \
 				$(MAKE) -C $$dep app IS_DEP=1; \
-				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
+				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $(ERLANG_MK_TMP)/dep_built/`basename $$dep`; fi; \
 			elif [ -f $$dep/GNUmakefile ] || [ -f $$dep/makefile ] || [ -f $$dep/Makefile ]; then \
 				$(MAKE) -C $$dep IS_DEP=1; \
-				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $$dep/ebin/dep_built; fi; \
+				if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $(ERLANG_MK_TMP)/dep_built/`basename $$dep`; fi; \
 			else \
 				echo "Error: No Makefile to build dependency $$dep." >&2; \
 				exit 2; \
@@ -886,7 +881,7 @@ define dep_fetch_fail
 endef
 
 define dep_target
-$(DEPS_DIR)/$(call query_name,$1): $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),$(if $(filter-out elixir,$1),$(DEPS_DIR)/elixir/ebin/dep_built)) $(if $(filter hex,$(call query_fetch_method,$1)),$(if $(wildcard $(DEPS_DIR)/$(call query_name,$1)),,$(DEPS_DIR)/hex_core/ebin/dep_built)) | $(ERLANG_MK_TMP)
+$(DEPS_DIR)/$(call query_name,$1): $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),$(if $(filter-out elixir,$1),$(ERLANG_MK_TMP)/dep_built/elixir)) $(if $(filter hex,$(call query_fetch_method,$1)),$(if $(wildcard $(DEPS_DIR)/$(call query_name,$1)),,$(ERLANG_MK_TMP)/dep_built/hex_core)) | $(ERLANG_MK_TMP)
 	$(eval DEP_NAME := $(call query_name,$1))
 	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
@@ -928,20 +923,22 @@ endef
 $(if $(filter hex_core,$(DEPS) $(BUILD_DEPS) $(DOC_DEPS) $(REL_DEPS) $(TEST_DEPS)),,\
 	$(eval $(call dep_target,hex_core)))
 
-$(DEPS_DIR)/hex_core/ebin/dep_built: | $(ERLANG_MK_TMP)
+$(ERLANG_MK_TMP)/dep_built/hex_core: | $(ERLANG_MK_TMP)
 	$(verbose) $(call maybe_flock,$(ERLANG_MK_TMP)/hex_core.lock,\
-		if [ ! -e $(DEPS_DIR)/hex_core/ebin/dep_built ]; then \
+		if [ ! -e $(ERLANG_MK_TMP)/dep_built/hex_core ]; then \
 			$(MAKE) $(DEPS_DIR)/hex_core; \
 			$(MAKE) -C $(DEPS_DIR)/hex_core IS_DEP=1; \
-			touch $(DEPS_DIR)/hex_core/ebin/dep_built; \
+			mkdir -p $(ERLANG_MK_TMP)/dep_built; \
+			touch $(ERLANG_MK_TMP)/dep_built/hex_core; \
 		fi)
 
-$(DEPS_DIR)/elixir/ebin/dep_built: | $(ERLANG_MK_TMP)
+$(ERLANG_MK_TMP)/dep_built/elixir: | $(ERLANG_MK_TMP)
 	$(verbose) $(call maybe_flock,$(ERLANG_MK_TMP)/elixir.lock,\
-		if [ ! -e $(DEPS_DIR)/elixir/ebin/dep_built ]; then \
+		if [ ! -e $(ERLANG_MK_TMP)/dep_built/elixir ]; then \
 			$(MAKE) $(DEPS_DIR)/elixir; \
 			$(MAKE) -C $(DEPS_DIR)/elixir; \
-			touch $(DEPS_DIR)/elixir/ebin/dep_built; \
+			mkdir -p $(ERLANG_MK_TMP)/dep_built; \
+			touch $(ERLANG_MK_TMP)/dep_built/elixir; \
 		fi)
 
 $(foreach dep,$(BUILD_DEPS) $(DEPS),$(eval $(call dep_target,$(dep))))

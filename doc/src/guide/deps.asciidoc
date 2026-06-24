@@ -340,7 +340,7 @@ to force recompiling a dependency however:
   will force building of all dependencies. This can be added
   to your Makefile before including 'erlang.mk'.
 
-* The file `ebin/dep_built` in the dependency is removed.
+* The file `$ERLANG_MK_TMP/dep_built/$dep` is removed.
 
 === Fetching and listing dependencies only
 

@@ -244,14 +244,13 @@ core-deps-dep-built: init
 	$t rm $(APP)/EXPECT
 
 	$i "Delete the dep_built file"
-	$t rm $(APP)/deps/cowlib/ebin/dep_built
+	$t rm $(APP)/.erlang.mk/dep_built/cowlib
 
 	$i "Check that cowlib was rebuilt"
 	$t printf "%s\n" \
 		$(APP)/deps/cowlib/cowlib.d \
 		$(APP)/deps/cowlib/ebin/cowlib.app \
-		$(APP)/deps/cowlib/ebin/cow_http.beam \
-		$(APP)/deps/cowlib/ebin/dep_built | sort > $(APP)/EXPECT
+		$(APP)/deps/cowlib/ebin/cow_http.beam | sort > $(APP)/EXPECT
 	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 # Files in .git might end up modified due to the id generation in the .app file.
@@ -279,8 +278,7 @@ core-deps-dep-built-full: init
 	$t printf "%s\n" \
 		$(APP)/deps/cowlib/cowlib.d \
 		$(APP)/deps/cowlib/ebin/cowlib.app \
-		$(APP)/deps/cowlib/ebin/cow_http.beam \
-		$(APP)/deps/cowlib/ebin/dep_built | sort > $(APP)/EXPECT
+		$(APP)/deps/cowlib/ebin/cow_http.beam | sort > $(APP)/EXPECT
 	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) FULL=1 $v
 # Files in .git might end up modified due to the id generation in the .app file.
@@ -315,8 +313,7 @@ core-deps-dep-built-force-full: init
 	$t printf "%s\n" \
 		$(APP)/deps/cowlib/cowlib.d \
 		$(APP)/deps/cowlib/ebin/cowlib.app \
-		$(APP)/deps/cowlib/ebin/cow_http.beam \
-		$(APP)/deps/cowlib/ebin/dep_built | sort > $(APP)/EXPECT
+		$(APP)/deps/cowlib/ebin/cow_http.beam | sort > $(APP)/EXPECT
 	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) force_rebuild_dep='test $$(1) = $(CURDIR)/$(APP)/deps/cowlib' $v
 # Files in .git might end up modified due to the id generation in the .app file.
@@ -345,8 +342,7 @@ core-deps-dep-built-force-full: init
 	$t printf "%s\n" \
 		$(APP)/deps/cowlib/cowlib.d \
 		$(APP)/deps/cowlib/ebin/cowlib.app \
-		$(APP)/deps/cowlib/ebin/cow_http.beam \
-		$(APP)/deps/cowlib/ebin/dep_built | sort > $(APP)/EXPECT
+		$(APP)/deps/cowlib/ebin/cow_http.beam | sort > $(APP)/EXPECT
 	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) FORCE_REBUILD='other_dep cowlib' $v
 # Files in .git might end up modified due to the id generation in the .app file.
@@ -381,17 +377,19 @@ ifneq ($(PLATFORM),msys2)
 	$t $(SLEEP)
 	$t touch $(APP)/deps/cowlib/src/cow_http.erl
 
-	$i "Check that cowlib is rebuilt; symlinked deps don't create dep_built"
+	$i "Check that cowlib is rebuilt"
 	$t printf "%s\n" \
 		$(APP)/cowlib/cowlib.d \
 		$(APP)/cowlib/ebin/cowlib.app \
 		$(APP)/cowlib/ebin/cow_http.beam | sort > $(APP)/EXPECT
-
 	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 # Files in .git might end up modified due to the id generation in the .app file.
 	$t find $(APP)/cowlib -type f -newer $(APP)/EXPECT | grep -v ".git" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
+
+	$i "Confirm that symlinked deps don't create dep_built"
+	$t test ! -e $(APP)/.erlang.mk/dep_built/cowlib
 endif
 
 core-deps-dep-commit: init

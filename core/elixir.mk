@@ -172,7 +172,7 @@ endef
 define dep_autopatch_mix
 	sed 's|\(defmodule.*do\)|\1\n  try do\n    Code.compiler_options(on_undefined_variable: :warn)\n    rescue _ -> :ok\n  end\n|g' $(DEPS_DIR)/$(1)/mix.exs > $(DEPS_DIR)/$(1)/mix.exs.new; \
 	mv $(DEPS_DIR)/$(1)/mix.exs.new $(DEPS_DIR)/$(1)/mix.exs; \
-	$(MAKE) $(DEPS_DIR)/hex_core/ebin/dep_built; \
+	$(MAKE) $(ERLANG_MK_TMP)/dep_built/hex_core; \
 	MIX_ENV="$(if $(MIX_ENV),$(strip $(MIX_ENV)),prod)" \
 		$(call erlang,$(call dep_autopatch_mix.erl,$1))
 endef

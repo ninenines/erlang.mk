@@ -160,7 +160,7 @@ core-elixir-disable-autopatch-make: init
 	$t $(MAKE) -C $(APP) $v
 
 	$i "Confirm Reloader was built"
-	$t test -f $(APP)/deps/reloader/ebin/dep_built
+	$t test -f $(APP)/.erlang.mk/dep_built/reloader
 	$t test -f $(APP)/deps/reloader/ebin/reloader.app
 	$t test -f $(APP)/deps/reloader/ebin/reloader.beam
 
@@ -215,10 +215,10 @@ endif
 	$t $(MAKE) -C $(APP) $v
 
 	$i "Check that all dependencies were fetched and built"
-	$t test -f $(APP)/deps/elixir/ebin/dep_built
-	$t test -f $(APP)/deps/lager/ebin/dep_built
-	$t test -f $(APP)/deps/jason/ebin/dep_built
-	$t test -f $(APP)/deps/phoenix/ebin/dep_built
+	$t test -f $(APP)/.erlang.mk/dep_built/elixir
+	$t test -f $(APP)/.erlang.mk/dep_built/lager
+	$t test -f $(APP)/.erlang.mk/dep_built/jason
+	$t test -f $(APP)/.erlang.mk/dep_built/phoenix
 
 	$i "Check that the application was compiled correctly"
 	$t cd $(APP); $(ERL) -pa ebin/ -pa deps/*/ebin -pa deps/elixir/lib/*/ebin -eval " \
@@ -261,9 +261,9 @@ endif
 
 	$i "Check that all dependencies were fetched and built"
 	$t ! test -e $(APP)/deps/elixir
-	$t test -f $(APP)/deps/lager/ebin/dep_built
-	$t test -f $(APP)/deps/jason/ebin/dep_built
-	$t test -f $(APP)/deps/phoenix/ebin/dep_built
+	$t test -f $(APP)/.erlang.mk/dep_built/lager
+	$t test -f $(APP)/.erlang.mk/dep_built/jason
+	$t test -f $(APP)/.erlang.mk/dep_built/phoenix
 
 	$i "Check that the application was compiled correctly"
 	$t cd $(APP); $(ERL) -pa ebin/ -pa deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \

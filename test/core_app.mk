@@ -2553,6 +2553,7 @@ endif
 
 	$i "Clean Cowlib"
 	$t $(MAKE) -C $(APP)/deps/cowlib clean $v
+	$t rm $(APP)/.erlang.mk/dep_built/cowlib
 
 	$i "Check that Cowlib compiled files were removed"
 	$t test ! -e $(APP)/deps/cowlib/ebin/cowlib.app

@@ -72,3 +72,10 @@
             mixing Erlang and Elixir in the same project.
             Please refer to the user guide for more information.
             Native Elixir support is considered experimental.
+
+2026/06/24: The `dep_built` file no longer gets written
+            to the `ebin/` folder. It now gets written
+            to `$(ERLANG_MK_TMP)/dep_built/`. This may
+            break workflows that clean dependencies, they
+            will now also need to remove this file manually
+            (this does not apply to symlinked deps).
