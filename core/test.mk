@@ -55,13 +55,13 @@ endif
 
 test-build:: IS_TEST=1
 test-build:: ERLC_OPTS=$(TEST_ERLC_OPTS)
-test-build:: $(if $(wildcard src),$(if $(wildcard ebin/test),,beam-cache-restore-test)) $(if $(IS_APP),,deps test-deps)
+test-build:: $(if $(wildcard src),$(if $(wildcard $(ERLANG_MK_TMP)/$(PROJECT).test),,beam-cache-restore-test)) $(if $(IS_APP),,deps test-deps)
 # We already compiled everything when IS_APP=1.
 ifndef IS_APP
 ifneq ($(wildcard src),)
 	$(verbose) $(MAKE) --no-print-directory $(PROJECT).d ERLC_OPTS="$(call escape_dquotes,$(TEST_ERLC_OPTS))"
 	$(verbose) $(MAKE) --no-print-directory app-build ERLC_OPTS="$(call escape_dquotes,$(TEST_ERLC_OPTS))"
-	$(gen_verbose) touch ebin/test
+	$(gen_verbose) touch $(ERLANG_MK_TMP)/$(PROJECT).test
 endif
 ifneq ($(wildcard $(TEST_DIR)),)
 	$(verbose) $(MAKE) --no-print-directory test-dir ERLC_OPTS="$(call escape_dquotes,$(TEST_ERLC_OPTS))"
@@ -76,7 +76,7 @@ test-build-app:: deps test-deps
 ifneq ($(wildcard src),)
 	$(verbose) $(MAKE) --no-print-directory $(PROJECT).d ERLC_OPTS="$(call escape_dquotes,$(TEST_ERLC_OPTS))"
 	$(verbose) $(MAKE) --no-print-directory app-build ERLC_OPTS="$(call escape_dquotes,$(TEST_ERLC_OPTS))"
-	$(gen_verbose) touch ebin/test
+	$(gen_verbose) touch $(ERLANG_MK_TMP)/$(PROJECT).test
 endif
 ifneq ($(wildcard $(TEST_DIR)),)
 	$(verbose) $(MAKE) --no-print-directory test-dir ERLC_OPTS="$(call escape_dquotes,$(TEST_ERLC_OPTS))"
