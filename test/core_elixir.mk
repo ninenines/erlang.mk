@@ -338,3 +338,30 @@ endif
 	$t test -d $(APP)/_rel/$(APP)_release/lib
 	$t test -d $(APP)/_rel/$(APP)_release/releases
 	$t test -d $(APP)/_rel/$(APP)_release/releases/1
+
+core-elixir-gh1050: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib bootstrap-rel $v
+
+	$i "Add google_api_storage to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = google_api_storage\ndep_google_api_storage = hex 0.46.1\nELIXIR = system\n"}' $(APP)/Makefile
+
+
+ifdef LEGACY
+	$i "Add google_api_storage to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tgoogle_api_storage,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the release was built"
+	$t test -d $(APP)/_rel
+	$t test -d $(APP)/_rel/$(APP)_release
+	$t test -d $(APP)/_rel/$(APP)_release/bin
+	$t test -d $(APP)/_rel/$(APP)_release/lib
+	$t test -d $(APP)/_rel/$(APP)_release/releases
+	$t test -d $(APP)/_rel/$(APP)_release/releases/1
