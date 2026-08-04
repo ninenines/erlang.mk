@@ -201,7 +201,7 @@ core-elixir-from-dep: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Elixir, Lager, Jason, Phoenix to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = elixir lager jason phoenix\ndep_elixir_commit = v1.17.3\ndep_lager = git https://github.com/erlang-lager/lager master\ndep_jason = git https://github.com/michalmuskala/jason.git master\ndep_phoenix = hex 1.7.2\n"}' $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = elixir lager jason phoenix\ndep_elixir_commit = v1.20.2\ndep_lager = git https://github.com/erlang-lager/lager master\ndep_jason = git https://github.com/michalmuskala/jason.git master\ndep_phoenix = hex 1.7.2\n"}' $(APP)/Makefile
 
 	$i "Add the lager_transform parse_transform to ERLC_OPTS"
 	$t echo "ERLC_OPTS += +'{parse_transform, lager_transform}'" >> $(APP)/Makefile
@@ -280,6 +280,34 @@ endif
 		true = lists:member(eex, Apps), \
 		true = lists:member(logger, Apps), \
 		true = lists:member(mix, Apps), \
+		halt()"
+
+core-elixir-mix-cwd: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Poison to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = poison\ndep_poison = hex 3.1.0\nELIXIR = system\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Poison to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tpoison,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that Poison was fetched and that VERSION was read during autopatch"
+	$t test -f $(APP)/.erlang.mk/dep_built/poison
+	$t grep -q '^PROJECT_VERSION = 3.1.0' $(APP)/deps/poison/Makefile
+
+	$i "Check that the application was compiled correctly"
+	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		{ok, Apps} = application:ensure_all_started('$(APP)'), \
+		true = lists:member(poison, Apps), \
 		halt()"
 
 core-elixir-nif: init
