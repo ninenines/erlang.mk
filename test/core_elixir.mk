@@ -69,6 +69,59 @@ core-elixir-compile-from-src: init
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
+core-elixir-keep-modules-on-erl-only-rebuild: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create Elixir source file hello.ex"
+	$t mkdir $(APP)/lib
+	$t printf "%s\n" \
+		"defmodule HelloWorld do" \
+		"  def hello do" \
+		'	IO.puts("Hello, world!")' \
+		"  end" \
+		"end" > $(APP)/lib/hello.ex
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the Elixir module is listed in the .app file"
+	$t grep -q "'Elixir.HelloWorld'" $(APP)/ebin/$(APP).app
+
+	$i "Place a marker file to detect what the next build touches"
+	$t touch $(APP)/marker
+
+	$i "Wait to ensure the new file has a later modification time"
+	$t $(SLEEP)
+
+	$i "Add an unrelated Erlang source file"
+	$t printf "%s\n" \
+		"-module(unrelated)." \
+		"-export([go/0])." \
+		"go() -> ok." > $(APP)/src/unrelated.erl
+
+	$i "Rebuild the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the Elixir module is still listed in the .app file"
+	$t grep -q "'Elixir.HelloWorld'" $(APP)/ebin/$(APP).app
+
+	$i "Check that the Elixir module was not recompiled"
+	$t ! find $(APP) -type f -newer $(APP)/marker | grep -q Elixir.HelloWorld.beam
+	$t rm $(APP)/marker
+
+	$i "Check that both modules are known to the application and loadable"
+	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods} = application:get_key($(APP), modules), \
+		true = lists:member('Elixir.HelloWorld', Mods), \
+		true = lists:member(unrelated, Mods), \
+		{module, 'Elixir.HelloWorld'} = code:load_file('Elixir.HelloWorld'), \
+		halt()"
+
 core-elixir-disable: init
 
 	$i "Bootstrap a new OTP library named $(APP)"

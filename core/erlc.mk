@@ -308,10 +308,30 @@ define validate_app_file
 	end
 endef
 
-ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES) $(wildcard src/$(PROJECT).app.src) $(EX_FILES)
+EX_MODULES_CACHE = $(ERLANG_MK_TMP)/ex_modules.log
+
+ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES) $(wildcard src/$(PROJECT).app.src) $(EX_FILES) | $(ERLANG_MK_TMP)
 	$(eval FILES_TO_COMPILE := $(filter-out $(EX_FILES) src/$(PROJECT).app.src,$?))
 	$(if $(strip $(FILES_TO_COMPILE)),$(call compile_erl,$(FILES_TO_COMPILE)))
-	$(if $(filter $(ELIXIR),disable),,$(if $(filter $?,$(EX_FILES)),$(elixirc_verbose) $(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES)))))))
+# MODULES must include the Elixir-defined modules, or they get silently
+# dropped from the generated .app file's modules entry. We only know a
+# module's real name by compiling it (an .ex file's name need not match
+# the module(s) it defines), so we cache the resolved list to
+# EX_MODULES_CACHE and only recompile when we have to: an EX_FILE is
+# itself out of date, or the cache doesn't exist yet (first build, or
+# after a `distclean`). Any other rebuild (e.g. triggered solely by an
+# out-of-date .erl or app.src) reuses the cache instead of recompiling
+# every Elixir file all over again.
+ifneq ($(ELIXIR),disable)
+ifneq ($(strip $(EX_FILES)),)
+	$(eval EX_FILES_CHANGED := $(filter $?,$(EX_FILES)))
+	$(eval EX_CACHE_MISSING := $(if $(wildcard $(EX_MODULES_CACHE)),,1))
+	$(if $(or $(EX_FILES_CHANGED),$(EX_CACHE_MISSING)),\
+		$(elixirc_verbose) $(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES))))) \
+		$(if $(filter _ERROR_,$(firstword $(MODULES))),,$(file >$(EX_MODULES_CACHE),$(MODULES))),\
+		$(eval MODULES := $(shell cat $(EX_MODULES_CACHE))))
+endif
+endif
 	$(eval ELIXIR_COMP_FAILED := $(if $(filter _ERROR_,$(firstword $(MODULES))),true,false))
 # Older git versions do not have the --first-parent flag. Do without in that case.
 	$(verbose) if $(ELIXIR_COMP_FAILED); then exit 1; fi
