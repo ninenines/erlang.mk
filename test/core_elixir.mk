@@ -398,6 +398,28 @@ endif
 		true = lists:member(libsalty2, Apps), \
 		halt()"
 
+core-elixir-nif-elixir-make: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Exqlite to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = db_connection exqlite\ndep_db_connection = hex 2.10.2\ndep_exqlite = hex 0.39.0\nELIXIR = system\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the NIF shared library was built"
+	$t test -f $(APP)/deps/exqlite/priv/sqlite3_nif$(C_SRC_OUTPUT_SHARED_EXTENSION)
+
+	$i "Check that the NIF actually loads and can open a database"
+	$t $(ERL) -pa $(APP)/deps/exqlite/ebin -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		{ok, Conn} = 'Elixir.Exqlite.Sqlite3':open(<<\":memory:\">>), \
+		ok = 'Elixir.Exqlite.Sqlite3':close(Conn), \
+		halt()"
+
 core-elixir-rel: init
 
 	$i "Bootstrap a new release named $(APP)"
