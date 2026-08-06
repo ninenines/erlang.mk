@@ -154,8 +154,8 @@ define dep_autopatch_mix.erl
 			end,
 			Write(["app::\n"
 				"\t", MakeExe, " -C ", MakeCwd, " -f $(DEPS_DIR)/$1/elixir_make.mk",
-				lists:join(" ", MakeTargets),
-				lists:join(" ", MakeArgs),
+				" ", lists:join(" ", MakeTargets),
+				" ", lists:join(" ", MakeArgs),
 				"\n\n"]),
 			case MakeVal(make_clean, Project, nil, undefined) of
 				undefined ->
