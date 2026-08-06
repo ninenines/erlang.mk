@@ -310,6 +310,51 @@ endif
 		true = lists:member(libsalty2, Apps), \
 		halt()"
 
+# Exqlite is a Mix package that builds its NIF via the `:elixir_make`
+# compiler (`compilers: [:elixir_make]` in its mix.exs), rather than
+# through a rebar/erlang.mk-style c_src/Makefile like Libsalty2 above.
+# dep_autopatch_mix's elixir_make branch generates the Makefile that
+# builds it, and has historically had bugs distinct from the plain-NIF
+# path core-elixir-nif exercises above:
+#   - the generated `app::` recipe concatenated `-f elixir_make.mk`
+#     directly onto the make targets with no separating space,
+#     producing a nonexistent `elixir_make.mkall` target;
+#   - MIX_APP_PATH/ERTS_INCLUDE_DIR/ERL_EI_INCLUDE_DIR/ERL_EI_LIBDIR,
+#     which Mix normally injects automatically, were never set, so the
+#     dependency's own build recipe couldn't find its headers or its
+#     output directory;
+#   - erlang.mk's own generic c_src auto-build additionally runs
+#     unconditionally for any dependency directory containing a c_src/
+#     folder, regardless of whether that dependency already has its own
+#     elixir_make-driven recipe, and recompiles the same sources a
+#     second time without the flags the first build used.
+core-elixir-nif-elixir-make: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Exqlite to the list of dependencies"
+# db_connection is declared explicitly (rather than relying on
+# dep_autopatch_mix to pick it up from Exqlite's own mix.exs deps) because
+# that auto-detection has a separate, pre-existing gap unrelated to the
+# elixir_make bugs this test targets - it currently doesn't add any of a
+# Mix dependency's own deps to the generated Makefile.
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = db_connection exqlite\ndep_db_connection = hex 2.10.2\ndep_exqlite = hex 0.39.0\nELIXIR = system\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the NIF shared library was built"
+	$t test -f $(APP)/deps/exqlite/priv/sqlite3_nif.so
+
+	$i "Check that the NIF actually loads and can open a database"
+	$t $(ERL) -pa $(APP)/deps/exqlite/ebin -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		{ok, Conn} = 'Elixir.Exqlite.Sqlite3':open(<<\":memory:\">>), \
+		ok = 'Elixir.Exqlite.Sqlite3':close(Conn), \
+		halt()"
+
 core-elixir-rel: init
 
 	$i "Bootstrap a new release named $(APP)"

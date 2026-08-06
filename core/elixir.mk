@@ -152,10 +152,19 @@ define dep_autopatch_mix.erl
 					io:format(standard_error, "Failed to copy Makefile with error ~p~n", [Err]),
 					halt(90)
 			end,
+			Write(io_lib:format(
+				"export ERTS_INCLUDE_DIR := ~s/erts-~s/include\n"
+				"export ERL_EI_INCLUDE_DIR := ~s\n"
+				"export ERL_EI_LIBDIR := ~s\n"
+				"export MIX_APP_PATH := $(DEPS_DIR)/$1\n"
+				"C_SRC_DIR := $(DEPS_DIR)/$1/elixir_make.disabled_c_src\n\n",
+				[code:root_dir(), erlang:system_info(version),
+				 code:lib_dir(erl_interface, include),
+				 code:lib_dir(erl_interface, lib)])),
 			Write(["app::\n"
 				"\t", MakeExe, " -C ", MakeCwd, " -f $(DEPS_DIR)/$1/elixir_make.mk",
-				lists:join(" ", MakeTargets),
-				lists:join(" ", MakeArgs),
+				" ", lists:join(" ", MakeTargets),
+				" ", lists:join(" ", MakeArgs),
 				"\n\n"]),
 			case MakeVal(make_clean, Project, nil, undefined) of
 				undefined ->
