@@ -336,7 +336,12 @@ core-elixir-nif-elixir-make: init
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
 	$i "Add Exqlite to the list of dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = exqlite\ndep_exqlite = hex 0.39.0\nELIXIR = system\n"}' $(APP)/Makefile
+# db_connection is declared explicitly (rather than relying on
+# dep_autopatch_mix to pick it up from Exqlite's own mix.exs deps) because
+# that auto-detection has a separate, pre-existing gap unrelated to the
+# elixir_make bugs this test targets - it currently doesn't add any of a
+# Mix dependency's own deps to the generated Makefile.
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = db_connection exqlite\ndep_db_connection = hex 2.10.2\ndep_exqlite = hex 0.39.0\nELIXIR = system\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v

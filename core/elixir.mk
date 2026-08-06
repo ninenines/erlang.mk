@@ -156,7 +156,8 @@ define dep_autopatch_mix.erl
 				"export ERTS_INCLUDE_DIR := ~s/erts-~s/include\n"
 				"export ERL_EI_INCLUDE_DIR := ~s\n"
 				"export ERL_EI_LIBDIR := ~s\n"
-				"export MIX_APP_PATH := $(DEPS_DIR)/$1\n\n",
+				"export MIX_APP_PATH := $(DEPS_DIR)/$1\n"
+				"C_SRC_DIR := $(DEPS_DIR)/$1/elixir_make.disabled_c_src\n\n",
 				[code:root_dir(), erlang:system_info(version),
 				 code:lib_dir(erl_interface, include),
 				 code:lib_dir(erl_interface, lib)])),
