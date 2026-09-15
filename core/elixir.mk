@@ -65,7 +65,7 @@ define dep_autopatch_mix.erl
 	{ok, _} = application:ensure_all_started(mix),
 	MixFile = <<"$(call core_native_path,$(DEPS_DIR)/$1/mix.exs)">>,
 	{ok, OldCwd} = file:get_cwd(),
-	ok = file:set_cwd("$(DEPS_DIR)/$1"),
+	ok = file:set_cwd("$(call core_native_path,$(DEPS_DIR)/$1)"),
 	{Mod, Bin} =
 		case elixir_compiler:file(MixFile, fun(_File, _LexerPid) -> ok end) of
 			[{T = {_, _}, _CheckerPid}] -> T;
