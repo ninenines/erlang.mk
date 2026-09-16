@@ -19,9 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         erlang:
-          - '27'
+          - '29'
         elixir:
-          - '1.17'
+          - '1.20'
         os:
 #          - macos-latest
           - ubuntu-latest
@@ -164,7 +164,7 @@ jobs:
       fail-fast: false
       matrix:
         erlang:
-          - '27'
+          - '29'
         os:
 #          - macos-latest
           - ubuntu-latest
@@ -191,7 +191,7 @@ jobs:
       uses: erlef/setup-beam@v1
       with:
         otp-version: ${{ matrix.erlang }}
-        elixir-version: '1.18'
+        elixir-version: '1.20'
         version-type: loose
 
     - name: Setup MSYS2 (Windows)
@@ -243,7 +243,7 @@ jobs:
       fail-fast: false
       matrix:
         erlang:
-          - '27'
+          - '29'
         os:
 #          - macos-latest
           - ubuntu-latest
@@ -297,7 +297,7 @@ jobs:
       fail-fast: false
       matrix:
         erlang:
-          - '27'
+          - '29'
         os:
 #          - macos-latest
           - ubuntu-latest
@@ -363,7 +363,7 @@ jobs:
       fail-fast: false
       matrix:
         erlang:
-          - '27'
+          - '29'
     runs-on: ubuntu-latest
     steps:
 
