@@ -25,7 +25,7 @@ jobs:
         os:
 #          - macos-latest
           - ubuntu-latest
-#          - windows-latest
+          - windows-latest
         suite:
           - core-app
           - core-apps
@@ -71,8 +71,19 @@ jobs:
           # We disable Concuerror as it doesn't seem to compile on Windows.
           - os: windows-latest
             suite: concuerror
+          # CACHE_DEPS and LEGACY are covered on Linux.
+          - os: windows-latest
+            extra: CACHE_DEPS=1
+          - os: windows-latest
+            extra: LEGACY=1
     runs-on: ${{ matrix.os }}
     steps:
+
+    - name: Configure Git line endings (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
 
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -97,10 +108,19 @@ jobs:
           mingw-w64-x86_64-gcc
           gnu-netcat
           diffutils
+          curl
+          perl
+          mingw-w64-x86_64-7zip
+          unzip
 
     - name: Install libsodium (Linux, Elixir)
       if: matrix.os == 'ubuntu-latest' && matrix.suite == 'core-elixir'
       run: sudo apt-get -y install libsodium-dev
+
+    - name: Install libsodium (Windows, Elixir)
+      if: matrix.os == 'windows-latest' && matrix.suite == 'core-elixir'
+      shell: msys2 {0}
+      run: pacman --noconfirm -S mingw-w64-x86_64-libsodium
 
     - name: Install problem matchers
       run: echo "::add-matcher::.github/matchers/erlang-mk-matchers.json"
@@ -116,7 +136,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
       run: |
-        export PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH
+        export PATH="$(cygpath -u "$INSTALL_DIR_FOR_OTP")/bin:$(cygpath -u "$INSTALL_DIR_FOR_ELIXIR")/bin:$PATH"
         erl -sname init_cookie -run erlang halt
         set -o pipefail
         make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }} 2>&1 | sed "s/\*\*\* \[/*** [test\//"
