@@ -6,7 +6,14 @@ core_misc_TARGETS = $(filter-out core-misc,$(call list_targets,core))
 
 .PHONY: core-misc $(core_misc_TARGETS)
 
-core-misc: $(core_misc_TARGETS)
+# Dummy target for Make < 4.4.
+.WAIT:
+
+# We list targets manually because the ones
+# on the right must not run in parallel.
+core-misc: core-clean-crash-dump core-distclean-tmp core-help \
+	.WAIT core-without-edoc .WAIT core-without-index \
+	.WAIT core-without-many
 
 core-clean-crash-dump: init
 
@@ -50,7 +57,7 @@ core-help: init
 	$i "Run 'make help' and check that it prints help"
 	$t test -n "`$(MAKE) -C $(APP) help` | grep Usage"
 
-core-without-edoc: clean
+core-without-edoc: init
 
 	$i "Create a working directory for this test"
 	$t mkdir -p $(APP)/
@@ -67,7 +74,7 @@ core-without-edoc: clean
 	$i "Confirm that the EDoc plugin is still not included."
 	$t ! grep -q distclean-edoc $(APP)/erlang.mk
 
-core-without-index: clean
+core-without-index: init
 
 	$i "Create a working directory for this test"
 	$t mkdir -p $(APP)/
@@ -84,7 +91,7 @@ core-without-index: clean
 	$i "Confirm that the index is still not included."
 	$t ! grep -q pkg_cowboy $(APP)/erlang.mk
 
-core-without-many: clean
+core-without-many: init
 
 	$i "Create a working directory for this test"
 	$t mkdir -p $(APP)/
