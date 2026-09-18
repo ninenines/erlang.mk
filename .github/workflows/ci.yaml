@@ -462,9 +462,10 @@ jobs:
         run: |
           sudo pkg update
           sudo pkg upgrade -y
-          sudo pkg install -y erlang elixir bash ca_root_nss gmake git libsodium perl5 7-zip
+          sudo pkg install -y erlang-runtime29 elixir bash ca_root_nss gmake git libsodium perl5 7-zip
 
           git config --global safe.directory '*'
+          export PATH=/usr/local/lib/erlang29/bin:$PATH
           erl -sname init_cookie -run erlang halt
 
           set -o pipefail
