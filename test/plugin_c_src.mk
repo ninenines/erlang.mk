@@ -146,7 +146,7 @@ c-src-static-nif: init
 	$t test -f $(APP)/priv/$(APP)$(C_SRC_OUTPUT_STATIC_EXTENSION)
 
 	$i "Check that the library file contains the expected functions"
-	$t objdump -t $(APP)/priv/test_c_src_static_nif.a | grep -c hello | grep -q 1
+	$t objdump -t $(APP)/priv/$(APP)$(C_SRC_OUTPUT_STATIC_EXTENSION) | grep -c hello | grep -q 1
 
 	$i "Re-build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -160,7 +160,7 @@ c-src-static-nif: init
 	$t test -f $(APP)/priv/$(APP)$(C_SRC_OUTPUT_STATIC_EXTENSION)
 
 	$i "Check that the library file contains the expected functions"
-	$t objdump -t $(APP)/priv/test_c_src_static_nif.a | grep -c hello | grep -q 1
+	$t objdump -t $(APP)/priv/$(APP)$(C_SRC_OUTPUT_STATIC_EXTENSION) | grep -c hello | grep -q 1
 
 	$i "Clean the application"
 	$t $(MAKE) -C $(APP) clean $v
