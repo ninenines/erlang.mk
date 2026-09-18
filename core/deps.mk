@@ -131,11 +131,20 @@ ALL_APPS_DIRS := $(filter-out $(APPS_DIR)/$(notdir $(CURDIR)),$(ALL_APPS_DIRS))
 endif
 endif
 
-ifeq ($(filter $(APPS_DIR) $(DEPS_DIR),$(subst :, ,$(ERL_LIBS))),)
-ifeq ($(ERL_LIBS),)
-	ERL_LIBS = $(APPS_DIR):$(DEPS_DIR)
+ifeq ($(PLATFORM),msys2)
+ERL_LIBS_SEP = ;
 else
-	ERL_LIBS := $(ERL_LIBS):$(APPS_DIR):$(DEPS_DIR)
+ERL_LIBS_SEP = :
+endif
+
+APPS_DIR_N := $(call core_native_path,$(APPS_DIR))
+DEPS_DIR_N := $(call core_native_path,$(DEPS_DIR))
+
+ifeq ($(filter $(APPS_DIR_N) $(DEPS_DIR_N),$(subst $(ERL_LIBS_SEP), ,$(ERL_LIBS))),)
+ifeq ($(ERL_LIBS),)
+	ERL_LIBS = $(APPS_DIR_N)$(ERL_LIBS_SEP)$(DEPS_DIR_N)
+else
+	ERL_LIBS := $(ERL_LIBS)$(ERL_LIBS_SEP)$(APPS_DIR_N)$(ERL_LIBS_SEP)$(DEPS_DIR_N)
 endif
 endif
 export ERL_LIBS

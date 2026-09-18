@@ -12,10 +12,10 @@ ELIXIR_LIBS = $(abspath $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))')/../
 endif
 ELIXIR_LIBS := $(ELIXIR_LIBS)
 export ELIXIR_LIBS
-ERL_LIBS := $(ERL_LIBS):$(ELIXIR_LIBS)
+ERL_LIBS := $(ERL_LIBS)$(ERL_LIBS_SEP)$(call core_native_path,$(ELIXIR_LIBS))
 else
 ifeq ($(ELIXIR),dep)
-ERL_LIBS := $(ERL_LIBS):$(DEPS_DIR)/elixir/lib/
+ERL_LIBS := $(ERL_LIBS)$(ERL_LIBS_SEP)$(call core_native_path,$(DEPS_DIR)/elixir/lib/)
 endif
 endif
 
