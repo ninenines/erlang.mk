@@ -523,15 +523,30 @@ define dep_autopatch_rebar.erl
 		case lists:keyfind(erl_first_files, 1, Conf) of
 			false -> ok;
 			{_, Files0} ->
+				FixSlashes = fun(P) ->
+					[if C =:= 92 -> $$/; true -> C end || C <- P]
+				end,
+				SrcDir = FixSlashes("$(call core_native_path,$(DEPS_DIR)/$1/src/)"),
 				Files = [begin
-					hd(filelib:wildcard("$(call core_native_path,$(DEPS_DIR)/$1/src/)**/" ++ filename:rootname(F) ++ ".*rl"))
+					case filelib:wildcard(SrcDir ++ "**/" ++ filename:rootname(F) ++ ".*rl") of
+						[Found|_] -> FixSlashes(Found);
+						[] -> SrcDir ++ F
+					end
 				end || "src/" ++ F <- Files0],
-				Names = [[" ", case lists:reverse(F) of
-					"lre." ++ Elif -> lists:reverse(Elif);
-					"lrx." ++ Elif -> lists:reverse(Elif);
-					"lry." ++ Elif -> lists:reverse(Elif);
-					Elif -> lists:reverse(Elif)
-				end] || "$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ F <- Files],
+				RelName = fun(Full) ->
+					Rel = case lists:prefix(SrcDir, Full)
+							orelse lists:prefix(string:to_lower(SrcDir), string:to_lower(Full)) of
+						true -> lists:nthtail(length(SrcDir), Full);
+						false -> filename:basename(Full)
+					end,
+					case lists:reverse(Rel) of
+						"lre." ++ Elif -> lists:reverse(Elif);
+						"lrx." ++ Elif -> lists:reverse(Elif);
+						"lry." ++ Elif -> lists:reverse(Elif);
+						Elif -> lists:reverse(Elif)
+					end
+				end,
+				Names = [[" ", RelName(Full)] || Full <- Files],
 				Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
 		end
 	end(),
