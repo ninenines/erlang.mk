@@ -23,7 +23,7 @@ jobs:
         elixir:
           - '1.20'
         os:
-#          - macos-latest
+          - macos-latest
           - ubuntu-latest
           - windows-latest
         suite:
@@ -72,6 +72,10 @@ jobs:
           - os: windows-latest
             suite: concuerror
           # CACHE_DEPS and LEGACY are covered on Linux.
+          - os: macos-latest
+            extra: CACHE_DEPS=1
+          - os: macos-latest
+            extra: LEGACY=1
           - os: windows-latest
             extra: CACHE_DEPS=1
           - os: windows-latest
