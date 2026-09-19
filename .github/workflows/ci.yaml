@@ -190,9 +190,7 @@ jobs:
         erlang:
           - '29'
         os:
-#          - macos-latest
           - ubuntu-latest
-#          - windows-latest
         extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
 
     services:
@@ -270,9 +268,9 @@ jobs:
         erlang:
           - '29'
         os:
-#          - macos-latest
+          - macos-latest
           - ubuntu-latest
-#          - windows-latest
+          - windows-latest
         extra: ['', 'LEGACY=1']
     runs-on: ${{ matrix.os }}
     steps:
@@ -307,6 +305,8 @@ jobs:
     - name: Check packages (Windows)
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
+      env:
+        MSYS: winsymlinks:nativestrict
       run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make packages -k ${{ matrix.extra }}
 
     - name: Upload artifacts
@@ -324,15 +324,19 @@ jobs:
         erlang:
           - '29'
         os:
-#          - macos-latest
+          - macos-latest
           - ubuntu-latest
-#          - windows-latest
+          - windows-latest
         packages:
           - '^cowboy \|^cowlib \|^gun \|^ranch '
           - '^amqp_client \|^amqp10_client \|^aten \|^credentials_obfuscation \|^cuttlefish '
           - '^gen_batch_server \|^ra \|^seshat \|^stdout_formatter \|^sysmon_handler '
           - '^rocksdb '
         extra: ['', 'LEGACY=1']
+        exclude:
+          # We disable rocksdb as it doesn't seem to compile on Windows.
+          - os: windows-latest
+            packages: '^rocksdb '
     runs-on: ${{ matrix.os }}
     steps:
 
