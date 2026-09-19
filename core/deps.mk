@@ -124,7 +124,7 @@ ALL_DEPS_DIRS = $(addprefix $(DEPS_DIR)/,$(foreach dep,$(filter-out $(IGNORE_DEP
 
 # When we are calling an app directly we don't want to include it here
 # otherwise it'll be treated both as an apps and a top-level project.
-ALL_APPS_DIRS = $(if $(wildcard $(APPS_DIR)/),$(filter-out $(APPS_DIR),$(shell find $(APPS_DIR) -maxdepth 1 -type d)))
+ALL_APPS_DIRS = $(if $(wildcard $(APPS_DIR)/),$(filter-out $(APPS_DIR),$(shell find -L $(APPS_DIR) -maxdepth 1 -type d)))
 ifdef ROOT_DIR
 ifndef IS_APP
 ALL_APPS_DIRS := $(filter-out $(APPS_DIR)/$(notdir $(CURDIR)),$(ALL_APPS_DIRS))
