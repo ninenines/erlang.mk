@@ -192,8 +192,27 @@ core_lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,
 
 core_ls = $(filter-out $1,$(shell echo $1))
 
-# @todo Use a solution that does not require using perl.
-core_relpath = $(shell perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"' $1 $2)
+define core_relpath.erl
+	Drop = fun D([A|T], [A|F]) -> D(T, F); D(T, F) -> {T, F} end,
+	To0 = "$(call core_native_path,$1)",
+	To = filename:split(filename:absname(To0)),
+	From0 = "$(call core_native_path,$2)",
+	From = filename:split(filename:absname(From0)),
+	Rel = case {To, From} of
+		{[H|_], [H|_]} ->
+			{T1, F1} = Drop(To, From),
+			case lists:duplicate(length(F1), "..") ++ T1 of
+				[] -> ".";
+				P -> filename:join(P)
+			end;
+		_ ->
+			filename:absname(To0)
+	end,
+	io:format("~s", [Rel]),
+	halt()
+endef
+
+core_relpath = $(shell $(call erlang,$(call core_relpath.erl,$1,$2)))
 
 define core_render
 	printf -- '$(subst $(newline),\n,$(subst %,%%,$(subst ','\'',$(subst $(tab),$(WS),$(call $1)))))\n' > $2
