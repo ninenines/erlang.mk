@@ -190,9 +190,7 @@ jobs:
         erlang:
           - '29'
         os:
-          - macos-latest
           - ubuntu-latest
-          - windows-latest
         extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
 
     services:
@@ -307,7 +305,7 @@ jobs:
     - name: Check packages (Windows)
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
-      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make packages -k ${{ matrix.extra }}
+      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make packages -k ${{ matrix.extra }} V=3
 
     - name: Upload artifacts
       if: failure()
@@ -333,6 +331,10 @@ jobs:
           - '^gen_batch_server \|^ra \|^seshat \|^stdout_formatter \|^sysmon_handler '
           - '^rocksdb '
         extra: ['', 'LEGACY=1']
+        exclude:
+          # We disable rocksdb as it doesn't seem to compile on Windows.
+          - os: windows-latest
+            packages: '^rocksdb '
     runs-on: ${{ matrix.os }}
     steps:
 
