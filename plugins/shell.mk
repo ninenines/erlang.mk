@@ -32,7 +32,7 @@ build-shell-deps: $(ALL_SHELL_DEPS_DIRS) | $(ERLANG_MK_TMP)/dep_built
 			:; \
 		else \
 			$(MAKE) -C $$dep IS_DEP=1; \
-			if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $(ERLANG_MK_TMP)/dep_built/$$dep; fi; \
+			if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $(ERLANG_MK_TMP)/dep_built/`basename $$dep`; fi; \
 		fi \
 	done
 endif

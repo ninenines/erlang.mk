@@ -21,6 +21,8 @@ while true; do
 
 	PAGE=$(curl -s "https://hex.pm/api/packages?sort=name&page=$NUM")
 
+	sleep 1
+
 	if [ "$PAGE" = "[]" ]; then exit 0; fi
 
 	PACKAGES=$(echo $PAGE | jq -r "map({name: .name, url: .releases[0].url})")
@@ -37,10 +39,10 @@ while true; do
 			echo "$NAME $VERSION"
 		fi
 
+		sleep 1
+
 	done
 
 	NUM=$(expr $NUM + 1)
-
-	sleep 10
 
 done

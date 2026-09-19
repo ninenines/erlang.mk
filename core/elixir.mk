@@ -12,10 +12,10 @@ ELIXIR_LIBS = $(abspath $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))')/../
 endif
 ELIXIR_LIBS := $(ELIXIR_LIBS)
 export ELIXIR_LIBS
-ERL_LIBS := $(ERL_LIBS):$(ELIXIR_LIBS)
+ERL_LIBS := $(ERL_LIBS)$(ERL_LIBS_SEP)$(call core_native_path,$(ELIXIR_LIBS))
 else
 ifeq ($(ELIXIR),dep)
-ERL_LIBS := $(ERL_LIBS):$(DEPS_DIR)/elixir/lib/
+ERL_LIBS := $(ERL_LIBS)$(ERL_LIBS_SEP)$(call core_native_path,$(DEPS_DIR)/elixir/lib/)
 endif
 endif
 
@@ -149,7 +149,8 @@ define dep_autopatch_mix.erl
 			MakeCwd = MakeVal(make_cwd, Project, undefined, <<".">>),
 			MakeTargets = MakeVal(make_targets, Project, [], []),
 			MakeArgs = MakeVal(make_args, Project, undefined, []),
-			case file:rename("$(DEPS_DIR)/$1/" ++ MakeMakefile, "$(DEPS_DIR)/$1/elixir_make.mk") of
+			case file:rename("$(call core_native_path,$(DEPS_DIR)/$1)/" ++ MakeMakefile,
+					"$(call core_native_path,$(DEPS_DIR)/$1)/elixir_make.mk") of
 				ok -> ok;
 				Err = {error, _} ->
 					io:format(standard_error, "Failed to copy Makefile with error ~p~n", [Err]),

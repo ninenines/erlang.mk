@@ -163,6 +163,47 @@ ifneq ($(PLATFORM),msys2)
 	$t test -f $(APP)/deps/erlsha2/priv/erlsha2_nif.so
 endif
 
+core-autopatch-rebar-erl-first-files: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap a rebar application my_dep whose parse_transform must compile after a helper"
+	$t mkdir $(APP)/my_dep
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib LEGACY=1 $v
+	$t rm $(APP)/my_dep/erlang.mk $(APP)/my_dep/Makefile
+
+	$i "Add a rebar.config with erl_first_files; a_user sorts before helper so COMPILE_FIRST is required"
+	$t echo '{erl_first_files, ["src/helper.erl", "src/pt.erl"]}.' > $(APP)/my_dep/rebar.config
+	$t printf "%s\n" \
+		"-module(helper)." \
+		"-export([ok/0])." \
+		"ok() -> ok." > $(APP)/my_dep/src/helper.erl
+	$t printf "%s\n" \
+		"-module(pt)." \
+		"-export([parse_transform/2])." \
+		"parse_transform(Forms, _) -> ok = helper:ok(), Forms." > $(APP)/my_dep/src/pt.erl
+	$t printf "%s\n" \
+		"-module(a_user)." \
+		"-compile({parse_transform, pt})." \
+		"-export([f/0])." \
+		"f() -> ok." > $(APP)/my_dep/src/a_user.erl
+
+	$i "Add my_dep to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = cp $(CURDIR)/$(APP)/my_dep/\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that erl_first_files were autopatched and the parse_transform compiled"
+	$t grep -q "COMPILE_FIRST += helper pt" $(APP)/deps/my_dep/Makefile
+	$t test -f $(APP)/deps/my_dep/ebin/a_user.beam
+	$t test -f $(APP)/deps/my_dep/ebin/helper.beam
+	$t test -f $(APP)/deps/my_dep/ebin/pt.beam
+
 core-autopatch-rebar-git_subdir: init
 
 	$i "Bootstrap a new OTP library named $(APP)"

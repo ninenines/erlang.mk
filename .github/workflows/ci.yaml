@@ -23,9 +23,9 @@ jobs:
         elixir:
           - '1.20'
         os:
-#          - macos-latest
+          - macos-latest
           - ubuntu-latest
-#          - windows-latest
+          - windows-latest
         suite:
           - core-app
           - core-apps
@@ -71,8 +71,23 @@ jobs:
           # We disable Concuerror as it doesn't seem to compile on Windows.
           - os: windows-latest
             suite: concuerror
+          # CACHE_DEPS and LEGACY are covered on Linux.
+          - os: macos-latest
+            extra: CACHE_DEPS=1
+          - os: macos-latest
+            extra: LEGACY=1
+          - os: windows-latest
+            extra: CACHE_DEPS=1
+          - os: windows-latest
+            extra: LEGACY=1
     runs-on: ${{ matrix.os }}
     steps:
+
+    - name: Configure Git line endings (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
 
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -97,10 +112,19 @@ jobs:
           mingw-w64-x86_64-gcc
           gnu-netcat
           diffutils
+          curl
+          perl
+          mingw-w64-x86_64-7zip
+          unzip
 
     - name: Install libsodium (Linux, Elixir)
       if: matrix.os == 'ubuntu-latest' && matrix.suite == 'core-elixir'
       run: sudo apt-get -y install libsodium-dev
+
+    - name: Install libsodium (Windows, Elixir)
+      if: matrix.os == 'windows-latest' && matrix.suite == 'core-elixir'
+      shell: msys2 {0}
+      run: pacman --noconfirm -S mingw-w64-x86_64-libsodium
 
     - name: Install problem matchers
       run: echo "::add-matcher::.github/matchers/erlang-mk-matchers.json"
@@ -116,7 +140,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
       run: |
-        export PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH
+        export PATH="$(cygpath -u "$INSTALL_DIR_FOR_OTP")/bin:$(cygpath -u "$INSTALL_DIR_FOR_ELIXIR")/bin:$PATH"
         erl -sname init_cookie -run erlang halt
         set -o pipefail
         make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }} 2>&1 | sed "s/\*\*\* \[/*** [test\//"
@@ -166,9 +190,7 @@ jobs:
         erlang:
           - '29'
         os:
-#          - macos-latest
           - ubuntu-latest
-#          - windows-latest
         extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
 
     services:
@@ -212,7 +234,8 @@ jobs:
       run: |
         git clone https://github.com/hexpm/hexpm
         cd hexpm
-        perl -ni.bak -e 'print;if ($.==3) {print "  user_confirm: false,\n"}' config/dev.exs
+        git checkout 3da683955ecde4718f4719509011e2ede6b108cd
+        perl -ni.bak -e 'print; if (/^config :hexpm,\s*$/) {print "  user_confirm: false,\n"}' config/dev.exs
         mix setup
         mix phx.server &
 
@@ -245,9 +268,9 @@ jobs:
         erlang:
           - '29'
         os:
-#          - macos-latest
+          - macos-latest
           - ubuntu-latest
-#          - windows-latest
+          - windows-latest
         extra: ['', 'LEGACY=1']
     runs-on: ${{ matrix.os }}
     steps:
@@ -282,7 +305,7 @@ jobs:
     - name: Check packages (Windows)
       if: matrix.os == 'windows-latest'
       shell: msys2 {0}
-      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make packages -k ${{ matrix.extra }}
+      run: PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH make packages -k ${{ matrix.extra }} V=3
 
     - name: Upload artifacts
       if: failure()
@@ -299,15 +322,19 @@ jobs:
         erlang:
           - '29'
         os:
-#          - macos-latest
+          - macos-latest
           - ubuntu-latest
-#          - windows-latest
+          - windows-latest
         packages:
           - '^cowboy \|^cowlib \|^gun \|^ranch '
           - '^amqp_client \|^amqp10_client \|^aten \|^credentials_obfuscation \|^cuttlefish '
           - '^gen_batch_server \|^ra \|^seshat \|^stdout_formatter \|^sysmon_handler '
           - '^rocksdb '
         extra: ['', 'LEGACY=1']
+        exclude:
+          # We disable rocksdb as it doesn't seem to compile on Windows.
+          - os: windows-latest
+            packages: '^rocksdb '
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -441,9 +468,10 @@ jobs:
         run: |
           sudo pkg update
           sudo pkg upgrade -y
-          sudo pkg install -y erlang elixir bash ca_root_nss gmake git libsodium perl5 7-zip
+          sudo pkg install -y erlang-runtime29 elixir bash ca_root_nss gmake git libsodium perl5 7-zip
 
           git config --global safe.directory '*'
+          export PATH=/usr/local/lib/erlang29/bin:$PATH
           erl -sname init_cookie -run erlang halt
 
           set -o pipefail

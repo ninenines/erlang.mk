@@ -131,11 +131,20 @@ ALL_APPS_DIRS := $(filter-out $(APPS_DIR)/$(notdir $(CURDIR)),$(ALL_APPS_DIRS))
 endif
 endif
 
-ifeq ($(filter $(APPS_DIR) $(DEPS_DIR),$(subst :, ,$(ERL_LIBS))),)
-ifeq ($(ERL_LIBS),)
-	ERL_LIBS = $(APPS_DIR):$(DEPS_DIR)
+ifeq ($(PLATFORM),msys2)
+ERL_LIBS_SEP = ;
 else
-	ERL_LIBS := $(ERL_LIBS):$(APPS_DIR):$(DEPS_DIR)
+ERL_LIBS_SEP = :
+endif
+
+APPS_DIR_N := $(call core_native_path,$(APPS_DIR))
+DEPS_DIR_N := $(call core_native_path,$(DEPS_DIR))
+
+ifeq ($(filter $(APPS_DIR_N) $(DEPS_DIR_N),$(subst $(ERL_LIBS_SEP), ,$(ERL_LIBS))),)
+ifeq ($(ERL_LIBS),)
+	ERL_LIBS = $(APPS_DIR_N)$(ERL_LIBS_SEP)$(DEPS_DIR_N)
+else
+	ERL_LIBS := $(ERL_LIBS)$(ERL_LIBS_SEP)$(APPS_DIR_N)$(ERL_LIBS_SEP)$(DEPS_DIR_N)
 endif
 endif
 export ERL_LIBS
@@ -514,15 +523,30 @@ define dep_autopatch_rebar.erl
 		case lists:keyfind(erl_first_files, 1, Conf) of
 			false -> ok;
 			{_, Files0} ->
+				FixSlashes = fun(P) ->
+					[if C =:= 92 -> $$/; true -> C end || C <- P]
+				end,
+				SrcDir = FixSlashes("$(call core_native_path,$(DEPS_DIR)/$1/src/)"),
 				Files = [begin
-					hd(filelib:wildcard("$(call core_native_path,$(DEPS_DIR)/$1/src/)**/" ++ filename:rootname(F) ++ ".*rl"))
+					case filelib:wildcard(SrcDir ++ "**/" ++ filename:rootname(F) ++ ".*rl") of
+						[Found|_] -> FixSlashes(Found);
+						[] -> SrcDir ++ F
+					end
 				end || "src/" ++ F <- Files0],
-				Names = [[" ", case lists:reverse(F) of
-					"lre." ++ Elif -> lists:reverse(Elif);
-					"lrx." ++ Elif -> lists:reverse(Elif);
-					"lry." ++ Elif -> lists:reverse(Elif);
-					Elif -> lists:reverse(Elif)
-				end] || "$(call core_native_path,$(DEPS_DIR)/$1/src/)" ++ F <- Files],
+				RelName = fun(Full) ->
+					Rel = case lists:prefix(SrcDir, Full)
+							orelse lists:prefix(string:to_lower(SrcDir), string:to_lower(Full)) of
+						true -> lists:nthtail(length(SrcDir), Full);
+						false -> filename:basename(Full)
+					end,
+					case lists:reverse(Rel) of
+						"lre." ++ Elif -> lists:reverse(Elif);
+						"lrx." ++ Elif -> lists:reverse(Elif);
+						"lry." ++ Elif -> lists:reverse(Elif);
+						Elif -> lists:reverse(Elif)
+					end
+				end,
+				Names = [[" ", RelName(Full)] || Full <- Files],
 				Write(io_lib:format("COMPILE_FIRST +=~s\n", [Names]))
 		end
 	end(),
@@ -912,6 +936,7 @@ endif
 
 ifeq ($1,elixir)
 autopatch-elixir::
+	$$(verbose) mkdir -p lib/elixir/ebin
 	$$(verbose) ln -s lib/elixir/ebin $(DEPS_DIR)/elixir/
 else
 autopatch-$(call query_name,$1)::
