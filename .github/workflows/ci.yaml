@@ -190,9 +190,9 @@ jobs:
         erlang:
           - '29'
         os:
-#          - macos-latest
+          - macos-latest
           - ubuntu-latest
-#          - windows-latest
+          - windows-latest
         extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
 
     services:
@@ -270,9 +270,9 @@ jobs:
         erlang:
           - '29'
         os:
-#          - macos-latest
+          - macos-latest
           - ubuntu-latest
-#          - windows-latest
+          - windows-latest
         extra: ['', 'LEGACY=1']
     runs-on: ${{ matrix.os }}
     steps:
@@ -324,9 +324,9 @@ jobs:
         erlang:
           - '29'
         os:
-#          - macos-latest
+          - macos-latest
           - ubuntu-latest
-#          - windows-latest
+          - windows-latest
         packages:
           - '^cowboy \|^cowlib \|^gun \|^ranch '
           - '^amqp_client \|^amqp10_client \|^aten \|^credentials_obfuscation \|^cuttlefish '
