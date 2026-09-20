@@ -8,19 +8,17 @@ build tools as well. Erlang.mk is like the cool kid that gets
 along with everybody.
 
 In this chapter I will use the term _Rebar project_ to refer
-to a project built using Rebar 2, Rebar 3 or Mad. These three
-build tools are very similar and share the same configuration
-file.
+to a project built using Rebar 3 (or older tools that share
+the same 'rebar.config' file).
 
 === Rebar projects as Erlang.mk dependencies
 
-Erlang.mk comes with a feature called _Autoload_ which will
-use Rebar 2 to patch any Rebar project and make it compatible
-with Erlang.mk. This feature essentially patches Rebar out
-and adds a Makefile to the project that Erlang.mk can then
-use for building:
+Erlang.mk comes with a feature called _Autopatch_ which
+converts Rebar and Mix projects so Erlang.mk can build them.
+It essentially patches Rebar out and adds a Makefile to the
+project:
 
-_Autoload_ is documented in more details in the
+_Autopatch_ is documented in more details in the
 xref:deps[Packages and dependencies] chapter.
 
 === Erlang.mk projects as Rebar dependencies
@@ -50,12 +48,11 @@ the `DEPS` and `ERLC_OPTS` variables, among others. This
 means that the Rebar family builds your project much the
 same way as Erlang.mk.
 
-// @todo Sanity check chapter.
 Careful though! Different build tools have different fetching
 strategies. If some applications provide differing dependencies,
-they might be fetched differently by other build tools. Check
-the upcoming Sanity check chapter to find out how to detect such
-issues.
+they might be fetched differently by other build tools. You can
+use `make query-deps` to see what Erlang.mk would fetch; this
+is covered in the xref:deps[Packages and dependencies] chapter.
 
 You can automatically generate this file when you build
 your application, by making it a dependency of the `app`

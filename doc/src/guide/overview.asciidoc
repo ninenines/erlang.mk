@@ -23,25 +23,12 @@ when applicable. It can also xref:escript[generate escripts].
 
 === Exploring the package index
 
-Erlang.mk comes with a xref:deps[built-in package index].
-It is built as an extension of the dependency system and is
-meant to be used for discovery purposes.
+Erlang.mk comes with a small xref:deps[built-in package index]
+for a handful of commonly used projects. It is a shortcut over
+plain dependencies: nothing is installed globally, packages are
+only fetched as project-specific deps.
 
-No package is ever installed, they are only used as dependencies
-and are always project-specific. They can be thought of as a
-shortcut over plain dependencies.
-
-You can get a list of all packages known to Erlang.mk by using
-the `search` target:
-
-[source,bash]
-$ make search
-
-You can also use this target to search across all packages, for
-example to find all packages related to Cowboy:
-
-[source,bash]
-$ make search q=cowboy
+`make search` lists the index; `make search q=cowboy` filters it.
 
 === Generating documentation
 

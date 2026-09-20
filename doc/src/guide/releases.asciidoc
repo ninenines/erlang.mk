@@ -3,15 +3,16 @@
 
 Erlang.mk relies on _Relx_ for generating releases. This
 chapter covers the Erlang.mk-specific bits. Consult the
-https://erlware.github.io/relx/[Relx website] for more information.
+https://github.com/erlware/relx[Relx repository] for more
+information.
 
 === Setup
 
 First, `relx` must be added in the dependencies of your
-project. You can add it to `REL_DEPS` so that it is fetched
-whenever you need to build the release:
+project. Relx is in the built-in index, so you can add it
+to `REL_DEPS` with the name alone:
 
-[source,erlang]
+[source,make]
 REL_DEPS = relx
 
 Then, you need to create a 'relx.config' file in the

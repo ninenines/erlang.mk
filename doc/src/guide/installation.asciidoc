@@ -95,7 +95,7 @@ You can install Erlang/OTP silently using the `/S` switch
 on the command line:
 
 ----
-C:\Users\essen\Downloads> otp_win64_18.0.exe /S
+C:\Users\essen\Downloads> otp_win64_29.0.exe /S
 ----
 
 ==== Installing MSYS2
@@ -104,32 +104,9 @@ The only supported environment on Windows is MSYS2. MSYS2 is
 a lightweight Unix-like environment for Windows that comes
 with the Arch Linux package manager, `pacman`.
 
-The MSYS2 project provides a http://msys2.github.io[one click installer]
-and instructions to set things up post-installation.
-
-It is currently not possible to use the installer silently.
-Thankfully, the MSYS2 project provides an archive that can
-be used in lieu of the installer. The archive however requires
-_7zip_ to decompress it.
-
-First, download the
-http://sourceforge.net/projects/msys2/files/Base/x86_64/msys2-base-x86_64-20150512.tar.xz/download[MSYS2 base archive]
-and extract it under 'C:\'. Assuming you downloaded the
-archive as 'msys2.tar.xz' and put it in 'C:\', you can
-use the following commands to extract it:
-
-----
-C:\> 7z x msys2.tar.xz
-C:\> 7z x msys2.tar > NUL
-----
-
-Then you can run the two commands needed to perform the
-post-installation setup:
-
-----
-C:\> C:\msys64\usr\bin\bash -lc "pacman --needed --noconfirm -Sy bash pacman pacman-mirrors msys2-runtime"
-C:\> C:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syu"
-----
+Install it from https://www.msys2.org/[msys2.org] and follow
+the post-install update steps on that site. The default
+install path is 'C:\msys64'.
 
 ==== Installing the required MSYS2 packages
 
@@ -163,12 +140,3 @@ C:\> C:\msys64\usr\bin\bash -lc "pacman --noconfirm -S git make"
 
 You can use similar `bash` commands if you need to run programs
 inside the MSYS2 environment from a batch file.
-
-==== Gotchas
-
-While most of the basic functionality will just work, there are
-still some issues. Erlang.mk needs to be fixed to pass the
-right paths when running Erlang scripts. We are working on it.
-Erlang.mk is fully tested on both Linux and Windows, but is
-lacking tests in the areas not yet covered by this guide,
-so expect bugs to be fixed as more tests are added.

@@ -6,57 +6,36 @@ project requires. Erlang.mk improves upon the concepts
 introduced by Rebar, so they should be familiar to many
 seasoned Erlang developers.
 
-Erlang.mk is not a package manager, nor is it trying to be,
-but it does include an index of Erlang packages to make
-discovering useful projects easier.
-
-This chapter will explain how to use packages, add
-dependencies to your project or bundle them directly
-in a single repository.
-
-=== Searching packages
-
-Erlang.mk gives you access to nearly 500 packages, with more
-being added regularly.
-
-To find a package, search for it:
-
-[source,bash]
-$ make search q=pool
-
-This will return all packages matching this word, like worker
-pool and acceptor pool projects.
-
-You can also list everything and use regular command line
-tools to find what you need, for example:
-
-[source,bash]
-$ make search | less
-
-// @todo Simplify adding packages, add a new chapter explaining
-// everything, then link to this new chapter from here.
+This chapter will explain how to add dependencies to your
+project, how they are fetched and built, and how to bundle
+them directly in a single repository.
 
 === Adding dependencies to your project
 
-Once you find the package you need, adding it as a dependency
-to your project is a one-liner:
+List the applications you need in `DEPS`. Cowboy is in the
+built-in package index, so the name alone is enough:
 
 [source,make]
 DEPS = cowboy
 
-And that's it! The next time you run `make`, Erlang.mk will
-fetch and compile Cowboy. Erlang.mk will also ensure Cowboy
-is available whenever you use the shell, run tests and any
-other operations.
+The next time you run `make`, Erlang.mk will fetch and compile
+Cowboy. Erlang.mk will also ensure Cowboy is available whenever
+you use the shell, run tests and any other operations.
 
-Note though that you may need to specify the version of a
-dependency to use. Otherwise, you may get an outdated version,
-since the package index used by Erlang.mk is not always
-updated with the latest version of each package.
+You can pin the version without repeating the repository:
 
 [source,make]
 DEPS = cowboy
-dep_cowboy_commit = 2.8.0
+dep_cowboy_commit = 2.19.0
+
+For a project that is not in the index, set `dep_$(NAME)` to
+the fetch method and location. Hex packages look like this:
+
+[source,make]
+DEPS = jsx
+dep_jsx = hex 3.1.0
+
+Git, and the other methods, are listed in the next section.
 
 Erlang.mk will fill in the application resource file with
 all applications found in `DEPS`. But not all dependencies
@@ -71,6 +50,7 @@ this to make it available only at build time:
 
 [source,make]
 BUILD_DEPS = erlando
+dep_erlando = git https://github.com/proger/erlando master
 
 Or you could depend on a C project directly, if you are
 building a NIF:
@@ -108,18 +88,21 @@ dep_ct_helper = git https://github.com/ninenines/ct_helper master
 
 [source,make]
 DOC_DEPS = edown
+dep_edown = git https://github.com/uwiger/edown master
 
 `REL_DEPS` for dependencies required to build the release,
 or to include extra applications in the release:
 
 [source,make]
 REL_DEPS = recon
+dep_recon = hex 2.5.6
 
 And `SHELL_DEPS` for dependencies to make available when running
 the `make shell` command:
 
 [source,make]
-SHELL_DEPS = tddreloader
+SHELL_DEPS = observer_cli
+dep_observer_cli = hex 2.0.0
 
 All these will be documented in more details in their respective
 chapters.
@@ -143,41 +126,6 @@ OPTIONAL_DEPS = quicer
 The top-level project can then decide whether to include this
 application by adding it to its `BUILD_DEPS` and including
 it in the release dependencies.
-
-==== Modifying the dependency source or version
-
-By default, Erlang.mk will look into its package index to
-find the project you are looking for, if you only provide
-its name. This is this case:
-
-[source,make]
-DEPS = cowboy
-
-If you need a different version, you need to define another
-variable. There are two ways to do this, each being useful
-for different reasons.
-
-If you simply want to change the commit number, all you
-need to do is to define the `dep_$(DEP_NAME)_commit`
-variable. In the case of Cowboy, this would look like this:
-
-[source,make]
-DEPS = cowboy
-dep_cowboy_commit = 2.12.0
-
-Erlang.mk will use the package index to get all information
-about Cowboy, except the commit number which will be overridden.
-
-If you need to set the fetch method or repository information
-too, for example because you want to use your own fork, or
-simply because the project is missing from the index, you
-can define the `dep_$(DEP_NAME)` variable with everything:
-
-[source,make]
-DEPS = cowboy
-dep_cowboy = git https://github.com/essen/cowboy 2.12.0
-
-This will fetch Cowboy from your fork at the given commit.
 
 ==== Fetch methods
 
@@ -208,10 +156,10 @@ The `git` and `hg` methods both have a repository and commit.
 You can use any valid commit, tag or branch in that repository
 for the commit value.
 
-For example, to fetch Cowboy with tag 2.0.0-pre.2 from Git:
+For example, to fetch Cowboy with tag 2.19.0 from Git:
 
 [source,make]
-dep_cowboy = git https://github.com/ninenines/cowboy 2.0.0-pre.2
+dep_cowboy = git https://github.com/ninenines/cowboy 2.19.0
 
 Or to fetch Ehsa tag 4.0.3 from Mercurial:
 
@@ -250,7 +198,7 @@ Finally, you can use a package from the
 link:https://hex.pm/[Hex repository]:
 
 [source,make]
-dep_cowboy = hex 1.0.3
+dep_cowboy = hex 2.19.0
 
 If the package on Hex has a different name than the application,
 you can provide it after the version:
@@ -280,6 +228,20 @@ endef
 
 Note that, like dependency information, this custom fetch method
 must be written before including 'erlang.mk'.
+
+=== Built-in package index
+
+The index is only a handful of commonly used projects.
+`make search` lists them; `make search q=cowboy` filters
+that list.
+
+If you need a different fetch method or repository for an
+indexed package, for example a fork, set `dep_$(NAME)` as
+usual:
+
+[source,make]
+DEPS = cowboy
+dep_cowboy = git https://github.com/essen/cowboy 2.19.0
 
 === How deps are fetched and built
 

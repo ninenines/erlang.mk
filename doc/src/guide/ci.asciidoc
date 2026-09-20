@@ -12,11 +12,11 @@ section of the xref:kerl[OTP version management] chapter.)
 To use the CI plugin you must first configure which versions
 of Erlang/OTP will be used.
 
-At the time of writing, this is how you would test against all
-the most recent patch releases of Erlang/OTP 19 and above:
+For example, this is how you would test against a few
+recent OTP releases:
 
 [source,make]
-CI_OTP = OTP-19.0.7 OTP-19.1.6 OTP-19.2.3 OTP-19.3.6.2 OTP-20.0.4
+CI_OTP = OTP-27.3.4 OTP-28.3 OTP-29.0
 
 Consult the xref:kerl[OTP version management] chapter for more
 information about Erlang/OTP versions and customization of the

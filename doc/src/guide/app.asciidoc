@@ -166,7 +166,7 @@ the Cowboy Makefile follows, if you need an example:
 ----
 PROJECT = cowboy
 PROJECT_DESCRIPTION = Small, fast, modular HTTP server.
-PROJECT_VERSION = 2.0.0-pre.2
+PROJECT_VERSION = 2.19.0
 PROJECT_REGISTERED = cowboy_clock
 
 LOCAL_DEPS = crypto
@@ -257,7 +257,7 @@ command on their production server:
 ----
 1> application:get_all_key(cowboy).
 {ok,[{description,"Small, fast, modular HTTP server."},
-     {id,"2.0.0-pre.2-25-g0ffde50-dirty"},
+     {id,"2.19.0"},
 ----
 
 === File formats

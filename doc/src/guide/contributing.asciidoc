@@ -5,15 +5,6 @@ You are welcome and encouraged to contribute.
 
 This is how.
 
-=== Priorities
-
-From the most important to the least important:
-
-* Bugs
-* Package issues/additions
-* Refactoring
-* Features
-
 === Bugs
 
 If you have found a bug, you should open a ticket. Include
@@ -60,36 +51,6 @@ if one fails. For example: `make check -j 32 -k`.
 
 Some changes should be tested against all packages. Continue
 reading for more details on testing them.
-
-=== Packages
-
-You can search existing packages using the `make search q=STRING`
-command. This can be done both from an Erlang.mk project or
-directly from the Erlang.mk repository.
-
-Packages can be added to the index using the `pkg_add.sh` script.
-
-[source,bash]
-----
-$ git clone https://github.com/$YOURUSERNAME/erlang.mk
-$ cd erlang.mk
-$ ./pkg_add.sh cowboy git https://github.com/ninenines/cowboy 1.0.0
-  http://ninenines.eu "Small, fast and modular HTTP server."
-$ git push origin master
-----
-
-Before sending a pull request, you should test your package.
-You can use the following command: `make check p=PACKAGE`,
-where `PACKAGE` is the name of the package, for example
-`cowboy`.
-
-To test all packages, the `make packages` command can be used.
-This can take a long time. Some packages will fail with certain
-versions of Erlang, or if a prerequisite is missing from your system.
-You can of course speed things up using the `-j` and `-k` flags.
-
-After all packages have been tested, you can run the command
-`make summary` to know what changed since the previous run.
 
 === Documentation
 

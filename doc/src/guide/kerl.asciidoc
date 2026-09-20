@@ -11,10 +11,9 @@ or maintain different versions side by side.
 === Erlang versions
 
 Erlang.mk uses the Git tags from Erlang/OTP to identify
-OTP versions. The most recent tag at the time of writing
-is `OTP-20.0.4`, which is a patch release of `OTP-20.0`.
-A patch release is a non-official release containing a
-few fixes on top of the official release.
+OTP versions, for example `OTP-29.0` or a patch tag such
+as `OTP-28.3.4`. A patch release is a non-official release
+containing a few fixes on top of the official release.
 
 Older versions used a slightly different versioning scheme
 and tag format, for example: `OTP_R16B03`. Beware though,
@@ -22,10 +21,7 @@ there also was an `OTP_R16B03-1` release that fixed a
 critical issue in the initial release.
 
 The README file for all official Erlang/OTP releases can
-be found on http://www.erlang.org/downloads[erlang.org].
-To obtain information about patch releases when they are
-released you need to be subscribed to the
-http://erlang.org/mailman/listinfo/erlang-questions[erlang-questions mailing list].
+be found on https://www.erlang.org/patches[erlang.org].
 
 [[otp_version_pinning]]
 === OTP version pinning
@@ -38,11 +34,11 @@ ensure this version is used by everyone in your team.
 
 To pin the version all you need to do is to set the
 `ERLANG_OTP` variable in your Makefile before including
-Erlang.mk. For example, to use `OTP-20.0.4`:
+Erlang.mk. For example, to use `OTP-29.0`:
 
 [source,make]
 ----
-ERLANG_OTP = OTP-20.0.4
+ERLANG_OTP = OTP-29.0
 
 include erlang.mk
 ----

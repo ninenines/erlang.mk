@@ -20,6 +20,7 @@ comments, using the `edown` application:
 
 [source,make]
 DOC_DEPS = edown
+dep_edown = git https://github.com/uwiger/edown master
 EDOC_OPTS = {doclet, edown_doclet}
 
 === Usage

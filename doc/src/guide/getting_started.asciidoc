@@ -79,32 +79,9 @@ All you need to do is use the `bootstrap` target:
 [source,bash]
 $ make -f erlang.mk bootstrap
 
-Something similar to the following snippet will then appear
-on your screen:
-
-[source,bash]
-----
-git clone https://github.com/ninenines/erlang.mk .erlang.mk.build
-Cloning into '.erlang.mk.build'...
-remote: Counting objects: 4035, done.
-remote: Compressing objects: 100% (12/12), done.
-remote: Total 4035 (delta 8), reused 4 (delta 4), pack-reused 4019
-Receiving objects: 100% (4035/4035), 1.10 MiB | 784.00 KiB/s, done.
-Resolving deltas: 100% (2442/2442), done.
-Checking connectivity... done.
-if [ -f build.config ]; then cp build.config .erlang.mk.build; fi
-cd .erlang.mk.build && make
-make[1]: Entering directory '/home/essen/tmp/hello_joe/.erlang.mk.build'
-awk 'FNR==1 && NR!=1{print ""}1' core/core.mk index/*.mk core/index.mk core/deps.mk plugins/protobuffs.mk core/erlc.mk core/docs.mk core/test.mk plugins/asciidoc.mk plugins/bootstrap.mk plugins/c_src.mk plugins/ci.mk plugins/ct.mk plugins/dialyzer.mk plugins/edoc.mk plugins/elvis.mk plugins/erlydtl.mk plugins/escript.mk plugins/eunit.mk plugins/relx.mk plugins/shell.mk plugins/triq.mk plugins/xref.mk plugins/cover.mk \
-	| sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = 1.2.0-642-gccd2b9f/' > erlang.mk
-make[1]: Leaving directory '/home/essen/tmp/hello_joe/.erlang.mk.build'
-cp .erlang.mk.build/erlang.mk ./erlang.mk
-rm -rf .erlang.mk.build
-----
-
-This is Erlang.mk bootstrapping itself. Indeed, the file you
-initially downloaded contains nothing more than the code needed
-to bootstrap. This operation is done only once. Consult the
+Erlang.mk will bootstrap itself: the file you initially
+downloaded contains nothing more than the code needed to
+do that. This operation is done only once. Consult the
 xref:updating[Updating Erlang.mk] chapter for more
 information.
 
@@ -164,21 +141,11 @@ project and build the release:
 
 [source,bash]
 $ make
- APP    hello_joe.app.src
- GEN    distclean-relx-rel
- GEN    /home/essen/tmp/hello_joe/relx
-===> Starting relx build process ...
-===> Resolving OTP Applications from directories:
-          /home/essen/tmp/hello_joe/ebin
-          /usr/lib/erlang/lib
-          /home/essen/tmp/hello_joe/deps
-===> Resolved hello_joe_release-1
-===> Including Erts from /usr/lib/erlang
-===> release successfully created!
 
-The first time you run this command, Erlang.mk will download
-_relx_, the release building tool. So don't worry if you see
-more output than above.
+The first time you run this command, Erlang.mk will fetch
+_relx_ (it is added to `REL_DEPS` when you bootstrap the
+release) and then generate the release. So don't worry if
+you see more output than above.
 
 If building the release is slow, no need to upgrade your
 hardware just yet. Just consult the xref:relx[Releases]
@@ -192,24 +159,11 @@ your project and build the release if it wasn't already:
 [source,bash]
 ----
 $ make run
- APP    hello_joe.app.src
- GEN    distclean-relx-rel
-===> Starting relx build process ...
-===> Resolving OTP Applications from directories:
-          /home/essen/tmp/hello_joe/ebin
-          /usr/lib/erlang/lib
-          /home/essen/tmp/hello_joe/deps
-===> Resolved hello_joe_release-1
-===> Including Erts from /usr/lib/erlang
-===> release successfully created!
-Exec: /home/essen/tmp/hello_joe/_rel/hello_joe_release/erts-7.0/bin/erlexec -boot /home/essen/tmp/hello_joe/_rel/hello_joe_release/releases/1/hello_joe_release -boot_var ERTS_LIB_DIR /home/essen/tmp/hello_joe/_rel/hello_joe_release/erts-7.0/../lib -env ERL_LIBS /home/essen/tmp/hello_joe/_rel/hello_joe_release/releases/1/lib -config /home/essen/tmp/hello_joe/_rel/hello_joe_release/releases/1/sys.config -args_file /home/essen/tmp/hello_joe/_rel/hello_joe_release/releases/1/vm.args -- console
-Root: /home/essen/tmp/hello_joe/_rel/hello_joe_release
-/home/essen/tmp/hello_joe/_rel/hello_joe_release
-heart_beat_kill_pid = 16389
-Erlang/OTP 18 [erts-7.0] [source] [64-bit] [smp:4:4] [async-threads:10] [hipe] [kernel-poll:false]
+...
+Erlang/OTP 29 [erts-17.0] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1]
 
-Eshell V7.0  (abort with ^G)
-(hello_joe@127.0.0.1)1> 
+Eshell V17.0 (abort with ^G)
+(hello_joe@127.0.0.1)1>
 ----
 
 Simple as that!
@@ -331,7 +285,7 @@ you can always run `make help`:
 [source,bash]
 ----
 $ make help
-erlang.mk (version 1.2.0-642-gccd2b9f) is distributed under the terms of the ISC License.
+erlang.mk (version rolling) is distributed under the terms of the ISC License.
 Copyright (c) 2013-2016 Loïc Hoguin <essen@ninenines.eu>
 
 Usage: [V=1] make [target]...
@@ -340,6 +294,8 @@ Core targets:
   all           Run deps, app and rel targets in that order
   app           Compile the project
   deps          Fetch dependencies (if needed) and compile them
+  fetch-deps    Fetch dependencies recursively (if needed) without compiling them
+  list-deps     List dependencies recursively on stdout
   search q=...  Search for a package in the built-in index
   rel           Build a release for this project, if applicable
   docs          Build the documentation for this project
@@ -355,6 +311,8 @@ Bootstrap targets:
   bootstrap          Generate a skeleton of an OTP application
   bootstrap-lib      Generate a skeleton of an OTP library
   bootstrap-rel      Generate the files needed to build a release
+  new-app in=NAME    Create a new local OTP application NAME
+  new-lib in=NAME    Create a new local OTP library NAME
   new t=TPL n=NAME   Generate a module NAME based on the template TPL
   list-templates     List available templates
 ...

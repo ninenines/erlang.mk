@@ -11,17 +11,14 @@ This chapter lists all known limitations of Erlang.mk.
 
 === Erlang must be available
 
-Currently Erlang.mk requires you to install Erlang beforehand.
-Installing Erlang is not always easy, particularly if you need
-a specific version of Erlang for a specific project.
+By default Erlang.mk expects `erl` to be in your `$PATH`.
+Installing Erlang is not always easy, particularly if you
+need a specific version for a specific project.
 
-In addition, the Erlang being used must be in your `$PATH`
-before you use Erlang.mk.
-
-In the future we envision, Erlang.mk could manage the Erlang
-version you need to use a project. Erlang.mk already does this
-for running tests when using `make ci`, so doing this during
-development is just a step away.
+You can pin an OTP version with `ERLANG_OTP` and let
+Erlang.mk fetch and build it via Kerl. The same mechanism
+is used by `make ci`. See the xref:kerl[OTP version management]
+chapter.
 
 === Spaces in path
 
