@@ -738,36 +738,6 @@ endif
 		{ok, \"0.6.0\"} = application:get_key(systemd, vsn), \
 		halt()"
 
-# @todo Enable this test again when a host provides Mercurial again.
-#core-deps-fetch-hg: init
-#
-#	$i "Bootstrap a new OTP library named $(APP)"
-#	$t mkdir $(APP)/
-#	$t cp ../erlang.mk $(APP)/
-#	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-#
-#	$i "Add Ehsa 4.0.3 to the list of dependencies"
-#	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = ehsa\ndep_ehsa = hg https://bitbucket.org/a12n/ehsa 4.0.3\n"}' $(APP)/Makefile
-#
-#ifdef LEGACY
-#	$i "Add ehsa to the applications key in the .app.src file"
-#	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tehsa,\n"}' $(APP)/src/$(APP).app.src
-#endif
-#
-#	$i "Build the application"
-#	$t $(MAKE) -C $(APP) $v
-#
-#	$i "Check that all dependencies were fetched"
-#	$t test -d $(APP)/deps/ehsa
-#
-#	$i "Check that the application was compiled correctly"
-#	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
-#		[ok = application:load(App) || App <- [$(APP), ehsa]], \
-#		{ok, Deps} = application:get_key($(APP), applications), \
-#		true = lists:member(ehsa, Deps), \
-#		{ok, \"4.0.3\"} = application:get_key(ehsa, vsn), \
-#		halt()"
-
 core-deps-fetch-ln: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -800,36 +770,6 @@ endif
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(my_dep, Deps), \
 		halt()"
-
-# @todo Enable this test again when a host provides Subversion again.
-#core-deps-fetch-svn: init
-#
-#	$i "Bootstrap a new OTP library named $(APP)"
-#	$t mkdir $(APP)/
-#	$t cp ../erlang.mk $(APP)/
-#	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-#
-#	$i "Add Cowlib 1.0.0 to the list of dependencies"
-#	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = svn https://github.com/ninenines/cowlib/tags/1.0.0\n"}' $(APP)/Makefile
-#
-#ifdef LEGACY
-#	$i "Add Cowlib to the applications key in the .app.src file"
-#	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/src/$(APP).app.src
-#endif
-#
-#	$i "Build the application"
-#	$t $(MAKE) -C $(APP) $v
-#
-#	$i "Check that all dependencies were fetched"
-#	$t test -d $(APP)/deps/cowlib
-#
-#	$i "Check that the application was compiled correctly"
-#	$t $(ERL) -pa $(APP)/ebin/ $(APP)/deps/*/ebin/ -eval " \
-#		[ok = application:load(App) || App <- [$(APP), cowlib]], \
-#		{ok, Deps} = application:get_key($(APP), applications), \
-#		true = lists:member(cowlib, Deps), \
-#		{ok, \"1.0.0\"} = application:get_key(cowlib, vsn), \
-#		halt()"
 
 core-deps-ignore: init
 
