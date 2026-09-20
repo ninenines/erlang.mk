@@ -255,10 +255,6 @@ relx-rel-with-script-only: init
 	$i "Check that the output directory was removed entirely"
 	$t test ! -d $(APP)/_rel/
 
-ifneq ($(PLATFORM),msys2)
-# This test is currently disabled on Windows because we are
-# running into too many issues preventing the test from
-# executing properly and leaving the release running at the end.
 relx-relup: init
 
 	$i "Bootstrap a new release named $(APP)"
@@ -378,7 +374,6 @@ endif
 ifeq ($(PLATFORM),msys2)
 	$t sleep 1
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall
-endif
 endif
 
 relx-start-stop: init
