@@ -117,7 +117,10 @@ hex-tarball-create: init
 
 	$i "Confirm the tarball contains a valid metadata.config file"
 	$t $(ERL) -eval " \
-		{ok, _} = file:consult(\"$(APP)/.erlang.mk/metadata.config\"), \
+		{ok, Metadata} = file:consult(\"$(APP)/.erlang.mk/metadata.config\"), \
+		{_, Tools} = lists:keyfind(<<\"build_tools\">>, 1, Metadata), \
+		true = lists:member(<<\"make\">>, Tools), \
+		true = lists:member(<<\"rebar3\">>, Tools), \
 		halt(0)"
 
 	$i "Confirm the tarball contains a contents.tar.gz file that can be extracted"
@@ -160,6 +163,41 @@ endif
 		{_, <<\"cowlib\">>} = lists:keyfind(<<\"app\">>, 1, Cowlib), \
 		{_, false} = lists:keyfind(<<\"optional\">>, 1, Cowlib), \
 		{_, <<\"2.13.0\">>} = lists:keyfind(<<\"requirement\">>, 1, Cowlib), \
+		{_, Tools} = lists:keyfind(<<\"build_tools\">>, 1, Metadata), \
+		true = lists:member(<<\"make\">>, Tools), \
+		false = lists:member(<<\"rebar3\">>, Tools), \
+		halt(0)"
+
+hex-tarball-create-with-deps-rebar-config: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Add Cowlib to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib_commit = 2.13.0\n"}' $(APP)/Makefile
+
+	$i "Generate rebar.config when building"
+	$t echo "app:: rebar.config" >> $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowlib to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Create a release tarball"
+	$t $(MAKE) -C $(APP) hex-tarball-create $v
+
+	$i "Confirm the tarball contents can be extracted"
+	$t cd $(APP)/.erlang.mk/ && tar xf $(APP).tar
+
+	$i "Confirm the tarball advertises rebar3 because rebar.config exists"
+	$t $(ERL) -eval " \
+		{ok, Metadata} = file:consult(\"$(APP)/.erlang.mk/metadata.config\"), \
+		{_, Tools} = lists:keyfind(<<\"build_tools\">>, 1, Metadata), \
+		true = lists:member(<<\"make\">>, Tools), \
+		true = lists:member(<<\"rebar3\">>, Tools), \
 		halt(0)"
 
 hex-tarball-create-with-req: init

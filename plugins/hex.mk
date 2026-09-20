@@ -74,9 +74,6 @@ HEX_TARBALL_FILES ?= \
 
 HEX_TARBALL_OUTPUT_FILE ?= $(ERLANG_MK_TMP)/$(PROJECT).tar
 
-# @todo Need to check for rebar.config and/or the absence of DEPS to know
-# whether a project will work with Rebar.
-
 # In order to build the requirements metadata we look into DEPS.
 # We do not require that the project use Hex dependencies, however
 # Hex.pm does require that the package name and version numbers
@@ -95,7 +92,7 @@ define hex_tarball_create.erl
 	Requirements = maps:remove(dummy, Requirements0),
 	Metadata0 = #{
 		app => <<"$(strip $(PROJECT))">>,
-		build_tools => [<<"make">>, <<"rebar3">>],
+		build_tools => [<<"make">>$(if $(or $(wildcard rebar.config),$(if $(strip $(DEPS)),,true)),$(comma) <<"rebar3">>)],
 		description => <<"$(strip $(PROJECT_DESCRIPTION))">>,
 		files => [unicode:characters_to_binary(F) || F <- Files0],
 		name => <<"$(strip $(PROJECT))">>,
