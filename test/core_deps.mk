@@ -6,34 +6,6 @@ core_deps_TARGETS = $(call list_targets,core-deps)
 
 core-deps: $(core_deps_TARGETS)
 
-ifneq ($(PLATFORM),msys2)
-core-deps-build-c-8cc: init
-
-	$i "Bootstrap a new OTP library named $(APP)"
-	$t mkdir $(APP)/
-	$t cp ../erlang.mk $(APP)/
-	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-
-	$i "Add 8cc to the list of build dependencies"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "BUILD_DEPS = 8cc\ndep_8cc = git https://github.com/rui314/8cc master\n"}' $(APP)/Makefile
-
-	$i "Build the application"
-	$t $(MAKE) -C $(APP) $v
-
-	$i "Check that all dependencies were fetched"
-	$t test -d $(APP)/deps/8cc
-
-	$i "Check that 8cc can be started"
-	$t $(APP)/deps/8cc/8cc -h $v
-
-	$i "Check that the application was compiled correctly"
-	$t $(ERL) -pa $(APP)/ebin/ -eval " \
-		[ok = application:load(App) || App <- [$(APP)]], \
-		{ok, Deps} = application:get_key($(APP), applications), \
-		false = lists:member('8cc', Deps), \
-		halt()"
-endif
-
 core-deps-build-c-lz4: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
