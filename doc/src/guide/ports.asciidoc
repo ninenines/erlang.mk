@@ -8,7 +8,22 @@ There are two ways to build the C code: using a custom Makefile,
 or making Erlang.mk do it directly. The C code will be built
 as needed when you run `make`.
 
-// @todo something for easier bootstrapping
+=== Generating a NIF skeleton
+
+Erlang.mk can generate a NIF module and the matching C
+source, the same way it generates OTP modules from templates.
+See xref:getting_started[Getting started] for the general
+template workflow.
+
+[source,bash]
+$ make new-nif n=my_nif
+
+This creates 'src/my_nif.erl' and 'c_src/my_nif.c'. In a
+multi-application repository you can pass `in=APP` to put
+the files inside that application.
+
+The next `make` will compile both the Erlang module and the
+NIF shared library.
 
 === C source code location and Erlang environment
 
