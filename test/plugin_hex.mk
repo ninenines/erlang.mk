@@ -485,7 +485,30 @@ hex-docs-publish: init
 	$i "Publish the documentation for the release"
 	$t $(MAKE) -C $(APP) hex-docs-publish HEX_SECRET=`cat $(APP)/hex.key` $v
 
-# @todo hex-docs-publish when there are no docs
+hex-docs-publish-no-docs: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Configure a local Hex provider"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Add extra Hex metadata"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
+
+	$i "Create a Hex user"
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" HEX_EMAIL=$(APP)@noone.test $v
+
+	$i "Create a key for that user"
+	$t $(MAKE) -C $(APP) hex-key-add HEX_USERNAME=$(APP) HEX_PASSWORD="12345678" | grep ^Secret: | cut -f2 -d" " > $(APP)/hex.key
+
+	$i "Publish the release"
+	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
+
+	$i "Publish the non-existent documentation for the release"
+	$t ! $(MAKE) -C $(APP) hex-docs-publish HEX_SECRET=`cat $(APP)/hex.key` $v
 
 hex-docs-delete: init
 
