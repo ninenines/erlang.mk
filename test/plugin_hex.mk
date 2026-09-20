@@ -255,8 +255,6 @@ hex-release-publish: init
 	$i "Check that the release exists"
 	$t curl -sf http://localhost:4000/api/packages/$(APP)/releases/0.1.0 >/dev/null
 
-# @todo There's a weird ci.erlang.mk related bug with CACHE_DEPS. Fix it.
-ifndef CACHE_DEPS
 hex-release-publish-with-deps: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
@@ -292,14 +290,13 @@ endif
 
 	$i "Publish the Cowlib release"
 	$t cp ../erlang.mk $(APP)/deps/cowlib
-	$t $(MAKE) -C $(APP)/deps/cowlib hex-release-publish DEPS_DIR=$(APP)/deps ERLANG_MK_TMP=$(APP)/.erlang.mk HEX_SECRET=`cat $(APP)/hex.key` $v
+	$t $(MAKE) -C $(APP)/deps/cowlib hex-release-publish DEPS_DIR=$(CURDIR)/$(APP)/deps ERLANG_MK_TMP=$(CURDIR)/$(APP)/.erlang.mk HEX_SECRET=`cat $(APP)/hex.key` $v
 
 	$i "Publish the release"
 	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
 
 	$i "Check that the release exists and includes Cowlib as requirement"
 	$t curl -sf http://localhost:4000/api/packages/$(APP)/releases/0.1.0 | grep -q cowlib
-endif
 
 hex-release-replace: init
 
