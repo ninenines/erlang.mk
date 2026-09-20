@@ -58,7 +58,6 @@ hex-key-add: $(ERLANG_MK_TMP)/dep_built/hex_core
 
 HEX_TARBALL_EXTRA_METADATA ?=
 
-# @todo Check that we can += files
 HEX_TARBALL_FILES ?= \
 	$(wildcard early-plugins.mk) \
 	$(wildcard ebin/$(PROJECT).app) \
@@ -77,8 +76,6 @@ HEX_TARBALL_OUTPUT_FILE ?= $(ERLANG_MK_TMP)/$(PROJECT).tar
 
 # @todo Need to check for rebar.config and/or the absence of DEPS to know
 # whether a project will work with Rebar.
-#
-# @todo contributors licenses links in HEX_TARBALL_EXTRA_METADATA
 
 # In order to build the requirements metadata we look into DEPS.
 # We do not require that the project use Hex dependencies, however
