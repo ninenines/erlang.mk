@@ -336,15 +336,11 @@ core-deps-dep-built-ln: init
 
 	$i "Link to cowlib instead of fetching the dependency"
 	$t mkdir -p $(APP)/deps
-	$t ln -s ../cowlib $(APP)/deps/cowlib
+	$t MSYS="$${MSYS:+$$MSYS }winsymlinks:nativestrict" ln -s ../cowlib $(APP)/deps/cowlib
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
 
-# On MSYS2 "ln" will by default not create symbolic links because
-# it requires an option to be enabled and administrative privileges.
-# The "rebuild" part of the test is therefore skipped on Windows.
-ifneq ($(PLATFORM),msys2)
 	$i "Touch one cowlib file to mark it for recompilation"
 	$t $(SLEEP)
 	$t touch $(APP)/deps/cowlib/src/cow_http.erl
@@ -362,7 +358,6 @@ ifneq ($(PLATFORM),msys2)
 
 	$i "Confirm that symlinked deps don't create dep_built"
 	$t test ! -e $(APP)/.erlang.mk/dep_built/cowlib
-endif
 
 core-deps-dep-commit: init
 

@@ -141,6 +141,7 @@ jobs:
       shell: msys2 {0}
       run: |
         export PATH="$(cygpath -u "$INSTALL_DIR_FOR_OTP")/bin:$(cygpath -u "$INSTALL_DIR_FOR_ELIXIR")/bin:$PATH"
+        export MSYS="${MSYS:+$MSYS }winsymlinks:nativestrict"
         erl -sname init_cookie -run erlang halt
         set -o pipefail
         make check c=${{ matrix.suite }} -j4 -k ${{ matrix.extra }} 2>&1 | sed "s/\*\*\* \[/*** [test\//"
