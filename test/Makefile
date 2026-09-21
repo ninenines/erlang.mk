@@ -308,9 +308,6 @@ hexpm-pkg-$1: init
 # Make sure $@ is defined inside the define.
 	$(eval @ = hexpm-pkg-$1)
 
-# @todo Get the real application's name. How?
-	$(eval APP_NAME := $1)
-
 	$i "Bootstrap a new OTP library in packages/$1_pkg"
 	$t mkdir -p packages/$1_pkg/
 	$t cp ../erlang.mk packages/$1_pkg/
@@ -327,7 +324,7 @@ hexpm-pkg-$1: init
 
 #	$(if $(filter $1,$(EXCLUDE_FROM_APP_CHECK)),,
 	$i "Check that $1 has a .app file"
-	$t if ! test -f packages/$1_pkg/deps/$(APP_NAME)/ebin/$(APP_NAME).app; then \
+	$t if ! ls packages/$1_pkg/deps/$1/ebin/*.app >/dev/null 2>&1; then \
 		echo "$1: no .app file" >> packages/errors.log; \
 		false; \
 	fi
@@ -363,7 +360,7 @@ hexpm-pkg-$1: init
 
 #	$(if $(filter $1,$(EXCLUDE_FROM_APP_CHECK)),,
 	$i "Check that $1 has a .app file"
-	$t if ! test -f packages/$1_pkg/deps/$(APP_NAME)/ebin/$(APP_NAME).app; then \
+	$t if ! ls packages/$1_pkg/deps/$1/ebin/*.app >/dev/null 2>&1; then \
 		echo "$1: no .app file" >> packages/errors.log; \
 		false; \
 	fi
