@@ -85,26 +85,25 @@ core-autopatch-no-autopatch-erlang-mk: init
 	$i "Check that Erlang.mk was not autopatched"
 	$t grep -q Hoguin $(APP)/deps/cowlib/erlang.mk
 
-#core-autopatch-no-autopatch-rebar: init
-#
-#	$i "Bootstrap a new OTP library named $(APP)"
-#	$t mkdir $(APP)/
-#	$t cp ../erlang.mk $(APP)/
-#	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
-#
-#	$i "Add Lager to the list of dependencies and to the NO_AUTOPATCH list"
-#	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = lager\ndep_lager = git https://github.com/erlang-lager/lager master\nNO_AUTOPATCH = lager\n"}' $(APP)/Makefile
-#
-#	$i "Build the application"
-#	$t $(MAKE) -C $(APP) $v
-#
-#	$i "Check that all dependencies were fetched"
-#	$t test -d $(APP)/deps/goldrush
-#	$t test -d $(APP)/deps/lager
-#
-#	$i "Check that Lager was not autopatched"
-#	$t if grep -q erlang\.mk $(APP)/deps/goldrush/Makefile; then false; fi
-#	$t if grep -q erlang\.mk $(APP)/deps/lager/Makefile; then false; fi
+core-autopatch-no-autopatch-rebar: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add poolboy to the list of dependencies and to the NO_AUTOPATCH list"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = poolboy\ndep_poolboy = git https://github.com/devinus/poolboy 1.5.2\nNO_AUTOPATCH = poolboy\n"}' $(APP)/Makefile
+
+	$i "Fetch the dependency without building it"
+	$t $(MAKE) -C $(APP) $(CURDIR)/$(APP)/deps/poolboy $v
+
+	$i "Check that poolboy was fetched"
+	$t test -d $(APP)/deps/poolboy
+	$t test -f $(APP)/deps/poolboy/rebar.config
+
+	$i "Check that poolboy was not autopatched"
+	$t if test -f $(APP)/deps/poolboy/Makefile && grep -q erlang.mk $(APP)/deps/poolboy/Makefile; then false; fi
 
 core-autopatch-port_env: init
 
