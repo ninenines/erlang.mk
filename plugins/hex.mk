@@ -1,11 +1,15 @@
 # Copyright (c) 2020, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+define hex_string_escape
+$(subst $$,\$$,$(subst ",\\",$(subst \,\\\\,$1)))
+endef
+
 define hex_user_create.erl
 	{ok, _} = application:ensure_all_started(ssl),
 	{ok, _} = application:ensure_all_started(inets),
 	Config = $(hex_config.erl),
-	case hex_api_user:create(Config, <<"$(strip $1)">>, <<"$(strip $2)">>, <<"$(strip $3)">>) of
+	case hex_api_user:create(Config, <<"$(strip $1)">>, <<"$(call hex_string_escape,$2)">>, <<"$(strip $3)">>) of
 		{ok, {201, _, #{<<"email">> := Email, <<"url">> := URL, <<"username">> := Username}}} ->
 			io:format("User ~s (~s) created at ~s~n"
 				"Please check your inbox for a confirmation email.~n"
@@ -23,13 +27,13 @@ hex-user-create: $(ERLANG_MK_TMP)/dep_built/hex_core
 	$(if $(HEX_USERNAME),,$(eval HEX_USERNAME := $(shell read -p "Username: " username; echo $$username)))
 	$(if $(HEX_PASSWORD),,$(eval HEX_PASSWORD := $(shell stty -echo; read -p "Password: " password; stty echo; echo $$password) $(info )))
 	$(if $(HEX_EMAIL),,$(eval HEX_EMAIL := $(shell read -p "Email: " email; echo $$email)))
-	$(gen_verbose) $(call erlang,$(call hex_user_create.erl,$(HEX_USERNAME),$(HEX_PASSWORD),$(HEX_EMAIL)))
+	$(gen_verbose) $(call erlang,$(call hex_user_create.erl,$(HEX_USERNAME),$(value HEX_PASSWORD),$(HEX_EMAIL)))
 
 define hex_key_add.erl
 	{ok, _} = application:ensure_all_started(ssl),
 	{ok, _} = application:ensure_all_started(inets),
 	Config = $(hex_config.erl),
-	ConfigF = Config#{api_key => iolist_to_binary([<<"Basic ">>, base64:encode(<<"$(strip $1):$(strip $2)">>)])},
+	ConfigF = Config#{api_key => iolist_to_binary([<<"Basic ">>, base64:encode(<<"$(strip $1):$(call hex_string_escape,$2)">>)])},
 	Permissions = [
 		case string:split(P, <<":">>) of
 			[D] -> #{domain => D};
@@ -52,7 +56,7 @@ endef
 hex-key-add: $(ERLANG_MK_TMP)/dep_built/hex_core
 	$(if $(HEX_USERNAME),,$(eval HEX_USERNAME := $(shell read -p "Username: " username; echo $$username)))
 	$(if $(HEX_PASSWORD),,$(eval HEX_PASSWORD := $(shell stty -echo; read -p "Password: " password; stty echo; echo $$password) $(info )))
-	$(gen_verbose) $(call erlang,$(call hex_key_add.erl,$(HEX_USERNAME),$(HEX_PASSWORD),\
+	$(gen_verbose) $(call erlang,$(call hex_key_add.erl,$(HEX_USERNAME),$(value HEX_PASSWORD),\
 		$(if $(name),$(name),$(shell hostname)-erlang-mk),\
 		$(if $(perm),$(perm),api)))
 

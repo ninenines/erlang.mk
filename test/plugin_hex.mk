@@ -27,39 +27,37 @@ hex-user-create: init
 	$i "Check that the user exists"
 	$t curl -sf http://localhost:4000/api/users/$(APP) >/dev/null
 
-# @todo Fix this.
-#hex-user-create-password-with-dollar-sign: init
-#
-#	$i "Bootstrap a new OTP application named $(APP)"
-#	$t mkdir $(APP)/
-#	$t cp ../erlang.mk $(APP)/
-#	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
-#
-#	$i "Configure a local Hex provider"
-#	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
-#
-#	$i "Create a Hex user"
-#	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="123$$567" HEX_EMAIL=$(APP)@noone.test $v
-#
-#	$i "Check that the user exists"
-#	$t curl --user "$(APP):123$$567" -sf http://localhost:4000/api/users/$(APP) >/dev/null
+hex-user-create-password-with-dollar-sign: init
 
-# @todo Fix this.
-#hex-user-create-password-with-backslash: init
-#
-#	$i "Bootstrap a new OTP application named $(APP)"
-#	$t mkdir $(APP)/
-#	$t cp ../erlang.mk $(APP)/
-#	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
-#
-#	$i "Configure a local Hex provider"
-#	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
-#
-#	$i "Create a Hex user"
-#	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="123\\567" HEX_EMAIL=$(APP)@noone.test $v
-#
-#	$i "Check that the user exists"
-#	$t curl --user "$(APP):123\\567" -sf http://localhost:4000/api/users/$(APP) >/dev/null
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Configure a local Hex provider"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Create a Hex user"
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD='123$$5678' HEX_EMAIL=$(APP)@noone.test $v
+
+	$i "Check that the user exists"
+	$t curl -sf http://localhost:4000/api/users/$(APP)
+
+hex-user-create-password-with-backslash: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Configure a local Hex provider"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Create a Hex user"
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD='123\5678' HEX_EMAIL=$(APP)@noone.test $v
+
+	$i "Check that the user exists"
+	$t curl -sf http://localhost:4000/api/users/$(APP)
 
 hex-user-create-password-with-space: init
 
@@ -72,10 +70,26 @@ hex-user-create-password-with-space: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
 
 	$i "Create a Hex user"
-	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD="123 5678" HEX_EMAIL=$(APP)@noone.test $v
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD='123 5678' HEX_EMAIL=$(APP)@noone.test $v
 
 	$i "Check that the user exists"
-	$t curl --user "$(APP):123 5678" -sf http://localhost:4000/api/users/$(APP) >/dev/null
+	$t curl --user -sf http://localhost:4000/api/users/$(APP) >/dev/null
+
+hex-user-create-password-with-double-quote: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Configure a local Hex provider"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Create a Hex user"
+	$t $(MAKE) -C $(APP) hex-user-create HEX_USERNAME=$(APP) HEX_PASSWORD='123"5678' HEX_EMAIL=$(APP)@noone.test $v
+
+	$i "Check that the user exists"
+	$t curl --user -sf http://localhost:4000/api/users/$(APP) >/dev/null
 
 hex-key-add: init
 
