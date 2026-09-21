@@ -173,6 +173,29 @@ erlydtl-opts: init
 		<<\"<&>\", _/binary>> = iolist_to_binary(Result), \
 		halt()"
 
+erlydtl-percent-path: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate an ErlyDTL template under a path that contains a percent character"
+	$t mkdir -p "$(APP)/foo%2Fbar/templates/"
+	$t echo '{{ var }}' > "$(APP)/foo%2Fbar/templates/status_page.dtl"
+
+	$i "Build the application with DTL_PATH pointing at that directory"
+	$t $(MAKE) -C $(APP) DEPS=erlydtl DTL_PATH="foo%2Fbar/templates" $v
+
+	$i "Check that the template is compiled to the module derived from its basename"
+	$t test -f $(APP)/ebin/status_page_dtl.beam
+
+	$i "Check that the generated module is included in the .app file"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		ok = application:load($(APP)), \
+		{ok, [status_page_dtl]} = application:get_key($(APP), modules), \
+		halt()"
+
 erlydtl-path-full-path-suffix: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
