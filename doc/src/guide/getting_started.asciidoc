@@ -286,7 +286,7 @@ you can always run `make help`:
 ----
 $ make help
 erlang.mk (version rolling) is distributed under the terms of the ISC License.
-Copyright (c) 2013-2016 Loïc Hoguin <essen@ninenines.eu>
+Copyright (c) Loïc Hoguin <essen@ninenines.eu>
 
 Usage: [V=1] make [target]...
 

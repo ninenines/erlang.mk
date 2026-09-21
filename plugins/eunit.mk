@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2016, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) Loïc Hoguin <essen@ninenines.eu>
 # Copyright (c) 2014, Enrique Fernandez <enrique.fernandez@erlang-solutions.com>
 # This file is contributed to erlang.mk and subject to the terms of the ISC License.
 

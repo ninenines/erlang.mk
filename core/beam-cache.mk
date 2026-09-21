@@ -1,4 +1,4 @@
-# Copyright (c) 2024, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 .PHONY: beam-cache-restore-app beam-cache-restore-test clean-beam-cache distclean-beam-cache

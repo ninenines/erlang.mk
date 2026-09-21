@@ -1,4 +1,4 @@
-# Copyright (c) 2020, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 define hex_string_escape

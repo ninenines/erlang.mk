@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2016, Loïc Hoguin <essen@ninenines.eu>
+# Copyright (c) Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
 ifeq ($(filter relx,$(BUILD_DEPS) $(DEPS) $(REL_DEPS)),relx)
