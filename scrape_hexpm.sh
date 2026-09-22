@@ -9,7 +9,7 @@
 # This script should only be run occasionally to refresh the file
 # containing the list of packages.
 #
-# @todo Some of the projects fetched are Elixir despite indicating
+# NOTE: Some of the projects fetched are Elixir despite indicating
 #       "rebar3" or "make". We should ignore them here once identified
 #       so they don't make it to the output.
 
