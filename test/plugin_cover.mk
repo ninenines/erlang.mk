@@ -526,6 +526,44 @@ cover-report-excl-mods: init
 	$t ! test -e $(APP)/cover/$(APP)_sup.COVER.html
 	$t ! grep -q '$(APP)_sup' $(APP)/cover/index.html
 
+cover-report-ambiguous-mods: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate modules whose names collide with cover:analyse/2"
+	$t printf "%s\n" \
+		"-module(coverage)." \
+		"-export([ok/0])." \
+		"ok() -> ok." > $(APP)/src/coverage.erl
+	$t printf "%s\n" \
+		"-module(calls)." \
+		"-export([ok/0])." \
+		"ok() -> ok." > $(APP)/src/calls.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Export coverdata that contains the colliding modules"
+	$t mkdir -p $(APP)/cover/
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		cover:start(), \
+		{ok, _} = cover:compile_beam(\"$(APP)/ebin/coverage.beam\"), \
+		{ok, _} = cover:compile_beam(\"$(APP)/ebin/calls.beam\"), \
+		ok = cover:export(\"$(APP)/cover/included.coverdata\"), \
+		halt()"
+
+	$i "Build the cover report"
+	$t $(MAKE) -C $(APP) cover-report $v
+
+	$i "Check that both modules are in the HTML report and the index"
+	$t test -f $(APP)/cover/coverage.COVER.html
+	$t test -f $(APP)/cover/calls.COVER.html
+	$t grep -q 'coverage' $(APP)/cover/index.html
+	$t grep -q 'calls' $(APP)/cover/index.html
+
 cover-report-and-merge: init
 
 	$i "Bootstrap a new OTP application named $(APP)"

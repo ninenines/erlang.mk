@@ -144,7 +144,10 @@ define cover_report.erl
 	Ms = [M || M <- Ms0, not lists:member(M, Exclude)],
 	[cover:analyse_to_file(M, "$(COVER_REPORT_DIR)/" ++ atom_to_list(M)
 		++ ".COVER.html", [html])  || M <- Ms],
-	Report = [begin {ok, R} = cover:analyse(M, module), R end || M <- Ms],
+	Report = [begin
+		{result, [R], []} = cover:analyse([M], module),
+		R
+	end || M <- Ms],
 	EunitHrlMods = [$(EUNIT_HRL_MODS)],
 	Report1 = [{M, {Y, case lists:member(M, EunitHrlMods) of
 		true -> N - 1; false -> N end}} || {M, {Y, N}} <- Report],
