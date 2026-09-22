@@ -47,6 +47,9 @@ define core_render_template
 endef
 
 bootstrap:
+ifneq ($(wildcard Makefile),)
+	$(error Error: Makefile already exists)
+endif
 ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif
@@ -63,6 +66,9 @@ endif
 	$(verbose) $(call core_render_template,supervisor,src/$(PROJECT)_sup.erl)
 
 bootstrap-lib:
+ifneq ($(wildcard Makefile),)
+	$(error Error: Makefile already exists)
+endif
 ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif

@@ -105,6 +105,32 @@ bootstrap-invalid-new-lib-name-uppercase: init
 	$i "Try to create a new library My_lib"
 	$t ! $(MAKE) -C $(APP) new-lib in=My_lib $v
 
+bootstrap-lib-makefile-exists: init
+
+	$i "Bootstrap a new OTP library over an existing Makefile"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t printf '%s\n' 'keep this makefile' > $(APP)/Makefile
+
+	$i "Refuse to overwrite the existing Makefile"
+	$t ! $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+	$t test -f $(APP)/Makefile
+	$t grep -q 'keep this makefile' $(APP)/Makefile
+	$t ! test -d $(APP)/src
+
+bootstrap-makefile-exists: init
+
+	$i "Bootstrap a new OTP application over an existing Makefile"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t printf '%s\n' 'keep this makefile' > $(APP)/Makefile
+
+	$i "Refuse to overwrite the existing Makefile"
+	$t ! $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+	$t test -f $(APP)/Makefile
+	$t grep -q 'keep this makefile' $(APP)/Makefile
+	$t ! test -d $(APP)/src
+
 bootstrap-lib: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
