@@ -48,7 +48,10 @@ define erlydtl_compile.erl
 		Module = list_to_atom("$(DTL_PREFIX)" ++ string:to_lower(Module0) ++ "$(DTL_SUFFIX)"),
 		case erlydtl:compile(F, Module, [$(DTL_OPTS)] ++ [{out_dir, "ebin/"}, return_errors]) of
 			ok -> ok;
-			{ok, _} -> ok
+			{ok, _} -> ok;
+			{error, Errors, Warnings} ->
+				io:format("Errors: ~p~nWarnings: ~p~n", [Errors, Warnings]),
+				halt(91)
 		end
 	end || F <- string:tokens("$(1)", " ")],
 	halt().

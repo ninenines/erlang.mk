@@ -34,6 +34,26 @@ erlydtl-compile: init
 		{ok, [$(APP_)_one_dtl, $(APP)_two_dtl]} = application:get_key($(APP), modules), \
 		halt()"
 
+erlydtl-compile-error: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add ErlyDTL to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = erlydtl\n"}' $(APP)/Makefile
+
+	$i "Generate a template with a syntax error"
+	$t mkdir $(APP)/templates/
+	$t echo '{% if foo %}no end' > $(APP)/templates/$(APP).dtl
+
+	$i "Check that the build fails and reports the ErlyDTL errors"
+	$t ! $(MAKE) -C $(APP) $v > $(APP)/erlydtl.log 2>&1
+	$t grep -q 'Errors:' $(APP)/erlydtl.log
+	$t grep -q 'syntax error' $(APP)/erlydtl.log
+	$t grep -q 'Warnings:' $(APP)/erlydtl.log
+
 erlydtl-custom-tag: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
