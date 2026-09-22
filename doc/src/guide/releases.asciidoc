@@ -86,6 +86,20 @@ release if they weren't already. It starts the release in
 _console mode_, meaning you will also have a shell ready to
 use to check things as needed.
 
+If the release is already running, you can rebuild it and
+reload the changed modules into that node:
+
+[source,bash]
+$ make RELOAD=1
+
+This pings the release and then runs `c:lm()`. The release
+must have been built with `{extended_start_script, true}`
+in `relx.config`, which is what the `relx.config` template
+does. The build fails if the node cannot be reached.
+
+This does not work on Windows. The release script there has
+no `eval` command, and that is how `c:lm()` is invoked.
+
 === Upgrading a release
 
 Erlang.mk provides a `relup` target for generating release

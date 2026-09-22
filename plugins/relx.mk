@@ -156,7 +156,7 @@ ifdef RELOAD
 rel::
 	$(verbose) $(RELX_OUTPUT_DIR)/$(RELX_REL_NAME)/bin/$(RELX_REL_NAME)$(RELX_REL_EXT) ping
 	$(verbose) $(RELX_OUTPUT_DIR)/$(RELX_REL_NAME)/bin/$(RELX_REL_NAME)$(RELX_REL_EXT) \
-		eval "io:format(\"~p~n\", [c:lm()])."
+		eval "io:format(\"reloaded ~p~n\", [c:lm()])."
 endif
 
 help::

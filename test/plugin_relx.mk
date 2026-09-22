@@ -386,12 +386,6 @@ relx-start-stop: init
 	$i "Build the release"
 	$t $(MAKE) -C $(APP) $v
 
-	$i "Stop the release (in case one is running from a previously aborted run)"
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) stop || true
-ifeq ($(PLATFORM),msys2)
-	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) uninstall || true
-endif
-
 	$i "Start the release"
 ifeq ($(PLATFORM),msys2)
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release$(RELX_REL_EXT) install
@@ -417,6 +411,58 @@ endif
 
 	$i "Check that there's no erl_crash.dump file"
 	$t test ! -f $(APP)/_rel/$(APP)_release/erl_crash.dump
+
+# Reload is not available for releases on Windows.
+ifneq ($(PLATFORM),msys2)
+relx-reload: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Export a function from the application module"
+	$t printf "%s\n" \
+		"-module($(APP)_app)." \
+		"-behaviour(application)." \
+		"-export([start/2])." \
+		"-export([stop/1])." \
+		"-export([v/0])." \
+		"start(_Type, _Args) ->" \
+		"	$(APP)_sup:start_link()." \
+		"stop(_State) ->" \
+		"	ok." \
+		"v() -> 1." > $(APP)/src/$(APP)_app.erl
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Start the release"
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release daemon
+
+	$i "Ping the release"
+	$t $(call wait_for_success,$(APP)/_rel/$(APP)_release/bin/$(APP)_release ping)
+
+	$i "Change the function and rebuild"
+	$t $(SLEEP)
+	$t perl -pi.bak -e 's/v\(\) -> 1\./v() -> 2./' $(APP)/src/$(APP)_app.erl
+	$t $(MAKE) -C $(APP) RELOAD=1 $v > $(APP)/reload.log 2>&1
+
+	$i "Check that the running release returns the new value"
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release eval '$(APP)_app:v().' | grep -q '^2$$'
+
+	$i "Stop the release"
+	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop
+
+	$i "Check that the release printed the reloaded module"
+ifeq ($(PLATFORM),freebsd)
+# FreeBSD sort has no -V, so the release script falls back to nodetool.
+# Nodetool prints the result of the eval in the caller's output.
+	$t tr -d '\r' < $(APP)/reload.log | grep -q '\[{module,$(APP)_app}\]'
+else
+	$t grep -q '\[{module,$(APP)_app}\]' $(APP)/_rel/$(APP)_release/log/erlang.log.*
+endif
+endif
 
 relx-tar: init
 

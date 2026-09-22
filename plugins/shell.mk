@@ -37,5 +37,20 @@ build-shell-deps: $(ALL_SHELL_DEPS_DIRS) | $(ERLANG_MK_TMP)/dep_built
 	done
 endif
 
+ifdef RELOAD
+define shell_reload.erl
+	spawn(fun F() ->
+		case c:lm() of
+			[] -> ok;
+			Reloaded -> io:format("reloaded ~p~n", [Reloaded])
+		end,
+		receive after 5000 -> F() end
+	end).
+endef
+SHELL_RELOAD_OPTS = -eval "$(subst $(newline),,$(call escape_dquotes,$(call shell_reload.erl)))"
+else
+SHELL_RELOAD_OPTS =
+endif
+
 shell:: build-shell-deps
-	$(gen_verbose) $(SHELL_ERL) -pa $(SHELL_PATHS) $(SHELL_OPTS)
+	$(gen_verbose) $(SHELL_ERL) -pa $(SHELL_PATHS) $(SHELL_RELOAD_OPTS) $(SHELL_OPTS)

@@ -55,7 +55,7 @@ SLEEP =
 endif
 
 # In some cases it is more appropriate to wait until a command succeeds or fails.
-# These functions run the given command every second and gives up after 10 tries.
+# These functions run the given command every second and give up after 10 tries.
 
 define wait_for_success
 	count=10; \

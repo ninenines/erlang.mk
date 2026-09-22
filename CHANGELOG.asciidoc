@@ -12,3 +12,8 @@
             break workflows that clean dependencies, they
             will now also need to remove this file manually
             (this does not apply to symlinked deps).
+
+2026/09/22: `make RELOAD=1` was documented for automatic
+            code reloading with releases. `make shell RELOAD=1`
+            was added for automatic code reloading with
+            `make shell`.

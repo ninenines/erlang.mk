@@ -48,3 +48,15 @@ command `q().`.
 Note that the `shell` target does not build the application. To do it,
 use either the `app` target or, if you want to include also test
 modules, the `test-build` target.
+
+To reload changed modules into a running shell automatically,
+start it with `RELOAD=1`:
+
+[source,bash]
+$ make shell RELOAD=1
+
+The shell then calls `c:lm()` every 5 seconds. Modules that are
+already loaded are reloaded when a newer `.beam` is found, and
+the list of reloaded modules is printed. A `make` in another
+terminal is therefore picked up within 5 seconds. Modules that
+were never loaded are left alone.
