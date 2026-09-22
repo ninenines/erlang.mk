@@ -139,7 +139,9 @@ EUNIT_HRL_MODS = $(subst $(space),$(comma),$(shell \
 
 define cover_report.erl
 	$(foreach f,$(COVERDATA),cover:import("$(f)") == ok orelse halt(1),)
-	Ms = cover:imported_modules(),
+	Ms0 = cover:imported_modules(),
+	Exclude = [$(call comma_list,$(COVER_EXCLUDE_MODS))],
+	Ms = [M || M <- Ms0, not lists:member(M, Exclude)],
 	[cover:analyse_to_file(M, "$(COVER_REPORT_DIR)/" ++ atom_to_list(M)
 		++ ".COVER.html", [html])  || M <- Ms],
 	Report = [begin {ok, R} = cover:analyse(M, module), R end || M <- Ms],

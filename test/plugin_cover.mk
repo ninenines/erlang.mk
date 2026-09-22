@@ -495,6 +495,37 @@ cover-proper: init
 	$t $(MAKE) -C $(APP) clean $v
 	$t test ! -e $(APP)/cover/proper.coverdata
 
+cover-report-excl-mods: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Exclude the supervisor module from the cover report"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "COVER_EXCLUDE_MODS = $(APP)_sup\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Export coverdata that still contains the excluded module"
+	$t mkdir -p $(APP)/cover/
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		cover:start(), \
+		{ok, _} = cover:compile_beam(\"$(APP)/ebin/$(APP)_app.beam\"), \
+		{ok, _} = cover:compile_beam(\"$(APP)/ebin/$(APP)_sup.beam\"), \
+		ok = cover:export(\"$(APP)/cover/included.coverdata\"), \
+		halt()"
+
+	$i "Build the cover report"
+	$t $(MAKE) -C $(APP) cover-report $v
+
+	$i "Check that the excluded module is left out of the HTML report and the index"
+	$t test -f $(APP)/cover/$(APP)_app.COVER.html
+	$t grep -q '$(APP)_app' $(APP)/cover/index.html
+	$t ! test -e $(APP)/cover/$(APP)_sup.COVER.html
+	$t ! grep -q '$(APP)_sup' $(APP)/cover/index.html
+
 cover-report-and-merge: init
 
 	$i "Bootstrap a new OTP application named $(APP)"
