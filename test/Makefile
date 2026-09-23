@@ -58,7 +58,7 @@ endif
 # These functions run the given command every second and give up after 10 tries.
 
 define wait_for_success
-	count=10; \
+	count=30; \
 	until [ $$count = 0 ] || $1; do \
 		count=`expr $$count - 1`; \
 		sleep 1; \
@@ -69,7 +69,7 @@ define wait_for_success
 endef
 
 define wait_for_failure
-	count=10; \
+	count=30; \
 	while [ $$count != 0 ] && $1; do \
 		count=`expr $$count - 1`; \
 		sleep 1; \

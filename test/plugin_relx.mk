@@ -464,6 +464,39 @@ else
 endif
 endif
 
+# The Windows script starts the console in a new window and stop
+# does not stop it.
+ifneq ($(PLATFORM),msys2)
+relx-run: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Run the release in the background"
+# The console reads stdin. Hold the pipe open until the shell has
+# started, then close it. End of file makes the shell terminate.
+# Calling stop after that fails because the node is already down,
+# and calling it before hangs because the shell is blocked in read.
+	$t mkfifo $(APP)/run.in
+	$t tail -f /dev/null > $(APP)/run.in & echo $$! > $(APP)/tail.pid
+	$t $(MAKE) -C $(APP) run < $(APP)/run.in > $(APP)/run.log 2>&1 & echo $$! > $(APP)/run.pid
+	$t $(call wait_for_success,$(APP)/_rel/$(APP)_release/bin/$(APP)_release ping)
+
+	$i "Check that the console started"
+	$t grep -q Eshell $(APP)/run.log
+
+	$i "Close stdin and check that the release stops"
+	$t kill `cat $(APP)/tail.pid`
+	$t $(call wait_for_failure,kill -0 `cat $(APP)/tail.pid` 2>/dev/null)
+	$t $(call wait_for_failure,kill -0 `cat $(APP)/run.pid` 2>/dev/null)
+	$t $(call wait_for_failure,$(APP)/_rel/$(APP)_release/bin/$(APP)_release ping)
+endif
+
 relx-tar: init
 
 	$i "Bootstrap a new release named $(APP)"
