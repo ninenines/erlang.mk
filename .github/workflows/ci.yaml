@@ -115,9 +115,23 @@ jobs:
           mingw-w64-x86_64-7zip
           unzip
 
+    - name: Install GNU Make (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install make
+        echo "$(brew --prefix make)/libexec/gnubin" >> "$GITHUB_PATH"
+
     - name: Install libsodium (Linux, Elixir)
       if: matrix.os == 'ubuntu-latest' && matrix.suite == 'core-elixir'
       run: sudo apt-get -y install libsodium-dev
+
+    - name: Install libsodium (macOS, Elixir)
+      if: matrix.os == 'macos-latest' && matrix.suite == 'core-elixir'
+      run: |
+        brew install libsodium
+        # Apple Silicon Homebrew is not on the compiler's default search path.
+        echo "CPATH=$(brew --prefix)/include" >> "$GITHUB_ENV"
+        echo "LIBRARY_PATH=$(brew --prefix)/lib" >> "$GITHUB_ENV"
 
     - name: Install libsodium (Windows, Elixir)
       if: matrix.os == 'windows-latest' && matrix.suite == 'core-elixir'
@@ -127,8 +141,8 @@ jobs:
     - name: Install problem matchers
       run: echo "::add-matcher::.github/matchers/erlang-mk-matchers.json"
 
-    - name: Run tests (Linux)
-      if: matrix.os == 'ubuntu-latest'
+    - name: Run tests (Unix)
+      if: matrix.os != 'windows-latest'
       run: |
         erl -sname init_cookie -run erlang halt
         set -o pipefail
@@ -297,8 +311,14 @@ jobs:
           gnu-netcat
           diffutils
 
-    - name: Check packages (Linux)
-      if: matrix.os == 'ubuntu-latest'
+    - name: Install GNU Make (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install make
+        echo "$(brew --prefix make)/libexec/gnubin" >> "$GITHUB_PATH"
+
+    - name: Check packages (Unix)
+      if: matrix.os != 'windows-latest'
       run: make packages -k ${{ matrix.extra }}
 
     - name: Check packages (Windows)
@@ -362,8 +382,14 @@ jobs:
           gnu-netcat
           diffutils
 
-    - name: Check select packages (Linux)
-      if: matrix.os == 'ubuntu-latest'
+    - name: Install GNU Make (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install make
+        echo "$(brew --prefix make)/libexec/gnubin" >> "$GITHUB_PATH"
+
+    - name: Check select packages (Unix)
+      if: matrix.os != 'windows-latest'
       run: |
         cat test/hexpm_packages.txt | grep "${{ matrix.packages }}" > select_hexpm_packages.txt
         mv select_hexpm_packages.txt test/hexpm_packages.txt
