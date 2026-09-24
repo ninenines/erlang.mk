@@ -127,11 +127,7 @@ jobs:
 
     - name: Install libsodium (macOS, Elixir)
       if: matrix.os == 'macos-latest' && matrix.suite == 'core-elixir'
-      run: |
-        brew install libsodium
-        # Apple Silicon Homebrew is not on the compiler's default search path.
-        echo "CPATH=$(brew --prefix)/include" >> "$GITHUB_ENV"
-        echo "LIBRARY_PATH=$(brew --prefix)/lib" >> "$GITHUB_ENV"
+      run: brew install libsodium
 
     - name: Install libsodium (Windows, Elixir)
       if: matrix.os == 'windows-latest' && matrix.suite == 'core-elixir'
