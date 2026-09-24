@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   check:
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -163,6 +164,7 @@ jobs:
           test/test_*/
 
   check-asdf-elixir:
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
 
@@ -193,6 +195,7 @@ jobs:
         make check c=core-elixir -j4 -k
 
   check-hex:
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -271,6 +274,7 @@ jobs:
           test/test_*/
 
   packages:
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -333,6 +337,7 @@ jobs:
           test/packages/
 
   hexpm-packages:
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -409,6 +414,7 @@ jobs:
           test/packages/
 
   templates:
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -430,6 +436,7 @@ jobs:
       run: make check-templates
 
   check-in-vm:
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -482,7 +489,6 @@ jobs:
 
     - name: Run tests (FreeBSD)
       uses: cross-platform-actions/action@v1
-      timeout-minutes: 60
       with:
         operating_system: ${{ matrix.os }}
         version: '15.1'
