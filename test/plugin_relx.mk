@@ -102,6 +102,52 @@ relx-bare-rel: init
 	$t test -d $(APP)/_rel/$(APP)_release/releases
 	$t test -d $(APP)/_rel/$(APP)_release/releases/1
 
+relx-dir-name: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Rename the project directory so it no longer matches the application"
+	$t mv $(APP) test_build
+
+	$i "Check that the release fails and explains the directory name"
+	$t ! $(MAKE) -C test_build $v > test_build/relx.log 2>&1
+	$t grep -q 'application $(APP) was not found' test_build/relx.log
+	$t grep -q "named 'test_build'" test_build/relx.log
+	$t grep -q "OTP requires it to be named '$(APP)'" test_build/relx.log
+
+relx-dir-name-vsn: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Rename the project directory to the application name plus a version"
+	$t mv $(APP) $(APP)-1
+
+	$i "Build the release"
+	$t $(MAKE) -C $(APP)-1 $v
+
+	$i "Check that the release was built"
+	$t test -d $(APP)-1/_rel/$(APP)_release
+
+relx-dir-name-other: init
+
+	$i "Bootstrap a new release named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap bootstrap-rel $v
+
+	$i "Add an application that does not exist to the release"
+	$t perl -pi.bak -e 's/$(APP),/$(APP), not_a_real_app,/' $(APP)/relx.config
+
+	$i "Check that the release fails without blaming the directory name"
+	$t ! $(MAKE) -C $(APP) $v > $(APP)/relx.log 2>&1
+	$t ! grep -q "named '$(APP)'" $(APP)/relx.log
+
 relx-output-dir: init
 
 	$i "Bootstrap a new release named $(APP)"

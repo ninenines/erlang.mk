@@ -97,6 +97,15 @@ define relx_relup.erl
 endef
 
 relx-rel: rel-deps app
+# OTP finds this application only when the directory is named
+# $(PROJECT) or $(PROJECT)-<vsn>.
+	$(verbose) dir="$(notdir $(CURDIR))"; \
+	case "$$dir" in \
+		"$(PROJECT)"|"$(PROJECT)"-*) ;; \
+		*) \
+			printf '%s\n' "Error: application $(PROJECT) was not found. The project directory is named '$$dir'; OTP requires it to be named '$(PROJECT)' or '$(PROJECT)-<vsn>' so the application can be found on the code path." >&2; \
+			exit 1 ;; \
+	esac
 	$(call erlang,$(call relx_release.erl),-pa ebin/)
 	$(verbose) $(MAKE) relx-post-rel
 	$(if $(filter-out 0,$(RELX_TAR)),$(call erlang,$(call relx_tar.erl),-pa ebin/))
