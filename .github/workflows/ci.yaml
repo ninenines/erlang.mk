@@ -31,8 +31,7 @@ jobs:
           - core-apps
           - core-autopatch
           - core-compat
-          # Trick GH runners into picking this slower job early.
-          - ACME=1 c=core-deps
+          - core-deps
           - core-elixir
           - core-makedep
           - core-misc
@@ -55,8 +54,7 @@ jobs:
           - eunit
           - proper
           - protobuffs
-          # Trick GH runners into picking this slower job early.
-          - ACME=1 c=relx
+          - relx
           - shell
           - sphinx
           - triq
@@ -420,8 +418,7 @@ jobs:
           - core-apps
           - core-autopatch
           - core-compat
-          # Trick GH runners into picking this slower job early.
-          - ACME=1 c=core-deps
+          - core-deps
           - core-elixir
           - core-makedep
           - core-misc
@@ -444,8 +441,7 @@ jobs:
           - eunit
           - proper
           - protobuffs
-          # Trick GH runners into picking this slower job early.
-          - ACME=1 c=relx
+          - relx
           - shell
           - sphinx
           - triq
