@@ -1347,6 +1347,104 @@ else
 	$t $(APP)/_rel/$(APP)_release/bin/$(APP)_release stop $v
 endif
 
+core-deps-rebar-vsn: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create a rebar application my_dep with {vsn, semver}"
+	$t mkdir -p $(APP)/git_repo/src
+	$t printf "%s\n" \
+		"{application, my_dep, [" \
+		"	{description, \"\"}," \
+		"	{vsn, semver}," \
+		"	{modules, []}," \
+		"	{registered, []}," \
+		"	{applications, [kernel, stdlib]}" \
+		"]}." > $(APP)/git_repo/src/my_dep.app.src
+	$t cd $(APP)/git_repo && \
+		git init -q -b master && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Tests" && \
+		git tag v1.2.3
+
+	$i "Create a rebar application my_dep2 with {vsn, {semver, git}}"
+	$t mkdir -p $(APP)/git_repo2/src
+	$t printf "%s\n" \
+		"{application, my_dep2, [" \
+		"	{description, \"\"}," \
+		"	{vsn, {semver, git}}," \
+		"	{modules, []}," \
+		"	{registered, []}," \
+		"	{applications, [kernel, stdlib]}" \
+		"]}." > $(APP)/git_repo2/src/my_dep2.app.src
+	$t cd $(APP)/git_repo2 && \
+		git init -q -b master && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Tests" && \
+		git tag v2.0.0
+
+	$i "Create a rebar application my_dep3 with {vsn, {git, short}}"
+	$t mkdir -p $(APP)/git_repo3/src
+	$t printf "%s\n" \
+		"{application, my_dep3, [" \
+		"	{description, \"\"}," \
+		"	{vsn, {git, short}}," \
+		"	{modules, []}," \
+		"	{registered, []}," \
+		"	{applications, [kernel, stdlib]}" \
+		"]}." > $(APP)/git_repo3/src/my_dep3.app.src
+	$t cd $(APP)/git_repo3 && \
+		git init -q -b master && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Tests" && \
+		git tag v3.0.0
+
+	$i "Create a rebar application my_dep4 with {vsn, {file, \"VERSION\"}}"
+	$t mkdir -p $(APP)/git_repo4/src
+	$t printf "%s\n" "9.9.9" > $(APP)/git_repo4/VERSION
+	$t printf "%s\n" \
+		"{application, my_dep4, [" \
+		"	{description, \"\"}," \
+		"	{vsn, {file, \"VERSION\"}}," \
+		"	{modules, []}," \
+		"	{registered, []}," \
+		"	{applications, [kernel, stdlib]}" \
+		"]}." > $(APP)/git_repo4/src/my_dep4.app.src
+	$t cd $(APP)/git_repo4 && \
+		git init -q -b master && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Tests" && \
+		git tag v4.0.0
+
+	$i "Add the applications to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep my_dep2 my_dep3 my_dep4\ndep_my_dep = git file://$(abspath $(APP)/git_repo) v1.2.3\ndep_my_dep2 = git file://$(abspath $(APP)/git_repo2) v2.0.0\ndep_my_dep3 = git file://$(abspath $(APP)/git_repo3) v3.0.0\ndep_my_dep4 = git file://$(abspath $(APP)/git_repo4) v4.0.0\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that vsn forms were rewritten"
+	$t $(ERL) -pa $(APP)/deps/my_dep/ebin/ $(APP)/deps/my_dep2/ebin/ $(APP)/deps/my_dep3/ebin/ $(APP)/deps/my_dep4/ebin/ -eval " \
+		ok = application:load(my_dep), \
+		ok = application:load(my_dep2), \
+		ok = application:load(my_dep3), \
+		ok = application:load(my_dep4), \
+		{ok, \"v1.2.3\"} = application:get_key(my_dep, vsn), \
+		{ok, \"v2.0.0\"} = application:get_key(my_dep2, vsn), \
+		{ok, \"v3.0.0\"} = application:get_key(my_dep3, vsn), \
+		{ok, \"file\"} = application:get_key(my_dep4, vsn), \
+		halt()"
+
 core-deps-search: init
 
 	$i "Bootstrap a new OTP library named $(APP)"

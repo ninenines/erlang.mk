@@ -781,9 +781,14 @@ define dep_autopatch_appsrc.erl
 		true ->
 			{ok, [{application, $1, L0}]} = file:consult(AppSrcIn),
 			L1 = lists:keystore(modules, 1, L0, {modules, []}),
+			GitDescribe = fun() -> lists:droplast(os:cmd("git -C $(DEPS_DIR)/$1 describe --dirty --tags --always")) end,
 			L2 = case lists:keyfind(vsn, 1, L1) of
-				{_, git} -> lists:keyreplace(vsn, 1, L1, {vsn, lists:droplast(os:cmd("git -C $(DEPS_DIR)/$1 describe --dirty --tags --always"))});
+				{_, Vsn} when Vsn =:= git; Vsn =:= semver ->
+					lists:keyreplace(vsn, 1, L1, {vsn, GitDescribe()});
+				{_, {Vcs, _}} when Vcs =:= git; Vcs =:= semver ->
+					lists:keyreplace(vsn, 1, L1, {vsn, GitDescribe()});
 				{_, {cmd, _}} -> lists:keyreplace(vsn, 1, L1, {vsn, "cmd"});
+				{_, {file, _}} -> lists:keyreplace(vsn, 1, L1, {vsn, "file"});
 				_ -> L1
 			end,
 			L3 = case lists:keyfind(registered, 1, L2) of false -> [{registered, []}|L2]; _ -> L2 end,
