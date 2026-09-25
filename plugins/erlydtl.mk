@@ -26,14 +26,10 @@ DTL_MODULES = $(if $(DTL_FULL_PATH),$(subst /,_,$(DTL_NAMES)),$(notdir $(DTL_NAM
 BEAM_FILES += $(addsuffix .beam,$(addprefix ebin/,$(DTL_MODULES)))
 
 ifneq ($(words $(DTL_FILES)),0)
-# Rebuild templates when the Makefile changes.
-$(ERLANG_MK_TMP)/last-makefile-change-erlydtl: $(MAKEFILE_LIST) | $(ERLANG_MK_TMP)
-	$(verbose) if test -f $@; then \
-		touch $(DTL_FILES); \
-	fi
+# Rebuild templates when a Makefile changes, without touching them.
+# $(PROJECT).d is excluded to avoid a circular dependency.
+$(ERLANG_MK_TMP)/last-makefile-change-erlydtl: $(filter-out $(PROJECT).d,$(MAKEFILE_LIST)) | $(ERLANG_MK_TMP)
 	$(verbose) touch $@
-
-ebin/$(PROJECT).app:: $(ERLANG_MK_TMP)/last-makefile-change-erlydtl
 endif
 
 define erlydtl_compile.erl
@@ -46,7 +42,7 @@ define erlydtl_compile.erl
 				re:replace(F2, "/",  "_",  [{return, list}, global])
 		end,
 		Module = list_to_atom("$(DTL_PREFIX)" ++ string:to_lower(Module0) ++ "$(DTL_SUFFIX)"),
-		case erlydtl:compile(F, Module, [$(DTL_OPTS)] ++ [{out_dir, "ebin/"}, return_errors]) of
+		case erlydtl:compile(F, Module, [$(DTL_OPTS)] ++ [$(2)] ++ [{out_dir, "ebin/"}, return_errors]) of
 			ok -> ok;
 			{ok, _} -> ok;
 			{error, Errors, Warnings} ->
@@ -57,9 +53,15 @@ define erlydtl_compile.erl
 	halt().
 endef
 
-ebin/$(PROJECT).app:: $(DTL_FILES) | ebin/
-	$(if $(strip $?),\
-		$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$(call core_native_path,$?)),\
-			-pa ebin/))
+define erlydtl_compile_one
+	@echo " DTL   " $(notdir $1);
+	$(verbose) $(call erlang,$(call erlydtl_compile.erl,$(call core_native_path,$1),force_recompile),-pa ebin/)
+
+endef
+
+ebin/$(PROJECT).app:: $(DTL_FILES) $(ERLANG_MK_TMP)/last-makefile-change-erlydtl | ebin/
+	$(if $(filter $(ERLANG_MK_TMP)/last-makefile-change-erlydtl,$?),\
+		$(foreach f,$(DTL_FILES),$(call erlydtl_compile_one,$f)),\
+		$(if $(strip $(filter %.dtl,$?)),$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$(call core_native_path,$(filter %.dtl,$?))),-pa ebin/)))
 
 endif

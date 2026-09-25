@@ -34,8 +34,7 @@ c-src-makefile-change: init
 		$(APP)/c_src/$(APP).o \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/$(APP).beam \
-		$(APP)/priv/$(APP)$(C_SRC_OUTPUT_SHARED_EXTENSION) \
-		$(APP)/src/$(APP).erl | sort > $(APP)/EXPECT
+		$(APP)/priv/$(APP)$(C_SRC_OUTPUT_SHARED_EXTENSION) | sort > $(APP)/EXPECT
 	$t $(SLEEP)
 	$t touch $(APP)/Makefile
 	$t $(SLEEP)

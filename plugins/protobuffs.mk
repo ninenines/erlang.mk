@@ -17,15 +17,10 @@ ifeq ($(PROTO_FILES),)
 $(ERLANG_MK_TMP)/last-makefile-change-protobuffs:
 	$(verbose) :
 else
-# Rebuild proto files when the Makefile changes.
+# Rebuild proto files when a Makefile changes, without touching them.
 # We exclude $(PROJECT).d to avoid a circular dependency.
 $(ERLANG_MK_TMP)/last-makefile-change-protobuffs: $(filter-out $(PROJECT).d,$(MAKEFILE_LIST)) | $(ERLANG_MK_TMP)
-	$(verbose) if test -f $@; then \
-		touch $(PROTO_FILES); \
-	fi
 	$(verbose) touch $@
-
-$(PROJECT).d:: $(ERLANG_MK_TMP)/last-makefile-change-protobuffs
 endif
 
 ifeq ($(filter gpb,$(BUILD_DEPS) $(DEPS)),)
@@ -53,10 +48,18 @@ define compile_proto.erl
 endef
 endif
 
+define compile_proto_one
+	@echo " PROTO " $(notdir $1);
+	$(verbose) $(call erlang,$(call compile_proto.erl,$1))
+
+endef
+
 ifneq ($(PROTO_FILES),)
-$(PROJECT).d:: $(PROTO_FILES)
+$(PROJECT).d:: $(PROTO_FILES) $(ERLANG_MK_TMP)/last-makefile-change-protobuffs
 	$(verbose) mkdir -p ebin/ include/
-	$(if $(strip $?),$(proto_verbose) $(call erlang,$(call compile_proto.erl,$?)))
+	$(if $(filter $(ERLANG_MK_TMP)/last-makefile-change-protobuffs,$?),\
+		$(foreach f,$(PROTO_FILES),$(call compile_proto_one,$f)),\
+		$(if $(strip $(filter %.proto,$?)),$(proto_verbose) $(call erlang,$(call compile_proto.erl,$(filter %.proto,$?)))))
 endif
 endif
 endif
