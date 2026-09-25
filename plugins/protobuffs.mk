@@ -4,7 +4,9 @@
 # Verbosity.
 
 proto_verbose_0 = @echo " PROTO " $(filter %.proto,$(?F));
+proto_verbose_all_0 = @echo " PROTO " $(notdir $(PROTO_FILES));
 proto_verbose = $(proto_verbose_$(V))
+proto_verbose_all = $(proto_verbose_all_$(V))
 
 # Core targets.
 
@@ -12,21 +14,6 @@ ifneq ($(wildcard src/),)
 ifneq ($(filter gpb protobuffs,$(BUILD_DEPS) $(DEPS)),)
 PROTO_FILES := $(filter %.proto,$(ALL_SRC_FILES))
 ERL_FILES += $(addprefix src/,$(patsubst %.proto,%_pb.erl,$(notdir $(PROTO_FILES))))
-
-ifeq ($(PROTO_FILES),)
-$(ERLANG_MK_TMP)/last-makefile-change-protobuffs:
-	$(verbose) :
-else
-# Rebuild proto files when the Makefile changes.
-# We exclude $(PROJECT).d to avoid a circular dependency.
-$(ERLANG_MK_TMP)/last-makefile-change-protobuffs: $(filter-out $(PROJECT).d,$(MAKEFILE_LIST)) | $(ERLANG_MK_TMP)
-	$(verbose) if test -f $@; then \
-		touch $(PROTO_FILES); \
-	fi
-	$(verbose) touch $@
-
-$(PROJECT).d:: $(ERLANG_MK_TMP)/last-makefile-change-protobuffs
-endif
 
 ifeq ($(filter gpb,$(BUILD_DEPS) $(DEPS)),)
 define compile_proto.erl
@@ -54,9 +41,11 @@ endef
 endif
 
 ifneq ($(PROTO_FILES),)
-$(PROJECT).d:: $(PROTO_FILES)
+$(PROJECT).d:: $(PROTO_FILES) $(erlc_makefile_change)
 	$(verbose) mkdir -p ebin/ include/
-	$(if $(strip $?),$(proto_verbose) $(call erlang,$(call compile_proto.erl,$?)))
+	$(if $(filter $(erlc_makefile_change),$?),\
+		$(proto_verbose_all) $(call erlang,$(call compile_proto.erl,$(PROTO_FILES))),\
+		$(if $(strip $(filter %.proto,$?)),$(proto_verbose) $(call erlang,$(call compile_proto.erl,$(filter %.proto,$?)))))
 endif
 endif
 endif

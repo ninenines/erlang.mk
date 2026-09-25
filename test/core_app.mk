@@ -1011,15 +1011,45 @@ core-app-makefile-change: init
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/$(APP)_app.beam \
-		$(APP)/ebin/$(APP)_sup.beam \
-		$(APP)/src/$(APP)_app.erl \
-		$(APP)/src/$(APP)_sup.erl | sort > $(APP)/EXPECT
+		$(APP)/ebin/$(APP)_sup.beam | sort > $(APP)/EXPECT
 	$t $(SLEEP)
 	$t touch $(APP)/Makefile
 	$t $(SLEEP)
 	$t $(MAKE) -C $(APP) $v
 	$t find $(APP) -type f -newer $(APP)/Makefile -not -path "$(APP)/.erlang.mk/*" | sort | diff $(APP)/EXPECT -
 	$t rm $(APP)/EXPECT
+
+# The makefile-change rule passes every source path to one touch(1).
+# Past ARG_MAX the shell cannot start, which is #994.
+core-app-makefile-change-arg-max: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Build the application so the makefile-change stamp exists"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Add enough source files for the touch command to exceed ARG_MAX"
+	$t cd $(APP) && awk -v n="$$(($$(getconf ARG_MAX) / 220 + 1))" 'BEGIN { \
+		for (i = 0; i < n; i++) { \
+			name = sprintf("m%0199d", i); \
+			f = "src/" name ".erl"; \
+			printf "-module(%s).\n", name > f; \
+			close(f); \
+		} \
+	}'
+
+	$i "Keep the dependency file up to date so make reaches the stamp recipe"
+	$t touch $(APP)/$(APP).d
+	$t $(SLEEP)
+	$t touch $(APP)/Makefile
+	$t $(SLEEP)
+	$t touch $(APP)/$(APP).d
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
 
 core-app-mib: init
 

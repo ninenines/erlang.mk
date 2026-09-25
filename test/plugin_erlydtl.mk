@@ -156,6 +156,37 @@ erlydtl-include-template: init
 		{ok, [foo, foo_bar, foo_baz]} = application:get_key($(APP), modules), \
 		halt()"
 
+erlydtl-makefile-change: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add ErlyDTL to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = erlydtl\n"}' $(APP)/Makefile
+
+	$i "Generate ErlyDTL templates"
+	$t mkdir $(APP)/templates/
+	$t echo '{{ one }}' > $(APP)/templates/$(APP)_one.dtl
+	$t echo '{{ two }}' > $(APP)/templates/$(APP)_two.dtl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Touch the Makefile; check that templates are rebuilt but not touched"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/$(APP)_one_dtl.beam \
+		$(APP)/ebin/$(APP)_two_dtl.beam | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/Makefile
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/Makefile -not -path "$(APP)/.erlang.mk/*" -not -path "$(APP)/deps/*" | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
 erlydtl-opts: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
