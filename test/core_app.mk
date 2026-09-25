@@ -1011,9 +1011,7 @@ core-app-makefile-change: init
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/$(APP)_app.beam \
-		$(APP)/ebin/$(APP)_sup.beam \
-		$(APP)/src/$(APP)_app.erl \
-		$(APP)/src/$(APP)_sup.erl | sort > $(APP)/EXPECT
+		$(APP)/ebin/$(APP)_sup.beam | sort > $(APP)/EXPECT
 	$t $(SLEEP)
 	$t touch $(APP)/Makefile
 	$t $(SLEEP)
@@ -1128,6 +1126,31 @@ endif
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+core-app-mib-error: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Download a .mib file from Erlang/OTP"
+	$t mkdir $(APP)/mibs/
+	$t curl -fsSL -o $(APP)/mibs/OTP-REG.mib $(OTP_MASTER)/lib/snmp/mibs/OTP-REG.mib
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+	$t test -f $(APP)/priv/mibs/OTP-REG.bin
+	$t cp $(APP)/include/OTP-REG.hrl $(APP)/OTP-REG.hrl.before
+
+	$i "Corrupt the .mib file and keep the previously generated .bin"
+	$t printf '%s\n' 'not a mib' > $(APP)/mibs/OTP-REG.mib
+	$t $(SLEEP)
+	$t touch $(APP)/mibs/OTP-REG.mib
+	$t ! $(MAKE) -C $(APP) --no-print-directory V=0 >$(APP)/mib.log 2>&1
+
+	$i "Check that the old header was not regenerated from the .bin"
+	$t cmp $(APP)/OTP-REG.hrl.before $(APP)/include/OTP-REG.hrl
 
 ifndef LEGACY
 core-app-name-special-char: init

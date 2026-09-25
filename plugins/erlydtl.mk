@@ -12,7 +12,9 @@ DTL_OPTS ?=
 # Verbosity.
 
 dtl_verbose_0 = @echo " DTL   " $(filter %.dtl,$(?F));
+dtl_verbose_all_0 = @echo " DTL   " $(notdir $(DTL_FILES));
 dtl_verbose = $(dtl_verbose_$(V))
+dtl_verbose_all = $(dtl_verbose_all_$(V))
 
 # Core targets.
 
@@ -26,14 +28,10 @@ DTL_MODULES = $(if $(DTL_FULL_PATH),$(subst /,_,$(DTL_NAMES)),$(notdir $(DTL_NAM
 BEAM_FILES += $(addsuffix .beam,$(addprefix ebin/,$(DTL_MODULES)))
 
 ifneq ($(words $(DTL_FILES)),0)
-# Rebuild templates when the Makefile changes.
-$(ERLANG_MK_TMP)/last-makefile-change-erlydtl: $(MAKEFILE_LIST) | $(ERLANG_MK_TMP)
-	$(verbose) if test -f $@; then \
-		touch $(DTL_FILES); \
-	fi
+# Rebuild templates when a Makefile changes, without touching them.
+# $(PROJECT).d is excluded to avoid a circular dependency.
+$(ERLANG_MK_TMP)/last-makefile-change-erlydtl: $(filter-out $(PROJECT).d,$(MAKEFILE_LIST)) | $(ERLANG_MK_TMP)
 	$(verbose) touch $@
-
-ebin/$(PROJECT).app:: $(ERLANG_MK_TMP)/last-makefile-change-erlydtl
 endif
 
 define erlydtl_compile.erl
@@ -46,7 +44,7 @@ define erlydtl_compile.erl
 				re:replace(F2, "/",  "_",  [{return, list}, global])
 		end,
 		Module = list_to_atom("$(DTL_PREFIX)" ++ string:to_lower(Module0) ++ "$(DTL_SUFFIX)"),
-		case erlydtl:compile(F, Module, [$(DTL_OPTS)] ++ [{out_dir, "ebin/"}, return_errors]) of
+		case erlydtl:compile(F, Module, [$(DTL_OPTS)] ++ [$(2)] ++ [{out_dir, "ebin/"}, return_errors]) of
 			ok -> ok;
 			{ok, _} -> ok;
 			{error, Errors, Warnings} ->
@@ -57,9 +55,9 @@ define erlydtl_compile.erl
 	halt().
 endef
 
-ebin/$(PROJECT).app:: $(DTL_FILES) | ebin/
-	$(if $(strip $?),\
-		$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$(call core_native_path,$?)),\
-			-pa ebin/))
+ebin/$(PROJECT).app:: $(DTL_FILES) $(ERLANG_MK_TMP)/last-makefile-change-erlydtl | ebin/
+	$(if $(filter $(ERLANG_MK_TMP)/last-makefile-change-erlydtl,$?),\
+		$(dtl_verbose_all) $(call erlang,$(call erlydtl_compile.erl,$(call core_native_path,$(DTL_FILES)),force_recompile),-pa ebin/),\
+		$(if $(strip $(filter %.dtl,$?)),$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$(call core_native_path,$(filter %.dtl,$?))),-pa ebin/)))
 
 endif

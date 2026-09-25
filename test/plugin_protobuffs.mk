@@ -129,8 +129,6 @@ protobuffs-makefile-change: init
 		$(APP)/include/empty_pb.hrl \
 		$(APP)/include/simple_pb.hrl \
 		$(APP)/src/empty_pb.erl \
-		$(APP)/src/proto/simple.proto \
-		$(APP)/src/proto/empty.proto \
 		$(APP)/src/simple_pb.erl \
 		$(APP)/$(APP).d | sort > $(APP)/EXPECT
 	$t $(SLEEP)
