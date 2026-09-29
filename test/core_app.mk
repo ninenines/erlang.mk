@@ -327,6 +327,28 @@ core-app-compile-first-sub-directory: init
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
+core-app-compile-no-debug-info: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t printf "%s\n" "-module(girl)." "-compile({debug_info, false})." > $(APP)/src/girl.erl
+
+	$i "Build the application with the default ERLC_OPTS (+debug_info)"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that debug_info remains for boy and is absent for girl"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		{ok, {boy, [{abstract_code, {raw_abstract_v1, _}}]}} \
+			= beam_lib:chunks(\"$(APP)/ebin/boy.beam\", [abstract_code]), \
+		{ok, {girl, [{abstract_code, no_abstract_code}]}} \
+			= beam_lib:chunks(\"$(APP)/ebin/girl.beam\", [abstract_code]), \
+		halt()"
+
 ifndef LEGACY
 core-app-env: init
 
