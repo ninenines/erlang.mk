@@ -22,6 +22,8 @@ include::app.asciidoc[Building]
 
 include::deps.asciidoc[Packages and dependencies]
 
+include::hex.asciidoc[Publishing to Hex]
+
 include::ports.asciidoc[NIFs and port drivers]
 
 include::releases.asciidoc[Releases]

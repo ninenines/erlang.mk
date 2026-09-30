@@ -17,3 +17,9 @@
             code reloading with releases. `make shell RELOAD=1`
             was added for automatic code reloading with
             `make shell`.
+
+2026/09/30: `hex-user-create` and `hex-key-add` were removed.
+            Hex no longer accepts the HTTP Basic authentication
+            those targets used to create an account and an API key.
+            Create the key on Hex. Support is now documented
+            in the user guide.

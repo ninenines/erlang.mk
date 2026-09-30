@@ -1,65 +1,6 @@
 # Copyright (c) Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-define hex_string_escape
-$(subst $$,\$$,$(subst ",\\",$(subst \,\\\\,$1)))
-endef
-
-define hex_user_create.erl
-	{ok, _} = application:ensure_all_started(ssl),
-	{ok, _} = application:ensure_all_started(inets),
-	Config = $(hex_config.erl),
-	case hex_api_user:create(Config, <<"$(strip $1)">>, <<"$(call hex_string_escape,$2)">>, <<"$(strip $3)">>) of
-		{ok, {201, _, #{<<"email">> := Email, <<"url">> := URL, <<"username">> := Username}}} ->
-			io:format("User ~s (~s) created at ~s~n"
-				"Please check your inbox for a confirmation email.~n"
-				"You must confirm before you are allowed to publish packages.~n",
-				[Username, Email, URL]),
-			halt(0);
-		{ok, {Status, _, Errors}} ->
-			io:format("Error ~b: ~0p~n", [Status, Errors]),
-			halt(80)
-	end
-endef
-
-# The $(info ) call inserts a new line after the password prompt.
-hex-user-create: $(ERLANG_MK_TMP)/dep_built/hex_core
-	$(if $(HEX_USERNAME),,$(eval HEX_USERNAME := $(shell read -p "Username: " username; echo $$username)))
-	$(if $(HEX_PASSWORD),,$(eval HEX_PASSWORD := $(shell stty -echo; read -p "Password: " password; stty echo; echo $$password) $(info )))
-	$(if $(HEX_EMAIL),,$(eval HEX_EMAIL := $(shell read -p "Email: " email; echo $$email)))
-	$(gen_verbose) $(call erlang,$(call hex_user_create.erl,$(HEX_USERNAME),$(value HEX_PASSWORD),$(HEX_EMAIL)))
-
-define hex_key_add.erl
-	{ok, _} = application:ensure_all_started(ssl),
-	{ok, _} = application:ensure_all_started(inets),
-	Config = $(hex_config.erl),
-	ConfigF = Config#{api_key => iolist_to_binary([<<"Basic ">>, base64:encode(<<"$(strip $1):$(call hex_string_escape,$2)">>)])},
-	Permissions = [
-		case string:split(P, <<":">>) of
-			[D] -> #{domain => D};
-			[D, R] -> #{domain => D, resource => R}
-		end
-	|| P <- string:split(<<"$(strip $4)">>, <<",">>, all)],
-	case hex_api_key:add(ConfigF, <<"$(strip $3)">>, Permissions) of
-		{ok, {201, _, #{<<"secret">> := Secret}}} ->
-			io:format("Key ~s created for user ~s~nSecret: ~s~n"
-				"Please store the secret in a secure location, such as a password store.~n"
-				"The secret will be requested for most Hex-related operations.~n",
-				[<<"$(strip $3)">>, <<"$(strip $1)">>, Secret]),
-			halt(0);
-		{ok, {Status, _, Errors}} ->
-			io:format("Error ~b: ~0p~n", [Status, Errors]),
-			halt(81)
-	end
-endef
-
-hex-key-add: $(ERLANG_MK_TMP)/dep_built/hex_core
-	$(if $(HEX_USERNAME),,$(eval HEX_USERNAME := $(shell read -p "Username: " username; echo $$username)))
-	$(if $(HEX_PASSWORD),,$(eval HEX_PASSWORD := $(shell stty -echo; read -p "Password: " password; stty echo; echo $$password) $(info )))
-	$(gen_verbose) $(call erlang,$(call hex_key_add.erl,$(HEX_USERNAME),$(value HEX_PASSWORD),\
-		$(if $(name),$(name),$(shell hostname)-erlang-mk),\
-		$(if $(perm),$(perm),api)))
-
 HEX_TARBALL_EXTRA_METADATA ?=
 
 HEX_TARBALL_FILES ?= \

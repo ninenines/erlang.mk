@@ -246,7 +246,6 @@ jobs:
       run: |
         git clone https://github.com/hexpm/hexpm
         cd hexpm
-        git checkout 3da683955ecde4718f4719509011e2ede6b108cd
         perl -ni.bak -e 'print; if (/^config :hexpm,\s*$/) {print "  user_confirm: false,\n"}' config/dev.exs
         mix setup
         mix phx.server &
