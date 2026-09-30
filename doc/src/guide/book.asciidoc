@@ -11,6 +11,8 @@ include::getting_started.asciidoc[Getting started]
 
 include::overview.asciidoc[Overview]
 
+include::cheatsheet.asciidoc[Cheat sheet]
+
 include::updating.asciidoc[Updating Erlang.mk]
 
 include::limitations.asciidoc[Limitations]
