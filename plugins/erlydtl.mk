@@ -34,7 +34,15 @@ $(ERLANG_MK_TMP)/last-makefile-change-erlydtl: $(filter-out $(PROJECT).d,$(MAKEF
 	$(verbose) touch $@
 endif
 
+# Every template is compiled. Without force_recompile, ErlyDTL rewrites a
+# beam only when that file's checksum or a stored include/extends checksum
+# changed. A Makefile change still passes force_recompile.
 define erlydtl_compile.erl
+	All = string:tokens("$(call core_native_path,$(DTL_FILES))", " "),
+	Extra = case "$1" of
+		"force_recompile" -> [force_recompile];
+		_ -> []
+	end,
 	[begin
 		Module0 = case "$(strip $(DTL_FULL_PATH))" of
 			"" ->
@@ -44,20 +52,24 @@ define erlydtl_compile.erl
 				re:replace(F2, "/",  "_",  [{return, list}, global])
 		end,
 		Module = list_to_atom("$(DTL_PREFIX)" ++ string:to_lower(Module0) ++ "$(DTL_SUFFIX)"),
-		case erlydtl:compile(F, Module, [$(DTL_OPTS)] ++ [$(2)] ++ [{out_dir, "ebin/"}, return_errors]) of
+		case erlydtl:compile(F, Module, [$(DTL_OPTS)] ++ Extra ++ [{out_dir, "ebin/"}, return_errors]) of
 			ok -> ok;
 			{ok, _} -> ok;
 			{error, Errors, Warnings} ->
 				io:format("Errors: ~p~nWarnings: ~p~n", [Errors, Warnings]),
 				halt(91)
 		end
-	end || F <- string:tokens("$(1)", " ")],
+	end || F <- All],
 	halt().
 endef
 
+# Refresh the .app file. The makefile stamp is built after the
+# application file on the first run; without this it stays newer
+# and every template is compiled again on the next make.
 ebin/$(PROJECT).app:: $(DTL_FILES) $(ERLANG_MK_TMP)/last-makefile-change-erlydtl | ebin/
 	$(if $(filter $(ERLANG_MK_TMP)/last-makefile-change-erlydtl,$?),\
-		$(dtl_verbose_all) $(call erlang,$(call erlydtl_compile.erl,$(call core_native_path,$(DTL_FILES)),force_recompile),-pa ebin/),\
-		$(if $(strip $(filter %.dtl,$?)),$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl,$(call core_native_path,$(filter %.dtl,$?))),-pa ebin/)))
+		$(dtl_verbose_all) $(call erlang,$(call erlydtl_compile.erl,force_recompile),-pa ebin/),\
+		$(if $(strip $(filter %.dtl,$?)),$(dtl_verbose) $(call erlang,$(call erlydtl_compile.erl),-pa ebin/)))
+	$(verbose) touch $@
 
 endif
