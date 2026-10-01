@@ -916,6 +916,7 @@ define dep_target
 $(DEPS_DIR)/$(call query_name,$1): $(if $(filter elixir,$(BUILD_DEPS) $(DEPS)),$(if $(filter-out elixir,$1),$(ERLANG_MK_TMP)/dep_built/elixir)) $(if $(filter hex,$(call query_fetch_method,$1)),$(if $(wildcard $(DEPS_DIR)/$(call query_name,$1)),,$(ERLANG_MK_TMP)/dep_built/hex_core)) | $(ERLANG_MK_TMP)
 	$(eval DEP_NAME := $(call query_name,$1))
 	$(eval DEP_STR := $(if $(filter $1,$(DEP_NAME)),$1,"$1 ($(DEP_NAME))"))
+	$(verbose) rm -f $(ERLANG_MK_TMP)/dep_built/$(DEP_NAME)
 	$(verbose) if test -d $(APPS_DIR)/$(DEP_NAME); then \
 		echo "Error: Dependency" $(DEP_STR) "conflicts with application found in $(APPS_DIR)/$(DEP_NAME)." >&2; \
 		exit 17; \
