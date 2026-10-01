@@ -323,7 +323,7 @@ endef
 ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES) $(wildcard src/$(PROJECT).app.src) $(EX_FILES) $(MAKEFILE_CHANGE)
 	$(eval FILES_TO_COMPILE := $(filter-out $(EX_FILES) src/$(PROJECT).app.src,$?))
 	$(if $(filter $(MAKEFILE_CHANGE),$?),$(call compile_erl,$(filter-out $(EX_FILES) src/$(PROJECT).app.src,$(ERL_FILES) $(CORE_FILES))),$(if $(strip $(FILES_TO_COMPILE)),$(call compile_erl,$(FILES_TO_COMPILE))))
-	$(if $(filter $(ELIXIR),disable),,$(if $(filter $(MAKEFILE_CHANGE),$?),$(if $(strip $(EX_FILES)),$(elixirc_verbose) $(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES)))))),$(if $(filter $?,$(EX_FILES)),$(elixirc_verbose) $(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES))))))))
+	$(if $(filter $(ELIXIR),disable),,$(if $(strip $(EX_FILES)),$(if $(filter $(MAKEFILE_CHANGE) $(EX_FILES),$?),$(elixirc_verbose) $(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES))))),$(eval MODULES := $(patsubst %,'%',$(notdir $(basename $(wildcard ebin/Elixir.*.beam))))))))
 	$(eval ELIXIR_COMP_FAILED := $(if $(filter _ERROR_,$(firstword $(MODULES))),true,false))
 # Older git versions do not have the --first-parent flag. Do without in that case.
 	$(verbose) if $(ELIXIR_COMP_FAILED); then exit 1; fi
