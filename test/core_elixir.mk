@@ -282,6 +282,67 @@ endif
 		true = lists:member(mix, Apps), \
 		halt()"
 
+core-elixir-heex-rebuild: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create an Elixir module that renders a HEEx template"
+	$t mkdir -p $(APP)/lib/hello
+	$t printf "%s\n" \
+		"defmodule HelloWorld do" \
+		"  require EEx" \
+		'  EEx.function_from_file(:def, :render, Path.join(__DIR__, "hello/home.html.heex"), [])' \
+		"end" > $(APP)/lib/hello.ex
+	$t printf '%s\n' '<p>hello</p>' > $(APP)/lib/hello/home.html.heex
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the module rendered the template"
+	$t $(ERL) -pa $(APP)/ebin/ -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		<<\"<p>hello</p>\\n\">> = 'Elixir.HelloWorld':render(), \
+		halt()"
+
+	$i "Place a marker file to detect what the next build touches"
+	$t touch $(APP)/marker
+
+	$i "Wait to ensure the new file has a later modification time"
+	$t $(SLEEP)
+
+	$i "Change the HEEx template"
+	$t printf '%s\n' '<p>changed</p>' > $(APP)/lib/hello/home.html.heex
+
+	$i "Rebuild the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the module was recompiled with the new template"
+	$t find $(APP) -type f -newer $(APP)/marker | grep -q Elixir.HelloWorld.beam
+	$t $(ERL) -pa $(APP)/ebin/ -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		<<\"<p>changed</p>\\n\">> = 'Elixir.HelloWorld':render(), \
+		halt()"
+
+	$i "Place a new marker file"
+	$t touch $(APP)/marker
+
+	$i "Wait to ensure the new file has a later modification time"
+	$t $(SLEEP)
+
+	$i "Add an unrelated Erlang source file"
+	$t printf "%s\n" \
+		"-module(unrelated)." \
+		"-export([go/0])." \
+		"go() -> ok." > $(APP)/src/unrelated.erl
+
+	$i "Rebuild the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the Elixir module was not recompiled"
+	$t ! find $(APP) -type f -newer $(APP)/marker | grep -q Elixir.HelloWorld.beam
+	$t rm $(APP)/marker
+
 core-elixir-keep-modules-on-erl-only-rebuild: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
