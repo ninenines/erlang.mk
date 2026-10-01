@@ -394,6 +394,30 @@ with the name of the information printed prefixed. For
 example the hex fetch method will add
 `package-name=uuid_erl` for the `uuid` application.
 
+=== Dependency tree
+
+`make tree` prints the dependencies from `BUILD_DEPS` and
+`DEPS` as a tree. Each line shows the dependency name and
+its version:
+
+[source]
+----
+myapp
+└── cowboy 2.7.0
+    ├── cowlib 2.8.0
+    └── ranch 1.7.1
+----
+
+Dependencies are fetched first, the same way as `make query-deps`.
+
+A dependency name is expanded the first time it appears.
+Erlang.mk keeps a single checkout per name, so a later
+occurrence keeps the version from that line and does not
+repeat the children of the first checkout.
+
+`make tree` always prints the name and the version. Setting
+`QUERY` does not change this output.
+
 === Ignoring unwanted dependencies
 
 Sometimes, you may want to ignore dependencies entirely.

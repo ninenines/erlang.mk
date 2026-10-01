@@ -23,3 +23,6 @@
             those targets used to create an account and an API key.
             Create the key on Hex. Support is now documented
             in the user guide.
+
+2026/10/01: New `make tree` command prints a human-readable
+            dependency tree.

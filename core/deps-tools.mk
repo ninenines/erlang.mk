@@ -136,3 +136,54 @@ $(eval $(call query_target,query-doc-deps,$(ERLANG_MK_RECURSIVE_DOC_DEPS_LIST),$
 $(eval $(call query_target,query-rel-deps,$(ERLANG_MK_RECURSIVE_REL_DEPS_LIST),$(REL_DEPS),$(ERLANG_MK_QUERY_REL_DEPS_FILE)))
 $(eval $(call query_target,query-test-deps,$(ERLANG_MK_RECURSIVE_TEST_DEPS_LIST),$(TEST_DEPS),$(ERLANG_MK_QUERY_TEST_DEPS_FILE)))
 $(eval $(call query_target,query-shell-deps,$(ERLANG_MK_RECURSIVE_SHELL_DEPS_LIST),$(SHELL_DEPS),$(ERLANG_MK_QUERY_SHELL_DEPS_FILE)))
+
+ERLANG_MK_TREE_FILE = $(ERLANG_MK_TMP)/tree.log
+
+.PHONY: tree
+
+ifeq ($(IS_APP)$(IS_DEP),)
+tree:
+	$(verbose) $(MAKE) --no-print-directory query-deps QUERY="name fetch_method repo version" >/dev/null
+	$(verbose) $(call erlang,$(call dep_tree.erl,$(call core_native_path,$(ERLANG_MK_QUERY_DEPS_FILE)),$(call core_native_path,$(ERLANG_MK_TREE_FILE)),$(PROJECT)))
+	$(verbose) cat $(ERLANG_MK_TREE_FILE)
+else
+tree: ;
+endif
+
+define dep_tree.erl
+	{ok, Bin} = file:read_file("$1"),
+	Edges = [case string:lexemes(Line, " ") of
+		[Parent, Name, _, _, Version] ->
+			{string:trim(Parent, trailing, ":"), Name, Version};
+		_ ->
+			io:format(standard_error, "bad query-deps line: ~ts~n", [Line]),
+			halt(96)
+	end || Line <- string:lexemes(Bin, "\n")],
+	Root = unicode:characters_to_binary("$3"),
+	Walk = fun Walk(Parent, Prefix, Seen) ->
+		Children = [{N, V} || {P, N, V} <- Edges, P =:= Parent],
+		Draw = fun Draw([], SeenAcc) ->
+				{[], SeenAcc};
+			Draw([{Name, Version}|Rest], SeenAcc) ->
+				{Branch, Pad} = case Rest of
+					[] -> {"\x{2514}\x{2500}\x{2500} ", "    "};
+					_ -> {"\x{251C}\x{2500}\x{2500} ", "\x{2502}   "}
+				end,
+				Line = [Prefix, Branch, Name, " ", Version, "\n"],
+				{ChildIo, Seen1} = case lists:member(Name, SeenAcc) of
+					true -> {[], SeenAcc};
+					false -> Walk(Name, [Prefix, Pad], [Name|SeenAcc])
+				end,
+				{RestIo, Seen2} = Draw(Rest, Seen1),
+				{[Line, ChildIo, RestIo], Seen2}
+			end,
+		Draw(Children, Seen)
+	end,
+	{Body, _} = Walk(Root, "", [Root]),
+	case file:write_file("$2", unicode:characters_to_binary([Root, "\n", Body])) of
+		ok -> halt(0);
+		{error, Reason} ->
+			io:format(standard_error, "Error: ~0p~n", [Reason]),
+			halt(1)
+	end
+endef

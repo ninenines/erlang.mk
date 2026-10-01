@@ -302,3 +302,76 @@ core-query-test-deps: init
 		"$(APP): cowboy git https://github.com/ninenines/cowboy 2.7.0" \
 		> $(APP)/expected-deps.txt
 	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/query-test-deps.log
+
+core-query-tree: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy 2.7.0 to DEPS and a QUERY that would hide versions"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy_commit = 2.7.0\nQUERY = name\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowboy to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Print the dependency tree"
+	$t $(MAKE) -C $(APP) tree $v
+
+	$i "Confirm the tree shows name and version, including transitive dependencies"
+	$t printf "%s\n" \
+		"$(APP)" \
+		"└── cowboy 2.7.0" \
+		"    ├── cowlib 2.8.0" \
+		"    └── ranch 1.7.1" \
+		> $(APP)/expected-tree.txt
+	$t cmp $(APP)/expected-tree.txt $(APP)/.erlang.mk/tree.log
+
+core-query-tree-already-listed: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowboy 2.7.0 and Farwest master to DEPS"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy farwest\ndep_cowboy_commit = 2.7.0\ndep_farwest = git https://github.com/ninenines/farwest 017dc36b59f028e7014bad927e745a2c0b529018\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowboy and Farwest to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\t\tfarwest,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Print the dependency tree"
+	$t $(MAKE) -C $(APP) tree $v
+
+	$i "Confirm a dependency name is expanded only the first time it appears"
+	$t printf "%s\n" \
+		"$(APP)" \
+		"├── cowboy 2.7.0" \
+		"│   ├── cowlib 2.8.0" \
+		"│   └── ranch 1.7.1" \
+		"└── farwest 017dc36b59f028e7014bad927e745a2c0b529018" \
+		"    ├── cowlib master" \
+		"    ├── cowboy master" \
+		"    └── gun master" \
+		"        └── cowlib 2.20.0" \
+		> $(APP)/expected-tree.txt
+	$t cmp $(APP)/expected-tree.txt $(APP)/.erlang.mk/tree.log
+
+core-query-tree-empty: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Print the dependency tree"
+	$t $(MAKE) -C $(APP) tree $v
+
+	$i "Confirm that a project with no dependencies prints its name"
+	$t printf "%s\n" "$(APP)" > $(APP)/expected-tree.txt
+	$t cmp $(APP)/expected-tree.txt $(APP)/.erlang.mk/tree.log

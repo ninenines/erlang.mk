@@ -99,6 +99,14 @@ Dependencies are fetched and built when running `make`.
 
 See xref:deps[Packages and dependencies].
 
+=== Dependency tree
+
+[source,bash]
+$ make tree
+
+Prints the name and version of `BUILD_DEPS` and `DEPS`.
+See xref:deps[Packages and dependencies].
+
 === Help and updating
 
 [source,bash]
