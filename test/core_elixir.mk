@@ -363,6 +363,51 @@ endif
 		true = lists:member(poison, Apps), \
 		halt()"
 
+core-elixir-mix-hex-error: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a local Mix dependency that requires a missing Hex package"
+	$t mkdir -p $(APP)/my_dep/lib
+	$t printf '%s\n' \
+		'defmodule MyDep.MixProject do' \
+		'  use Mix.Project' \
+		'  def project do' \
+		'    [' \
+		'      app: :my_dep,' \
+		'      version: "0.1.0",' \
+		'      deps: [{:erlang_mk_no_such_pkg_1038, "~> 1.0"}]' \
+		'    ]' \
+		'  end' \
+		'end' > $(APP)/my_dep/mix.exs
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = cp $(CURDIR)/$(APP)/my_dep\nELIXIR = system\n"}' $(APP)/Makefile
+
+	$i "Check that a missing Hex package is reported"
+	$t $(MAKE) -C $(APP) V=0 >$(APP)/hex-missing.log 2>&1 || true
+	$t grep -q 'Error 404:' $(APP)/hex-missing.log
+
+	$i "Point the same dependency at a real package with options and a bad Hex public key"
+	$t rm -rf $(APP)/deps/my_dep
+	$t printf '%s\n' \
+		'defmodule MyDep.MixProject do' \
+		'  use Mix.Project' \
+		'  def project do' \
+		'    [' \
+		'      app: :my_dep,' \
+		'      version: "0.1.0",' \
+		'      deps: [{:jason, "~> 1.0", []}]' \
+		'    ]' \
+		'  end' \
+		'end' > $(APP)/my_dep/mix.exs
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{repo_public_key => <<\"bad\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Check that a bad Hex public key is reported"
+	$t $(MAKE) -C $(APP) V=0 >$(APP)/hex-bad-key.log 2>&1 || true
+	$t grep -q 'Error: bad_key' $(APP)/hex-bad-key.log
+
 core-elixir-nif: init
 
 	$i "Bootstrap a new OTP library named $(APP)"

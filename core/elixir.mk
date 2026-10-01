@@ -38,18 +38,26 @@ define hex_version_resolver.erl
 				end, List),
 				{ok, Version};
 			{ok, {Status, _, Errors}} ->
-				{error, Status, Errors}
+				{error, Status, Errors};
+			{error, Reason} ->
+				{error, Reason}
+		end
+	end,
+	HexVersion = fun(Name, Req) ->
+		case HexVersionResolve(Name, Req) of
+			{ok, Vsn} ->
+				Vsn;
+			{error, Status, Errors} ->
+				io:format(standard_error, "Error ~b: ~0p~n", [Status, Errors]),
+				halt(77);
+			{error, Reason} ->
+				io:format(standard_error, "Error: ~0p~n", [Reason]),
+				halt(95)
 		end
 	end,
 	HexVersionResolveAndPrint = fun(Name, Req) ->
-		case HexVersionResolve(Name, Req) of
-			{ok, Version} ->
-				io:format("~s", [Version]),
-				halt(0);
-			{error, Status, Errors} ->
-				io:format("Error ~b: ~0p~n", [Status, Errors]),
-				halt(77)
-		end
+		io:format("~s", [HexVersion(Name, Req)]),
+		halt(0)
 	end
 endef
 
@@ -100,7 +108,7 @@ define dep_autopatch_mix.erl
 	end,
 	lists:foreach(fun
 		({Name, Req}) when is_binary(Req) ->
-			{ok, Vsn} = HexVersionResolve(Name, Req),
+			Vsn = HexVersion(Name, Req),
 			Write(["DEPS += ", atom_to_list(Name), "\n"]),
 			Write(["dep_", atom_to_list(Name), " = hex ", Vsn, " ", atom_to_list(Name), "\n"]);
 		({Name, Opts}) when is_list(Opts) ->
@@ -118,7 +126,7 @@ define dep_autopatch_mix.erl
 		({Name, Req, Opts}) ->
 			case IsRequiredProdDep(Opts) of
 				true ->
-					{ok, Vsn} = HexVersionResolve(Name, Req),
+					Vsn = HexVersion(Name, Req),
 					Write(["DEPS += ", atom_to_list(Name), "\n"]),
 					Write(["dep_", atom_to_list(Name), " = hex ", Vsn, " ", atom_to_list(Name), "\n"]);
 				false ->
