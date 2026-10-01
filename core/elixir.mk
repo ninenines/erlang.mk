@@ -23,12 +23,6 @@ elixirc_verbose_0 = @echo " EXC    $(words $(EX_FILES)) files";
 elixirc_verbose_2 = set -x;
 elixirc_verbose = $(elixirc_verbose_$(V))
 
-# Unfortunately this currently requires Elixir.
-# https://github.com/jelly-beam/verl is a good choice
-# for an Erlang implementation, but we already have to
-# pull hex_core and Rebar3 so adding yet another pull
-# is annoying, especially one that would be necessary
-# every time we autopatch Rebar projects. Wait and see.
 define hex_version_resolver.erl
 	HexVersionResolve = fun(Name, Req) ->
 		application:ensure_all_started(ssl),

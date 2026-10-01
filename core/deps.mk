@@ -462,29 +462,66 @@ define dep_autopatch_rebar.erl
 				false
 		end
 	end,
-	GetHexVsn3Common = fun(N, NP, S0) ->
-		case GetHexVsn2(N, NP) of
-			false ->
-				S2 = case S0 of
-					" " ++ S1 -> S1;
-					_ -> S0
-				end,
-				S = case length([ok || $$. <- S2]) of
-					0 -> S2 ++ ".0.0";
-					1 -> S2 ++ ".0";
-					_ -> S2
-				end,
-				{N, {hex, NP, S}};
-			NameSource ->
-				NameSource
+	ResolveHexVsn = fun(Name, Req) ->
+		{ok, _} = application:ensure_all_started(ssl),
+		{ok, _} = application:ensure_all_started(inets),
+		Config0 = r3_hex_core:default_config(),
+		Config = Config0$(HEX_CONFIG),
+		Pkg = atom_to_binary(Name, latin1),
+		ReqBin = list_to_binary(Req),
+		maybe
+			{ok, {200, _, #{releases := Releases}}} ?=
+				r3_hex_repo:get_package(Config, Pkg),
+			{ok, Match} ?= rebar_semver:parse_constraint(ReqBin),
+			AllowPre = rebar_semver:is_prerelease_or_build(ReqBin),
+			Best = lists:foldl(fun(Release, Acc) ->
+				maybe
+					true ?= maps:get(retired, Release, false) =:= false,
+					VsnBin = maps:get(version, Release),
+					true ?= AllowPre orelse
+						not rebar_semver:is_prerelease_or_build(VsnBin),
+					{ok, Parsed} ?= rebar_semver:parse_version(VsnBin),
+					true ?= rebar_semver:match(Parsed, Match),
+					true ?= case Acc of
+						none -> true;
+						{_, BestParsed} ->
+							rebar_semver:cmp(Parsed, BestParsed) =:= gt
+					end,
+					{VsnBin, Parsed}
+				else
+					_ -> Acc
+				end
+			end, none, Releases),
+			{VsnBin, _} ?= Best,
+			binary_to_list(VsnBin)
+		else
+			{error, {invalid_vsn, _}} ->
+				io:format(standard_error,
+					"Invalid Hex requirement for ~p: ~p~n", [Name, Req]),
+				halt(92);
+			none ->
+				io:format(standard_error,
+					"No Hex release of ~p matches ~p~n", [Name, Req]),
+				halt(93);
+			Other ->
+				io:format(standard_error,
+					"Failed to get Hex package ~p: ~p~n", [Name, Other]),
+				halt(94)
 		end
 	end,
-	GetHexVsn3 = fun
-		(N, NP, "~>" ++ S0) ->
-			GetHexVsn3Common(N, NP, S0);
-		(N, NP, ">=" ++ S0) ->
-			GetHexVsn3Common(N, NP, S0);
-		(N, NP, S) -> {N, {hex, NP, S}}
+	GetHexVsn3 = fun(N, NP, S) ->
+		Req = string:trim(S),
+		case rebar_semver:parse_version(list_to_binary(Req)) of
+			{ok, _} ->
+				{N, {hex, NP, Req}};
+			{error, _} ->
+				case GetHexVsn2(N, NP) of
+					false ->
+						{N, {hex, NP, ResolveHexVsn(NP, Req)}};
+					NameSource ->
+						NameSource
+				end
+		end
 	end,
 	ConvertCommit = fun
 		({branch, C}) -> C;
