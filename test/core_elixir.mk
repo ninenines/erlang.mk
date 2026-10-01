@@ -193,6 +193,34 @@ core-elixir-disable-by-default-autopatch-rebar3: init
 	$i "Building the application should work as OpenTelemetry_API is Rebar3-compatible"
 	$t $(MAKE) -C $(APP) $v
 
+core-elixir-erl-beam-on-path: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create an Erlang module and build it"
+	$t printf "%s\n" \
+		"-module(my_mod)." \
+		"-export([hello/0])." \
+		"hello() -> world." > $(APP)/src/my_mod.erl
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Add an Elixir module that calls the Erlang module at compile time and rebuild"
+	$t mkdir -p $(APP)/lib
+	$t printf "%s\n" \
+		"defmodule HelloWorld do" \
+		"  @value :my_mod.hello()" \
+		"  def hello, do: @value" \
+		"end" > $(APP)/lib/hello.ex
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the compile-time call saw the compiled Erlang module"
+	$t $(ERL) -pa $(APP)/ebin/ -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		world = 'Elixir.HelloWorld':hello(), \
+		halt()"
+
 core-elixir-from-dep: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
