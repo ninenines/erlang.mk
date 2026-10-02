@@ -273,9 +273,9 @@ define makedep.erl
 		[[F, "::", [[" ", D] || D <- Deps], "; @touch \$$@\n"] || {F, Deps} <- Depend],
 		"\nCOMPILE_FIRST +=", [[" ", TargetPath(CF)] || CF <- CompileFirst], "\n"
 	],
-	Output = case "é" of
-		[233] -> unicode:characters_to_binary(Output0);
-		_ -> Output0
+	Output = case file:native_name_encoding() of
+		utf8 -> unicode:characters_to_binary(Output0);
+		latin1 -> Output0
 	end,
 	ok = file:write_file("$1", Output),
 	halt()

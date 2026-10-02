@@ -538,7 +538,7 @@ core-app-extra-keys: init
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:load($(APP)), \
 		{ok, 10000} = application:get_key($(APP), maxT), \
-		AppFile = filename:join(code:lib_dir($(APP), ebin), atom_to_list($(APP)) ++ \".app\"), \
+		AppFile = filename:join([code:lib_dir($(APP)), \"ebin\", atom_to_list($(APP)) ++ \".app\"]), \
 		{ok, [App]} = file:consult(AppFile), \
 		{application, $(APP), Props} = App, \
 		test_value = proplists:get_value(non_standard_key, Props),\
@@ -553,7 +553,7 @@ core-app-extra-keys: init
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:load($(APP)), \
-		AppFile = filename:join(code:lib_dir($(APP), ebin), atom_to_list($(APP)) ++ \".app\"), \
+		AppFile = filename:join([code:lib_dir($(APP)), \"ebin\", atom_to_list($(APP)) ++ \".app\"]), \
 		{ok, [App]} = file:consult(AppFile), \
 		{application, $(APP), Props} = App, \
 		'\\\$$my_app' = proplists:get_value(non_standard_atom, Props),\
@@ -1848,9 +1848,15 @@ core-app-yrl-include: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Download a .yrl file with includes from Erlang/OTP"
-	$t curl -s -o $(APP)/src/core_parse.yrl $(OTP_MASTER)/lib/compiler/src/core_parse.yrl
-	$t curl -s -o $(APP)/src/core_parse.hrl $(OTP_MASTER)/lib/compiler/src/core_parse.hrl
+	$i "Copy a .yrl file with includes from the installed Erlang/OTP"
+	$t $(ERL) -eval " \
+		Src = filename:join(code:lib_dir(compiler), \"src\"), \
+		Dest = \"$(APP)/src\", \
+		{ok, _} = file:copy(filename:join(Src, \"core_parse.yrl\"), \
+			filename:join(Dest, \"core_parse.yrl\")), \
+		{ok, _} = file:copy(filename:join(Src, \"core_parse.hrl\"), \
+			filename:join(Dest, \"core_parse.hrl\")), \
+		halt()."
 
 	$i "Generate unrelated .erl files"
 	$t echo "-module(boy)." > $(APP)/src/boy.erl

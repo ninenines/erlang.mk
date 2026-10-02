@@ -449,7 +449,7 @@ define dep_autopatch_rebar.erl
 				end,
 				if
 					is_list(LockPkgs) ->
-						case lists:keyfind(atom_to_binary(N, latin1), 1, LockPkgs) of
+						case lists:keyfind(atom_to_binary(N), 1, LockPkgs) of
 							{_, {pkg, _, Vsn}, _} ->
 								{N, {hex, NP, binary_to_list(Vsn)}};
 							_ ->
@@ -467,7 +467,7 @@ define dep_autopatch_rebar.erl
 		{ok, _} = application:ensure_all_started(inets),
 		Config0 = r3_hex_core:default_config(),
 		Config = Config0$(HEX_CONFIG),
-		Pkg = atom_to_binary(Name, latin1),
+		Pkg = atom_to_binary(Name),
 		ReqBin = list_to_binary(Req),
 		maybe
 			{ok, {200, _, #{releases := Releases}}} ?=
@@ -678,9 +678,9 @@ define dep_autopatch_rebar.erl
 		_ ->
 			Write("\npre-app::\n\t@$$\(MAKE) --no-print-directory -f c_src/Makefile.erlang.mk\n"),
 			PortSpecWrite(io_lib:format("ERL_CFLAGS ?= -finline-functions -Wall -fPIC -I \\"~s/erts-~s/include\\" -I \\"~s\\"\n",
-				[code:root_dir(), erlang:system_info(version), code:lib_dir(erl_interface, include)])),
+				[code:root_dir(), erlang:system_info(version), filename:join(code:lib_dir(erl_interface), "include")])),
 			PortSpecWrite(io_lib:format("ERL_LDFLAGS ?= -L \\"~s\\" -lei\n",
-				[code:lib_dir(erl_interface, lib)])),
+				[filename:join(code:lib_dir(erl_interface), "lib")])),
 			[PortSpecWrite(["\n", E, "\n"]) || E <- OsEnv],
 			FilterEnv = fun(Env) ->
 				lists:flatten([case E of

@@ -11,6 +11,11 @@ from parallel builds via the `-j` flag).
 
 Git and Erlang/OTP must also be installed.
 
+Erlang.mk supports the current Erlang/OTP release and the
+two releases before it. For example, when Erlang/OTP 29 is
+the latest release, the supported releases are Erlang/OTP 29,
+28, and 27.
+
 Some functionality requires that Autoconf 2.59 or later be
 installed, in order to compile Erlang/OTP. Erlang/OTP may
 have further requirements depending on your needs.

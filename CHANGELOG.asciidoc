@@ -26,3 +26,8 @@
 
 2026/10/01: New `make tree` command prints a human-readable
             dependency tree.
+
+2026/10/02: Erlang.mk now supports only the current Erlang/OTP
+            release and the two releases before it. For example,
+            when Erlang/OTP 29 is the latest release, the supported
+            releases are Erlang/OTP 29, 28, and 27.

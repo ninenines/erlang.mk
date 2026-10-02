@@ -21,6 +21,7 @@ jobs:
       matrix:
         erlang:
           - '29'
+          - '27'
         elixir:
           - '1.20'
         os:
@@ -79,6 +80,11 @@ jobs:
             extra: CACHE_DEPS=1
           - os: windows-latest
             extra: LEGACY=1
+          # OTP 27 is covered on Linux.
+          - os: macos-latest
+            erlang: '27'
+          - os: windows-latest
+            erlang: '27'
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -279,11 +285,18 @@ jobs:
       matrix:
         erlang:
           - '29'
+          - '27'
         os:
           - macos-latest
           - ubuntu-latest
           - windows-latest
         extra: ['', 'LEGACY=1']
+        exclude:
+          # OTP 27 is covered on Linux.
+          - os: macos-latest
+            erlang: '27'
+          - os: windows-latest
+            erlang: '27'
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -342,6 +355,7 @@ jobs:
       matrix:
         erlang:
           - '29'
+          - '27'
         os:
           - macos-latest
           - ubuntu-latest
@@ -356,6 +370,11 @@ jobs:
           # We disable rocksdb as it doesn't seem to compile on Windows.
           - os: windows-latest
             packages: '^rocksdb '
+          # OTP 27 is covered on Linux.
+          - os: macos-latest
+            erlang: '27'
+          - os: windows-latest
+            erlang: '27'
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -419,6 +438,7 @@ jobs:
       matrix:
         erlang:
           - '29'
+          - '27'
     runs-on: ubuntu-latest
     steps:
 

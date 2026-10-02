@@ -165,8 +165,8 @@ define dep_autopatch_mix.erl
 				"export MIX_APP_PATH := $(DEPS_DIR)/$1\n"
 				"C_SRC_DIR := $(DEPS_DIR)/$1/elixir_make.disabled_c_src\n\n",
 				[code:root_dir(), erlang:system_info(version),
-				 code:lib_dir(erl_interface, include),
-				 code:lib_dir(erl_interface, lib)])),
+				 filename:join(code:lib_dir(erl_interface), "include"),
+				 filename:join(code:lib_dir(erl_interface), "lib")])),
 			Write(["app::\n"
 				"\t", MakeExe, " -C ", MakeCwd, " -f $(DEPS_DIR)/$1/elixir_make.mk",
 				" ", lists:join(" ", MakeTargets),
