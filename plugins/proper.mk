@@ -1,6 +1,14 @@
 # Copyright (c) Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+help::
+	$(verbose) printf "%s\n" "" \
+		"PropEr targets:" \
+		"  proper      Run PropEr properties for this project" \
+		"" \
+		"Requires proper in DEPS or TEST_DEPS." \
+		"Pass t=mod or t=mod:prop to run one module or property."
+
 ifeq ($(filter proper,$(DEPS) $(TEST_DEPS)),proper)
 .PHONY: proper
 

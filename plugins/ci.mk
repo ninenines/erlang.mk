@@ -47,6 +47,6 @@ help::
 		"  ci          Run '$(MAKE) tests' on all configured Erlang versions." \
 		"" \
 		"The CI_OTP variable must be defined with the Erlang versions" \
-		"that must be tested. For example: CI_OTP = OTP-17.3.4 OTP-17.5.3"
+		"that must be tested. For example: CI_OTP = OTP-27.3.4 OTP-28.3 OTP-29.0"
 
 endif
