@@ -75,8 +75,6 @@ query_repo_default = $(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo))
 query_repo_git = $(patsubst git://github.com/%,https://github.com/%,$(call query_repo_default,$1))
 query_repo_git-subfolder = $(call query_repo_git,$1)
 query_repo_git-submodule = -
-query_repo_hg = $(call query_repo_default,$1)
-query_repo_svn = $(call query_repo_default,$1)
 query_repo_cp = $(call query_repo_default,$1)
 query_repo_ln = $(call query_repo_default,$1)
 query_repo_hex = https://hex.pm/packages/$(if $(word 3,$(dep_$(1))),$(word 3,$(dep_$(1))),$1)
@@ -89,8 +87,6 @@ query_version_default = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(
 query_version_git = $(call query_version_default,$1)
 query_version_git-subfolder = $(call query_version_default,$1)
 query_version_git-submodule = -
-query_version_hg = $(call query_version_default,$1)
-query_version_svn = -
 query_version_cp = -
 query_version_ln = -
 query_version_hex = $(if $(dep_$(1)_commit),$(dep_$(1)_commit),$(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_commit)))
@@ -102,8 +98,6 @@ _qe = $(if $(query_extra_$(2)),$(call query_extra_$(2),$1),-)
 query_extra_git = -
 query_extra_git-subfolder = $(if $(dep_$(1)),subfolder=$(word 4,$(dep_$(1))),-)
 query_extra_git-submodule = -
-query_extra_hg = -
-query_extra_svn = -
 query_extra_cp = -
 query_extra_ln = -
 query_extra_hex = $(if $(dep_$(1)),package-name=$(word 3,$(dep_$(1))),-)
@@ -885,15 +879,6 @@ endif
 
 define dep_fetch_git-submodule
 	git submodule update --init -- $(DEPS_DIR)/$1;
-endef
-
-define dep_fetch_hg
-	hg clone -q -U $(call query_repo_hg,$1) $(DEPS_DIR)/$(call query_name,$1); \
-	cd $(DEPS_DIR)/$(call query_name,$1) && hg update -q $(call query_version_hg,$1);
-endef
-
-define dep_fetch_svn
-	svn checkout -q $(call query_repo_svn,$1) $(DEPS_DIR)/$(call query_name,$1);
 endef
 
 define dep_fetch_cp

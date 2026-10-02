@@ -130,7 +130,6 @@ it in the release dependencies.
 ==== Fetch methods
 
 Erlang.mk comes with a number of different fetch methods.
-You can fetch from Git, Mercurial, SVN, to name a few.
 There are fetch methods that will work everywhere, and
 fetch methods that will only work in a given environment.
 
@@ -142,8 +141,6 @@ The following table lists all existing methods:
 | git            | git repo commit   | Clone the Git repository and checkout the given version
 | git-subfolder  | git repo commit subfolder | Clone the Git repository, checkout the given version and use one of its subfolders as a dependency
 | git-submodule  | git-submodule     | Initialize and update the Git submodule
-| hg             | hg repo commit    | Clone the Mercurial repository and update to the given version
-| svn            | svn repo          | Checkout the given SVN repository
 | cp             | cp path/to/repo   | Recursively copy a local directory
 | ln             | ln path/to/repo   | Symbolically link a local directory
 | hex            | hex version [pkg] | Download the given project version from hex.pm
@@ -152,7 +149,7 @@ The following table lists all existing methods:
 | default        | N/A               | Reserved
 |===
 
-The `git` and `hg` methods both have a repository and commit.
+The `git` method has a repository and commit.
 You can use any valid commit, tag or branch in that repository
 for the commit value.
 
@@ -161,32 +158,12 @@ For example, to fetch Cowboy with tag 2.19.0 from Git:
 [source,make]
 dep_cowboy = git https://github.com/ninenines/cowboy 2.19.0
 
-Or to fetch Ehsa tag 4.0.3 from Mercurial:
-
-[source,make]
-dep_ehsa = hg https://bitbucket.org/a12n/ehsa 4.0.3
-
 Git also comes with a concept of submodules. Erlang.mk can
 automatically initializes and updates submodules for dependencies,
 as long as they were added beforehand using `git submodule add`:
 
 [source,make]
 dep_cowboy = git-submodule
-
-The `svn` method only has a repository value, but that's
-simply because the SVN repository URL can also contain
-the path and commit.
-
-This would fetch an example project from the trunk:
-
-[source,make]
-dep_ex1 = svn https://example.com/svn/trunk/project/ex1
-
-And this would fetch a separate example project from a
-specific commit:
-
-[source,make]
-dep_ex2 = svn svn://example.com/svn/branches/erlang-proj/ex2@264
 
 You can copy a directory from your machine using the `cp` method.
 It only takes the path to copy from:

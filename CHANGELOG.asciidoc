@@ -31,3 +31,6 @@
             release and the two releases before it. For example,
             when Erlang/OTP 29 is the latest release, the supported
             releases are Erlang/OTP 29, 28, and 27.
+
+2026/10/02: The `hg` and `svn` fetch methods were removed.
+            Use Git or Hex or define a custom fetch method.
