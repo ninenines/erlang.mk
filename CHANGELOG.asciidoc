@@ -34,3 +34,16 @@
 
 2026/10/02: The `hg` and `svn` fetch methods were removed.
             Use Git or Hex or define a custom fetch method.
+
+2026/10/02: Fetching a Git, git-subfolder or Hex
+            dependency writes `lock.mk`. The file records
+            `dep_<name>` and `dep_<name>_commit` inside
+            `ifdef ERLANG_MK_LOCK`, including dependencies of
+            dependencies and of applications. A Hex dependency
+            also records its tarball checksum, and a fetch that
+            does not match is rejected. `make lock` fetches
+            missing dependencies and enables the file.
+            `make unlock` disables it. `distclean` leaves
+            `lock.mk` in place. A git-submodule dependency is not
+            recorded. Running make inside a dependency writes that
+            dependency's own `lock.mk`.

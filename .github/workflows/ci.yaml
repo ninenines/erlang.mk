@@ -35,6 +35,7 @@ jobs:
           - core-compat
           - core-deps
           - core-elixir
+          - core-lock
           - core-makedep
           - core-misc
           - core-plugins
@@ -468,6 +469,7 @@ jobs:
           - core-compat
           - core-deps
           - core-elixir
+          - core-lock
           - core-makedep
           - core-misc
           - core-plugins

@@ -99,6 +99,21 @@ Dependencies are fetched and built when running `make`.
 
 See xref:deps[Packages and dependencies].
 
+=== Dependency lock
+
+[source,bash]
+----
+$ make lock         # fetch anything missing and enable the pins
+$ make unlock       # disable the pins and keep lock.mk
+----
+
+`lock.mk` records `git`, `git-subfolder` and `hex` dependencies,
+including dependencies of dependencies. `ERLANG_MK_LOCK := 1`
+enables the `dep_*` lines inside `ifdef ERLANG_MK_LOCK`.
+Commit the file. The file is not removed on `distclean`.
+
+See xref:deps[Packages and dependencies].
+
 === Dependency tree
 
 [source,bash]
