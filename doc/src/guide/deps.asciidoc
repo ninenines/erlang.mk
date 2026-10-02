@@ -145,7 +145,6 @@ The following table lists all existing methods:
 | ln             | ln path/to/repo   | Symbolically link a local directory
 | hex            | hex version [pkg] | Download the given project version from hex.pm
 | fail           | N/A               | Always fail, reserved for internal use
-| legacy         | N/A               | Legacy Erlang.mk fetcher, reserved for internal use
 | default        | N/A               | Reserved
 |===
 
