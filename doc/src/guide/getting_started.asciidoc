@@ -232,7 +232,6 @@ Available templates:
     cowboy_loop_h
     cowboy_rest_h
     cowboy_websocket_h
-    gen_fsm
     gen_server
     gen_statem
     module

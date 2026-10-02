@@ -413,7 +413,7 @@ core-apps-new-tpl: init
 	$t $(MAKE) -C $(APP) new-lib in=my_app $v
 
 	$i "Generate one of each template"
-	$t $(MAKE) -C $(APP) --no-print-directory new in=my_app t=gen_fsm n=my_fsm
+	$t $(MAKE) -C $(APP) --no-print-directory new in=my_app t=gen_statem n=my_statem
 	$t $(MAKE) -C $(APP) --no-print-directory new in=my_app t=gen_server n=my_server
 	$t $(MAKE) -C $(APP) --no-print-directory new in=my_app t=supervisor n=my_sup
 
@@ -423,14 +423,14 @@ core-apps-new-tpl: init
 
 	$i "Check that all compiled files exist"
 	$t test -f $(APP)/apps/my_app/ebin/my_app.app
-	$t test -f $(APP)/apps/my_app/ebin/my_fsm.beam
+	$t test -f $(APP)/apps/my_app/ebin/my_statem.beam
 	$t test -f $(APP)/apps/my_app/ebin/my_server.beam
 	$t test -f $(APP)/apps/my_app/ebin/my_sup.beam
 
 	$i "Check that all the modules can be loaded"
 	$t $(ERL) -pa $(APP)/ebin/ $(APP)/apps/*/ebin/ -eval " \
 		ok = application:start(my_app), \
-		{ok, Mods = [my_fsm, my_server, my_sup]} = application:get_key(my_app, modules), \
+		{ok, Mods = [my_server, my_statem, my_sup]} = application:get_key(my_app, modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
