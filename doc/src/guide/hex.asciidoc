@@ -93,6 +93,7 @@ as well as the following files (if they exist):
 * `*.hrl` files in `include/` directory
 * `priv/` directory
 * `Makefile`
+* `lock.mk`
 * `erlang.mk`
 * `early-plugins.mk`
 * `plugins.mk`

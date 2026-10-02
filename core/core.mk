@@ -137,6 +137,8 @@ help::
 		"  app           Compile the project" \
 		"  deps          Fetch dependencies (if needed) and compile them" \
 		"  fetch-deps    Fetch dependencies recursively (if needed) without compiling them" \
+		"  lock          Enable the dependency lock recorded in lock.mk" \
+		"  unlock        Disable the dependency lock recorded in lock.mk" \
 		"  list-deps     List dependencies recursively on stdout" \
 		"  tree          Print the name and version of BUILD_DEPS and DEPS" \
 		"  search q=...  Search for a package in the built-in index" \

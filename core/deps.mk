@@ -829,6 +829,24 @@ define dep_autopatch_appsrc.erl
 	halt()
 endef
 
+define dep_lock_git
+	rev=`git rev-parse HEAD` && \
+	printf '%s\n' \
+		'ifdef ERLANG_MK_LOCK' \
+		"dep_$(call query_name,$1) := git $(call query_repo_git,$1) $$$$rev" \
+		'dep_$(call query_name,$1)_commit := '"$$$$rev" \
+		'endif' >> "$(ERLANG_MK_LOCK_FILE)"
+endef
+
+define dep_lock_git-subfolder
+	rev=`git rev-parse HEAD` && \
+	printf '%s\n' \
+		'ifdef ERLANG_MK_LOCK' \
+		"dep_$(call query_name,$1) := git-subfolder $(call query_repo_git-subfolder,$1) $$$$rev $(word 4,$(dep_$1))" \
+		'dep_$(call query_name,$1)_commit := '"$$$$rev" \
+		'endif' >> "$(ERLANG_MK_LOCK_FILE)"
+endef
+
 ifeq ($(CACHE_DEPS),1)
 
 define dep_cache_fetch_git
@@ -848,21 +866,24 @@ define dep_cache_fetch_git
 endef
 
 define dep_fetch_git
-	$(call dep_cache_fetch_git,$1,$(DEPS_DIR)/$(call query_name,$1));
+	$(call dep_cache_fetch_git,$1,$(DEPS_DIR)/$(call query_name,$1)) && \
+	$(call dep_lock_git,$1)
 endef
 
 define dep_fetch_git-subfolder
 	mkdir -p $(ERLANG_MK_TMP)/git-subfolder; \
-	$(call dep_cache_fetch_git,$1,$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)); \
+	$(call dep_cache_fetch_git,$1,$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)) && \
 	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)/$(word 4,$(dep_$1)) \
-		$(DEPS_DIR)/$(call query_name,$1);
+		$(DEPS_DIR)/$(call query_name,$1) && \
+	$(call dep_lock_git-subfolder,$1)
 endef
 
 else
 
 define dep_fetch_git
 	git clone -q -n -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1); \
-	cd $(DEPS_DIR)/$(call query_name,$1) && git checkout -q $(call query_version_git,$1);
+	cd $(DEPS_DIR)/$(call query_name,$1) && git checkout -q $(call query_version_git,$1) && \
+	$(call dep_lock_git,$1)
 endef
 
 define dep_fetch_git-subfolder
@@ -870,9 +891,10 @@ define dep_fetch_git-subfolder
 	git clone -q -n -- $(call query_repo_git-subfolder,$1) \
 		$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1); \
 	cd $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) \
-		&& git checkout -q $(call query_version_git-subfolder,$1); \
+		&& git checkout -q $(call query_version_git-subfolder,$1) && \
 	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)/$(word 4,$(dep_$1)) \
-		$(DEPS_DIR)/$(call query_name,$1);
+		$(DEPS_DIR)/$(call query_name,$1) && \
+	$(call dep_lock_git-subfolder,$1)
 endef
 
 endif
@@ -889,6 +911,10 @@ define dep_fetch_ln
 	ln -s $(call query_repo_ln,$1) $(DEPS_DIR)/$(call query_name,$1);
 endef
 
+# cat and tar take the shell path. On Windows, cygpath -m produces a
+# D:/ path, and GNU tar treats that colon as a remote archive (host D).
+# file:read_file and file:write_file still need the native path.
+
 NATIVE_ERLANG_MK_TMP = $(eval NATIVE_ERLANG_MK_TMP := $$(call core_native_path,$(ERLANG_MK_TMP)))$(NATIVE_ERLANG_MK_TMP)
 NATIVE_CACHE_DIR = $(eval NATIVE_CACHE_DIR := $$(call core_native_path,$(CACHE_DIR)))$(NATIVE_CACHE_DIR)
 
@@ -902,7 +928,38 @@ define hex_get_tarball.erl
 			halt(0);
 		{ok, {Status, _, Errors}} ->
 			io:format("Error ~b: ~0p~n", [Status, Errors]),
+			halt(79);
+		_ ->
 			halt(79)
+	end
+endef
+
+define hex_check_tarball.erl
+	case file:read_file("$4") of
+		{ok, Bin} ->
+			Sum = binary_to_list(binary:encode_hex(crypto:hash(sha256, Bin), lowercase)),
+			case "$5" of
+				"" ->
+					DepLine = case "$3" of
+						"" -> io_lib:format("dep_~s := hex ~s", ["$1", "$2"]);
+						_ -> io_lib:format("dep_~s := hex ~s ~s", ["$1", "$2", "$3"])
+					end,
+					Block = iolist_to_binary([
+						"ifdef ERLANG_MK_LOCK\n", DepLine, "\n",
+						io_lib:format("dep_~s_commit := ~s\n", ["$1", "$2"]),
+						io_lib:format("dep_~s_checksum := ~s\n", ["$1", Sum]),
+						"endif\n"
+					]),
+					ok = file:write_file("$6", Block, [append]),
+					halt(0);
+				Sum ->
+					halt(0);
+				_ ->
+					io:format(standard_error, "Error: checksum mismatch for ~s.~n", ["$1"]),
+					halt(101)
+			end;
+		_ ->
+			halt(102)
 	end
 endef
 
@@ -910,21 +967,28 @@ ifeq ($(CACHE_DEPS),1)
 
 # Hex only has a package version. No need to look in the Erlang.mk packages.
 define dep_fetch_hex
-	mkdir -p $(CACHE_DIR)/hex $(DEPS_DIR)/$1; \
+	mkdir -p $(CACHE_DIR)/hex; \
 	$(eval hex_pkg_name := $(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)) \
-	$(eval hex_tar_name := $(hex_pkg_name)-$(strip $(word 2,$(dep_$1))).tar) \
+	$(eval hex_tar_name := $(hex_pkg_name)-$(strip $(call query_version_hex,$1)).tar) \
 	$(if $(wildcard $(CACHE_DIR)/hex/$(hex_tar_name)),,\
-		$(call erlang,$(call hex_get_tarball.erl,$(hex_pkg_name),$(word 2,$(dep_$1)),$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name)));) \
-	tar -xOf $(CACHE_DIR)/hex/$(hex_tar_name) contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
+		$(call erlang,$(call hex_get_tarball.erl,$(hex_pkg_name),$(call query_version_hex,$1),$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name))) &&) \
+	$(call erlang,$(call hex_check_tarball.erl,$1,$(call query_version_hex,$1),$(word 3,$(dep_$1)),$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name),$(dep_$1_checksum),$(call core_native_path,$(ERLANG_MK_LOCK_FILE)))) && \
+	{ mkdir -p $(DEPS_DIR)/$1 && \
+		tar -xOf $(CACHE_DIR)/hex/$(hex_tar_name) contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf - \
+		|| { rm -rf $(DEPS_DIR)/$1; exit 1; }; }
 endef
 
 else
 
 # Hex only has a package version. No need to look in the Erlang.mk packages.
 define dep_fetch_hex
-	mkdir -p $(ERLANG_MK_TMP)/hex $(DEPS_DIR)/$1; \
-	$(call erlang,$(call hex_get_tarball.erl,$(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1),$(word 2,$(dep_$1)),$(NATIVE_ERLANG_MK_TMP)/hex/$1.tar)); \
-	tar -xOf $(ERLANG_MK_TMP)/hex/$1.tar contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf -;
+	mkdir -p $(ERLANG_MK_TMP)/hex; \
+	$(eval hex_pkg_name := $(if $(word 3,$(dep_$1)),$(word 3,$(dep_$1)),$1)) \
+	$(call erlang,$(call hex_get_tarball.erl,$(hex_pkg_name),$(call query_version_hex,$1),$(NATIVE_ERLANG_MK_TMP)/hex/$1.tar)) && \
+	$(call erlang,$(call hex_check_tarball.erl,$1,$(call query_version_hex,$1),$(word 3,$(dep_$1)),$(NATIVE_ERLANG_MK_TMP)/hex/$1.tar,$(dep_$1_checksum),$(call core_native_path,$(ERLANG_MK_LOCK_FILE)))) && \
+	{ mkdir -p $(DEPS_DIR)/$1 && \
+		tar -xOf $(ERLANG_MK_TMP)/hex/$1.tar contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf - \
+		|| { rm -rf $(DEPS_DIR)/$1; exit 1; }; }
 endef
 
 endif
@@ -974,6 +1038,34 @@ autopatch-$(call query_name,$1)::
 	$$(autopatch_verbose) $$(call dep_autopatch_for_$(AUTOPATCH_METHOD),$(call query_name,$1))
 endif
 endef
+
+# A recursive value would expand CURDIR in the child. Expand it here
+# and let dependencies and applications inherit the path.
+ifeq ($(origin ERLANG_MK_LOCK_FILE),undefined)
+ERLANG_MK_LOCK_FILE := $(CURDIR)/lock.mk
+endif
+export ERLANG_MK_LOCK_FILE
+
+-include $(ERLANG_MK_LOCK_FILE)
+
+ifeq ($(IS_APP)$(IS_DEP),)
+
+.PHONY: lock unlock
+
+lock: fetch-deps
+	$(verbose) if [ ! -f "$(ERLANG_MK_LOCK_FILE)" ]; then \
+		echo "Error: lock.mk was not found. Fetch dependencies before locking." >&2; \
+		exit 97; \
+	fi
+	$(verbose) grep -qx 'ERLANG_MK_LOCK := 1' "$(ERLANG_MK_LOCK_FILE)" || { \
+		printf '%s\n\n' 'ERLANG_MK_LOCK := 1' | cat - "$(ERLANG_MK_LOCK_FILE)" > "$(ERLANG_MK_LOCK_FILE).tmp" && mv "$(ERLANG_MK_LOCK_FILE).tmp" "$(ERLANG_MK_LOCK_FILE)"; \
+	}
+
+unlock:
+	$(verbose) if [ -f "$(ERLANG_MK_LOCK_FILE)" ]; then \
+		grep -vx 'ERLANG_MK_LOCK := 1' "$(ERLANG_MK_LOCK_FILE)" | sed '1{/^$$/d;}' > "$(ERLANG_MK_LOCK_FILE).tmp" && mv "$(ERLANG_MK_LOCK_FILE).tmp" "$(ERLANG_MK_LOCK_FILE)"; \
+	fi
+endif
 
 # We automatically depend on hex_core when the project isn't already.
 $(if $(filter hex_core,$(DEPS) $(BUILD_DEPS) $(DOC_DEPS) $(REL_DEPS) $(TEST_DEPS)),,\

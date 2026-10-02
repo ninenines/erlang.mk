@@ -7,8 +7,9 @@ introduced by Rebar, so they should be familiar to many
 seasoned Erlang developers.
 
 This chapter will explain how to add dependencies to your
-project, how they are fetched and built, and how to bundle
-them directly in a single repository.
+project, how they are fetched and built, how to lock the
+versions that were fetched, and how to bundle them directly
+in a single repository.
 
 === Adding dependencies to your project
 
@@ -328,6 +329,117 @@ of dependencies in a Makefile or a script, you should use the content
 of those files directly instead. The reason is that `make fetch-*` and
 `make list-*` may have unwanted content in their output, such as actual
 fetching of dependencies.
+
+=== Dependency lock
+
+Fetching Git, git-subfolder or Hex dependencies
+writes `lock.mk` in the project directory when that fetch finishes.
+The file records the fetches that happened. Dependencies of dependencies, and
+dependencies of applications, are written to that same file.
+Applications themselves are not listed. Commit `lock.mk`.
+`make distclean` leaves it in place.
+
+The file is only appended to. A Git or git-subfolder fetch adds a
+block after whatever is already there, including comments and lines
+edited by hand. A Hex fetch adds a block when `dep_$(NAME)_checksum`
+is not already set. The later `:=` is the one that applies. Deleting
+`lock.mk` does not regenerate it until a dependency is fetched again.
+
+`ERLANG_MK_LOCK := 1` enables the lock. The line stands on its own.
+`make lock` fetches anything still missing, following the same rules
+as `make fetch-deps`, then writes that line at the top of the file.
+`make unlock` removes the line and keeps the entries. With the line
+absent, the blocks below do nothing.
+
+Each recorded dependency is wrapped in `ifdef ERLANG_MK_LOCK`.
+`git` sets the repository and the full commit:
+
+[source,make]
+----
+ifdef ERLANG_MK_LOCK
+dep_NAME := git URL COMMIT
+dep_NAME_commit := COMMIT
+endif
+----
+
+`git-subfolder` adds the subfolder as the fourth word:
+
+[source,make]
+----
+ifdef ERLANG_MK_LOCK
+dep_NAME := git-subfolder URL COMMIT SUBFOLDER
+dep_NAME_commit := COMMIT
+endif
+----
+
+`hex` sets the version. `dep_NAME_commit` is that same version.
+`dep_NAME_checksum` is the SHA-256 of the package tarball.
+When the package name differs from the dependency name, it is
+the third word:
+
+[source,make]
+----
+ifdef ERLANG_MK_LOCK
+dep_NAME := hex VERSION
+dep_NAME_commit := VERSION
+dep_NAME_checksum := SHA256
+endif
+ifdef ERLANG_MK_LOCK
+dep_NAME := hex VERSION PACKAGE
+dep_NAME_commit := VERSION
+dep_NAME_checksum := SHA256
+endif
+----
+
+A git-submodule dependency is not recorded. Its commit is the
+gitlink in the current repository. Any other fetch method keeps
+the definition from the Makefile. A dependency with no lines in
+`lock.mk` is left alone. With nothing recorded, `make lock` fails
+because `lock.mk` does not exist.
+
+With the lock enabled, Cowboy fetched at tag 2.19.0 and jsx 3.1.0
+look like this. Each fetch appends its own block:
+
+[source,make]
+----
+ERLANG_MK_LOCK := 1
+
+ifdef ERLANG_MK_LOCK
+dep_cowboy := git https://github.com/ninenines/cowboy 79e3fb02b31d47af6e69e8f3ba18fba291a3072a
+dep_cowboy_commit := 79e3fb02b31d47af6e69e8f3ba18fba291a3072a
+endif
+ifdef ERLANG_MK_LOCK
+dep_jsx := hex 3.1.0
+dep_jsx_commit := 3.1.0
+dep_jsx_checksum := 0c5cc8fdc11b53cc25cf65ac6705ad39e54ecc56d1c22e4adb8f5a53fb9427f3
+endif
+----
+
+While the lock is enabled, those lines are what the next fetch
+uses. Changing a `dep_$(NAME)` line in the Makefile, above
+`include erlang.mk`, leaves the locked fetch unchanged. An
+existing dependency directory is not fetched again. To take a
+new version from the lock file, edit the block, remove that
+dependency directory, and fetch again. From the Makefile, run
+`make unlock`, change the `dep_$(NAME)` line, run `make distclean`
+and then `make lock`.
+
+When `dep_$(NAME)_checksum` is set, a Hex fetch compares the
+tarball with it before extracting. The fetch stops when they
+differ. A match does not append another block. Fetching from Hex
+also records `hex_core`, the library
+Erlang.mk uses to download the package.
+
+`TEST_DEPS`, `DOC_DEPS`, `REL_DEPS` and `SHELL_DEPS` are recorded
+when they are fetched. Pass `DEP_TYPES` to `make lock` to include
+them, the same way as for `make fetch-deps`.
+
+Removing a dependency from the Makefile leaves its lines in
+`lock.mk`. Delete those lines to drop the pin.
+
+A build started from the top-level project writes the top-level
+`lock.mk`. Running `make` yourself inside a dependency writes
+that dependency's own `lock.mk`.
 
 === Querying dependencies
 

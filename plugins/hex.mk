@@ -10,6 +10,7 @@ HEX_TARBALL_FILES ?= \
 	$(wildcard $(notdir $(ERLANG_MK_FILENAME))) \
 	$(sort $(call core_find,include/,*.hrl)) \
 	$(wildcard LICENSE*) \
+	$(wildcard lock.mk) \
 	$(wildcard Makefile) \
 	$(wildcard plugins.mk) \
 	$(sort $(call core_find,priv/,*)) \

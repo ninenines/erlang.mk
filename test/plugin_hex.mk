@@ -52,6 +52,7 @@ hex-tarball-create: init
 	$t printf "%s\n" \
 		erlang.mk \
 		Makefile \
+		lock.mk \
 		ebin/$(APP).app \
 		src/$(APP)_app.erl \
 		src/$(APP)_sup.erl | sort > $(APP)/.erlang.mk/EXPECT
