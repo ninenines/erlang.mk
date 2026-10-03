@@ -31,12 +31,16 @@ define hex_version_resolver.erl
 		case hex_repo:get_package(Config, atom_to_binary(Name)) of
 			{ok, {200, _RespHeaders, Package}} ->
 				#{releases := List} = Package,
-				{value, #{version := Version}} = lists:search(fun(#{version := Vsn}) ->
+				case lists:search(fun(#{version := Vsn}) ->
 					M = list_to_atom("Elixir.Version"),
 					F = list_to_atom("match?"),
 					M:F(Vsn, Req)
-				end, List),
-				{ok, Version};
+				end, List) of
+					{value, #{version := Version}} ->
+						{ok, Version};
+					false ->
+						{error, nomatch}
+				end;
 			{ok, {Status, _, Errors}} ->
 				{error, Status, Errors};
 			{error, Reason} ->
