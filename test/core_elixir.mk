@@ -497,6 +497,32 @@ core-elixir-mix-hex-error: init
 	$t $(MAKE) -C $(APP) V=0 >$(APP)/hex-bad-key.log 2>&1 || true
 	$t grep -q 'Error: bad_key' $(APP)/hex-bad-key.log
 
+core-elixir-mix-hex-nomatch: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a local Mix dependency that requires a Hex version with no release"
+	$t mkdir -p $(APP)/my_dep/lib
+	$t printf '%s\n' \
+		'defmodule MyDep.MixProject do' \
+		'  use Mix.Project' \
+		'  def project do' \
+		'    [' \
+		'      app: :my_dep,' \
+		'      version: "0.1.0",' \
+		'      deps: [{:jason, "~> 99.0"}]' \
+		'    ]' \
+		'  end' \
+		'end' > $(APP)/my_dep/mix.exs
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = cp $(CURDIR)/$(APP)/my_dep\nELIXIR = system\n"}' $(APP)/Makefile
+
+	$i "Check that a requirement with no matching release is reported"
+	$t $(MAKE) -C $(APP) V=0 >$(APP)/hex-nomatch.log 2>&1 || true
+	$t grep -q 'Error: nomatch' $(APP)/hex-nomatch.log
+
 core-elixir-nif: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
