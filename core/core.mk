@@ -66,7 +66,7 @@ export ERLANG_MK_TMP
 
 # "erl" command.
 
-ERL = erl -noinput -boot no_dot_erlang -kernel start_distribution false +P 1024 +Q 1024
+ERL = erl -noinput -boot no_dot_erlang -kernel start_distribution false +P 1024 +Q 1024 +S 1:1
 
 # Platform detection.
 
@@ -137,7 +137,10 @@ help::
 		"  app           Compile the project" \
 		"  deps          Fetch dependencies (if needed) and compile them" \
 		"  fetch-deps    Fetch dependencies recursively (if needed) without compiling them" \
+		"  lock          Enable the dependency lock recorded in lock.mk" \
+		"  unlock        Disable the dependency lock recorded in lock.mk" \
 		"  list-deps     List dependencies recursively on stdout" \
+		"  tree          Print the name and version of BUILD_DEPS and DEPS" \
 		"  search q=...  Search for a package in the built-in index" \
 		"  rel           Build a release for this project, if applicable" \
 		"  docs          Build the documentation for this project" \

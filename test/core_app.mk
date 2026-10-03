@@ -327,6 +327,28 @@ core-app-compile-first-sub-directory: init
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
+core-app-compile-no-debug-info: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .erl files"
+	$t echo "-module(boy)." > $(APP)/src/boy.erl
+	$t printf "%s\n" "-module(girl)." "-compile({debug_info, false})." > $(APP)/src/girl.erl
+
+	$i "Build the application with the default ERLC_OPTS (+debug_info)"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that debug_info remains for boy and is absent for girl"
+	$t $(ERL) -pa $(APP)/ebin/ -eval " \
+		{ok, {boy, [{abstract_code, {raw_abstract_v1, _}}]}} \
+			= beam_lib:chunks(\"$(APP)/ebin/boy.beam\", [abstract_code]), \
+		{ok, {girl, [{abstract_code, no_abstract_code}]}} \
+			= beam_lib:chunks(\"$(APP)/ebin/girl.beam\", [abstract_code]), \
+		halt()"
+
 ifndef LEGACY
 core-app-env: init
 
@@ -516,7 +538,7 @@ core-app-extra-keys: init
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:load($(APP)), \
 		{ok, 10000} = application:get_key($(APP), maxT), \
-		AppFile = filename:join(code:lib_dir($(APP), ebin), atom_to_list($(APP)) ++ \".app\"), \
+		AppFile = filename:join([code:lib_dir($(APP)), \"ebin\", atom_to_list($(APP)) ++ \".app\"]), \
 		{ok, [App]} = file:consult(AppFile), \
 		{application, $(APP), Props} = App, \
 		test_value = proplists:get_value(non_standard_key, Props),\
@@ -531,7 +553,7 @@ core-app-extra-keys: init
 	$i "Check that the application was compiled correctly"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:load($(APP)), \
-		AppFile = filename:join(code:lib_dir($(APP), ebin), atom_to_list($(APP)) ++ \".app\"), \
+		AppFile = filename:join([code:lib_dir($(APP)), \"ebin\", atom_to_list($(APP)) ++ \".app\"]), \
 		{ok, [App]} = file:consult(AppFile), \
 		{application, $(APP), Props} = App, \
 		'\\\$$my_app' = proplists:get_value(non_standard_atom, Props),\
@@ -1011,9 +1033,7 @@ core-app-makefile-change: init
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/$(APP)_app.beam \
-		$(APP)/ebin/$(APP)_sup.beam \
-		$(APP)/src/$(APP)_app.erl \
-		$(APP)/src/$(APP)_sup.erl | sort > $(APP)/EXPECT
+		$(APP)/ebin/$(APP)_sup.beam | sort > $(APP)/EXPECT
 	$t $(SLEEP)
 	$t touch $(APP)/Makefile
 	$t $(SLEEP)
@@ -1128,6 +1148,31 @@ endif
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
+
+core-app-mib-error: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Download a .mib file from Erlang/OTP"
+	$t mkdir $(APP)/mibs/
+	$t curl -fsSL -o $(APP)/mibs/OTP-REG.mib $(OTP_MASTER)/lib/snmp/mibs/OTP-REG.mib
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+	$t test -f $(APP)/priv/mibs/OTP-REG.bin
+	$t cp $(APP)/include/OTP-REG.hrl $(APP)/OTP-REG.hrl.before
+
+	$i "Corrupt the .mib file and keep the previously generated .bin"
+	$t printf '%s\n' 'not a mib' > $(APP)/mibs/OTP-REG.mib
+	$t $(SLEEP)
+	$t touch $(APP)/mibs/OTP-REG.mib
+	$t ! $(MAKE) -C $(APP) --no-print-directory V=0 >$(APP)/mib.log 2>&1
+
+	$i "Check that the old header was not regenerated from the .bin"
+	$t cmp $(APP)/OTP-REG.hrl.before $(APP)/include/OTP-REG.hrl
 
 ifndef LEGACY
 core-app-name-special-char: init
@@ -1803,9 +1848,15 @@ core-app-yrl-include: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Download a .yrl file with includes from Erlang/OTP"
-	$t curl -s -o $(APP)/src/core_parse.yrl $(OTP_MASTER)/lib/compiler/src/core_parse.yrl
-	$t curl -s -o $(APP)/src/core_parse.hrl $(OTP_MASTER)/lib/compiler/src/core_parse.hrl
+	$i "Copy a .yrl file with includes from the installed Erlang/OTP"
+	$t $(ERL) -eval " \
+		Src = filename:join(code:lib_dir(compiler), \"src\"), \
+		Dest = \"$(APP)/src\", \
+		{ok, _} = file:copy(filename:join(Src, \"core_parse.yrl\"), \
+			filename:join(Dest, \"core_parse.yrl\")), \
+		{ok, _} = file:copy(filename:join(Src, \"core_parse.hrl\"), \
+			filename:join(Dest, \"core_parse.hrl\")), \
+		halt()."
 
 	$i "Generate unrelated .erl files"
 	$t echo "-module(boy)." > $(APP)/src/boy.erl

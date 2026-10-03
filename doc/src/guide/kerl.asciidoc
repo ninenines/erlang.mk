@@ -15,11 +15,6 @@ OTP versions, for example `OTP-29.0` or a patch tag such
 as `OTP-28.3.4`. A patch release is a non-official release
 containing a few fixes on top of the official release.
 
-Older versions used a slightly different versioning scheme
-and tag format, for example: `OTP_R16B03`. Beware though,
-there also was an `OTP_R16B03-1` release that fixed a
-critical issue in the initial release.
-
 The README file for all official Erlang/OTP releases can
 be found on https://www.erlang.org/patches[erlang.org].
 

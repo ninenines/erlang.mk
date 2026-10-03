@@ -193,6 +193,34 @@ core-elixir-disable-by-default-autopatch-rebar3: init
 	$i "Building the application should work as OpenTelemetry_API is Rebar3-compatible"
 	$t $(MAKE) -C $(APP) $v
 
+core-elixir-erl-beam-on-path: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create an Erlang module and build it"
+	$t printf "%s\n" \
+		"-module(my_mod)." \
+		"-export([hello/0])." \
+		"hello() -> world." > $(APP)/src/my_mod.erl
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Add an Elixir module that calls the Erlang module at compile time and rebuild"
+	$t mkdir -p $(APP)/lib
+	$t printf "%s\n" \
+		"defmodule HelloWorld do" \
+		"  @value :my_mod.hello()" \
+		"  def hello, do: @value" \
+		"end" > $(APP)/lib/hello.ex
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the compile-time call saw the compiled Erlang module"
+	$t $(ERL) -pa $(APP)/ebin/ -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		world = 'Elixir.HelloWorld':hello(), \
+		halt()"
+
 core-elixir-from-dep: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -282,6 +310,120 @@ endif
 		true = lists:member(mix, Apps), \
 		halt()"
 
+core-elixir-heex-rebuild: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create an Elixir module that renders a HEEx template"
+	$t mkdir -p $(APP)/lib/hello
+	$t printf "%s\n" \
+		"defmodule HelloWorld do" \
+		"  require EEx" \
+		'  EEx.function_from_file(:def, :render, Path.join(__DIR__, "hello/home.html.heex"), [])' \
+		"end" > $(APP)/lib/hello.ex
+	$t printf '%s\n' '<p>hello</p>' > $(APP)/lib/hello/home.html.heex
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the module rendered the template"
+	$t $(ERL) -pa $(APP)/ebin/ -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		<<\"<p>hello</p>\\n\">> = 'Elixir.HelloWorld':render(), \
+		halt()"
+
+	$i "Place a marker file to detect what the next build touches"
+	$t touch $(APP)/marker
+
+	$i "Wait to ensure the new file has a later modification time"
+	$t $(SLEEP)
+
+	$i "Change the HEEx template"
+	$t printf '%s\n' '<p>changed</p>' > $(APP)/lib/hello/home.html.heex
+
+	$i "Rebuild the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the module was recompiled with the new template"
+	$t find $(APP) -type f -newer $(APP)/marker | grep -q Elixir.HelloWorld.beam
+	$t $(ERL) -pa $(APP)/ebin/ -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		<<\"<p>changed</p>\\n\">> = 'Elixir.HelloWorld':render(), \
+		halt()"
+
+	$i "Place a new marker file"
+	$t touch $(APP)/marker
+
+	$i "Wait to ensure the new file has a later modification time"
+	$t $(SLEEP)
+
+	$i "Add an unrelated Erlang source file"
+	$t printf "%s\n" \
+		"-module(unrelated)." \
+		"-export([go/0])." \
+		"go() -> ok." > $(APP)/src/unrelated.erl
+
+	$i "Rebuild the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the Elixir module was not recompiled"
+	$t ! find $(APP) -type f -newer $(APP)/marker | grep -q Elixir.HelloWorld.beam
+	$t rm $(APP)/marker
+
+core-elixir-keep-modules-on-erl-only-rebuild: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create Elixir source file hello.ex"
+	$t mkdir $(APP)/lib
+	$t printf "%s\n" \
+		"defmodule HelloWorld do" \
+		"  def hello do" \
+		'	IO.puts("Hello, world!")' \
+		"  end" \
+		"end" > $(APP)/lib/hello.ex
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the Elixir module is listed in the .app file"
+	$t grep -q "'Elixir.HelloWorld'" $(APP)/ebin/$(APP).app
+
+	$i "Place a marker file to detect what the next build touches"
+	$t touch $(APP)/marker
+
+	$i "Wait to ensure the new file has a later modification time"
+	$t $(SLEEP)
+
+	$i "Add an unrelated Erlang source file"
+	$t printf "%s\n" \
+		"-module(unrelated)." \
+		"-export([go/0])." \
+		"go() -> ok." > $(APP)/src/unrelated.erl
+
+	$i "Rebuild the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the Elixir module is still listed in the .app file"
+	$t grep -q "'Elixir.HelloWorld'" $(APP)/ebin/$(APP).app
+
+	$i "Check that the Elixir module was not recompiled"
+	$t ! find $(APP) -type f -newer $(APP)/marker | grep -q Elixir.HelloWorld.beam
+	$t rm $(APP)/marker
+
+	$i "Check that both modules are known to the application and loadable"
+	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		ok = application:start($(APP)), \
+		{ok, Mods} = application:get_key($(APP), modules), \
+		true = lists:member('Elixir.HelloWorld', Mods), \
+		true = lists:member(unrelated, Mods), \
+		{module, 'Elixir.HelloWorld'} = code:load_file('Elixir.HelloWorld'), \
+		halt()"
+
 core-elixir-mix-cwd: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -309,6 +451,77 @@ endif
 		{ok, Apps} = application:ensure_all_started('$(APP)'), \
 		true = lists:member(poison, Apps), \
 		halt()"
+
+core-elixir-mix-hex-error: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a local Mix dependency that requires a missing Hex package"
+	$t mkdir -p $(APP)/my_dep/lib
+	$t printf '%s\n' \
+		'defmodule MyDep.MixProject do' \
+		'  use Mix.Project' \
+		'  def project do' \
+		'    [' \
+		'      app: :my_dep,' \
+		'      version: "0.1.0",' \
+		'      deps: [{:erlang_mk_no_such_pkg_1038, "~> 1.0"}]' \
+		'    ]' \
+		'  end' \
+		'end' > $(APP)/my_dep/mix.exs
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = cp $(CURDIR)/$(APP)/my_dep\nELIXIR = system\n"}' $(APP)/Makefile
+
+	$i "Check that a missing Hex package is reported"
+	$t $(MAKE) -C $(APP) V=0 >$(APP)/hex-missing.log 2>&1 || true
+	$t grep -q 'Error 404:' $(APP)/hex-missing.log
+
+	$i "Point the same dependency at a real package with options and a bad Hex public key"
+	$t rm -rf $(APP)/deps/my_dep
+	$t printf '%s\n' \
+		'defmodule MyDep.MixProject do' \
+		'  use Mix.Project' \
+		'  def project do' \
+		'    [' \
+		'      app: :my_dep,' \
+		'      version: "0.1.0",' \
+		'      deps: [{:jason, "~> 1.0", []}]' \
+		'    ]' \
+		'  end' \
+		'end' > $(APP)/my_dep/mix.exs
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{repo_public_key => <<\"bad\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Check that a bad Hex public key is reported"
+	$t $(MAKE) -C $(APP) V=0 >$(APP)/hex-bad-key.log 2>&1 || true
+	$t grep -q 'Error: bad_key' $(APP)/hex-bad-key.log
+
+core-elixir-mix-hex-nomatch: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a local Mix dependency that requires a Hex version with no release"
+	$t mkdir -p $(APP)/my_dep/lib
+	$t printf '%s\n' \
+		'defmodule MyDep.MixProject do' \
+		'  use Mix.Project' \
+		'  def project do' \
+		'    [' \
+		'      app: :my_dep,' \
+		'      version: "0.1.0",' \
+		'      deps: [{:jason, "~> 99.0"}]' \
+		'    ]' \
+		'  end' \
+		'end' > $(APP)/my_dep/mix.exs
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = cp $(CURDIR)/$(APP)/my_dep\nELIXIR = system\n"}' $(APP)/Makefile
+
+	$i "Check that a requirement with no matching release is reported"
+	$t $(MAKE) -C $(APP) V=0 >$(APP)/hex-nomatch.log 2>&1 || true
+	$t grep -q 'Error: nomatch' $(APP)/hex-nomatch.log
 
 core-elixir-nif: init
 
@@ -343,6 +556,28 @@ endif
 	$t $(ERL) -pa $(APP)/ebin/ -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
 		{ok, Apps} = application:ensure_all_started('$(APP)'), \
 		true = lists:member(libsalty2, Apps), \
+		halt()"
+
+core-elixir-nif-elixir-make: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Exqlite to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = db_connection exqlite\ndep_db_connection = hex 2.10.2\ndep_exqlite = hex 0.39.0\nELIXIR = system\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the NIF shared library was built"
+	$t test -f $(APP)/deps/exqlite/priv/sqlite3_nif$(C_SRC_OUTPUT_SHARED_EXTENSION)
+
+	$i "Check that the NIF actually loads and can open a database"
+	$t $(ERL) -pa $(APP)/deps/exqlite/ebin -pa $(APP)/deps/*/ebin -pa $(dir $(shell elixir -e 'IO.puts(:code.lib_dir(:elixir))'))/*/ebin -eval " \
+		{ok, Conn} = 'Elixir.Exqlite.Sqlite3':open(<<\":memory:\">>), \
+		ok = 'Elixir.Exqlite.Sqlite3':close(Conn), \
 		halt()"
 
 core-elixir-rel: init

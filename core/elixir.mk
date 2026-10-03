@@ -23,12 +23,6 @@ elixirc_verbose_0 = @echo " EXC    $(words $(EX_FILES)) files";
 elixirc_verbose_2 = set -x;
 elixirc_verbose = $(elixirc_verbose_$(V))
 
-# Unfortunately this currently requires Elixir.
-# https://github.com/jelly-beam/verl is a good choice
-# for an Erlang implementation, but we already have to
-# pull hex_core and Rebar3 so adding yet another pull
-# is annoying, especially one that would be necessary
-# every time we autopatch Rebar projects. Wait and see.
 define hex_version_resolver.erl
 	HexVersionResolve = fun(Name, Req) ->
 		application:ensure_all_started(ssl),
@@ -37,25 +31,37 @@ define hex_version_resolver.erl
 		case hex_repo:get_package(Config, atom_to_binary(Name)) of
 			{ok, {200, _RespHeaders, Package}} ->
 				#{releases := List} = Package,
-				{value, #{version := Version}} = lists:search(fun(#{version := Vsn}) ->
+				case lists:search(fun(#{version := Vsn}) ->
 					M = list_to_atom("Elixir.Version"),
 					F = list_to_atom("match?"),
 					M:F(Vsn, Req)
-				end, List),
-				{ok, Version};
+				end, List) of
+					{value, #{version := Version}} ->
+						{ok, Version};
+					false ->
+						{error, nomatch}
+				end;
 			{ok, {Status, _, Errors}} ->
-				{error, Status, Errors}
+				{error, Status, Errors};
+			{error, Reason} ->
+				{error, Reason}
+		end
+	end,
+	HexVersion = fun(Name, Req) ->
+		case HexVersionResolve(Name, Req) of
+			{ok, Vsn} ->
+				Vsn;
+			{error, Status, Errors} ->
+				io:format(standard_error, "Error ~b: ~0p~n", [Status, Errors]),
+				halt(77);
+			{error, Reason} ->
+				io:format(standard_error, "Error: ~0p~n", [Reason]),
+				halt(95)
 		end
 	end,
 	HexVersionResolveAndPrint = fun(Name, Req) ->
-		case HexVersionResolve(Name, Req) of
-			{ok, Version} ->
-				io:format("~s", [Version]),
-				halt(0);
-			{error, Status, Errors} ->
-				io:format("Error ~b: ~0p~n", [Status, Errors]),
-				halt(77)
-		end
+		io:format("~s", [HexVersion(Name, Req)]),
+		halt(0)
 	end
 endef
 
@@ -106,7 +112,7 @@ define dep_autopatch_mix.erl
 	end,
 	lists:foreach(fun
 		({Name, Req}) when is_binary(Req) ->
-			{ok, Vsn} = HexVersionResolve(Name, Req),
+			Vsn = HexVersion(Name, Req),
 			Write(["DEPS += ", atom_to_list(Name), "\n"]),
 			Write(["dep_", atom_to_list(Name), " = hex ", Vsn, " ", atom_to_list(Name), "\n"]);
 		({Name, Opts}) when is_list(Opts) ->
@@ -124,7 +130,7 @@ define dep_autopatch_mix.erl
 		({Name, Req, Opts}) ->
 			case IsRequiredProdDep(Opts) of
 				true ->
-					{ok, Vsn} = HexVersionResolve(Name, Req),
+					Vsn = HexVersion(Name, Req),
 					Write(["DEPS += ", atom_to_list(Name), "\n"]),
 					Write(["dep_", atom_to_list(Name), " = hex ", Vsn, " ", atom_to_list(Name), "\n"]);
 				false ->
@@ -156,10 +162,19 @@ define dep_autopatch_mix.erl
 					io:format(standard_error, "Failed to copy Makefile with error ~p~n", [Err]),
 					halt(90)
 			end,
+			Write(io_lib:format(
+				"export ERTS_INCLUDE_DIR := ~s/erts-~s/include\n"
+				"export ERL_EI_INCLUDE_DIR := ~s\n"
+				"export ERL_EI_LIBDIR := ~s\n"
+				"export MIX_APP_PATH := $(DEPS_DIR)/$1\n"
+				"C_SRC_DIR := $(DEPS_DIR)/$1/elixir_make.disabled_c_src\n\n",
+				[code:root_dir(), erlang:system_info(version),
+				 filename:join(code:lib_dir(erl_interface), "include"),
+				 filename:join(code:lib_dir(erl_interface), "lib")])),
 			Write(["app::\n"
 				"\t", MakeExe, " -C ", MakeCwd, " -f $(DEPS_DIR)/$1/elixir_make.mk",
-				lists:join(" ", MakeTargets),
-				lists:join(" ", MakeArgs),
+				" ", lists:join(" ", MakeTargets),
+				" ", lists:join(" ", MakeArgs),
 				"\n\n"]),
 			case MakeVal(make_clean, Project, nil, undefined) of
 				undefined ->

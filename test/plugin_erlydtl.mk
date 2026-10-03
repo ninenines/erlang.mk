@@ -156,6 +156,133 @@ erlydtl-include-template: init
 		{ok, [foo, foo_bar, foo_baz]} = application:get_key($(APP), modules), \
 		halt()"
 
+erlydtl-include-rebuild: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add ErlyDTL to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = erlydtl\n"}' $(APP)/Makefile
+
+	$i "Generate templates that include or extend others"
+	$t mkdir $(APP)/templates/
+	$t echo 'unrelated' > $(APP)/templates/unrelated.dtl
+	$t echo '{% include "child.dtl" %}' > $(APP)/templates/parent.dtl
+	$t echo 'child' > $(APP)/templates/child.dtl
+	$t echo '{% extends "base.dtl" %}' > $(APP)/templates/extender.dtl
+	$t echo 'base' > $(APP)/templates/base.dtl
+	$t echo '{% include "b.dtl" %}' > $(APP)/templates/a.dtl
+	$t echo '{% include "c.dtl" %}' > $(APP)/templates/b.dtl
+	$t echo 'c' > $(APP)/templates/c.dtl
+	$t echo '{% include "shared.dtl" %}' > $(APP)/templates/left.dtl
+	$t echo '{% include "shared.dtl" %}' > $(APP)/templates/right.dtl
+	$t echo 'shared' > $(APP)/templates/shared.dtl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Change an included template; rebuild it and the template that includes it"
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/child_dtl.beam \
+		$(APP)/ebin/parent_dtl.beam | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t echo 'child changed' > $(APP)/templates/child.dtl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/templates/child.dtl -not -path "$(APP)/.erlang.mk/*" -not -path "$(APP)/deps/*" | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Change the including template; leave the included template alone"
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/parent_dtl.beam | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t echo '{% include "child.dtl" %}x' > $(APP)/templates/parent.dtl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/templates/parent.dtl -not -path "$(APP)/.erlang.mk/*" -not -path "$(APP)/deps/*" | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Change an extended template; rebuild it and the template that extends it"
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/base_dtl.beam \
+		$(APP)/ebin/extender_dtl.beam | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t echo 'base changed' > $(APP)/templates/base.dtl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/templates/base.dtl -not -path "$(APP)/.erlang.mk/*" -not -path "$(APP)/deps/*" | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Change the end of an include chain; rebuild every template that reaches it"
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/a_dtl.beam \
+		$(APP)/ebin/b_dtl.beam \
+		$(APP)/ebin/c_dtl.beam | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t echo 'c changed' > $(APP)/templates/c.dtl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/templates/c.dtl -not -path "$(APP)/.erlang.mk/*" -not -path "$(APP)/deps/*" | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Change a template included twice; rebuild both includers"
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/left_dtl.beam \
+		$(APP)/ebin/right_dtl.beam \
+		$(APP)/ebin/shared_dtl.beam | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t echo 'shared changed' > $(APP)/templates/shared.dtl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/templates/shared.dtl -not -path "$(APP)/.erlang.mk/*" -not -path "$(APP)/deps/*" | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
+	$i "Rebuild with no changes and leave every output in place"
+	$t $(SLEEP)
+	$t touch $(APP)/REF
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/REF -not -path "$(APP)/.erlang.mk/*" -not -path "$(APP)/deps/*" | sort | diff /dev/null -
+	$t rm $(APP)/REF
+
+erlydtl-makefile-change: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add ErlyDTL to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = erlydtl\n"}' $(APP)/Makefile
+
+	$i "Generate ErlyDTL templates"
+	$t mkdir $(APP)/templates/
+	$t echo '{{ one }}' > $(APP)/templates/$(APP)_one.dtl
+	$t echo '{{ two }}' > $(APP)/templates/$(APP)_two.dtl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Touch the Makefile; check that templates are rebuilt but not touched"
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/$(APP)_one_dtl.beam \
+		$(APP)/ebin/$(APP)_two_dtl.beam | sort > $(APP)/EXPECT
+	$t $(SLEEP)
+	$t touch $(APP)/Makefile
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/Makefile -not -path "$(APP)/.erlang.mk/*" -not -path "$(APP)/deps/*" | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
 erlydtl-opts: init
 
 	$i "Bootstrap a new OTP library named $(APP)"

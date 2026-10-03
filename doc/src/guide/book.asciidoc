@@ -11,6 +11,8 @@ include::getting_started.asciidoc[Getting started]
 
 include::overview.asciidoc[Overview]
 
+include::cheatsheet.asciidoc[Cheat sheet]
+
 include::updating.asciidoc[Updating Erlang.mk]
 
 include::limitations.asciidoc[Limitations]
@@ -21,6 +23,8 @@ include::limitations.asciidoc[Limitations]
 include::app.asciidoc[Building]
 
 include::deps.asciidoc[Packages and dependencies]
+
+include::hex.asciidoc[Publishing to Hex]
 
 include::ports.asciidoc[NIFs and port drivers]
 

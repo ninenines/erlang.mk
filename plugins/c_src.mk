@@ -162,8 +162,8 @@ $(C_SRC_ENV):
 			\"ERL_INTERFACE_LIB_DIR ?= ~s~n\" \
 			\"ERTS_DIR ?= $(ERL_ERTS_DIR)~n\", \
 			[code:root_dir(), erlang:system_info(version), \
-			code:lib_dir(erl_interface, include), \
-			code:lib_dir(erl_interface, lib)])), \
+			filename:join(code:lib_dir(erl_interface), \"include\"), \
+			filename:join(code:lib_dir(erl_interface), \"lib\")])), \
 		halt()."
 
 distclean:: distclean-c_src-env

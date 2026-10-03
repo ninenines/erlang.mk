@@ -1,6 +1,14 @@
 # Copyright (c) Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
+help::
+	$(verbose) printf "%s\n" "" \
+		"Triq targets:" \
+		"  triq        Run Triq properties for this project" \
+		"" \
+		"Requires triq in DEPS or TEST_DEPS." \
+		"Pass t=mod or t=mod:prop to run one module or property."
+
 ifeq ($(filter triq,$(DEPS) $(TEST_DEPS)),triq)
 .PHONY: triq
 

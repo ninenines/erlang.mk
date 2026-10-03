@@ -359,6 +359,38 @@ core-deps-dep-built-ln: init
 	$i "Confirm that symlinked deps don't create dep_built"
 	$t test ! -e $(APP)/.erlang.mk/dep_built/cowlib
 
+core-deps-dep-built-rm: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add cowlib to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that cowlib was built and the dep_built stamp exists"
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
+	$t test -f $(APP)/deps/cowlib/ebin/cow_http.beam
+	$t test -f $(APP)/.erlang.mk/dep_built/cowlib
+
+	$i "Remove only the cowlib directory"
+	$t rm -rf $(APP)/deps/cowlib
+
+	$i "Check that the dep_built stamp is still there"
+	$t test -f $(APP)/.erlang.mk/dep_built/cowlib
+
+	$i "Build the application again"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that cowlib was built again"
+	$t test -f $(APP)/deps/cowlib/ebin/cowlib.app
+	$t test -f $(APP)/deps/cowlib/ebin/cow_http.beam
+	$t test -f $(APP)/.erlang.mk/dep_built/cowlib
+
 core-deps-dep-commit: init
 
 	$i "Bootstrap a new OTP library named $(APP)"

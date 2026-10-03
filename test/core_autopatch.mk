@@ -230,6 +230,45 @@ core-autopatch-rebar-git_subdir: init
 	$t test -f $(APP)/deps/eqwalizer_support/ebin/eqwalizer.beam
 	$t test -f $(APP)/deps/eqwalizer_support/ebin/eqwalizer_specs.beam
 
+core-autopatch-rebar-hex-req: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap application my_dep inside $(APP) that uses rebar"
+	$t mkdir $(APP)/my_dep
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib LEGACY=1 $v
+	$t rm $(APP)/my_dep/erlang.mk $(APP)/my_dep/Makefile
+
+	$i "Add a rebar.config with a pessimistic requirement and a minimum Hex version"
+	$t printf '%s\n' \
+		'{deps, [' \
+		'{cowlib, "~> 2.13"},' \
+		'{jsx, ">= 3.0.0"}' \
+		']}.' > $(APP)/my_dep/rebar.config
+
+	$i "Add my_dep to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = cp $(CURDIR)/$(APP)/my_dep/\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that cowlib is above 2.13.0 and jsx is at least 3.0.0"
+	$t $(ERL) -eval " \
+		Vsn = fun(Name) -> \
+			Path = \"$(APP)/deps/\" ++ Name ++ \"/ebin/\" ++ Name ++ \".app\", \
+			{ok, [{application, _, Props}]} = file:consult(Path), \
+			{vsn, V} = lists:keyfind(vsn, 1, Props), \
+			Parts = [list_to_integer(P) || P <- string:split(V, \".\", all)], \
+			list_to_tuple(lists:sublist(Parts ++ [0, 0], 3)) \
+		end, \
+		true = Vsn(\"cowlib\") > {2, 13, 0}, \
+		true = Vsn(\"jsx\") >= {3, 0, 0}, \
+		halt()"
+
 # This test is expected to fail when run in parallel and flock/lockf is not available.
 core-autopatch-two-rebar: init
 

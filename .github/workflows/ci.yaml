@@ -21,6 +21,7 @@ jobs:
       matrix:
         erlang:
           - '29'
+          - '27'
         elixir:
           - '1.20'
         os:
@@ -34,6 +35,7 @@ jobs:
           - core-compat
           - core-deps
           - core-elixir
+          - core-lock
           - core-makedep
           - core-misc
           - core-plugins
@@ -79,6 +81,11 @@ jobs:
             extra: CACHE_DEPS=1
           - os: windows-latest
             extra: LEGACY=1
+          # OTP 27 is covered on Linux.
+          - os: macos-latest
+            erlang: '27'
+          - os: windows-latest
+            erlang: '27'
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -246,7 +253,6 @@ jobs:
       run: |
         git clone https://github.com/hexpm/hexpm
         cd hexpm
-        git checkout 3da683955ecde4718f4719509011e2ede6b108cd
         perl -ni.bak -e 'print; if (/^config :hexpm,\s*$/) {print "  user_confirm: false,\n"}' config/dev.exs
         mix setup
         mix phx.server &
@@ -280,11 +286,18 @@ jobs:
       matrix:
         erlang:
           - '29'
+          - '27'
         os:
           - macos-latest
           - ubuntu-latest
           - windows-latest
         extra: ['', 'LEGACY=1']
+        exclude:
+          # OTP 27 is covered on Linux.
+          - os: macos-latest
+            erlang: '27'
+          - os: windows-latest
+            erlang: '27'
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -343,6 +356,7 @@ jobs:
       matrix:
         erlang:
           - '29'
+          - '27'
         os:
           - macos-latest
           - ubuntu-latest
@@ -357,6 +371,11 @@ jobs:
           # We disable rocksdb as it doesn't seem to compile on Windows.
           - os: windows-latest
             packages: '^rocksdb '
+          # OTP 27 is covered on Linux.
+          - os: macos-latest
+            erlang: '27'
+          - os: windows-latest
+            erlang: '27'
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -420,6 +439,7 @@ jobs:
       matrix:
         erlang:
           - '29'
+          - '27'
     runs-on: ubuntu-latest
     steps:
 
@@ -449,6 +469,7 @@ jobs:
           - core-compat
           - core-deps
           - core-elixir
+          - core-lock
           - core-makedep
           - core-misc
           - core-plugins

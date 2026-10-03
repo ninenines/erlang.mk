@@ -325,7 +325,6 @@ bootstrap-templates: init
 	$t test `$(MAKE) -C $(APP) --no-print-directory list-templates V=0 | wc -l` -gt 1
 
 	$i "Generate one of each template"
-	$t $(MAKE) -C $(APP) --no-print-directory new t=gen_fsm n=my_fsm
 	$t $(MAKE) -C $(APP) --no-print-directory new t=gen_statem n=my_statem
 	$t $(MAKE) -C $(APP) --no-print-directory new t=gen_server n=my_server
 	$t $(MAKE) -C $(APP) --no-print-directory new t=supervisor n=my_sup
@@ -345,7 +344,6 @@ bootstrap-templates: init
 
 	$i "Check that all compiled files exist"
 	$t test -f $(APP)/ebin/$(APP).app
-	$t test -f $(APP)/ebin/my_fsm.beam
 	$t test -f $(APP)/ebin/my_statem.beam
 	$t test -f $(APP)/ebin/my_server.beam
 	$t test -f $(APP)/ebin/my_sup.beam
@@ -359,7 +357,7 @@ bootstrap-templates: init
 	$i "Check that all the modules can be loaded"
 	$t $(ERL) -pa $(APP)/ebin/ -eval " \
 		ok = application:start($(APP)), \
-		{ok, Mods = [my_fsm, my_http_h, my_loop_h, my_module, my_protocol, my_rest_h, my_server, my_statem, my_sup, my_ws_h]} \
+		{ok, Mods = [my_http_h, my_loop_h, my_module, my_protocol, my_rest_h, my_server, my_statem, my_sup, my_ws_h]} \
 			= application:get_key($(APP), modules), \
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"

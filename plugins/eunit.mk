@@ -22,7 +22,9 @@ tests:: eunit
 help::
 	$(verbose) printf "%s\n" "" \
 		"EUnit targets:" \
-		"  eunit       Run all the EUnit tests for this project"
+		"  eunit       Run all the EUnit tests for this project" \
+		"" \
+		"Pass t=mod or t=mod:case to run one module or test."
 
 # Plugin-specific targets.
 

@@ -38,16 +38,20 @@ erlc_verbose_2 = set -x;
 erlc_verbose = $(erlc_verbose_$(V))
 
 xyrl_verbose_0 = @echo " XYRL  " $(filter %.xrl %.yrl,$(?F));
+xyrl_verbose_all_0 = @echo " XYRL  " $(notdir $(XRL_FILES) $(YRL_FILES));
 xyrl_verbose_2 = set -x;
 xyrl_verbose = $(xyrl_verbose_$(V))
+xyrl_verbose_all = $(xyrl_verbose_all_$(V))
 
-asn1_verbose_0 = @echo " ASN1  " $(filter %.asn1,$(?F));
+asn1_verbose_0 = @echo " ASN1  " $(notdir $1);
 asn1_verbose_2 = set -x;
 asn1_verbose = $(asn1_verbose_$(V))
 
 mib_verbose_0 = @echo " MIB   " $(filter %.bin %.mib,$(?F));
+mib_verbose_all_0 = @echo " MIB   " $(notdir $(MIB_FILES));
 mib_verbose_2 = set -x;
 mib_verbose = $(mib_verbose_$(V))
+mib_verbose_all = $(mib_verbose_all_$(V))
 
 ifneq ($(wildcard src/)$(wildcard lib/),)
 
@@ -85,6 +89,15 @@ CORE_FILES := $(filter %.core,$(ALL_SRC_FILES))
 
 ALL_LIB_FILES := $(sort $(call core_find,lib/,*))
 EX_FILES := $(filter-out lib/mix/%,$(filter %.ex,$(ALL_SRC_FILES) $(ALL_LIB_FILES)))
+HEEX_FILES := $(filter-out lib/mix/%,$(filter %.heex,$(ALL_SRC_FILES) $(ALL_LIB_FILES)))
+
+# Top-level projects rebuild generated files when a Makefile changes.
+# Dependencies and applications under apps/ do not.
+ifeq ($(IS_APP)$(IS_DEP),)
+MAKEFILE_CHANGE = $(ERLANG_MK_TMP)/last-makefile-change
+else
+MAKEFILE_CHANGE =
+endif
 
 # ASN.1 files.
 
@@ -100,8 +113,8 @@ define compile_asn1
 	$(verbose) mv asn1/*.asn1db include/
 endef
 
-$(PROJECT).d:: $(ASN1_FILES)
-	$(if $(strip $?),$(call compile_asn1,$?))
+$(PROJECT).d:: $(ASN1_FILES) $(MAKEFILE_CHANGE)
+	$(if $(filter $(MAKEFILE_CHANGE),$?),$(if $(strip $(ASN1_FILES)),$(call compile_asn1,$(ASN1_FILES))),$(if $(strip $(filter %.asn1,$?)),$(call compile_asn1,$(filter %.asn1,$?))))
 endif
 
 # SNMP MIB files.
@@ -109,10 +122,18 @@ endif
 ifneq ($(wildcard mibs/),)
 MIB_FILES = $(sort $(call core_find,mibs/,*.mib))
 
-$(PROJECT).d:: $(COMPILE_MIB_FIRST_PATHS) $(MIB_FILES)
+define compile_mib
+	$(1) erlc -v $(ERLC_MIB_OPTS) -o priv/mibs/ -I priv/mibs/ $(2)
+	$(1) erlc -o include/ -- $(addprefix priv/mibs/,$(patsubst %.mib,%.bin,$(notdir $(2))))
+endef
+
+$(PROJECT).d:: $(COMPILE_MIB_FIRST_PATHS) $(MIB_FILES) $(MAKEFILE_CHANGE)
 	$(verbose) mkdir -p include/ priv/mibs/
-	$(mib_verbose) erlc -v $(ERLC_MIB_OPTS) -o priv/mibs/ -I priv/mibs/ $?
-	$(mib_verbose) erlc -o include/ -- $(addprefix priv/mibs/,$(patsubst %.mib,%.bin,$(notdir $?)))
+	$(if $(filter $(MAKEFILE_CHANGE),$?),\
+		$(if $(strip $(COMPILE_MIB_FIRST_PATHS) $(MIB_FILES)),\
+			$(call compile_mib,$(mib_verbose_all),$(COMPILE_MIB_FIRST_PATHS) $(filter-out $(COMPILE_MIB_FIRST_PATHS),$(MIB_FILES)))),\
+		$(if $(strip $(filter %.mib,$?)),\
+			$(call compile_mib,$(mib_verbose),$(filter %.mib,$?))))
 endif
 
 # Leex and Yecc files.
@@ -125,8 +146,8 @@ YRL_FILES := $(filter %.yrl,$(ALL_SRC_FILES))
 YRL_ERL_FILES = $(addprefix src/,$(patsubst %.yrl,%.erl,$(notdir $(YRL_FILES))))
 ERL_FILES += $(YRL_ERL_FILES)
 
-$(PROJECT).d:: $(XRL_FILES) $(YRL_FILES)
-	$(if $(strip $?),$(xyrl_verbose) erlc -v -o src/ $(YRL_ERLC_OPTS) $?)
+$(PROJECT).d:: $(XRL_FILES) $(YRL_FILES) $(MAKEFILE_CHANGE)
+	$(if $(filter $(MAKEFILE_CHANGE),$?),$(if $(strip $(XRL_FILES) $(YRL_FILES)),$(xyrl_verbose_all) erlc -v -o src/ $(YRL_ERLC_OPTS) $(XRL_FILES) $(YRL_FILES)),$(if $(strip $(filter %.xrl %.yrl,$?)),$(xyrl_verbose) erlc -v -o src/ $(YRL_ERLC_OPTS) $(filter %.xrl %.yrl,$?)))
 
 # Erlang and Core Erlang files.
 
@@ -252,9 +273,9 @@ define makedep.erl
 		[[F, "::", [[" ", D] || D <- Deps], "; @touch \$$@\n"] || {F, Deps} <- Depend],
 		"\nCOMPILE_FIRST +=", [[" ", TargetPath(CF)] || CF <- CompileFirst], "\n"
 	],
-	Output = case "é" of
-		[233] -> unicode:characters_to_binary(Output0);
-		_ -> Output0
+	Output = case file:native_name_encoding() of
+		utf8 -> unicode:characters_to_binary(Output0);
+		latin1 -> Output0
 	end,
 	ok = file:write_file("$1", Output),
 	halt()
@@ -272,18 +293,10 @@ $(PROJECT).d:: $(ERL_FILES) $(EX_FILES) $(call core_find,include/,*.hrl) $(MAKEF
 endif
 
 ifeq ($(IS_APP)$(IS_DEP),)
-ifneq ($(words $(ERL_FILES) $(EX_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES) $(EX_FILES)),0)
-# Rebuild everything when the Makefile changes.
-$(ERLANG_MK_TMP)/last-makefile-change: $(MAKEFILE_LIST) | $(ERLANG_MK_TMP)
-	$(verbose) if test -f $@; then \
-		touch $(ERL_FILES) $(EX_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES) $(EX_FILES); \
-		touch -c $(PROJECT).d; \
-	fi
+# Rebuild generated files when a Makefile changes. $(PROJECT).d is
+# excluded so the stamp and the dependency file do not depend on each other.
+$(ERLANG_MK_TMP)/last-makefile-change: $(filter-out $(PROJECT).d,$(MAKEFILE_LIST)) | $(ERLANG_MK_TMP)
 	$(verbose) touch $@
-
-$(ERL_FILES) $(EX_FILES) $(CORE_FILES) $(ASN1_FILES) $(MIB_FILES) $(XRL_FILES) $(YRL_FILES):: $(ERLANG_MK_TMP)/last-makefile-change
-ebin/$(PROJECT).app:: $(ERLANG_MK_TMP)/last-makefile-change
-endif
 endif
 
 $(PROJECT).d::
@@ -308,10 +321,10 @@ define validate_app_file
 	end
 endef
 
-ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES) $(wildcard src/$(PROJECT).app.src) $(EX_FILES)
-	$(eval FILES_TO_COMPILE := $(filter-out $(EX_FILES) src/$(PROJECT).app.src,$?))
-	$(if $(strip $(FILES_TO_COMPILE)),$(call compile_erl,$(FILES_TO_COMPILE)))
-	$(if $(filter $(ELIXIR),disable),,$(if $(filter $?,$(EX_FILES)),$(elixirc_verbose) $(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES)))))))
+ebin/$(PROJECT).app:: $(ERL_FILES) $(CORE_FILES) $(wildcard src/$(PROJECT).app.src) $(EX_FILES) $(HEEX_FILES) $(MAKEFILE_CHANGE)
+	$(eval FILES_TO_COMPILE := $(filter-out $(EX_FILES) $(HEEX_FILES) src/$(PROJECT).app.src,$?))
+	$(if $(filter $(MAKEFILE_CHANGE),$?),$(call compile_erl,$(filter-out $(EX_FILES) src/$(PROJECT).app.src,$(ERL_FILES) $(CORE_FILES))),$(if $(strip $(FILES_TO_COMPILE)),$(call compile_erl,$(FILES_TO_COMPILE))))
+	$(if $(filter $(ELIXIR),disable),,$(if $(strip $(EX_FILES)),$(if $(filter $(MAKEFILE_CHANGE) $(EX_FILES) $(HEEX_FILES),$?),$(elixirc_verbose) $(eval MODULES := $(shell $(call erlang,$(call compile_ex.erl,$(EX_FILES)),-pa $(CURDIR)/ebin))),$(eval MODULES := $(patsubst %,'%',$(notdir $(basename $(wildcard ebin/Elixir.*.beam))))))))
 	$(eval ELIXIR_COMP_FAILED := $(if $(filter _ERROR_,$(firstword $(MODULES))),true,false))
 # Older git versions do not have the --first-parent flag. Do without in that case.
 	$(verbose) if $(ELIXIR_COMP_FAILED); then exit 1; fi

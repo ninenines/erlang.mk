@@ -1,0 +1,142 @@
+[[cheatsheet]]
+== Cheat sheet
+
+Run these from the project root, the directory with the
+Makefile and `erlang.mk`. Use `make -C path` for a nested
+application or dependency.
+
+=== General commands
+
+[source,bash]
+----
+$ make              # build app and/or release
+$ make docs         # project documentation
+$ make tests        # all test plugins
+$ make check        # tests + Dialyzer (+ extras)
+$ make dialyze xref # static checks only
+----
+
+`make docs` runs the documentation plugins that are
+enabled: xref:edoc[EDoc], xref:asciidoc[Asciidoc] and
+xref:sphinx[Sphinx]. `make check` runs the tests and
+xref:dialyzer[Dialyzer]. Concuerror is included when
+`CONCUERROR_TESTS` is set. xref:xref[Xref] is a separate
+target.
+
+=== Running tests
+
+[source,bash]
+----
+$ make eunit                    # all EUnit tests
+$ make eunit EUNIT_OPTS=verbose # verbose output
+$ make eunit t=mod              # one module
+$ make eunit t=mod:case         # one test
+
+$ make ct                       # all Common Test suites
+$ make ct-http                  # test/http_SUITE.erl
+$ make ct-http t=group          # one group
+$ make ct-http t=group:case     # one case in a group
+$ make ct-http t=[g1,g2]:case   # nested groups
+
+$ make proper                   # all PropEr properties
+$ make proper t=foo_tests       # one module
+$ make proper t=foo_tests:bar   # one property
+
+$ make triq                     # all Triq properties
+$ make triq t=foo_tests         # one module
+$ make triq t=foo_tests:bar     # one property
+----
+
+See xref:eunit[EUnit], xref:ct[Common Test],
+xref:proper[PropEr], xref:triq[Triq] and
+xref:coverage[code coverage].
+
+=== Shell
+
+The `shell` target does not build the application:
+
+[source,bash]
+$ make app && make shell SHELL_OPTS='-eval "my_app:run()."'
+
+See the xref:shell[Erlang shell] chapter for `SHELL_OPTS`
+and for `make shell RELOAD=1`.
+
+=== Cleaning
+
+[source,bash]
+----
+$ make clean      # this app's build output
+$ make distclean  # everything (deps, PLT, CT logs, tmp, ...)
+----
+
+=== Bootstrap and templates
+
+[source,bash]
+----
+$ make -f erlang.mk bootstrap
+$ make -f erlang.mk bootstrap-lib
+$ make -f erlang.mk bootstrap-lib bootstrap-rel
+$ make list-templates
+$ make new t=gen_server n=my_server
+----
+
+See xref:getting_started[Getting started].
+
+=== Packages
+
+List applications in `DEPS` before including Erlang.mk.
+`dep_NAME = hex VERSION` downloads that version from Hex.
+Add the Hex package name after the version when it differs
+from the application name:
+
+[source,make]
+----
+DEPS = cowboy
+dep_cowboy = hex 2.19.0
+----
+
+Dependencies are fetched and built when running `make`.
+
+See xref:deps[Packages and dependencies].
+
+=== Dependency lock
+
+[source,bash]
+----
+$ make fetch-deps   # write lock.mk; the pins stay off
+$ make lock         # fetch anything missing and enable the pins
+$ make unlock       # disable the pins and keep lock.mk
+----
+
+`lock.mk` records Git, git-subfolder and Hex dependencies,
+including dependencies of dependencies. `ERLANG_MK_LOCK := 1`
+enables the `dep_*` lines inside `ifdef ERLANG_MK_LOCK`.
+Commit the file. `make distclean` leaves it in place.
+An existing checkout is kept until it is removed.
+
+See xref:deps[Packages and dependencies].
+
+=== Dependency tree
+
+[source,bash]
+$ make tree
+
+Prints the name and version of `BUILD_DEPS` and `DEPS`.
+See xref:deps[Packages and dependencies].
+
+=== Help and updating
+
+[source,bash]
+----
+$ make help
+$ make erlang-mk
+----
+
+See xref:updating[Updating Erlang.mk].
+
+=== Running a release
+
+[source,bash]
+$ make run
+
+See xref:relx[Releases].

@@ -1,0 +1,216 @@
+[[hex]]
+== Publishing to Hex
+
+Erlang.mk can publish the current project to the
+link:https://hex.pm/[Hex] package repository.
+
+=== API key
+
+In order to publish on Hex you need an account and
+an API key with publishing rights. Erlang.mk does
+not provide other authentication methods.
+
+The API key can be provided one of two ways.
+
+Erlang.mk will prompt for the key automatically
+by default:
+
+[source,bash]
+----
+$ make hex-release-publish
+Secret:
+----
+
+The `HEX_SECRET` environment variable can also
+be defined to contain the API key. In that case
+Erlang.mk will not prompt for the key.
+
+[source,bash]
+----
+$ export HEX_SECRET=your-api-key
+----
+
+Note: DO NOT provide the API key as a Make variable
+as that variable will be visible in tools like `ps`:
+
+[source,bash]
+----
+# DO:
+$ HEX_SECRET=your-api-key make hex-release-publish
+
+# DO NOT:
+$ make hex-release-publish HEX_SECRET=your-api-key
+----
+
+=== Package metadata
+
+`PROJECT` is the package name. `PROJECT_VERSION` is the
+version. `PROJECT_DESCRIPTION` is the description sent
+to Hex.
+
+Hex requires a license in the package metadata. Set it
+with `HEX_TARBALL_EXTRA_METADATA`. The value is Erlang
+map syntax appended to the metadata:
+
+[source,make]
+----
+define HEX_TARBALL_EXTRA_METADATA
+#{licenses => [<<"ISC">>]}
+endef
+----
+
+The same variable can add the other metadata Hex accepts,
+such as links:
+
+[source,make]
+----
+define HEX_TARBALL_EXTRA_METADATA
+#{licenses => [<<"ISC">>],
+  links => #{<<"GitHub">> => <<"https://github.com/ninenines/cowboy">>}}
+endef
+----
+
+Dependencies listed in `DEPS` are written as package
+requirements. The requirement defaults to the version
+that was fetched. `hex_req_NAME` publishes a different
+requirement for that dependency:
+
+[source,make]
+----
+DEPS = cowlib
+dep_cowlib_commit = 2.13.0
+hex_req_cowlib = ~> 2.13
+----
+
+=== Package contents
+
+By default the package will contain the Hex metadata
+as well as the following files (if they exist):
+
+* `ebin/$(PROJECT).app`
+* `ebin/$(PROJECT).appup`
+* `src/` directory (minus `$(PROJECT).app.src` if any)
+* `*.hrl` files in `include/` directory
+* `priv/` directory
+* `Makefile`
+* `lock.mk`
+* `erlang.mk`
+* `early-plugins.mk`
+* `plugins.mk`
+* `rebar.config`
+* all `LICENSE*` files
+* all `README*` files
+
+Additional files can be included in the package, by
+appending to `HEX_TARBALL_FILES` after `include erlang.mk`.
+
+=== Publishing a release
+
+`make hex-release-publish` publishes `PROJECT_VERSION`.
+The version must be new on Hex.
+
+[source,bash]
+----
+$ make hex-release-publish
+----
+
+`make hex-release-replace` publishes over the version that
+is already on Hex.
+
+[source,bash]
+----
+$ make hex-release-replace
+----
+
+`make hex-release-delete` removes `PROJECT_VERSION`.
+
+[source,bash]
+----
+$ make hex-release-delete
+----
+
+=== Retiring a release
+
+`make hex-release-retire` retires a version. `HEX_VERSION`
+selects the version and defaults to `PROJECT_VERSION`.
+`HEX_REASON` defaults to `invalid`. Hex also accepts
+`other`, `security`, `deprecated` and `renamed`.
+`HEX_MESSAGE` is the text sent with the retirement.
+
+[source,bash]
+----
+$ make hex-release-retire HEX_REASON=security \
+    HEX_MESSAGE="See the advisory"
+----
+
+`make hex-release-unretire` restores a retired version.
+`HEX_VERSION` again defaults to `PROJECT_VERSION`.
+
+[source,bash]
+----
+$ make hex-release-unretire HEX_VERSION=0.1.0
+----
+
+=== Creating the package tarball
+
+The tarball is created automatically when publishing,
+but it can also be created manually.
+
+`make hex-tarball-create` writes the package tarball to
+`$(ERLANG_MK_TMP)/$(PROJECT).tar`.
+
+[source,bash]
+----
+$ make hex-tarball-create
+----
+
+`HEX_TARBALL_OUTPUT_FILE` changes that path.
+
+=== Documentation
+
+`make hex-docs-publish` builds the project documentation,
+packs the files under `doc/`, and uploads that archive
+for `PROJECT_VERSION`.
+
+[source,bash]
+----
+$ make hex-docs-publish
+----
+
+`HEX_DOCS_DOC_DIR` changes the directory that is packed.
+It defaults to `doc/`.
+
+[source,make]
+----
+HEX_DOCS_DOC_DIR = documentation/
+----
+
+`make hex-docs-tarball-create` writes the docs tarball to
+`$(ERLANG_MK_TMP)/$(PROJECT)-docs.tar.gz`.
+
+[source,bash]
+----
+$ make hex-docs-tarball-create
+----
+
+`make hex-docs-delete` removes the documentation for
+`HEX_VERSION`, or for `PROJECT_VERSION` when `HEX_VERSION`
+is not set.
+
+[source,bash]
+----
+$ make hex-docs-delete HEX_VERSION=0.1.0
+----
+
+=== Another Hex API
+
+The targets publish to Hex.pm unless `HEX_CONFIG` says
+otherwise. The value is Erlang map syntax appended to
+`hex_core:default_config()`:
+
+[source,make]
+----
+define HEX_CONFIG
+#{api_url => <<"https://hex.example/api">>}
+endef
+----
