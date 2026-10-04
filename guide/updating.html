@@ -33,34 +33,18 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="overview.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="limitations.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="updating"></a>Chapter 4. Updating Erlang.mk</h1></div></div></div><p>This chapter describes how to update the <span class="emphasis"><em>erlang.mk</em></span> file
-in your repository.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_initial_bootstrap"></a>4.1. Initial bootstrap</h2></div></div></div><p>The first time you use Erlang.mk, it will bootstrap itself.
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="cheatsheet.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="limitations.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="updating"></a>Chapter 5. Updating Erlang.mk</h1></div></div></div><p>This chapter describes how to update the <span class="emphasis"><em>erlang.mk</em></span> file
+in your repository.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_initial_bootstrap"></a>5.1. Initial bootstrap</h2></div></div></div><p>The first time you use Erlang.mk, it will bootstrap itself.
 It always uses the most recent version for this, so you don’t
-have to update after creating your project.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_updating"></a>4.2. Updating</h2></div></div></div><p>Later on though, updating becomes a necessity. Erlang.mk
+have to update after creating your project.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_updating"></a>5.2. Updating</h2></div></div></div><p>Later on though, updating becomes a necessity. Erlang.mk
 developers and contributors relentlessly improve the project
 and add new features; it would be a waste not to benefit
 from this.</p><p>That’s why updating Erlang.mk is so simple. All you need
-to do is to call <code class="literal">make erlang-mk</code>:</p><pre class="programlisting">$ make erlang-mk
-git clone https://github.com/ninenines/erlang.mk .erlang.mk.build
-Cloning into '.erlang.mk.build'...
-remote: Counting objects: 4035, done.
-remote: Compressing objects: 100% (12/12), done.
-remote: Total 4035 (delta 8), reused 4 (delta 4), pack-reused 4019
-Receiving objects: 100% (4035/4035), 1.10 MiB | 1000.00 KiB/s, done.
-Resolving deltas: 100% (2442/2442), done.
-Checking connectivity... done.
-if [ -f build.config ]; then cp build.config .erlang.mk.build; fi
-cd .erlang.mk.build &amp;&amp; make
-make[1]: Entering directory '/home/essen/tmp/emkg/hello_joe/.erlang.mk.build'
-awk 'FNR==1 &amp;&amp; NR!=1{print ""}1' core/core.mk index/*.mk core/index.mk core/deps.mk plugins/protobuffs.mk core/erlc.mk core/docs.mk core/test.mk plugins/asciidoc.mk plugins/bootstrap.mk plugins/c_src.mk plugins/ci.mk plugins/ct.mk plugins/dialyzer.mk plugins/edoc.mk plugins/elvis.mk plugins/erlydtl.mk plugins/escript.mk plugins/eunit.mk plugins/relx.mk plugins/shell.mk plugins/triq.mk plugins/xref.mk plugins/cover.mk \
-    | sed 's/^ERLANG_MK_VERSION = .*/ERLANG_MK_VERSION = 1.2.0-642-gccd2b9f/' &gt; erlang.mk
-make[1]: Leaving directory '/home/essen/tmp/emkg/hello_joe/.erlang.mk.build'
-cp .erlang.mk.build/erlang.mk ./erlang.mk
-rm -rf .erlang.mk.build</pre><p>All that’s left to do is to commit the file!</p><p>Yep, it’s that easy.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_customizing_the_build"></a>4.3. Customizing the build</h2></div></div></div><p>Erlang.mk allows you to customize which components are to be included
+to do is to call <code class="literal">make erlang-mk</code>:</p><pre class="programlisting">$ make erlang-mk</pre><p>All that’s left to do is to commit the file!</p><p>Yep, it’s that easy.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_customizing_the_build"></a>5.3. Customizing the build</h2></div></div></div><p>Erlang.mk allows you to customize which components are to be included
 in the <span class="emphasis"><em>erlang.mk</em></span> file. The <code class="literal">WITHOUT</code> variable allows you to
 remove components from the default Erlang.mk build. The <span class="emphasis"><em>build.config</em></span>
 file lets you define exactly what goes in (including your own code!),
-and in what order.</p><p>The <code class="literal">WITHOUT</code> file contains the list of components to exclude from
+and in what order.</p><p>The <code class="literal">WITHOUT</code> variable contains the list of components to exclude from
 the build. For example, to exclude the package index and the EDoc
 plugin when bootstrapping your application:</p><pre class="programlisting">$ make -f erlang.mk bootstrap WITHOUT="index plugins/edoc"</pre><p>The generated Erlang.mk will never include those components when
 you update it, until you change your mind and use the <code class="literal">WITHOUT</code>
@@ -73,7 +57,7 @@ by modifying the value for <code class="literal">ERLANG_MK_BUILD_CONFIG</code>. 
 tell Erlang.mk to use a different temporary directory by changing
 the <code class="literal">ERLANG_MK_BUILD_DIR</code> variable.</p><p>If you want to use a different repository or a specific commit for
 updating, you may use the variables <code class="literal">ERLANG_MK_REPO</code> and
-<code class="literal">ERLANG_MK_COMMIT</code>.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="overview.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="limitations.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+<code class="literal">ERLANG_MK_COMMIT</code>.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="cheatsheet.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="limitations.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>

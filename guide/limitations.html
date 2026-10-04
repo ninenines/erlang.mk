@@ -33,19 +33,18 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="updating.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="code.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="limitations"></a>Chapter 5. Limitations</h1></div></div></div><p>No software is perfect.</p><p>It’s very important, when evaluating and when using a tool,
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="updating.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="code.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="limitations"></a>Chapter 6. Limitations</h1></div></div></div><p>No software is perfect.</p><p>It’s very important, when evaluating and when using a tool,
 to understand its limitations, so as to avoid making mistakes
-and wasting valuable time.</p><p>This chapter lists all known limitations of Erlang.mk.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_must_be_available"></a>5.1. Erlang must be available</h2></div></div></div><p>Currently Erlang.mk requires you to install Erlang beforehand.
-Installing Erlang is not always easy, particularly if you need
-a specific version of Erlang for a specific project.</p><p>In addition, the Erlang being used must be in your <code class="literal">$PATH</code>
-before you use Erlang.mk.</p><p>In the future we envision, Erlang.mk could manage the Erlang
-version you need to use a project. Erlang.mk already does this
-for running tests when using <code class="literal">make ci</code>, so doing this during
-development is just a step away.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_spaces_in_path"></a>5.2. Spaces in path</h2></div></div></div><p>Erlang.mk will currently not work properly if the path to the
+and wasting valuable time.</p><p>This chapter lists all known limitations of Erlang.mk.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_must_be_available"></a>6.1. Erlang must be available</h2></div></div></div><p>By default Erlang.mk expects <code class="literal">erl</code> to be in your <code class="literal">$PATH</code>.
+Installing Erlang is not always easy, particularly if you
+need a specific version for a specific project.</p><p>You can pin an OTP version with <code class="literal">ERLANG_OTP</code> and let
+Erlang.mk fetch and build it via Kerl. The same mechanism
+is used by <code class="literal">make ci</code>. See the <a class="link" href="kerl.html" title="Chapter 14. OTP version management">OTP version management</a>
+chapter.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_spaces_in_path"></a>6.2. Spaces in path</h2></div></div></div><p>Erlang.mk will currently not work properly if the path to the
 project contains spaces. To check if that is the case, use the
 command <code class="literal">pwd</code>.</p><p>This issue is due to how Makefiles work. There might be ways
 to solve it, we have not given up on it, but it’s very low
-priority considering how simple the workaround is.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependency_tracking_and_modification_times"></a>5.3. Dependency tracking and modification times</h2></div></div></div><p>Erlang source files that depend on other files will have their
+priority considering how simple the workaround is.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependency_tracking_and_modification_times"></a>6.3. Dependency tracking and modification times</h2></div></div></div><p>Erlang source files that depend on other files will have their
 modification time updated when they need to be recompiled due
 to a dependency having changed. This could cause some editors to
 think the file changed when it didn’t.</p><p>Erlang.mk must use this method in order to be able to compile

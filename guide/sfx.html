@@ -33,17 +33,17 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="relx.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="escript.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="sfx"></a>Chapter 10. Self-extracting releases</h2></div></div></div><p>Erlang.mk allows you to package <a class="link" href="relx.html" title="Chapter 9. Releases">Relx releases</a> as
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="relx.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="escript.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="sfx"></a>Chapter 12. Self-extracting releases</h2></div></div></div><p>Erlang.mk allows you to package <a class="link" href="relx.html" title="Chapter 11. Releases">Relx releases</a> as
 self-extracting archives. These archives contain all the
 files in the release and come in the form of a script that
 will extract and run the release automatically.</p><p>This allows you to package the release as a single file
 that can then be executed.</p><p>This feature is currently experimental. Feedback is much
-appreciated.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_the_self_extracting_archive"></a>10.1. Generating the self-extracting archive</h2></div></div></div><p>To generate a self-extracting release, all you need to do
+appreciated.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_the_self_extracting_archive"></a>12.1. Generating the self-extracting archive</h2></div></div></div><p>To generate a self-extracting release, all you need to do
 is pass the <code class="literal">SFX=1</code> variable to Make when you build the
 release:</p><pre class="programlisting">$ make SFX=1</pre><p>This will create a self-extracting archive in
 <code class="literal">$RELX_OUTPUT_DIR/&lt;name&gt;.run</code>. For example if the release
 is named <code class="literal">hello_world</code> and <code class="literal">$RELX_OUTPUT_DIR</code> is the default,
-the file will be located at <code class="literal">_rel/hello_world.run</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_the_release_2"></a>10.2. Running the release</h2></div></div></div><p>Simply execute the script to get started:</p><pre class="programlisting">$ ./_rel/hello_world.run
+the file will be located at <code class="literal">_rel/hello_world.run</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_the_release_2"></a>12.2. Running the release</h2></div></div></div><p>Simply execute the script to get started:</p><pre class="programlisting">$ ./_rel/hello_world.run
 Exec: /tmp/tmp.3eeEq7E1ta/erts-8.1/bin/erlexec ...
 Root: /tmp/tmp.3eeEq7E1ta
 /tmp/tmp.3eeEq7E1ta

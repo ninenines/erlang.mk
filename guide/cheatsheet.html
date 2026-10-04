@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Erlang.mk User Guide</title>
+<style type="text/css"><!--
+body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
+header {align-items:center;display:flex;justify-content:center}
+header nav.left{text-align:right;width:150px}
+header nav.right{text-align:left;width:150px}
+header nav a{display:block;margin:1.5em 1em}
+main{margin-top:2em;text-align:justify}
+main h2, main h3{margin-top:2em}
+main h1, main div.chapter>div.titlepage h2{font-size:2em;margin-top:.67em}
+a{color:#d9230f;text-decoration:none}
+a:hover{text-decoration:underline}
+a.xref{display:none}
+h1, h2, h3{font-weight:normal}
+div.navfooter{margin-bottom:1em}
+--></style>
+</head>
+<body>
+<header>
+	<nav class="left">
+		<a href="index.html">User guide</a>
+		<a href="getting_started.html">Tutorials</a>
+	</nav>
+	<a href="/" class="logo"><img src="../res/logo-small.png" alt="Erlang.mk" title="Erlang.mk: A build tool for Erlang that just works" height="200" width="206"/></a>
+	<nav class="right">
+		<a href="https://github.com/ninenines/erlang.mk/tree/master/index">470+ packages</a>
+		<a href="https://github.com/ninenines/erlang.mk/issues">Issues?</a>
+	</nav>
+</header>
+<main>
+
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="overview.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="updating.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a id="cheatsheet"></a>Chapter 4. Cheat sheet</h1></div></div></div><p>Run these from the project root, the directory with the
+Makefile and <code class="literal">erlang.mk</code>. Use <code class="literal">make -C path</code> for a nested
+application or dependency.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_general_commands"></a>4.1. General commands</h2></div></div></div><pre class="programlisting">$ make              # build app and/or release
+$ make docs         # project documentation
+$ make tests        # all test plugins
+$ make check        # tests + Dialyzer (+ extras)
+$ make dialyze xref # static checks only</pre><p><code class="literal">make docs</code> runs the documentation plugins that are
+enabled: <a class="link" href="edoc.html" title="Chapter 19. EDoc comments">EDoc</a>, <a class="link" href="asciidoc.html" title="Chapter 18. AsciiDoc documentation">Asciidoc</a> and
+<a class="link" href="sphinx.html" title="Chapter 20. Sphinx documentation">Sphinx</a>. <code class="literal">make check</code> runs the tests and
+<a class="link" href="dialyzer.html" title="Chapter 28. Dialyzer">Dialyzer</a>. Concuerror is included when
+<code class="literal">CONCUERROR_TESTS</code> is set. <a class="link" href="xref.html" title="Chapter 30. Xref">Xref</a> is a separate
+target.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_tests_2"></a>4.2. Running tests</h2></div></div></div><pre class="programlisting">$ make eunit                    # all EUnit tests
+$ make eunit EUNIT_OPTS=verbose # verbose output
+$ make eunit t=mod              # one module
+$ make eunit t=mod:case         # one test
+
+$ make ct                       # all Common Test suites
+$ make ct-http                  # test/http_SUITE.erl
+$ make ct-http t=group          # one group
+$ make ct-http t=group:case     # one case in a group
+$ make ct-http t=[g1,g2]:case   # nested groups
+
+$ make proper                   # all PropEr properties
+$ make proper t=foo_tests       # one module
+$ make proper t=foo_tests:bar   # one property
+
+$ make triq                     # all Triq properties
+$ make triq t=foo_tests         # one module
+$ make triq t=foo_tests:bar     # one property</pre><p>See <a class="link" href="eunit.html" title="Chapter 22. EUnit">EUnit</a>, <a class="link" href="ct.html" title="Chapter 23. Common Test">Common Test</a>,
+<a class="link" href="proper.html" title="Chapter 24. PropEr">PropEr</a>, <a class="link" href="triq.html" title="Chapter 25. Triq">Triq</a> and
+<a class="link" href="coverage.html" title="Chapter 26. Code coverage">code coverage</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_shell"></a>4.3. Shell</h2></div></div></div><p>The <code class="literal">shell</code> target does not build the application:</p><pre class="programlisting">$ make app &amp;&amp; make shell SHELL_OPTS='-eval "my_app:run()."'</pre><p>See the <a class="link" href="shell.html" title="Chapter 21. Erlang shell">Erlang shell</a> chapter for <code class="literal">SHELL_OPTS</code>
+and for <code class="literal">make shell RELOAD=1</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_cleaning"></a>4.4. Cleaning</h2></div></div></div><pre class="programlisting">$ make clean      # this app's build output
+$ make distclean  # everything (deps, PLT, CT logs, tmp, ...)</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_bootstrap_and_templates"></a>4.5. Bootstrap and templates</h2></div></div></div><pre class="programlisting">$ make -f erlang.mk bootstrap
+$ make -f erlang.mk bootstrap-lib
+$ make -f erlang.mk bootstrap-lib bootstrap-rel
+$ make list-templates
+$ make new t=gen_server n=my_server</pre><p>See <a class="link" href="getting_started.html" title="Chapter 2. Getting started">Getting started</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_packages"></a>4.6. Packages</h2></div></div></div><p>List applications in <code class="literal">DEPS</code> before including Erlang.mk.
+<code class="literal">dep_NAME = hex VERSION</code> downloads that version from Hex.
+Add the Hex package name after the version when it differs
+from the application name:</p><pre class="programlisting">DEPS = cowboy
+dep_cowboy = hex 2.19.0</pre><p>Dependencies are fetched and built when running <code class="literal">make</code>.</p><p>See <a class="link" href="deps.html" title="Chapter 8. Packages and dependencies">Packages and dependencies</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependency_lock"></a>4.7. Dependency lock</h2></div></div></div><pre class="programlisting">$ make lock         # fetch anything missing and enable the pins
+$ make unlock       # disable the pins and keep lock.mk</pre><p><code class="literal">lock.mk</code> records <code class="literal">git</code>, <code class="literal">git-subfolder</code> and <code class="literal">hex</code> dependencies,
+including dependencies of dependencies. <code class="literal">ERLANG_MK_LOCK := 1</code>
+enables the <code class="literal">dep_*</code> lines inside <code class="literal">ifdef ERLANG_MK_LOCK</code>.
+Commit the file. The file is not removed on <code class="literal">distclean</code>.</p><p>See <a class="link" href="deps.html" title="Chapter 8. Packages and dependencies">Packages and dependencies</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependency_tree"></a>4.8. Dependency tree</h2></div></div></div><pre class="programlisting">$ make tree</pre><p>Prints the name and version of <code class="literal">BUILD_DEPS</code> and <code class="literal">DEPS</code>.
+See <a class="link" href="deps.html" title="Chapter 8. Packages and dependencies">Packages and dependencies</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_help_and_updating"></a>4.9. Help and updating</h2></div></div></div><pre class="programlisting">$ make help
+$ make erlang-mk</pre><p>See <a class="link" href="updating.html" title="Chapter 5. Updating Erlang.mk">Updating Erlang.mk</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_a_release"></a>4.10. Running a release</h2></div></div></div><pre class="programlisting">$ make run</pre><p>See <a class="link" href="relx.html" title="Chapter 11. Releases">Releases</a>.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="overview.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="updating.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+</main>
+</body>
+</html>
