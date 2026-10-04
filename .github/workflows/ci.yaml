@@ -62,7 +62,9 @@ jobs:
           - sphinx
           - triq
           - xref
-        extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
+        # Plain runs. Flagged runs are added below so the matrix stays
+        # under GitHub's 256-job limit.
+        extra: ['']
         exclude:
           # We disable proper/triq tests until ubuntu-latest includes GNU Make 4.4 or later.
           - os: ubuntu-latest
@@ -72,20 +74,35 @@ jobs:
           # We disable Concuerror as it doesn't seem to compile on Windows.
           - os: windows-latest
             suite: concuerror
-          # CACHE_DEPS and LEGACY are covered on Linux.
-          - os: macos-latest
-            extra: CACHE_DEPS=1
-          - os: macos-latest
-            extra: LEGACY=1
-          - os: windows-latest
-            extra: CACHE_DEPS=1
-          - os: windows-latest
-            extra: LEGACY=1
           # OTP 27 is covered on Linux.
           - os: macos-latest
             erlang: '27'
           - os: windows-latest
             erlang: '27'
+        include:
+          # LEGACY changes bootstrap .app.src. These suites branch on it.
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-app, extra: LEGACY=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-apps, extra: LEGACY=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-autopatch, extra: LEGACY=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-compat, extra: LEGACY=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-deps, extra: LEGACY=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-elixir, extra: LEGACY=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-query, extra: LEGACY=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: bootstrap, extra: LEGACY=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: cover, extra: LEGACY=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: relx, extra: LEGACY=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: xref, extra: LEGACY=1 }
+          # CACHE_DEPS changes git and Hex fetch.
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-deps, extra: CACHE_DEPS=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-lock, extra: CACHE_DEPS=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-autopatch, extra: CACHE_DEPS=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-elixir, extra: CACHE_DEPS=1 }
+          # ERLC_PER_FILE changes the Erlang compile rules.
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-app, extra: ERLC_PER_FILE=1 }
+          - { erlang: '27', elixir: '1.20', os: ubuntu-latest, suite: core-app, extra: ERLC_PER_FILE=1 }
+          - { erlang: '29', elixir: '1.20', os: macos-latest, suite: core-app, extra: ERLC_PER_FILE=1 }
+          - { erlang: '29', elixir: '1.20', os: windows-latest, suite: core-app, extra: ERLC_PER_FILE=1 }
+          - { erlang: '29', elixir: '1.20', os: ubuntu-latest, suite: core-elixir, extra: ERLC_PER_FILE=1 }
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -210,7 +227,6 @@ jobs:
           - '29'
         os:
           - ubuntu-latest
-        extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
 
     services:
       postgres:
@@ -261,7 +277,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         erl -sname init_cookie -run erlang halt
-        make check c=hex -j4 -k ${{ matrix.extra }}
+        make check c=hex -j4 -k
 
     - name: Run tests (Windows)
       if: matrix.os == 'windows-latest'
@@ -269,13 +285,13 @@ jobs:
       run: |
         export PATH=$INSTALL_DIR_FOR_OTP/bin:$PATH
         erl -sname init_cookie -run erlang halt
-        make check c=hex -j4 -k ${{ matrix.extra }}
+        make check c=hex -j4 -k
 
     - name: Upload artifacts
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.os }} OTP-${{ matrix.erlang }} ${{ matrix.suite }} ${{ matrix.extra }}
+        name: ${{ matrix.os }} OTP-${{ matrix.erlang }} ${{ matrix.suite }}
         path: |
           test/test_*/
 
@@ -496,9 +512,6 @@ jobs:
           - sphinx
           - triq
           - xref
-        # Don't run tests with CACHE_DEPS or LEGACY. Running them on Linux is
-        # good enough.
-        # extra: ['', 'CACHE_DEPS=1', 'LEGACY=1']
     runs-on: ubuntu-latest
     steps:
 
