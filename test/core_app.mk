@@ -1672,6 +1672,7 @@ core-app-xrl-include: init
 	$i "Touch a .hrl file included directly; check that only required files are rebuilt"
 ifeq ($(ERLC_PER_FILE),1)
 	$t printf "%s\n" \
+		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xfl_lexer.beam | sort > $(APP)/EXPECT
 else
@@ -1699,6 +1700,7 @@ endif
 	$i "Touch a .hrl file included indirectly; check that only required files are rebuilt"
 ifeq ($(ERLC_PER_FILE),1)
 	$t printf "%s\n" \
+		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xfl_lexer.beam | sort > $(APP)/EXPECT
 else
@@ -1993,6 +1995,7 @@ core-app-yrl-include: init
 	$i "Touch the .hrl file included; check that only required files are rebuilt"
 ifeq ($(ERLC_PER_FILE),1)
 	$t printf "%s\n" \
+		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/core_parse.beam | sort > $(APP)/EXPECT
 else
@@ -2322,6 +2325,7 @@ core-app-hrl-multiapps-include-lib: init
 # The use_red.erl gets touched because of its dependency to red.hrl.
 ifeq ($(ERLC_PER_FILE),1)
 	$t printf "%s\n" \
+		$(APP)/apps/my_app/my_app.d \
 		$(APP)/apps/my_app/ebin/my_app.app \
 		$(APP)/apps/my_app/ebin/use_red.beam | sort > $(APP)/EXPECT
 else
@@ -2432,6 +2436,7 @@ core-app-hrl-multiapps-include-lib-recursive: init
 # The use_red.erl gets touched because of its dependency to red.hrl.
 ifeq ($(ERLC_PER_FILE),1)
 	$t printf "%s\n" \
+		$(APP)/apps/my_app/my_app.d \
 		$(APP)/apps/my_app/ebin/my_app.app \
 		$(APP)/apps/my_app/ebin/use_red.beam | sort > $(APP)/EXPECT
 else
@@ -2531,6 +2536,7 @@ core-app-hrl-include-lib-src: init
 # The use_red.erl gets touched because of its dependency to red.hrl.
 ifeq ($(ERLC_PER_FILE),1)
 	$t printf "%s\n" \
+		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
 else
@@ -2590,6 +2596,49 @@ endif
 		[{module, M} = code:load_file(M) || M <- Mods], \
 		halt()"
 
+core-app-hrl-include-lib-src-added: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate a header and a module that includes it"
+	$t touch $(APP)/src/red.hrl
+	$t printf "%s\n" "-module(use_red)." "-include_lib(\"red.hrl\")." > $(APP)/src/use_red.erl
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Make the header include a new file"
+	$t touch $(APP)/src/pill.hrl
+	$t $(SLEEP)
+	$t echo "-include_lib(\"pill.hrl\")." > $(APP)/src/red.hrl
+
+	$i "Rebuild so the new header is recorded"
+	$t $(MAKE) -C $(APP) $v
+	$t grep -q pill.hrl $(APP)/$(APP).d
+
+	$i "Touch the new header; check that the module is rebuilt"
+ifeq ($(ERLC_PER_FILE),1)
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam \
+		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+endif
+	$t $(SLEEP)
+	$t touch $(APP)/src/pill.hrl
+	$t $(SLEEP)
+	$t $(MAKE) -C $(APP) $v
+	$t find $(APP) -type f -newer $(APP)/src/pill.hrl | sort | diff $(APP)/EXPECT -
+	$t rm $(APP)/EXPECT
+
 core-app-hrl-include-lib-src-recursive: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -2626,6 +2675,7 @@ core-app-hrl-include-lib-src-recursive: init
 # The use_red.erl gets touched because of its dependency to red.hrl and pill.hrl.
 ifeq ($(ERLC_PER_FILE),1)
 	$t printf "%s\n" \
+		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
 else
@@ -2724,6 +2774,7 @@ endif
 	$i "Touch cowlib .hrl file; check that only required files are rebuilt"
 ifeq ($(ERLC_PER_FILE),1)
 	$t printf "%s\n" \
+		$(APP)/apps/my_app/my_app.d \
 		$(APP)/apps/my_app/ebin/my_app.app \
 		$(APP)/apps/my_app/ebin/boy.beam | sort > $(APP)/EXPECT
 else
@@ -2948,6 +2999,7 @@ core-app-hrl-multiapps-include-loop-define-protected: init
 # The use_red.erl gets touched because of its dependency to red.hrl.
 ifeq ($(ERLC_PER_FILE),1)
 	$t printf "%s\n" \
+		$(APP)/apps/my_app/my_app.d \
 		$(APP)/apps/my_app/ebin/my_app.app \
 		$(APP)/apps/my_app/ebin/use_red.beam \
 		$(APP)/apps/my_app/ebin/use_blue.beam | sort > $(APP)/EXPECT
