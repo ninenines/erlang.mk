@@ -33,16 +33,16 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="hex.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="relx.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ports"></a>Chapter 10. NIFs and port drivers</h2></div></div></div><p>Erlang.mk can not only build Erlang projects, but also the C code
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="hex.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="relx.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ports"></a>Chapter 11. NIFs and port drivers</h2></div></div></div><p>Erlang.mk can not only build Erlang projects, but also the C code
 that some projects come with, like NIFs and port drivers.</p><p>There are two ways to build the C code: using a custom Makefile,
 or making Erlang.mk do it directly. The C code will be built
-as needed when you run <code class="literal">make</code>.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_a_nif_skeleton"></a>10.1. Generating a NIF skeleton</h2></div></div></div><p>Erlang.mk can generate a NIF module and the matching C
+as needed when you run <code class="literal">make</code>.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_a_nif_skeleton"></a>11.1. Generating a NIF skeleton</h2></div></div></div><p>Erlang.mk can generate a NIF module and the matching C
 source, the same way it generates OTP modules from templates.
 See <a class="link" href="getting_started.html" title="Chapter 2. Getting started">Getting started</a> for the general
 template workflow.</p><pre class="programlisting">$ make new-nif n=my_nif</pre><p>This creates <span class="emphasis"><em>src/my_nif.erl</em></span> and <span class="emphasis"><em>c_src/my_nif.c</em></span>. In a
 multi-application repository you can pass <code class="literal">in=APP</code> to put
 the files inside that application.</p><p>The next <code class="literal">make</code> will compile both the Erlang module and the
-NIF shared library.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_c_source_code_location_and_erlang_environment"></a>10.2. C source code location and Erlang environment</h2></div></div></div><p>The C source code should be located in the <span class="emphasis"><em>$(C_SRC_DIR)</em></span> directory.
+NIF shared library.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_c_source_code_location_and_erlang_environment"></a>11.2. C source code location and Erlang environment</h2></div></div></div><p>The C source code should be located in the <span class="emphasis"><em>$(C_SRC_DIR)</em></span> directory.
 It defaults to <span class="emphasis"><em>c_src/</em></span>. Should you need to modify it, all you
 need to do is to set the variable in your Makefile before including
 Erlang.mk:</p><pre class="programlisting">C_SRC_DIR = $(CURDIR)/my_nif_source</pre><p>When this directory exists, Erlang.mk will automatically create a
@@ -59,12 +59,12 @@ This can also be changed:</p><pre class="programlisting">C_SRC_ENV = $(C_SRC_DIR
 <code class="literal">ERL_INTERFACE_LIB_DIR</code>
 </span></dt><dd>
     Path to the Erl_Interface static libraries.
-</dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_using_a_custom_makefile"></a>10.3. Using a custom Makefile</h2></div></div></div><p>Erlang.mk will automatically run <code class="literal">make</code> if it detects a Makefile
+</dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_using_a_custom_makefile"></a>11.3. Using a custom Makefile</h2></div></div></div><p>Erlang.mk will automatically run <code class="literal">make</code> if it detects a Makefile
 in <span class="emphasis"><em>$(C_SRC_DIR)/Makefile</em></span>.</p><p>The Makefile should have at least two targets: a default target
 (which can be anything, for example <code class="literal">all</code>) which is invoked when
 building the C code, and a <code class="literal">clean</code> target invoked when cleaning
 it.</p><p>You can include the <span class="emphasis"><em>env.mk</em></span> file to benefit from the Erlang
-environment detection:</p><pre class="programlisting">include env.mk</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_using_erlang_mk_directly"></a>10.4. Using Erlang.mk directly</h2></div></div></div><p>You don’t need to write a Makefile to build C source code, however.
+environment detection:</p><pre class="programlisting">include env.mk</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_using_erlang_mk_directly"></a>11.4. Using Erlang.mk directly</h2></div></div></div><p>You don’t need to write a Makefile to build C source code, however.
 Erlang.mk comes with rules to build both shared libraries and
 executables, using the source files it finds in <span class="emphasis"><em>$(C_SRC_DIR)</em></span>.</p><p>By default, Erlang.mk will create a shared library. To change
 this and create an executable instead, put this in your Makefile
@@ -101,7 +101,7 @@ be overridden.</p><div class="variablelist"><dl class="variablelist"><dt><span c
 </dd></dl></div><p>The source files are automatically gathered from the contents
 of <span class="emphasis"><em>$(C_SRC_DIR)</em></span>. Erlang.mk looks for <span class="emphasis"><em>.c</em></span>, <span class="emphasis"><em>.C</em></span>, <span class="emphasis"><em>.cc</em></span> and <span class="emphasis"><em>.cpp</em></span>
 source files. You can define the variable <code class="literal">SOURCES</code> to manually
-list the files to compile.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_propagating_compile_and_linker_flags_to_sub_makefiles"></a>10.5. Propagating compile and linker flags to sub-Makefiles</h2></div></div></div><p>In some cases it might be necessary to propagate the flags
+list the files to compile.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_propagating_compile_and_linker_flags_to_sub_makefiles"></a>11.5. Propagating compile and linker flags to sub-Makefiles</h2></div></div></div><p>In some cases it might be necessary to propagate the flags
 you just defined to the sub-Makefiles of your local project.
 You generally can’t just export those as this could impact
 the building of dependencies.</p><p>Makefiles allow you to export variables for specific targets.

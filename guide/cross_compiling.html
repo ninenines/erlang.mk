@@ -33,13 +33,13 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="kerl.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="compat.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="cross_compiling"></a>Chapter 15. Cross compiling</h2></div></div></div><p>Erlang.mk supports cross-compiling. While the compiled
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="kerl.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="compat.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="cross_compiling"></a>Chapter 16. Cross compiling</h2></div></div></div><p>Erlang.mk supports cross-compiling. While the compiled
 Erlang code is portable as-is, the C code is not and
 releases need to use the correct runtime system for the
 target environment.</p><p>There are therefore two steps that might require some
 intervention: compiling and building the release. If
 you do not have any C code you can just compile as you
-would normally, however.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_compiling"></a>15.1. Compiling</h2></div></div></div><p>To cross-compile the C code you need a cross compiler. If you
+would normally, however.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_compiling"></a>16.1. Compiling</h2></div></div></div><p>To cross-compile the C code you need a cross compiler. If you
 were to target Windows from an Arch Linux machine you would
 install the <a class="ulink" href="https://aur.archlinux.org/packages/mingw-w64-gcc/" target="_top">mingw-w64-gcc</a>
 package. You would then need to define the <code class="literal">CC</code> environment
@@ -56,7 +56,7 @@ priv/my_nif.dll: PE32+ executable (DLL) (console) x86-64, for MS Windows</pre><p
 behind a flag:</p><pre class="programlisting">ifdef WINDOWS_BUILD
 CC = /usr/bin/x86_64-w64-mingw32-gcc
 C_SRC_OUTPUT_SHARED_EXTENSION = .dll
-endif</pre><p>And then just compile like this:</p><pre class="programlisting">$ make WINDOWS_BUILD=1</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_building_the_release"></a>15.2. Building the release</h2></div></div></div><p>For the release there are two options. You can either include
+endif</pre><p>And then just compile like this:</p><pre class="programlisting">$ make WINDOWS_BUILD=1</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_building_the_release"></a>16.2. Building the release</h2></div></div></div><p>For the release there are two options. You can either include
 the correct runtime system directly in the release; or you
 can not include the runtime system in the release and instead
 let it use the one installed in the target environment.</p><p>To include the target runtime system, add the <code class="literal">include_erts</code>

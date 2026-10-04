@@ -33,16 +33,16 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="escript.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="cross_compiling.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="kerl"></a>Chapter 14. OTP version management</h2></div></div></div><p>Erlang.mk comes with integrated support for
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="escript.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="cross_compiling.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="kerl"></a>Chapter 15. OTP version management</h2></div></div></div><p>Erlang.mk comes with integrated support for
 <a class="ulink" href="https://github.com/kerl/kerl" target="_top">Kerl</a>, a shell script that
 automates the downloading, building and installing of
 Erlang/OTP. It can be used to easily build a specific
 Erlang/OTP version (with or without custom build options)
-or maintain different versions side by side.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_versions"></a>14.1. Erlang versions</h2></div></div></div><p>Erlang.mk uses the Git tags from Erlang/OTP to identify
+or maintain different versions side by side.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_versions"></a>15.1. Erlang versions</h2></div></div></div><p>Erlang.mk uses the Git tags from Erlang/OTP to identify
 OTP versions, for example <code class="literal">OTP-29.0</code> or a patch tag such
 as <code class="literal">OTP-28.3.4</code>. A patch release is a non-official release
 containing a few fixes on top of the official release.</p><p>The README file for all official Erlang/OTP releases can
-be found on <a class="ulink" href="https://www.erlang.org/patches" target="_top">erlang.org</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="otp_version_pinning"></a>14.2. OTP version pinning</h2></div></div></div><p>Erlang.mk can use a specific version of Erlang/OTP when
+be found on <a class="ulink" href="https://www.erlang.org/patches" target="_top">erlang.org</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="otp_version_pinning"></a>15.2. OTP version pinning</h2></div></div></div><p>Erlang.mk can use a specific version of Erlang/OTP when
 interacting with your project. This can be very useful
 when you are working with a team because you can define
 the version you need in the Makefile and Erlang.mk will
@@ -53,9 +53,9 @@ Erlang.mk. For example, to use <code class="literal">OTP-29.0</code>:</p><pre cl
 include erlang.mk</pre><p>The next time you run <code class="literal">make</code> Erlang.mk will build and
 use the version you configured.</p><p>Note that there has been reports that this functionality
 is not compatible with the <code class="literal">.ONESHELL</code> feature from
-GNU Make.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_continuous_integration"></a>14.3. Continuous integration</h2></div></div></div><p>Erlang.mk can automatically test your project against
+GNU Make.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_continuous_integration"></a>15.3. Continuous integration</h2></div></div></div><p>Erlang.mk can automatically test your project against
 many different Erlang/OTP versions. This functionality
-is documented in the <a class="link" href="ci.html" title="Chapter 27. Continuous integration">Continuous integration</a> chapter.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuring_kerl"></a>14.4. Configuring Kerl</h2></div></div></div><p>All of the Kerl variables can be configured directly in the
+is documented in the <a class="link" href="ci.html" title="Chapter 28. Continuous integration">Continuous integration</a> chapter.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuring_kerl"></a>15.4. Configuring Kerl</h2></div></div></div><p>All of the Kerl variables can be configured directly in the
 Makefile. All you need to do is to export them. For example,
 to change the installation directory for the Erlang/OTP
 versions managed by Kerl, you could add the following to

@@ -39,7 +39,7 @@ and wasting valuable time.</p><p>This chapter lists all known limitations of Erl
 Installing Erlang is not always easy, particularly if you
 need a specific version for a specific project.</p><p>You can pin an OTP version with <code class="literal">ERLANG_OTP</code> and let
 Erlang.mk fetch and build it via Kerl. The same mechanism
-is used by <code class="literal">make ci</code>. See the <a class="link" href="kerl.html" title="Chapter 14. OTP version management">OTP version management</a>
+is used by <code class="literal">make ci</code>. See the <a class="link" href="kerl.html" title="Chapter 15. OTP version management">OTP version management</a>
 chapter.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_spaces_in_path"></a>6.2. Spaces in path</h2></div></div></div><p>Erlang.mk will currently not work properly if the path to the
 project contains spaces. To check if that is the case, use the
 command <code class="literal">pwd</code>.</p><p>This issue is due to how Makefiles work. There might be ways

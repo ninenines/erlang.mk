@@ -33,9 +33,9 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="compat.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="docs.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="elixir"></a>Chapter 17. Elixir modules and dependencies</h2></div></div></div><p>Erlang.mk has experimental support for building Elixir
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="compat.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="docs.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="elixir"></a>Chapter 18. Elixir modules and dependencies</h2></div></div></div><p>Erlang.mk has experimental support for building Elixir
 modules as well as dependencies. In this chapter we will
-cover the details and gotchas of the Elixir support.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_selecting_elixir"></a>17.1. Selecting Elixir</h2></div></div></div><p>By default Elixir is disabled. This is to ensure that
+cover the details and gotchas of the Elixir support.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_selecting_elixir"></a>18.1. Selecting Elixir</h2></div></div></div><p>By default Elixir is disabled. This is to ensure that
 there’s no negative impact to normal users of Erlang.mk.</p><p>Erlang.mk can use either an Elixir installed in the
 system; or use Elixir as a dependency.</p><p>Elixir will be automatically enabled when Elixir is
 used as a dependency. In that case all that is required
@@ -51,7 +51,7 @@ The <code class="literal">ELIXIR</code> variable must be defined before includin
 Erlang.mk:</p><pre class="programlisting">ELIXIR = system</pre><p>Elixir can be explicitly disabled. In that case trying to
 depend on Elixir applications will result in failure
 during autopatch, unless the Elixir application has both
-Erlang and Elixir code.</p><pre class="programlisting">ELIXIR = disable</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_elixir_compilation"></a>17.2. Elixir compilation</h2></div></div></div><p>There are currently no options.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_elixir_dependencies"></a>17.3. Elixir dependencies</h2></div></div></div><p>Erlang.mk will automatically autopatch Elixir dependencies
+Erlang and Elixir code.</p><pre class="programlisting">ELIXIR = disable</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_elixir_compilation"></a>18.2. Elixir compilation</h2></div></div></div><p>There are currently no options.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_elixir_dependencies"></a>18.3. Elixir dependencies</h2></div></div></div><p>Erlang.mk will automatically autopatch Elixir dependencies
 by running Mix on the mix.exs file and producing a Makefile
 using the generated metadata.</p><p>The following is an example of depending on Elixir
 applications from an Erlang-only application:</p><pre class="programlisting">DEPS = jose
@@ -59,7 +59,7 @@ dep_jose = hex 1.11.10
 
 ELIXIR = system
 
-include erlang.mk</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dialyzer"></a>17.4. Dialyzer</h2></div></div></div><p>Dialyzer requires Elixir to be available in order to access
+include erlang.mk</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dialyzer"></a>18.4. Dialyzer</h2></div></div></div><p>Dialyzer requires Elixir to be available in order to access
 the AST of the Elixir beam files. In most cases it will just
 work. When only enabling Elixir in a sub-application, Elixir
 will not always be available, so in that case we must tell

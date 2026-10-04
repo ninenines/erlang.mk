@@ -33,13 +33,13 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ports.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="sfx.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="relx"></a>Chapter 11. Releases</h2></div></div></div><p>Erlang.mk relies on <span class="emphasis"><em>Relx</em></span> for generating releases. This
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ports.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="sfx.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="relx"></a>Chapter 12. Releases</h2></div></div></div><p>Erlang.mk relies on <span class="emphasis"><em>Relx</em></span> for generating releases. This
 chapter covers the Erlang.mk-specific bits. Consult the
 <a class="ulink" href="https://github.com/erlware/relx" target="_top">Relx repository</a> for more
-information.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_requirement"></a>11.1. Requirement</h2></div></div></div><p>The project directory must be named <code class="literal">$(PROJECT)</code> or
+information.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_requirement"></a>12.1. Requirement</h2></div></div></div><p>The project directory must be named <code class="literal">$(PROJECT)</code> or
 <code class="literal">$(PROJECT)-&lt;vsn&gt;</code>. OTP finds the application by that
 directory name. <code class="literal">make rel</code> fails before Relx runs when
-the name does not match.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_setup"></a>11.2. Setup</h2></div></div></div><p>First, <code class="literal">relx</code> must be added in the dependencies of your
+the name does not match.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_setup"></a>12.2. Setup</h2></div></div></div><p>First, <code class="literal">relx</code> must be added in the dependencies of your
 project. Relx is in the built-in index, so you can add it
 to <code class="literal">REL_DEPS</code> with the name alone:</p><pre class="programlisting">REL_DEPS = relx</pre><p>Then, you need to create a <span class="emphasis"><em>relx.config</em></span> file in the
 <span class="emphasis"><em>$(RELX_CONFIG)</em></span> location. This defaults to
@@ -57,10 +57,10 @@ endif</pre><p><code class="literal">relx.config.script</code> is also recognized
 Erlang.mk evaluates the script with <code class="literal">CONFIG</code> bound to the
 terms from <code class="literal">relx.config</code>, or to <code class="literal">[]</code> when that file is
 absent. The script returns the configuration Relx receives.
-Either file is enough for <code class="literal">make</code> to build the release.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration"></a>11.3. Configuration</h2></div></div></div><p>Erlang.mk provides <code class="literal">RELX_OUTPUT_DIR</code> for the output
+Either file is enough for <code class="literal">make</code> to build the release.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration"></a>12.3. Configuration</h2></div></div></div><p>Erlang.mk provides <code class="literal">RELX_OUTPUT_DIR</code> for the output
 directory. It defaults to the <span class="emphasis"><em>_rel</em></span> directory and overrides
 <code class="literal">output_dir</code> in the config:</p><pre class="programlisting">RELX_OUTPUT_DIR = /path/to/staging/directory</pre><p>All other configuration is done through <code class="literal">relx.config</code>.
-To enable development mode:</p><pre class="programlisting">{dev_mode, true}.</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_the_release"></a>11.4. Generating the release</h2></div></div></div><p>Now that you’re all set, all you need to do is generate the
+To enable development mode:</p><pre class="programlisting">{dev_mode, true}.</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_the_release"></a>12.4. Generating the release</h2></div></div></div><p>Now that you’re all set, all you need to do is generate the
 release. As mentioned before, Erlang.mk will automatically
 generate it when it detects the <span class="emphasis"><em>$(RELX_CONFIG)</em></span> file or
 <span class="emphasis"><em>$(RELX_CONFIG_SCRIPT)</em></span>. This means the following command
@@ -71,7 +71,7 @@ located at <code class="literal">$(RELX_OUTPUT_DIR)/&lt;name&gt;/&lt;name&gt;-&l
 Set <code class="literal">RELX_TAR=0</code> to skip it. <code class="literal">make run</code> skips it.</p><p><code class="literal">relx-post-rel</code> runs after the release directory is
 assembled and before the tarball is written. You can
 define it to add files to the release tarball:</p><pre class="programlisting">relx-post-rel::
-    cp extra.txt $(RELX_OUTPUT_DIR)/example_release/</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_the_release"></a>11.5. Running the release</h2></div></div></div><p>Erlang.mk provides a convenience function for running the
+    cp extra.txt $(RELX_OUTPUT_DIR)/example_release/</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_running_the_release"></a>12.5. Running the release</h2></div></div></div><p>Erlang.mk provides a convenience function for running the
 release with one simple command:</p><pre class="programlisting">$ make run</pre><p>This command will also build the project and generate the
 release if they weren’t already. It starts the release in
 <span class="emphasis"><em>console mode</em></span>, meaning you will also have a shell ready to
@@ -79,7 +79,7 @@ use to check things as needed.</p><p><code class="literal">make run</code> is cu
 reload the changed modules into that node:</p><pre class="programlisting">$ make RELOAD=1</pre><p>This pings the release and then runs <code class="literal">c:lm()</code>. The release
 must have been built with <code class="literal">{extended_start_script, true}</code>
 in <code class="literal">relx.config</code>, which is what the <code class="literal">relx.config</code> template
-does. The build fails if the node cannot be reached.</p><p><code class="literal">RELOAD=1</code> is currently not available on Windows.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_upgrading_a_release"></a>11.6. Upgrading a release</h2></div></div></div><p>Erlang.mk provides a <code class="literal">relup</code> target for generating release
+does. The build fails if the node cannot be reached.</p><p><code class="literal">RELOAD=1</code> is currently not available on Windows.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_upgrading_a_release"></a>12.6. Upgrading a release</h2></div></div></div><p>Erlang.mk provides a <code class="literal">relup</code> target for generating release
 upgrades. Release upgrades allow updating the code and the
 state of a running release without restarting it.</p><p>Once your changes are done, you need to update the version
 of the application(s) that will be updated. You also need
