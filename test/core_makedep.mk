@@ -91,6 +91,34 @@ else
 	$t grep COMPILE_FIRST $(APP)/$(APP).d | grep -q core/human
 endif
 
+core-makedep-import-excluded: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Generate .erl files where girl imports an excluded module"
+	$t printf "%s\n" "-module(boy)." "-export([live/0])." "live() -> ok." > $(APP)/src/boy.erl
+	$t printf "%s\n" "-module(girl)." "-import(boy,[live/0])." > $(APP)/src/girl.erl
+
+	$i "Exclude boy from the compilation"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ERLC_EXCLUDE = boy\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the excluded module was not compiled"
+	$t test ! -e $(APP)/ebin/boy.beam
+	$t test -f $(APP)/ebin/girl.beam
+
+	$i "Confirm makedep kept the excluded source as a prerequisite"
+ifeq ($(ERLC_PER_FILE),1)
+	$t grep -q "ebin/girl.beam: src/boy.erl" $(APP)/$(APP).d
+else
+	$t grep -q "src/girl.erl:: src/boy.erl" $(APP)/$(APP).d
+endif
+
 core-makedep-non-usascii-paths: NON_USASCII_DIR = $(APP)/héhé
 core-makedep-non-usascii-paths: init
 

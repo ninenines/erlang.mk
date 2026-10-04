@@ -276,14 +276,19 @@ define makedep.erl
 				string:join(DirSubname ++ [atom_to_list(Target)], "/")
 		end
 	end,
+	Exclude = lists:usort(string:tokens("$(ERLC_EXCLUDE_PATHS)", " ")),
 	PerFile = "$(ERLC_PER_FILE)" =:= "1",
 	Beam = fun(File) ->
 		"ebin/" ++ filename:basename(File, ".erl") ++ ".beam"
 	end,
 	Prereq = fun(Dep) ->
-		case lists:keyfind(Dep, 2, Modules) of
-			false -> Dep;
-			_ -> Beam(Dep)
+		case lists:member(Dep, Exclude) of
+			true -> Dep;
+			false ->
+				case lists:keyfind(Dep, 2, Modules) of
+					false -> Dep;
+					_ -> Beam(Dep)
+				end
 		end
 	end,
 	Output0 = [
