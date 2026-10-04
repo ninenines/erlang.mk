@@ -85,7 +85,11 @@ core-makedep-import: init
 	$t test -f $(APP)/ebin/human.beam
 
 	$i "Confirm the file was added by makedep"
+ifdef ERLC_PER_FILE
+	$t grep -q "ebin/boy.beam: ebin/human.beam" $(APP)/$(APP).d
+else
 	$t grep COMPILE_FIRST $(APP)/$(APP).d | grep -q core/human
+endif
 
 core-makedep-non-usascii-paths: NON_USASCII_DIR = $(APP)/héhé
 core-makedep-non-usascii-paths: init

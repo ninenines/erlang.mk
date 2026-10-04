@@ -99,6 +99,16 @@ core-app-asn1: init
 
 	$i "Touch one .asn1 file; check that only required files are rebuilt"
 # The use_cap.erl gets touched because of its dependency to CAP.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/CAP.beam \
+		$(APP)/ebin/use_cap.beam \
+		$(APP)/include/CAP.asn1db \
+		$(APP)/include/CAP.hrl \
+		$(APP)/src/CAP.erl | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
@@ -108,6 +118,7 @@ core-app-asn1: init
 		$(APP)/include/CAP.hrl \
 		$(APP)/src/CAP.erl \
 		$(APP)/src/use_cap.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/asn1/CAP.asn1
 	$t $(SLEEP)
@@ -287,7 +298,7 @@ core-app-compile-first: init
 	$t echo "-module(first)." > $(APP)/src/first.erl
 
 	$i "Define COMPILE_FIRST"
-	$t echo "COMPILE_FIRST = first" >> $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "COMPILE_FIRST = first\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -314,7 +325,7 @@ core-app-compile-first-sub-directory: init
 	$t echo "-module(first)." > $(APP)/src/sub/first.erl
 
 	$i "Define COMPILE_FIRST with a module in a sub-directory"
-	$t echo "COMPILE_FIRST = sub/first" >> $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "COMPILE_FIRST = sub/first\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -408,7 +419,7 @@ core-app-erlc-exclude: init
 	$t echo "-module(girl)." > $(APP)/src/girl.erl
 
 	$i "Exclude boy.erl from the compilation"
-	$t echo "ERLC_EXCLUDE = boy" >> $(APP)/Makefile
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ERLC_EXCLUDE = boy\n"}' $(APP)/Makefile
 
 	$i "Build the application"
 	$t $(MAKE) -C $(APP) $v
@@ -709,11 +720,18 @@ core-app-generate-erl-include: init
 		halt()"
 
 	$i "Touch the .hrl file; check that only required files are rebuilt"
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/generated.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/generated.beam \
 		$(APP)/src/generated.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/include/included.hrl
 	$t $(SLEEP)
@@ -872,11 +890,18 @@ core-app-hrl: init
 
 	$i "Touch one .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/include/red.hrl
 	$t $(SLEEP)
@@ -962,11 +987,18 @@ core-app-hrl-recursive: init
 
 	$i "Touch the deepest .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl and pill.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/include/pill.hrl
 	$t $(SLEEP)
@@ -1084,6 +1116,14 @@ core-app-mib: init
 
 	$i "Touch one .mib file; check that only required files are rebuilt"
 # The use_v1.erl gets touched because of its dependency to EX1-MIB.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_v1.beam \
+		$(APP)/include/EX1-MIB.hrl \
+		$(APP)/priv/mibs/EX1-MIB.bin | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
@@ -1091,6 +1131,7 @@ core-app-mib: init
 		$(APP)/include/EX1-MIB.hrl \
 		$(APP)/priv/mibs/EX1-MIB.bin \
 		$(APP)/src/use_v1.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/mibs/EX1-MIB.mib
 	$t $(SLEEP)
@@ -1243,10 +1284,16 @@ core-app-no-makedep: init
 
 	$i "Touch one .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/include/red.hrl
 	$t $(SLEEP)
@@ -1264,11 +1311,18 @@ core-app-no-makedep: init
 
 	$i "Touch one .hrl file; disable NO_MAKEDEP and check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/include/red.hrl
 	$t $(SLEEP)
@@ -1594,11 +1648,17 @@ core-app-xrl-include: init
 		halt()"
 
 	$i "Touch a .hrl file included directly; check that only required files are rebuilt"
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/xfl_lexer.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xfl_lexer.beam \
 		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/src/typechecks.hrl
 	$t $(SLEEP)
@@ -1615,11 +1675,17 @@ core-app-xrl-include: init
 		halt()"
 
 	$i "Touch a .hrl file included indirectly; check that only required files are rebuilt"
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/xfl_lexer.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/xfl_lexer.beam \
 		$(APP)/src/xfl_lexer.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/src/errvals.hrl
 	$t $(SLEEP)
@@ -1903,11 +1969,17 @@ core-app-yrl-include: init
 		halt()"
 
 	$i "Touch the .hrl file included; check that only required files are rebuilt"
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/core_parse.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/core_parse.beam \
 		$(APP)/src/core_parse.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/src/core_parse.hrl
 	$t $(SLEEP)
@@ -2023,11 +2095,18 @@ core-app-hrl-include-lib: init
 
 	$i "Touch one .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/include/red.hrl
 	$t $(SLEEP)
@@ -2113,11 +2192,18 @@ core-app-hrl-include-lib-recursive: init
 
 	$i "Touch the deepest .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl and pill.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/$(APP).d \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/include/pill.hrl
 	$t $(SLEEP)
@@ -2212,11 +2298,17 @@ core-app-hrl-multiapps-include-lib: init
 
 	$i "Touch one .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/apps/my_app/ebin/my_app.app \
+		$(APP)/apps/my_app/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/apps/my_app/my_app.d \
 		$(APP)/apps/my_app/ebin/my_app.app \
 		$(APP)/apps/my_app/ebin/use_red.beam \
 		$(APP)/apps/my_app/src/use_red.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/apps/my_lib/include/red.hrl
 	$t $(SLEEP)
@@ -2316,11 +2408,17 @@ core-app-hrl-multiapps-include-lib-recursive: init
 
 	$i "Touch one .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/apps/my_app/ebin/my_app.app \
+		$(APP)/apps/my_app/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/apps/my_app/my_app.d \
 		$(APP)/apps/my_app/ebin/my_app.app \
 		$(APP)/apps/my_app/ebin/use_red.beam \
 		$(APP)/apps/my_app/src/use_red.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/apps/my_lib/include/pill.hrl
 	$t $(SLEEP)
@@ -2409,11 +2507,17 @@ core-app-hrl-include-lib-src: init
 
 	$i "Touch one .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/src/red.hrl
 	$t $(SLEEP)
@@ -2498,11 +2602,17 @@ core-app-hrl-include-lib-src-recursive: init
 
 	$i "Touch the deepest .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl and pill.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/ebin/$(APP).app \
+		$(APP)/ebin/use_red.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/$(APP).d \
 		$(APP)/ebin/$(APP).app \
 		$(APP)/ebin/use_red.beam \
 		$(APP)/src/use_red.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/src/pill.hrl
 	$t $(SLEEP)
@@ -2590,11 +2700,17 @@ ifndef LEGACY
 endif
 
 	$i "Touch cowlib .hrl file; check that only required files are rebuilt"
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/apps/my_app/ebin/my_app.app \
+		$(APP)/apps/my_app/ebin/boy.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/apps/my_app/my_app.d \
 		$(APP)/apps/my_app/ebin/my_app.app \
 		$(APP)/apps/my_app/ebin/boy.beam \
 		$(APP)/apps/my_app/src/boy.erl | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/deps/cowlib/include/cow_inline.hrl
 	$t $(SLEEP)
@@ -2672,8 +2788,13 @@ core-app-hrl-include-loop: init
 	$t ! $(MAKE) -C $(APP) $v
 
 	$i "Check .d file"
+ifdef ERLC_PER_FILE
+	$t grep -q "ebin/use_blue.beam: include/blue.hrl include/red.hrl" $(APP)/$(APP).d
+	$t grep -q "ebin/use_red.beam: include/blue.hrl include/red.hrl" $(APP)/$(APP).d
+else
 	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+endif
 
 core-app-hrl-include_lib-loop: init
 
@@ -2695,8 +2816,13 @@ core-app-hrl-include_lib-loop: init
 	$t ! $(MAKE) -C $(APP) $v
 
 	$i "Check .d file"
+ifdef ERLC_PER_FILE
+	$t grep -q "ebin/use_blue.beam: include/blue.hrl include/red.hrl" $(APP)/$(APP).d
+	$t grep -q "ebin/use_red.beam: include/blue.hrl include/red.hrl" $(APP)/$(APP).d
+else
 	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+endif
 
 core-app-hrl-include-loop-define-protected: init
 
@@ -2718,8 +2844,13 @@ core-app-hrl-include-loop-define-protected: init
 	$t ! $(MAKE) -C $(APP) $v ; ret=$$?
 
 	$i "Check .d file"
+ifdef ERLC_PER_FILE
+	$t grep -q "ebin/use_blue.beam: include/blue.hrl include/red.hrl" $(APP)/$(APP).d
+	$t grep -q "ebin/use_red.beam: include/blue.hrl include/red.hrl" $(APP)/$(APP).d
+else
 	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+endif
 
 core-app-hrl-include_lib-loop-define-protected: init
 
@@ -2741,8 +2872,13 @@ core-app-hrl-include_lib-loop-define-protected: init
 	$t $(MAKE) -C $(APP) $v ; ret=$$?
 
 	$i "Check .d file"
+ifdef ERLC_PER_FILE
+	$t grep -q "ebin/use_blue.beam: include/blue.hrl include/red.hrl" $(APP)/$(APP).d
+	$t grep -q "ebin/use_red.beam: include/blue.hrl include/red.hrl" $(APP)/$(APP).d
+else
 	$t grep -q "src/use_blue.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
 	$t grep -q "src/use_red.erl:: include/blue.hrl include/red.hrl; @touch" $(APP)/$(APP).d
+endif
 
 core-app-hrl-multiapps-include-loop-define-protected: init
 
@@ -2788,6 +2924,12 @@ core-app-hrl-multiapps-include-loop-define-protected: init
 
 	$i "Touch one .hrl file; check that only required files are rebuilt"
 # The use_red.erl gets touched because of its dependency to red.hrl.
+ifdef ERLC_PER_FILE
+	$t printf "%s\n" \
+		$(APP)/apps/my_app/ebin/my_app.app \
+		$(APP)/apps/my_app/ebin/use_red.beam \
+		$(APP)/apps/my_app/ebin/use_blue.beam | sort > $(APP)/EXPECT
+else
 	$t printf "%s\n" \
 		$(APP)/apps/my_app/my_app.d \
 		$(APP)/apps/my_app/ebin/my_app.app \
@@ -2795,6 +2937,7 @@ core-app-hrl-multiapps-include-loop-define-protected: init
 		$(APP)/apps/my_app/src/use_red.erl \
 		$(APP)/apps/my_app/src/use_blue.erl \
 		$(APP)/apps/my_app/ebin/use_blue.beam | sort > $(APP)/EXPECT
+endif
 	$t $(SLEEP)
 	$t touch $(APP)/apps/my_lib/include/red.hrl
 	$t $(SLEEP)

@@ -18,24 +18,24 @@
             was added for automatic code reloading with
             `make shell`.
 
-2026/09/30: `hex-user-create` and `hex-key-add` were removed.
+2026/10/04: `hex-user-create` and `hex-key-add` were removed.
             Hex no longer accepts the HTTP Basic authentication
             those targets used to create an account and an API key.
             Create the key on Hex. Support is now documented
             in the user guide.
 
-2026/10/01: New `make tree` command prints a human-readable
+2026/10/04: New `make tree` command prints a human-readable
             dependency tree.
 
-2026/10/02: Erlang.mk now supports only the current Erlang/OTP
+2026/10/04: Erlang.mk now supports only the current Erlang/OTP
             release and the two releases before it. For example,
             when Erlang/OTP 29 is the latest release, the supported
             releases are Erlang/OTP 29, 28, and 27.
 
-2026/10/02: The `hg` and `svn` fetch methods were removed.
+2026/10/04: The `hg` and `svn` fetch methods were removed.
             Use Git or Hex or define a custom fetch method.
 
-2026/10/02: Fetching a Git, git-subfolder or Hex
+2026/10/04: Fetching a Git, git-subfolder or Hex
             dependency writes `lock.mk`. The file records
             `dep_<name>` and `dep_<name>_commit` inside
             `ifdef ERLANG_MK_LOCK`, including dependencies of
@@ -47,3 +47,8 @@
             `lock.mk` in place. A git-submodule dependency is not
             recorded. Running make inside a dependency writes that
             dependency's own `lock.mk`.
+
+2026/10/04: Per-file erlc compilation can be enabled via
+            `ERLC_PER_FILE=1`. This feature is currently
+            considered experimental. Make sure to `distclean`
+            before trying it.
