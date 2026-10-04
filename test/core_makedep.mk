@@ -85,7 +85,7 @@ core-makedep-import: init
 	$t test -f $(APP)/ebin/human.beam
 
 	$i "Confirm the file was added by makedep"
-ifdef ERLC_PER_FILE
+ifeq ($(ERLC_PER_FILE),1)
 	$t grep -q "ebin/boy.beam: ebin/human.beam" $(APP)/$(APP).d
 else
 	$t grep COMPILE_FIRST $(APP)/$(APP).d | grep -q core/human

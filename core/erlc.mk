@@ -12,8 +12,8 @@ COMPILE_FIRST_PATHS = $(addprefix src/,$(addsuffix .erl,$(COMPILE_FIRST)))
 ERLC_EXCLUDE ?=
 ERLC_EXCLUDE_PATHS = $(addprefix src/,$(addsuffix .erl,$(ERLC_EXCLUDE)))
 
-# One Make target per Erlang source. Empty keeps a single erlc invocation.
-# Set before including erlang.mk.
+# One Make target per Erlang source when set to 1. Any other value
+# keeps a single erlc invocation. Set before including erlang.mk.
 ERLC_PER_FILE ?=
 
 ERLC_ASN1_OPTS ?=
@@ -276,7 +276,7 @@ define makedep.erl
 				string:join(DirSubname ++ [atom_to_list(Target)], "/")
 		end
 	end,
-	PerFile = "$(if $(ERLC_PER_FILE),true,false)" =:= "true",
+	PerFile = "$(ERLC_PER_FILE)" =:= "1",
 	Beam = fun(File) ->
 		"ebin/" ++ filename:basename(File, ".erl") ++ ".beam"
 	end,
@@ -325,7 +325,7 @@ endif
 $(PROJECT).d::
 	$(verbose) :
 
-ifneq ($(ERLC_PER_FILE),)
+ifeq ($(ERLC_PER_FILE),1)
 ERL_BEAM_FILES = $(addprefix ebin/,$(patsubst %.erl,%.beam,$(notdir $(filter-out $(ERLC_EXCLUDE_PATHS),$(ERL_FILES)))))
 CORE_BEAM_FILES = $(addprefix ebin/,$(patsubst %.core,%.beam,$(notdir $(filter-out $(ERLC_EXCLUDE_PATHS),$(CORE_FILES)))))
 COMPILE_FIRST_BEAMS = $(addprefix ebin/,$(patsubst %.erl,%.beam,$(notdir $(COMPILE_FIRST_PATHS))))
@@ -358,8 +358,8 @@ define validate_app_file
 	end
 endef
 
-ebin/$(PROJECT).app:: $(if $(ERLC_PER_FILE),$(ERL_BEAM_FILES) $(CORE_BEAM_FILES),$(ERL_FILES) $(CORE_FILES)) $(wildcard src/$(PROJECT).app.src) $(EX_FILES) $(HEEX_FILES) $(MAKEFILE_CHANGE)
-ifeq ($(ERLC_PER_FILE),)
+ebin/$(PROJECT).app:: $(if $(filter 1,$(ERLC_PER_FILE)),$(ERL_BEAM_FILES) $(CORE_BEAM_FILES),$(ERL_FILES) $(CORE_FILES)) $(wildcard src/$(PROJECT).app.src) $(EX_FILES) $(HEEX_FILES) $(MAKEFILE_CHANGE)
+ifneq ($(ERLC_PER_FILE),1)
 	$(eval FILES_TO_COMPILE := $(filter-out $(EX_FILES) $(HEEX_FILES) src/$(PROJECT).app.src,$?))
 	$(if $(filter $(MAKEFILE_CHANGE),$?),$(call compile_erl,$(filter-out $(EX_FILES) src/$(PROJECT).app.src,$(ERL_FILES) $(CORE_FILES))),$(if $(strip $(FILES_TO_COMPILE)),$(call compile_erl,$(FILES_TO_COMPILE))))
 endif
