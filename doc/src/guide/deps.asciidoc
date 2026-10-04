@@ -484,7 +484,6 @@ example the hex fetch method will add
 `DEPS` as a tree. Each line shows the dependency name and
 its version:
 
-[source]
 ----
 myapp
 └── cowboy 2.7.0
