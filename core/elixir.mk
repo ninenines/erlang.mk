@@ -28,23 +28,50 @@ define hex_version_resolver.erl
 		application:ensure_all_started(ssl),
 		application:ensure_all_started(inets),
 		Config = $(hex_config.erl),
-		case hex_repo:get_package(Config, atom_to_binary(Name)) of
-			{ok, {200, _RespHeaders, Package}} ->
-				#{releases := List} = Package,
-				case lists:search(fun(#{version := Vsn}) ->
-					M = list_to_atom("Elixir.Version"),
-					F = list_to_atom("match?"),
-					M:F(Vsn, Req)
-				end, List) of
-					{value, #{version := Version}} ->
-						{ok, Version};
-					false ->
-						{error, nomatch}
-				end;
+		Ver = list_to_atom("Elixir.Version"),
+		Match = list_to_atom("match?"),
+		Compare = list_to_atom("compare"),
+		ParseReq = list_to_atom("parse_requirement!"),
+		ParseVer = list_to_atom("parse!"),
+		maybe
+			{ok, {200, _, Package}} ?=
+				hex_repo:get_package(Config, atom_to_binary(Name)),
+			#{releases := List} = Package,
+			ParsedReq = Ver:ParseReq(Req),
+			AllowPre = lists:any(fun
+				({_, _, _, Pre, Build}) ->
+					Pre =/= [] orelse Build =/= [];
+				(_) ->
+					false
+			end, maps:get(lexed, ParsedReq)),
+			Best = lists:foldl(fun(Release, Acc) ->
+				maybe
+					true ?= maps:get(retired, Release, false) =:= false,
+					Vsn = maps:get(version, Release),
+					Parsed = Ver:ParseVer(Vsn),
+					Pre = maps:get(pre, Parsed),
+					Build = maps:get(build, Parsed),
+					true ?= AllowPre orelse
+						((Pre =:= []) andalso (Build =:= nil orelse Build =:= [])),
+					true ?= Ver:Match(Vsn, Req),
+					true ?= case Acc of
+						none -> true;
+						{ok, BestVsn} ->
+							Ver:Compare(Vsn, BestVsn) =:= gt
+					end,
+					{ok, Vsn}
+				else
+					_ -> Acc
+				end
+			end, none, List),
+			{ok, Vsn} ?= Best
+		else
 			{ok, {Status, _, Errors}} ->
 				{error, Status, Errors};
 			{error, Reason} ->
-				{error, Reason}
+				{error, Reason};
+			none ->
+				{error, nomatch}
 		end
 	end,
 	HexVersion = fun(Name, Req) ->
