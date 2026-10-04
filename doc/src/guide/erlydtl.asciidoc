@@ -1,0 +1,75 @@
+[[erlydtl]]
+== ErlyDTL templates
+
+Erlang.mk builds https://github.com/erlydtl/erlydtl[ErlyDTL]
+templates automatically when `erlydtl` is a dependency:
+
+[source,make]
+DEPS = erlydtl
+
+Put templates under `templates/`. Any subdirectory is searched.
+`templates/hello.dtl` is compiled to `ebin/hello_dtl.beam`.
+
+A template error stops the build and prints the errors and warnings.
+
+=== Module name
+
+The module name is the template filename, lowercased, with `_dtl`
+appended. Directories are ignored, so `templates/mail/hello.dtl`
+is also `hello_dtl`. Two templates with the same filename would
+therefore conflict by default.
+
+Set `DTL_FULL_PATH` to include the path from the template directory.
+Slashes become underscores, so `templates/mail/hello.dtl` becomes
+`mail_hello_dtl`:
+
+[source,make]
+DTL_FULL_PATH = 1
+
+`DTL_PREFIX` is prepended to that name. It is empty by default.
+`DTL_SUFFIX` is appended and defaults to `_dtl`. An empty suffix
+keeps the template name as the module name:
+
+[source,make]
+DTL_PREFIX = number_
+DTL_SUFFIX =
+
+With those values, `templates/one.dtl` becomes `number_one`.
+
+`DTL_PATH` selects the directory. It defaults to `templates/`:
+
+[source,make]
+DTL_PATH = priv/templates
+
+=== Compiler options
+
+`DTL_OPTS` holds Erlang terms passed to `erlydtl:compile/3`.
+They are inserted before the options added by the plugin.
+The plugin always writes beams to `ebin/` and returns errors
+to the build.
+
+[source,make]
+DTL_OPTS = {auto_escape, false}
+
+Several terms are comma-separated:
+
+[source,make]
+DTL_OPTS = auto_escape, {libraries, [{myapp, myapp_lib}]}
+
+`{libraries, [...]}` is how a project registers its own ErlyDTL
+tags and filters. The https://github.com/erlydtl/erlydtl[ErlyDTL]
+documentation describes the template language and the compiler
+options.
+
+=== Includes and extends
+
+ErlyDTL inlines `{% include %}` and `{% extends %}` when it
+compiles a template. A quoted path is relative to the template
+being compiled. `{doc_root, Dir}` in `DTL_OPTS` selects another
+directory.
+
+Changing a template rebuilds it. Changing a template that others
+include or extend also rebuilds those templates, including
+templates reached through a chain of includes. An unchanged
+template is left as-is. Changing the Makefile recompiles the
+templates.
