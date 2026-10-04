@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
+<link rel="icon" href="/favicon.ico" sizes="any"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/res/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/res/favicon-16x16.png"/>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
 <title>Erlang.mk User Guide</title>
 <style type="text/css"><!--
 body{background:white;color:black;font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;justify-content:center;margin:0 auto;padding:0;width:600px}
