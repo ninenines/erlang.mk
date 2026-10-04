@@ -68,7 +68,7 @@ You can use the <code class="literal">bootstrap-rel</code> target for this purpo
 create a project that will build a release:</p><pre class="programlisting">$ make -f erlang.mk bootstrap-lib bootstrap-rel</pre><p>It is often very useful to keep the top-level project for
 commands useful during operations, and put the components
 of the system in separate applications that you will then
-depend on. Consult the <a class="link" href="deps.html" title="Chapter 9. Packages and dependencies">Packages and dependencies</a>
+depend on. Consult the <a class="link" href="deps.html" title="Chapter 8. Packages and dependencies">Packages and dependencies</a>
 chapter for more information.</p><p>When you run <code class="literal">make</code> from now on, Erlang.mk will compile your
 project and build the release:</p><pre class="programlisting">$ make</pre><p>The first time you run this command, Erlang.mk will fetch
 <span class="emphasis"><em>relx</em></span> (it is added to <code class="literal">REL_DEPS</code> when you bootstrap the

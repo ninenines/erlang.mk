@@ -33,8 +33,8 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="deps.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ports.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="hex"></a>Chapter 10. Publishing to Hex</h2></div></div></div><p>Erlang.mk can publish the current project to the
-<a class="ulink" href="https://hex.pm/" target="_top">Hex</a> package repository.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_api_key"></a>10.1. API key</h2></div></div></div><p>In order to publish on Hex you need an account and
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="deps.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="erlydtl.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="hex"></a>Chapter 9. Publishing to Hex</h2></div></div></div><p>Erlang.mk can publish the current project to the
+<a class="ulink" href="https://hex.pm/" target="_top">Hex</a> package repository.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_api_key"></a>9.1. API key</h2></div></div></div><p>In order to publish on Hex you need an account and
 an API key with publishing rights. Erlang.mk does
 not provide other authentication methods.</p><p>The API key can be provided one of two ways.</p><p>Erlang.mk will prompt for the key automatically
 by default:</p><pre class="programlisting">$ make hex-release-publish
@@ -45,7 +45,7 @@ as that variable will be visible in tools like <code class="literal">ps</code>:<
 $ HEX_SECRET=your-api-key make hex-release-publish
 
 # DO NOT:
-$ make hex-release-publish HEX_SECRET=your-api-key</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_package_metadata"></a>10.2. Package metadata</h2></div></div></div><p><code class="literal">PROJECT</code> is the package name. <code class="literal">PROJECT_VERSION</code> is the
+$ make hex-release-publish HEX_SECRET=your-api-key</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_package_metadata"></a>9.2. Package metadata</h2></div></div></div><p><code class="literal">PROJECT</code> is the package name. <code class="literal">PROJECT_VERSION</code> is the
 version. <code class="literal">PROJECT_DESCRIPTION</code> is the description sent
 to Hex.</p><p>Hex requires a license in the package metadata. Set it
 with <code class="literal">HEX_TARBALL_EXTRA_METADATA</code>. The value is Erlang
@@ -60,7 +60,7 @@ requirements. The requirement defaults to the version
 that was fetched. <code class="literal">hex_req_NAME</code> publishes a different
 requirement for that dependency:</p><pre class="programlisting">DEPS = cowlib
 dep_cowlib_commit = 2.13.0
-hex_req_cowlib = ~&gt; 2.13</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_package_contents"></a>10.3. Package contents</h2></div></div></div><p>By default the package will contain the Hex metadata
+hex_req_cowlib = ~&gt; 2.13</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_package_contents"></a>9.3. Package contents</h2></div></div></div><p>By default the package will contain the Hex metadata
 as well as the following files (if they exist):</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 <code class="literal">ebin/$(PROJECT).app</code>
 </li><li class="listitem">
@@ -86,27 +86,27 @@ all <code class="literal">LICENSE*</code> files
 </li><li class="listitem">
 all <code class="literal">README*</code> files
 </li></ul></div><p>Additional files can be included in the package, by
-appending to <code class="literal">HEX_TARBALL_FILES</code> after <code class="literal">include erlang.mk</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_publishing_a_release"></a>10.4. Publishing a release</h2></div></div></div><p><code class="literal">make hex-release-publish</code> publishes <code class="literal">PROJECT_VERSION</code>.
+appending to <code class="literal">HEX_TARBALL_FILES</code> after <code class="literal">include erlang.mk</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_publishing_a_release"></a>9.4. Publishing a release</h2></div></div></div><p><code class="literal">make hex-release-publish</code> publishes <code class="literal">PROJECT_VERSION</code>.
 The version must be new on Hex.</p><pre class="programlisting">$ make hex-release-publish</pre><p><code class="literal">make hex-release-replace</code> publishes over the version that
-is already on Hex.</p><pre class="programlisting">$ make hex-release-replace</pre><p><code class="literal">make hex-release-delete</code> removes <code class="literal">PROJECT_VERSION</code>.</p><pre class="programlisting">$ make hex-release-delete</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_retiring_a_release"></a>10.5. Retiring a release</h2></div></div></div><p><code class="literal">make hex-release-retire</code> retires a version. <code class="literal">HEX_VERSION</code>
+is already on Hex.</p><pre class="programlisting">$ make hex-release-replace</pre><p><code class="literal">make hex-release-delete</code> removes <code class="literal">PROJECT_VERSION</code>.</p><pre class="programlisting">$ make hex-release-delete</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_retiring_a_release"></a>9.5. Retiring a release</h2></div></div></div><p><code class="literal">make hex-release-retire</code> retires a version. <code class="literal">HEX_VERSION</code>
 selects the version and defaults to <code class="literal">PROJECT_VERSION</code>.
 <code class="literal">HEX_REASON</code> defaults to <code class="literal">invalid</code>. Hex also accepts
 <code class="literal">other</code>, <code class="literal">security</code>, <code class="literal">deprecated</code> and <code class="literal">renamed</code>.
 <code class="literal">HEX_MESSAGE</code> is the text sent with the retirement.</p><pre class="programlisting">$ make hex-release-retire HEX_REASON=security \
     HEX_MESSAGE="See the advisory"</pre><p><code class="literal">make hex-release-unretire</code> restores a retired version.
-<code class="literal">HEX_VERSION</code> again defaults to <code class="literal">PROJECT_VERSION</code>.</p><pre class="programlisting">$ make hex-release-unretire HEX_VERSION=0.1.0</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_creating_the_package_tarball"></a>10.6. Creating the package tarball</h2></div></div></div><p>The tarball is created automatically when publishing,
+<code class="literal">HEX_VERSION</code> again defaults to <code class="literal">PROJECT_VERSION</code>.</p><pre class="programlisting">$ make hex-release-unretire HEX_VERSION=0.1.0</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_creating_the_package_tarball"></a>9.6. Creating the package tarball</h2></div></div></div><p>The tarball is created automatically when publishing,
 but it can also be created manually.</p><p><code class="literal">make hex-tarball-create</code> writes the package tarball to
-<code class="literal">$(ERLANG_MK_TMP)/$(PROJECT).tar</code>.</p><pre class="programlisting">$ make hex-tarball-create</pre><p><code class="literal">HEX_TARBALL_OUTPUT_FILE</code> changes that path.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_documentation"></a>10.7. Documentation</h2></div></div></div><p><code class="literal">make hex-docs-publish</code> builds the project documentation,
+<code class="literal">$(ERLANG_MK_TMP)/$(PROJECT).tar</code>.</p><pre class="programlisting">$ make hex-tarball-create</pre><p><code class="literal">HEX_TARBALL_OUTPUT_FILE</code> changes that path.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_documentation"></a>9.7. Documentation</h2></div></div></div><p><code class="literal">make hex-docs-publish</code> builds the project documentation,
 packs the files under <code class="literal">doc/</code>, and uploads that archive
 for <code class="literal">PROJECT_VERSION</code>.</p><pre class="programlisting">$ make hex-docs-publish</pre><p><code class="literal">HEX_DOCS_DOC_DIR</code> changes the directory that is packed.
 It defaults to <code class="literal">doc/</code>.</p><pre class="programlisting">HEX_DOCS_DOC_DIR = documentation/</pre><p><code class="literal">make hex-docs-tarball-create</code> writes the docs tarball to
 <code class="literal">$(ERLANG_MK_TMP)/$(PROJECT)-docs.tar.gz</code>.</p><pre class="programlisting">$ make hex-docs-tarball-create</pre><p><code class="literal">make hex-docs-delete</code> removes the documentation for
 <code class="literal">HEX_VERSION</code>, or for <code class="literal">PROJECT_VERSION</code> when <code class="literal">HEX_VERSION</code>
-is not set.</p><pre class="programlisting">$ make hex-docs-delete HEX_VERSION=0.1.0</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_another_hex_api"></a>10.8. Another Hex API</h2></div></div></div><p>The targets publish to Hex.pm unless <code class="literal">HEX_CONFIG</code> says
+is not set.</p><pre class="programlisting">$ make hex-docs-delete HEX_VERSION=0.1.0</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_another_hex_api"></a>9.8. Another Hex API</h2></div></div></div><p>The targets publish to Hex.pm unless <code class="literal">HEX_CONFIG</code> says
 otherwise. The value is Erlang map syntax appended to
 <code class="literal">hex_core:default_config()</code>:</p><pre class="programlisting">define HEX_CONFIG
 #{api_url =&gt; &lt;&lt;"https://hex.example/api"&gt;&gt;}
-endef</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="deps.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ports.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+endef</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="deps.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="erlydtl.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>

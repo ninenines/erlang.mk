@@ -33,13 +33,13 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="erlydtl.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="hex.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="deps"></a>Chapter 9. Packages and dependencies</h2></div></div></div><p>Erlang.mk can fetch and compile the dependencies that your
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="building.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="hex.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="deps"></a>Chapter 8. Packages and dependencies</h2></div></div></div><p>Erlang.mk can fetch and compile the dependencies that your
 project requires. Erlang.mk improves upon the concepts
 introduced by Rebar, so they should be familiar to many
 seasoned Erlang developers.</p><p>This chapter will explain how to add dependencies to your
 project, how they are fetched and built, how to lock the
 versions that were fetched, and how to bundle them directly
-in a single repository.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_adding_dependencies_to_your_project"></a>9.1. Adding dependencies to your project</h2></div></div></div><p>List the applications you need in <code class="literal">DEPS</code>. Cowboy is in the
+in a single repository.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_adding_dependencies_to_your_project"></a>8.1. Adding dependencies to your project</h2></div></div></div><p>List the applications you need in <code class="literal">DEPS</code>. Cowboy is in the
 built-in package index, so the name alone is enough:</p><pre class="programlisting">DEPS = cowboy</pre><p>The next time you run <code class="literal">make</code>, Erlang.mk will fetch and compile
 Cowboy. Erlang.mk will also ensure Cowboy is available whenever
 you use the shell, run tests and any other operations.</p><p>You can pin the version without repeating the repository:</p><pre class="programlisting">DEPS = cowboy
@@ -84,7 +84,7 @@ may depend on an optional application being started. To ensure that an
 optional dependency is started before your application, the variable
 <code class="literal">OPTIONAL_DEPS</code> may be used:</p><pre class="programlisting">OPTIONAL_DEPS = quicer</pre><p>The top-level project can then decide whether to include this
 application by adding it to its <code class="literal">BUILD_DEPS</code> and including
-it in the release dependencies.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_fetch_methods"></a>9.1.1. Fetch methods</h3></div></div></div><p>Erlang.mk comes with a number of different fetch methods.
+it in the release dependencies.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_fetch_methods"></a>8.1.1. Fetch methods</h3></div></div></div><p>Erlang.mk comes with a number of different fetch methods.
 There are fetch methods that will work everywhere, and
 fetch methods that will only work in a given environment.</p><p>The following table lists all existing methods:</p><div class="informaltable"><table class="informaltable" cellpadding="4px" style="border-collapse: collapse;border-top: 3px solid #527bbd; border-bottom: 3px solid #527bbd; border-left: 3px solid #527bbd; border-right: 3px solid #527bbd; "><colgroup><col class="col_1" /><col class="col_2" /><col class="col_3" /></colgroup><thead><tr><th style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="left" valign="top"> Name           </th><th style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"> Format            </th><th style="border-bottom: 1px solid #527bbd; " align="center" valign="top"> Description</th></tr></thead><tbody><tr><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="left" valign="top"><p>git</p></td><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>git repo commit</p></td><td style="border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>Clone the Git repository and checkout the given version</p></td></tr><tr><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="left" valign="top"><p>git-subfolder</p></td><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>git repo commit subfolder</p></td><td style="border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>Clone the Git repository, checkout the given version and use one of its subfolders as a dependency</p></td></tr><tr><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="left" valign="top"><p>git-submodule</p></td><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>git-submodule</p></td><td style="border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>Initialize and update the Git submodule</p></td></tr><tr><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="left" valign="top"><p>cp</p></td><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>cp path/to/repo</p></td><td style="border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>Recursively copy a local directory</p></td></tr><tr><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="left" valign="top"><p>ln</p></td><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>ln path/to/repo</p></td><td style="border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>Symbolically link a local directory</p></td></tr><tr><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="left" valign="top"><p>hex</p></td><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>hex version [pkg]</p></td><td style="border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>Download the given project version from hex.pm</p></td></tr><tr><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="left" valign="top"><p>fail</p></td><td style="border-right: 1px solid #527bbd; border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>N/A</p></td><td style="border-bottom: 1px solid #527bbd; " align="center" valign="top"><p>Always fail, reserved for internal use</p></td></tr><tr><td style="border-right: 1px solid #527bbd; " align="left" valign="top"><p>default</p></td><td style="border-right: 1px solid #527bbd; " align="center" valign="top"><p>N/A</p></td><td style="" align="center" valign="top"><p>Reserved</p></td></tr></tbody></table></div><p>The <code class="literal">git</code> method has a repository and commit.
 You can use any valid commit, tag or branch in that repository
@@ -93,7 +93,7 @@ automatically initializes and updates submodules for dependencies,
 as long as they were added beforehand using <code class="literal">git submodule add</code>:</p><pre class="programlisting">dep_cowboy = git-submodule</pre><p>You can copy a directory from your machine using the <code class="literal">cp</code> method.
 It only takes the path to copy from:</p><pre class="programlisting">dep_cowboy = cp $(HOME)/ninenines/cowboy</pre><p>Finally, you can use a package from the
 <a class="ulink" href="https://hex.pm/" target="_top">Hex repository</a>:</p><pre class="programlisting">dep_cowboy = hex 2.19.0</pre><p>If the package on Hex has a different name than the application,
-you can provide it after the version:</p><pre class="programlisting">dep_uuid = hex 1.7.5 uuid_erl</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_custom_fetch_methods"></a>9.1.2. Custom fetch methods</h3></div></div></div><p>If none of the existing methods fit your use, you can simply
+you can provide it after the version:</p><pre class="programlisting">dep_uuid = hex 1.7.5 uuid_erl</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_custom_fetch_methods"></a>8.1.2. Custom fetch methods</h3></div></div></div><p>If none of the existing methods fit your use, you can simply
 define your own. Erlang.mk will consider all variables that
 are named as <code class="literal">dep_fetch_$(METHOD)</code> to be available fetch
 methods. You can do anything inside this variable, as long
@@ -103,12 +103,12 @@ become <span class="emphasis"><em>deps/cowboy</em></span>.</p><p>To give an exam
     git clone -q -n -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1); \
     cd $(DEPS_DIR)/$(call query_name,$1) &amp;&amp; git checkout -q $(call query_version_git,$1);
 endef</pre><p>Note that, like dependency information, this custom fetch method
-must be written before including <span class="emphasis"><em>erlang.mk</em></span>.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_built_in_package_index"></a>9.2. Built-in package index</h2></div></div></div><p>The index is only a handful of commonly used projects.
+must be written before including <span class="emphasis"><em>erlang.mk</em></span>.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_built_in_package_index"></a>8.2. Built-in package index</h2></div></div></div><p>The index is only a handful of commonly used projects.
 <code class="literal">make search</code> lists them; <code class="literal">make search q=cowboy</code> filters
 that list.</p><p>If you need a different fetch method or repository for an
 indexed package, for example a fork, set <code class="literal">dep_$(NAME)</code> as
 usual:</p><pre class="programlisting">DEPS = cowboy
-dep_cowboy = git https://github.com/essen/cowboy 2.19.0</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_how_deps_are_fetched_and_built"></a>9.3. How deps are fetched and built</h2></div></div></div><p>The order in which dependencies are fetched and built is well
+dep_cowboy = git https://github.com/essen/cowboy 2.19.0</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_how_deps_are_fetched_and_built"></a>8.3. How deps are fetched and built</h2></div></div></div><p>The order in which dependencies are fetched and built is well
 defined. This means that Erlang.mk will get the same applications
 regardless of the command or options being used.</p><p>In tree traversal terms, where the list of dependencies is a
 tree, Erlang.mk fetches everything using the pre-order traversal
@@ -154,7 +154,7 @@ The variable <code class="literal">FULL</code> is set, for example <code class="
   to your Makefile before including <span class="emphasis"><em>erlang.mk</em></span>.
 </li><li class="listitem">
 The file <code class="literal">$ERLANG_MK_TMP/dep_built/$dep</code> is removed.
-</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_fetching_and_listing_dependencies_only"></a>9.4. Fetching and listing dependencies only</h2></div></div></div><p>You can fetch all dependencies recursively without building anything,
+</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_fetching_and_listing_dependencies_only"></a>8.4. Fetching and listing dependencies only</h2></div></div></div><p>You can fetch all dependencies recursively without building anything,
 with the <code class="literal">make fetch-deps</code> command. It follows the same rules described
 in the section above.</p><p>You can list all dependencies recursively, again without building
 anything, with the <code class="literal">make list-deps</code> command. It will obviously need
@@ -188,7 +188,7 @@ by the <code class="literal">make list-*</code> commands.</p><p><code class="lit
 of dependencies in a Makefile or a script, you should use the content
 of those files directly instead. The reason is that <code class="literal">make fetch-*</code> and
 <code class="literal">make list-*</code> may have unwanted content in their output, such as actual
-fetching of dependencies.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependency_lock_2"></a>9.5. Dependency lock</h2></div></div></div><p>Fetching <code class="literal">git</code>, <code class="literal">git-subfolder</code> or <code class="literal">hex</code> dependencies
+fetching of dependencies.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependency_lock_2"></a>8.5. Dependency lock</h2></div></div></div><p>Fetching <code class="literal">git</code>, <code class="literal">git-subfolder</code> or <code class="literal">hex</code> dependencies
 writes <code class="literal">lock.mk</code> in the project directory when that fetch finishes.
 The file records the fetches that happened. Dependencies of
 dependencies, and dependencies of local dependencies, are written
@@ -247,7 +247,7 @@ when they are fetched. Pass <code class="literal">DEP_TYPES</code> to <code clas
 them, the same way as for <code class="literal">make fetch-deps</code>.</p><p>Removing a dependency from the Makefile leaves its lines in
 <code class="literal">lock.mk</code>. Delete those lines to drop the pin.</p><p>A build started from the top-level project writes the top-level
 <code class="literal">lock.mk</code>. Running <code class="literal">make</code> yourself inside a dependency writes
-that dependency’s own <code class="literal">lock.mk</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_querying_dependencies"></a>9.6. Querying dependencies</h2></div></div></div><p>You can obtain information about all dependencies with
+that dependency’s own <code class="literal">lock.mk</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_querying_dependencies"></a>8.6. Querying dependencies</h2></div></div></div><p>You can obtain information about all dependencies with
 the <code class="literal">make query-deps</code> family of commands:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 <code class="literal">make query-deps</code> will list dependencies found in <code class="literal">BUILD_DEPS</code>
   and <code class="literal">DEPS</code> recursively.
@@ -294,7 +294,7 @@ The dependency’s location after it has been fetched.
 not all fetch methods have a value for the <code class="literal">version</code>.</p><p>The value for <code class="literal">extra</code>, when available, will be formatted
 with the name of the information printed prefixed. For
 example the hex fetch method will add
-<code class="literal">package-name=uuid_erl</code> for the <code class="literal">uuid</code> application.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependency_tree_2"></a>9.7. Dependency tree</h2></div></div></div><p><code class="literal">make tree</code> prints the dependencies from <code class="literal">BUILD_DEPS</code> and
+<code class="literal">package-name=uuid_erl</code> for the <code class="literal">uuid</code> application.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependency_tree_2"></a>8.7. Dependency tree</h2></div></div></div><p><code class="literal">make tree</code> prints the dependencies from <code class="literal">BUILD_DEPS</code> and
 <code class="literal">DEPS</code> as a tree. Each line shows the dependency name and
 its version:</p><pre class="screen">myapp
 └── cowboy 2.7.0
@@ -303,7 +303,7 @@ its version:</p><pre class="screen">myapp
 Erlang.mk keeps a single checkout per name, so a later
 occurrence keeps the version from that line and does not
 repeat the children of the first checkout.</p><p><code class="literal">make tree</code> always prints the name and the version. Setting
-<code class="literal">QUERY</code> does not change this output.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_ignoring_unwanted_dependencies"></a>9.8. Ignoring unwanted dependencies</h2></div></div></div><p>Sometimes, you may want to ignore dependencies entirely.
+<code class="literal">QUERY</code> does not change this output.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_ignoring_unwanted_dependencies"></a>8.8. Ignoring unwanted dependencies</h2></div></div></div><p>Sometimes, you may want to ignore dependencies entirely.
 Not even fetch them. You may want to do this because a
 project you depend on depends on an application you do
 not need (like a dependency for building documentation
@@ -313,7 +313,7 @@ variable:</p><pre class="programlisting">IGNORE_DEPS += edown proper</pre><p>Thi
 building. It is therefore safe to write:</p><pre class="programlisting">IGNORE_DEPS += edown proper
 TEST_DEPS = proper</pre><p>The PropEr application will be fetched as intended when
 running <code class="literal">make tests</code> or <code class="literal">make check</code>. It will however
-not be fetched when running <code class="literal">make</code> or <code class="literal">make deps</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependencies_directory"></a>9.9. Dependencies directory</h2></div></div></div><p>Dependencies are fetched in <span class="emphasis"><em>$(DEPS_DIR)</em></span>. By default this is
+not be fetched when running <code class="literal">make</code> or <code class="literal">make deps</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dependencies_directory"></a>8.9. Dependencies directory</h2></div></div></div><p>Dependencies are fetched in <span class="emphasis"><em>$(DEPS_DIR)</em></span>. By default this is
 the <span class="emphasis"><em>deps</em></span> directory. You can change this default, but you
 should only do so if it was not defined previously. Erlang.mk
 uses this variable to tell dependencies where to fetch their
@@ -322,7 +322,7 @@ if you know you will never use this project as a dependency,
 <code class="literal">=</code> will work. But to avoid it biting you later on, do this:</p><pre class="programlisting">DEPS_DIR ?= $(CURDIR)/libs</pre><p>The <code class="literal">$(CURDIR)</code> part is important, otherwise dependencies of
 dependencies will be fetched in the wrong directory.</p><p>Erlang.mk will also export the <code class="literal">REBAR_DEPS_DIR</code> variable for
 compatibility with Rebar build tools, as long as they are
-recent enough.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_many_applications_in_one_repository"></a>9.10. Many applications in one repository</h2></div></div></div><p>In addition to the dependencies that are fetched, Erlang.mk
+recent enough.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_many_applications_in_one_repository"></a>8.10. Many applications in one repository</h2></div></div></div><p>In addition to the dependencies that are fetched, Erlang.mk
 also allows you to have dependencies local to your repository.
 This kind of layout is sometimes called multi-application
 repositories, or repositories with multiple applications.</p><p>They work exactly the same as remote dependencies, except:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
@@ -355,7 +355,7 @@ command will create the necessary directories and bootstrap
 the application.</p><p>For example, to create a full fledged OTP application as
 a local dependency:</p><pre class="programlisting">$ make new-app in=webchat</pre><p>Or, the same as an OTP library:</p><pre class="programlisting">$ make new-lib in=webchat</pre><p>Templates also work with local dependencies, from the root
 directory of the project. You do need however to tell
-Erlang.mk to create the files in the correct application:</p><pre class="programlisting">$ make new t=gen_server n=my_server in=webchat</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_repositories_with_no_application_at_the_root_level"></a>9.11. Repositories with no application at the root level</h2></div></div></div><p>It’s possible to use Erlang.mk with only applications in
+Erlang.mk to create the files in the correct application:</p><pre class="programlisting">$ make new t=gen_server n=my_server in=webchat</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_repositories_with_no_application_at_the_root_level"></a>8.11. Repositories with no application at the root level</h2></div></div></div><p>It’s possible to use Erlang.mk with only applications in
 <span class="emphasis"><em>$(APPS_DIR)</em></span>, and nothing at the root of the repository.
 Just create a folder, put the <span class="emphasis"><em>erlang.mk</em></span> file in it,
 write a Makefile that includes it, and start creating
@@ -363,7 +363,7 @@ your applications.</p><p>Similarly, it’s possible to have a repository with on
 dependencies found in <span class="emphasis"><em>$(DEPS_DIR)</em></span>. You just need to
 create a Makefile and specify the dependencies you want.
 This allows you to create a repository for handling the
-building of releases, for example.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_autopatch"></a>9.12. Autopatch</h2></div></div></div><p>Erlang.mk will automatically patch all the dependencies it
+building of releases, for example.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_autopatch"></a>8.12. Autopatch</h2></div></div></div><p>Erlang.mk will automatically patch all the dependencies it
 fetches. It needs to do this to ensure that the dependencies
 become compatible with not only Erlang.mk, but also with
 the version of Erlang.mk that is currently used.</p><p>When fetching a dependency, the following operations are
@@ -406,7 +406,7 @@ It can also be used to add compiler options, for example:</p><pre class="program
     printf "\nERLC_OPTS += -DWITH_JIFFY\n" &gt;&gt; $(DEPS_DIR)/couchbeam/Makefile</pre><p>The commands will run before autopatch when the target is
 defined before including <span class="emphasis"><em>erlang.mk</em></span>, and after otherwise.</p><p>You can disable the replacing of the <span class="emphasis"><em>erlang.mk</em></span> file by
 defining the <code class="literal">NO_AUTOPATCH_ERLANG_MK</code> variable:</p><pre class="programlisting">NO_AUTOPATCH_ERLANG_MK = 1</pre><p>You can also disable autopatch entirely for a few select
-projects using the <code class="literal">NO_AUTOPATCH</code> variable:</p><pre class="programlisting">NO_AUTOPATCH = cowboy ranch cowlib</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dealing_with_duplicate_modules"></a>9.13. Dealing with duplicate modules</h2></div></div></div><p>When there are duplicate modules found in both applications
+projects using the <code class="literal">NO_AUTOPATCH</code> variable:</p><pre class="programlisting">NO_AUTOPATCH = cowboy ranch cowlib</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_dealing_with_duplicate_modules"></a>8.13. Dealing with duplicate modules</h2></div></div></div><p>When there are duplicate modules found in both applications
 and their dependencies, some tasks may fail. Erlang expects
 modules to be unique in general.</p><p>When the duplicates are found in dependencies, you will need
 to remove one of the duplicates at fetch time. To do so, you
@@ -415,14 +415,14 @@ can add a rule similar to this to your Makefile before including
 
 deps:: $(DEPS_DIR)/cowlib
     $(verbose) rm -f $(DEPS_DIR)/cowlib/src/cow_ws.erl</pre><p>This must be done from the application that has this dependency.
-Only define the <code class="literal">DEPS_DIR</code> variable if necessary.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_skipping_deps"></a>9.14. Skipping deps</h2></div></div></div><p>It is possible to temporarily skip all dependency operations.
+Only define the <code class="literal">DEPS_DIR</code> variable if necessary.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_skipping_deps"></a>8.14. Skipping deps</h2></div></div></div><p>It is possible to temporarily skip all dependency operations.
 This is done by defining the <code class="literal">SKIP_DEPS</code> variable. Use cases
 include being somewhere with no connection to download them,
 or perhaps a peculiar setup.</p><p>A typical usage would be:</p><pre class="programlisting">$ make SKIP_DEPS=1</pre><p>When the variable is defined:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 Dependencies will not be compiled or downloaded when required
 </li><li class="listitem">
 The dependency directory <span class="emphasis"><em>$(DEPS_DIR)</em></span> will not be removed on <code class="literal">make distclean</code>
-</li></ul></div><p>This variable only applies to remote dependencies.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="erlydtl.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="hex.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+</li></ul></div><p>This variable only applies to remote dependencies.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="building.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="hex.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>

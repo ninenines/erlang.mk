@@ -33,9 +33,9 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="building.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="deps.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="erlydtl"></a>Chapter 8. ErlyDTL templates</h2></div></div></div><p>Erlang.mk builds <a class="ulink" href="https://github.com/erlydtl/erlydtl" target="_top">ErlyDTL</a>
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="hex.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ports.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="erlydtl"></a>Chapter 10. ErlyDTL templates</h2></div></div></div><p>Erlang.mk builds <a class="ulink" href="https://github.com/erlydtl/erlydtl" target="_top">ErlyDTL</a>
 templates automatically when <code class="literal">erlydtl</code> is a dependency:</p><pre class="programlisting">DEPS = erlydtl</pre><p>Put templates under <code class="literal">templates/</code>. Any subdirectory is searched.
-<code class="literal">templates/hello.dtl</code> is compiled to <code class="literal">ebin/hello_dtl.beam</code>.</p><p>A template error stops the build and prints the errors and warnings.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_module_name"></a>8.1. Module name</h2></div></div></div><p>The module name is the template filename, lowercased, with <code class="literal">_dtl</code>
+<code class="literal">templates/hello.dtl</code> is compiled to <code class="literal">ebin/hello_dtl.beam</code>.</p><p>A template error stops the build and prints the errors and warnings.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_module_name"></a>10.1. Module name</h2></div></div></div><p>The module name is the template filename, lowercased, with <code class="literal">_dtl</code>
 appended. Directories are ignored, so <code class="literal">templates/mail/hello.dtl</code>
 is also <code class="literal">hello_dtl</code>. Two templates with the same filename would
 therefore conflict by default.</p><p>Set <code class="literal">DTL_FULL_PATH</code> to include the path from the template directory.
@@ -43,20 +43,20 @@ Slashes become underscores, so <code class="literal">templates/mail/hello.dtl</c
 <code class="literal">mail_hello_dtl</code>:</p><pre class="programlisting">DTL_FULL_PATH = 1</pre><p><code class="literal">DTL_PREFIX</code> is prepended to that name. It is empty by default.
 <code class="literal">DTL_SUFFIX</code> is appended and defaults to <code class="literal">_dtl</code>. An empty suffix
 keeps the template name as the module name:</p><pre class="programlisting">DTL_PREFIX = number_
-DTL_SUFFIX =</pre><p>With those values, <code class="literal">templates/one.dtl</code> becomes <code class="literal">number_one</code>.</p><p><code class="literal">DTL_PATH</code> selects the directory. It defaults to <code class="literal">templates/</code>:</p><pre class="programlisting">DTL_PATH = priv/templates</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_compiler_options"></a>8.2. Compiler options</h2></div></div></div><p><code class="literal">DTL_OPTS</code> holds Erlang terms passed to <code class="literal">erlydtl:compile/3</code>.
+DTL_SUFFIX =</pre><p>With those values, <code class="literal">templates/one.dtl</code> becomes <code class="literal">number_one</code>.</p><p><code class="literal">DTL_PATH</code> selects the directory. It defaults to <code class="literal">templates/</code>:</p><pre class="programlisting">DTL_PATH = priv/templates</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_compiler_options"></a>10.2. Compiler options</h2></div></div></div><p><code class="literal">DTL_OPTS</code> holds Erlang terms passed to <code class="literal">erlydtl:compile/3</code>.
 They are inserted before the options added by the plugin.
 The plugin always writes beams to <code class="literal">ebin/</code> and returns errors
 to the build.</p><pre class="programlisting">DTL_OPTS = {auto_escape, false}</pre><p>Several terms are comma-separated:</p><pre class="programlisting">DTL_OPTS = auto_escape, {libraries, [{myapp, myapp_lib}]}</pre><p><code class="literal">{libraries, [...]}</code> is how a project registers its own ErlyDTL
 tags and filters. The <a class="ulink" href="https://github.com/erlydtl/erlydtl" target="_top">ErlyDTL</a>
 documentation describes the template language and the compiler
-options.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_includes_and_extends"></a>8.3. Includes and extends</h2></div></div></div><p>ErlyDTL inlines <code class="literal">{% include %}</code> and <code class="literal">{% extends %}</code> when it
+options.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_includes_and_extends"></a>10.3. Includes and extends</h2></div></div></div><p>ErlyDTL inlines <code class="literal">{% include %}</code> and <code class="literal">{% extends %}</code> when it
 compiles a template. A quoted path is relative to the template
 being compiled. <code class="literal">{doc_root, Dir}</code> in <code class="literal">DTL_OPTS</code> selects another
 directory.</p><p>Changing a template rebuilds it. Changing a template that others
 include or extend also rebuilds those templates, including
 templates reached through a chain of includes. An unchanged
 template is left as-is. Changing the Makefile recompiles the
-templates.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="building.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="deps.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+templates.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="hex.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ports.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>

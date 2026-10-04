@@ -33,7 +33,7 @@ div.navfooter{margin-bottom:1em}
 </header>
 <main>
 
-<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="hex.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="relx.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ports"></a>Chapter 11. NIFs and port drivers</h2></div></div></div><p>Erlang.mk can not only build Erlang projects, but also the C code
+<div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="erlydtl.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="relx.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ports"></a>Chapter 11. NIFs and port drivers</h2></div></div></div><p>Erlang.mk can not only build Erlang projects, but also the C code
 that some projects come with, like NIFs and port drivers.</p><p>There are two ways to build the C code: using a custom Makefile,
 or making Erlang.mk do it directly. The C code will be built
 as needed when you run <code class="literal">make</code>.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_generating_a_nif_skeleton"></a>11.1. Generating a NIF skeleton</h2></div></div></div><p>Erlang.mk can generate a NIF module and the matching C
@@ -115,7 +115,7 @@ app-c_src: export CPPFLAGS +=
 app-c_src: export LDFLAGS +=
 app-c_src: export LDLIBS +=</pre><p>Appending an empty string to the existing value is necessary
 because Makefiles expect an assignment for target-specific
-exports. Alternatively you can set a new value:</p><pre class="programlisting">app-c_src: export CFLAGS = -O3</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="hex.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="relx.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
+exports. Alternatively you can set a new value:</p><pre class="programlisting">app-c_src: export CFLAGS = -O3</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="erlydtl.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="code.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="relx.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div>
 </main>
 </body>
 </html>

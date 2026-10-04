@@ -43,7 +43,7 @@ the same <span class="emphasis"><em>rebar.config</em></span> file).</p><div clas
 converts Rebar and Mix projects so Erlang.mk can build them.
 It essentially patches Rebar out and adds a Makefile to the
 project:</p><p><span class="emphasis"><em>Autopatch</em></span> is documented in more details in the
-<a class="link" href="deps.html" title="Chapter 9. Packages and dependencies">Packages and dependencies</a> chapter.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_projects_as_rebar_dependencies"></a>17.2. Erlang.mk projects as Rebar dependencies</h2></div></div></div><p>Erlang.mk projects can be made compatible with the Rebar family
+<a class="link" href="deps.html" title="Chapter 8. Packages and dependencies">Packages and dependencies</a> chapter.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_erlang_mk_projects_as_rebar_dependencies"></a>17.2. Erlang.mk projects as Rebar dependencies</h2></div></div></div><p>Erlang.mk projects can be made compatible with the Rebar family
 of build tools pretty easily, as Erlang.mk will generate
 all the files they require for building.</p><p>The Rebar family requires two files: a <span class="emphasis"><em>rebar.config</em></span> file
 containing compilation options and the list of dependencies,
@@ -57,7 +57,7 @@ same way as Erlang.mk.</p><p>Careful though! Different build tools have differen
 strategies. If some applications provide differing dependencies,
 they might be fetched differently by other build tools. You can
 use <code class="literal">make query-deps</code> to see what Erlang.mk would fetch; this
-is covered in the <a class="link" href="deps.html" title="Chapter 9. Packages and dependencies">Packages and dependencies</a> chapter.</p><p>You can automatically generate this file when you build
+is covered in the <a class="link" href="deps.html" title="Chapter 8. Packages and dependencies">Packages and dependencies</a> chapter.</p><p>You can automatically generate this file when you build
 your application, by making it a dependency of the <code class="literal">app</code>
 target:</p><pre class="programlisting">app:: rebar.config</pre><p>Don’t forget to commit the file when it changes!</p><p>If you run into other issues, it’s probably because you use a
 feature specific to Erlang.mk, like the <code class="literal">cp</code> fetch method.
