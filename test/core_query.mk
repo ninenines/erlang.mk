@@ -134,12 +134,12 @@ core-query-deps-no-duplicates: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add Cowboy 2.7.0 and Farwest master to DEPS"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy farwest\ndep_cowboy_commit = 2.7.0\ndep_farwest = git https://github.com/ninenines/farwest 017dc36b59f028e7014bad927e745a2c0b529018\n"}' $(APP)/Makefile
+	$i "Add Cowboy 2.7.0, Gun 2.7.0 and Farwest to DEPS"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy gun farwest\ndep_cowboy_commit = 2.7.0\ndep_gun_commit = 2.7.0\ndep_farwest = git https://github.com/ninenines/farwest 017dc36b59f028e7014bad927e745a2c0b529018\n"}' $(APP)/Makefile
 
 ifdef LEGACY
-	$i "Add Cowboy and Farwest to the applications key in the .app.src file"
-	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\t\tfarwest,\n"}' $(APP)/src/$(APP).app.src
+	$i "Add Cowboy, Gun and Farwest to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\t\tgun,\t\tfarwest,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Query the dependencies of $(APP)"
@@ -148,13 +148,14 @@ endif
 	$i "Confirm that the expected applications were found"
 	$t printf "%s\n" \
 		"$(APP): cowboy git https://github.com/ninenines/cowboy 2.7.0" \
+		"$(APP): gun git https://github.com/ninenines/gun 2.7.0" \
 		"$(APP): farwest git https://github.com/ninenines/farwest 017dc36b59f028e7014bad927e745a2c0b529018" \
 		"cowboy: cowlib git https://github.com/ninenines/cowlib 2.8.0" \
 		"cowboy: ranch git https://github.com/ninenines/ranch 1.7.1" \
+		"gun: cowlib git https://github.com/ninenines/cowlib 2.21.0" \
 		"farwest: cowlib git https://github.com/ninenines/cowlib master" \
 		"farwest: cowboy git https://github.com/ninenines/cowboy master" \
 		"farwest: gun git https://github.com/ninenines/gun master" \
-		"gun: cowlib git https://github.com/ninenines/cowlib 2.20.0" \
 		> $(APP)/expected-deps.txt
 	$t cmp $(APP)/expected-deps.txt $(APP)/.erlang.mk/query-deps.log
 
@@ -337,12 +338,12 @@ core-query-tree-already-listed: init
 	$t cp ../erlang.mk $(APP)/
 	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
 
-	$i "Add Cowboy 2.7.0 and Farwest master to DEPS"
-	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy farwest\ndep_cowboy_commit = 2.7.0\ndep_farwest = git https://github.com/ninenines/farwest 017dc36b59f028e7014bad927e745a2c0b529018\n"}' $(APP)/Makefile
+	$i "Add Cowboy 2.7.0, Gun 2.7.0 and Farwest to DEPS"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy gun farwest\ndep_cowboy_commit = 2.7.0\ndep_gun_commit = 2.7.0\ndep_farwest = git https://github.com/ninenines/farwest 017dc36b59f028e7014bad927e745a2c0b529018\n"}' $(APP)/Makefile
 
 ifdef LEGACY
-	$i "Add Cowboy and Farwest to the applications key in the .app.src file"
-	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\t\tfarwest,\n"}' $(APP)/src/$(APP).app.src
+	$i "Add Cowboy, Gun and Farwest to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowboy,\t\tgun,\t\tfarwest,\n"}' $(APP)/src/$(APP).app.src
 endif
 
 	$i "Print the dependency tree"
@@ -354,11 +355,12 @@ endif
 		"├── cowboy 2.7.0" \
 		"│   ├── cowlib 2.8.0" \
 		"│   └── ranch 1.7.1" \
+		"├── gun 2.7.0" \
+		"│   └── cowlib 2.21.0" \
 		"└── farwest 017dc36b59f028e7014bad927e745a2c0b529018" \
 		"    ├── cowlib master" \
 		"    ├── cowboy master" \
 		"    └── gun master" \
-		"        └── cowlib 2.20.0" \
 		> $(APP)/expected-tree.txt
 	$t cmp $(APP)/expected-tree.txt $(APP)/.erlang.mk/tree.log
 
