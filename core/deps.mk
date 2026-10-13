@@ -24,7 +24,7 @@ export REBAR_DEPS_DIR
 # When testing Erlang.mk and updating these, make sure
 # to delete test/test_rebar_git before running tests again.
 REBAR3_GIT ?= https://github.com/erlang/rebar3
-REBAR3_COMMIT ?= 619df55d9dab109cbd1b5d9ed1d45c93f5450e24 # 3.27.0
+REBAR3_COMMIT ?= 8723cb44fddb7ed66809d4dfbfc1da1ba6841456 # 3.27.3
 
 CACHE_DEPS ?= 0
 
@@ -925,7 +925,8 @@ define hex_get_tarball.erl
 		{ok, {Status, _, Errors}} ->
 			io:format("Error ~b: ~0p~n", [Status, Errors]),
 			halt(79);
-		_ ->
+		Error ->
+			io:format(standard_error, "Error: ~0p~n", [Error]),
 			halt(79)
 	end
 endef
