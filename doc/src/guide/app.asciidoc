@@ -114,7 +114,7 @@ information about what releases are and how they are generated.
 === Application resource file
 
 When building your application, Erlang.mk will generate the
-http://www.erlang.org/doc/man/app.html[application resource file].
+https://www.erlang.org/doc/apps/kernel/app.html[application resource file].
 This file is mandatory for all Erlang applications and is
 found in 'ebin/$(PROJECT).app'.
 
@@ -305,7 +305,7 @@ the build process and the resulting files.
 
 `ERLC_OPTS` can be used to pass some options to `erlc`, the Erlang
 compiler. Erlang.mk does not restrict any option. Please refer to
-the http://www.erlang.org/doc/man/erlc.html[erlc Manual] for the
+the https://www.erlang.org/doc/apps/erts/erlc_cmd.html[erlc Manual] for the
 full list.
 
 By default, Erlang.mk will set the following options:
@@ -338,7 +338,7 @@ ERLC_OPTS := $(filter-out -Werror,$(ERLC_OPTS))
 
 `ERLC_ASN1_OPTS` can be used to pass compiler options when compiling
 ASN.1 files.  Please refer to the
-http://erlang.org/doc/man/asn1ct.html[asn1ct manual] for the full list.
+https://www.erlang.org/doc/apps/asn1/asn1ct.html[asn1ct manual] for the full list.
 
 By default, Erlang.mk will leave this empty.
 

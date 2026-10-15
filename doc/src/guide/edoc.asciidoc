@@ -6,14 +6,14 @@ that generates documentation based on comments found in modules.
 
 === Writing EDoc comments
 
-The http://www.erlang.org/doc/apps/edoc/chapter.html[EDoc user guide]
+The https://www.erlang.org/doc/apps/edoc/chapter.html[EDoc user guide]
 explains everything you need to know about EDoc comments.
 
 === Configuration
 
 The `EDOC_OPTS` variable allows you to specify additional
 EDoc options. Options are documented in the
-http://www.erlang.org/doc/man/edoc.html#run-2[EDoc manual].
+https://www.erlang.org/doc/apps/edoc/edoc.html#run/2[EDoc manual].
 
 A common use for this variable is to enable Markdown in doc
 comments, using the `edown` application:

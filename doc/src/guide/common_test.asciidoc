@@ -7,7 +7,7 @@ Test suites.
 
 === Writing tests
 
-The http://www.erlang.org/doc/apps/common_test/write_test_chapter.html[Common Test user guide]
+The https://www.erlang.org/doc/apps/common_test/write_test_chapter.html[Common Test user guide]
 is the best place to learn how to write tests. Erlang.mk
 requires that file names for test suites end with '_SUITE.erl'
 and that the files be located in the '$(TEST_DIR)' directory.
@@ -17,7 +17,7 @@ This defaults to 'test/'.
 
 The `CT_OPTS` variable allows you to set extra Common Test
 options. Options are documented in the
-http://www.erlang.org/doc/apps/common_test/run_test_chapter.html[Common Test user guide].
+https://www.erlang.org/doc/apps/common_test/run_test_chapter.html[Common Test user guide].
 You can use it to set Common Test hooks, for example:
 
 [source,make]

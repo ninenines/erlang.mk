@@ -7,7 +7,7 @@ discovery and running of unit tests.
 
 === Writing tests
 
-The http://www.erlang.org/doc/apps/eunit/chapter.html[EUnit user guide]
+The https://www.erlang.org/doc/apps/eunit/chapter.html[EUnit user guide]
 is the best place to learn how to write tests. Of note is
 that all functions ending with `_test` or `_test_` will be
 picked up as EUnit test cases.
@@ -54,7 +54,7 @@ perform a normal build after running tests, and vice versa.
 
 The `EUNIT_OPTS` variable allows you to specify additional
 EUnit options. Options are documented in the
-http://www.erlang.org/doc/man/eunit.html#test-2[EUnit manual].
+https://www.erlang.org/doc/apps/eunit/eunit.html#test/2[EUnit manual].
 At the time of writing, the only available option is `verbose`:
 
 [source,make]

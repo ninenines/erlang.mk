@@ -138,7 +138,7 @@ of the application(s) that will be updated. You also need
 to update the version of the release.
 
 For each application that needs to be updated, an
-http://erlang.org/doc/man/appup.html[appup file]
+https://www.erlang.org/doc/apps/sasl/appup.html[appup file]
 must be written. Refer to the Erlang/OTP documentation
 for more details.
 
