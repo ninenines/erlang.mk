@@ -85,7 +85,7 @@ you used to build your project, otherwise it will fail
 to run.
 
 If you choose to not include the runtime system at all,
-configure 'relx.config' as follow:
+configure 'relx.config' as follows:
 
 [source,erlang]
 {include_erts, false}.

@@ -159,7 +159,7 @@ For example, to fetch Cowboy with tag 2.19.0 from Git:
 dep_cowboy = git https://github.com/ninenines/cowboy 2.19.0
 
 Git also comes with a concept of submodules. Erlang.mk can
-automatically initializes and updates submodules for dependencies,
+automatically initialize and update submodules for dependencies,
 as long as they were added beforehand using `git submodule add`:
 
 [source,make]

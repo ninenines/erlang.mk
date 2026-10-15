@@ -42,7 +42,7 @@ ci:: dialyze
 ----
 
 Additional setup can be done by extending the `ci-setup`
-target. This target is ran before testing each individual
+target. This target is run before testing each individual
 Erlang/OTP version.
 
 For example, to ensure dependencies are re-fetched/built
