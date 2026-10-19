@@ -934,9 +934,49 @@ endef
 define hex_check_tarball.erl
 	case file:read_file("$4") of
 		{ok, Bin} ->
-			Sum = binary_to_list(binary:encode_hex(crypto:hash(sha256, Bin), lowercase)),
-			case "$5" of
-				"" ->
+			Sum = binary:encode_hex(crypto:hash(sha256, Bin), lowercase),
+			case <<"$5">> of
+				<<>> ->
+					{ok, _} = application:ensure_all_started(ssl),
+					{ok, _} = application:ensure_all_started(inets),
+					Config = $(hex_config.erl),
+					Pkg = case "$3" of
+						"" -> <<"$1">>;
+						_ -> <<"$3">>
+					end,
+					LockSum = case hex_repo:get_package(Config, Pkg) of
+						{ok, {200, _, #{releases := Releases}}} ->
+							case [R || R <- Releases, maps:get(version, R) =:= <<"$(strip $2)">>] of
+								[Release] ->
+									case maps:get(outer_checksum, Release, <<>>) of
+										<<>> ->
+											io:format(standard_error,
+												"Warning: no outer checksum for ~s ~s.~n",
+												[Pkg, <<"$(strip $2)">>]),
+											Sum;
+										Outer ->
+											case binary:encode_hex(Outer, lowercase) of
+												Sum -> Sum;
+												_ ->
+													io:format(standard_error,
+														"Error: checksum mismatch for ~s.~n",
+														["$1"]),
+													halt(101)
+											end
+									end;
+								_ ->
+									io:format(standard_error,
+										"Error: no Hex release ~s ~s.~n",
+										[Pkg, <<"$(strip $2)">>]),
+									halt(103)
+							end;
+						{ok, {Status, _, Errors}} ->
+							io:format(standard_error, "Error ~b: ~0p~n", [Status, Errors]),
+							halt(103);
+						Error ->
+							io:format(standard_error, "Error: ~0p~n", [Error]),
+							halt(103)
+					end,
 					DepLine = case "$3" of
 						"" -> io_lib:format("dep_~s := hex ~s", ["$1", "$2"]);
 						_ -> io_lib:format("dep_~s := hex ~s ~s", ["$1", "$2", "$3"])
@@ -944,7 +984,7 @@ define hex_check_tarball.erl
 					Block = iolist_to_binary([
 						"ifdef ERLANG_MK_LOCK\n", DepLine, "\n",
 						io_lib:format("dep_~s_commit := ~s\n", ["$1", "$2"]),
-						io_lib:format("dep_~s_checksum := ~s\n", ["$1", Sum]),
+						io_lib:format("dep_~s_checksum := ~s\n", ["$1", LockSum]),
 						"endif\n"
 					]),
 					ok = file:write_file("$6", Block, [append]),

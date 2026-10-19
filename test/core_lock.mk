@@ -1436,6 +1436,56 @@ core-lock-hex-checksum-mismatch: init
 	$t test ! -e $(APP)/deps/cowlib
 	$t cmp $(APP)/lock.mk.before $(APP)/lock.mk
 
+core-lock-hex-checksum-registry: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Fetch Cowlib 2.12.1"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
+	$t $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/registry.log 2>&1
+
+	$i "Check that the lock records the archive this recipe read"
+ifdef CACHE_DEPS
+	$t $(call sha256,$(CACHE_DIR)/hex/cowlib-2.12.1.tar) | awk '{print $$1}' | tr -d '\n' > $(APP)/cowlib.checksum
+else
+	$t $(call sha256,$(APP)/.erlang.mk/hex/cowlib.tar) | awk '{print $$1}' | tr -d '\n' > $(APP)/cowlib.checksum
+endif
+	$t test -f $(APP)/deps/cowlib/Makefile
+	$t grep -qxF "dep_cowlib_checksum := $$(cat $(APP)/cowlib.checksum)" $(APP)/lock.mk
+	$t ! grep -q 'Error: checksum mismatch for cowlib.' $(APP)/registry.log
+
+ifdef CACHE_DEPS
+core-lock-hex-checksum-registry-mismatch: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Fetch Cowlib 2.12.1"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
+	$t $(MAKE) -C $(APP) fetch-deps $v
+
+	$i "Drop the lock and the checkout and replace the cached archive"
+	$t rm -f $(APP)/lock.mk
+	$t rm -rf $(APP)/deps/cowlib
+	$t mkdir -p $(APP)/fake/src
+	$t echo fake > $(APP)/fake/src/fake.erl
+	$t tar -C $(APP)/fake -czf $(APP)/contents.tar.gz src
+	$t tar -C $(APP) -cf $(APP)/fake.tar contents.tar.gz
+	$t cp $(APP)/fake.tar $(CACHE_DIR)/hex/cowlib-2.12.1.tar
+
+	$i "Check that the registry outer checksum rejects the archive"
+	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/registry.log 2>&1
+	$t grep -q 'Error: checksum mismatch for cowlib.' $(APP)/registry.log
+	$t grep -q 'Error 101' $(APP)/registry.log
+	$t test ! -e $(APP)/deps/cowlib
+	$t test ! -e $(APP)/lock.mk
+endif
+
 core-lock-hex-checksum-tarball: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -1666,6 +1716,28 @@ core-lock-hex-package-name: init
 	$t test `git -C $(APP)/deps/quickrand rev-parse HEAD` = `git -C $(APP)/deps/quickrand rev-parse v1.8.0^{commit}`
 	$t test `grep -c 'hex.pm' $(APP)/lock.mk` -eq 0
 	$t test `grep -c '^dep_uuid := ' $(APP)/lock.mk` -eq 1
+
+core-lock-hex-registry-failure: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Fetch Cowlib 2.12.1"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
+	$t $(MAKE) -C $(APP) fetch-deps $v
+
+	$i "Drop the lock and point the repository at a closed port"
+	$t rm -f $(APP)/lock.mk
+	$t rm -rf $(APP)/deps/cowlib
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{repo_url => <<\"http://127.0.0.1:1\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Check that the fetch fails and records nothing"
+	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/registry.log 2>&1
+	$t grep -Eq 'Error (79|103)' $(APP)/registry.log
+	$t test ! -e $(APP)/deps/cowlib
+	$t test ! -e $(APP)/lock.mk
 
 core-lock-hex-transitive-fetch-writes-lock: init
 
