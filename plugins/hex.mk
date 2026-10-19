@@ -98,13 +98,20 @@ define hex_release_publish_summary.erl
 	halt(0)
 endef
 
+define hex_api_key.erl
+	case os:getenv("HEX_SECRET") of
+		false -> <<>>;
+		Secret -> list_to_binary(string:trim(Secret))
+	end
+endef
+
 define hex_release_publish.erl
 	{ok, _} = application:ensure_all_started(ssl),
 	{ok, _} = application:ensure_all_started(inets),
 	Config = $(hex_config.erl),
-	ConfigF = Config#{api_key => <<"$(strip $1)">>},
+	ConfigF = Config#{api_key => $(hex_api_key.erl)},
 	{ok, Tarball} = file:read_file("$(strip $(HEX_TARBALL_OUTPUT_FILE))"),
-	case hex_api_release:publish(ConfigF, Tarball, [{replace, $2}]) of
+	case hex_api_release:publish(ConfigF, Tarball, [{replace, $1}]) of
 		{ok, {200, _, #{}}} ->
 			io:format("Release replaced~n"),
 			halt(0);
@@ -122,17 +129,19 @@ hex-release-tarball: $(ERLANG_MK_TMP)/dep_built/hex_core $(HEX_TARBALL_OUTPUT_FI
 
 hex-release-publish: $(ERLANG_MK_TMP)/dep_built/hex_core hex-release-tarball
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
-	$(gen_verbose) $(call erlang,$(call hex_release_publish.erl,$(HEX_SECRET),false))
+	$(eval export HEX_SECRET)
+	$(gen_verbose) $(call erlang,$(call hex_release_publish.erl,false))
 
 hex-release-replace: $(ERLANG_MK_TMP)/dep_built/hex_core hex-release-tarball
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
-	$(gen_verbose) $(call erlang,$(call hex_release_publish.erl,$(HEX_SECRET),true))
+	$(eval export HEX_SECRET)
+	$(gen_verbose) $(call erlang,$(call hex_release_publish.erl,true))
 
 define hex_release_delete.erl
 	{ok, _} = application:ensure_all_started(ssl),
 	{ok, _} = application:ensure_all_started(inets),
 	Config = $(hex_config.erl),
-	ConfigF = Config#{api_key => <<"$(strip $1)">>},
+	ConfigF = Config#{api_key => $(hex_api_key.erl)},
 	case hex_api_release:delete(ConfigF, <<"$(strip $(PROJECT))">>, <<"$(strip $(PROJECT_VERSION))">>) of
 		{ok, {204, _, _}} ->
 			io:format("Release $(strip $(PROJECT_VERSION)) deleted~n"),
@@ -145,17 +154,18 @@ endef
 
 hex-release-delete: $(ERLANG_MK_TMP)/dep_built/hex_core
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
-	$(gen_verbose) $(call erlang,$(call hex_release_delete.erl,$(HEX_SECRET)))
+	$(eval export HEX_SECRET)
+	$(gen_verbose) $(call erlang,$(call hex_release_delete.erl))
 
 define hex_release_retire.erl
 	{ok, _} = application:ensure_all_started(ssl),
 	{ok, _} = application:ensure_all_started(inets),
 	Config = $(hex_config.erl),
-	ConfigF = Config#{api_key => <<"$(strip $1)">>},
-	Params = #{<<"reason">> => <<"$(strip $3)">>, <<"message">> => <<"$(strip $4)">>},
-	case hex_api_release:retire(ConfigF, <<"$(strip $(PROJECT))">>, <<"$(strip $2)">>, Params) of
+	ConfigF = Config#{api_key => $(hex_api_key.erl)},
+	Params = #{<<"reason">> => <<"$(strip $2)">>, <<"message">> => <<"$(strip $3)">>},
+	case hex_api_release:retire(ConfigF, <<"$(strip $(PROJECT))">>, <<"$(strip $1)">>, Params) of
 		{ok, {204, _, _}} ->
-			io:format("Release $(strip $2) has been retired~n"),
+			io:format("Release $(strip $1) has been retired~n"),
 			halt(0);
 		{ok, {Status, _, Errors}} ->
 			io:format("Error ~b: ~0p~n", [Status, Errors]),
@@ -165,7 +175,8 @@ endef
 
 hex-release-retire: $(ERLANG_MK_TMP)/dep_built/hex_core
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
-	$(gen_verbose) $(call erlang,$(call hex_release_retire.erl,$(HEX_SECRET),\
+	$(eval export HEX_SECRET)
+	$(gen_verbose) $(call erlang,$(call hex_release_retire.erl,\
 		$(if $(HEX_VERSION),$(HEX_VERSION),$(PROJECT_VERSION)),\
 		$(if $(HEX_REASON),$(HEX_REASON),invalid),\
 		$(HEX_MESSAGE)))
@@ -174,10 +185,10 @@ define hex_release_unretire.erl
 	{ok, _} = application:ensure_all_started(ssl),
 	{ok, _} = application:ensure_all_started(inets),
 	Config = $(hex_config.erl),
-	ConfigF = Config#{api_key => <<"$(strip $1)">>},
-	case hex_api_release:unretire(ConfigF, <<"$(strip $(PROJECT))">>, <<"$(strip $2)">>) of
+	ConfigF = Config#{api_key => $(hex_api_key.erl)},
+	case hex_api_release:unretire(ConfigF, <<"$(strip $(PROJECT))">>, <<"$(strip $1)">>) of
 		{ok, {204, _, _}} ->
-			io:format("Release $(strip $2) is not retired anymore~n"),
+			io:format("Release $(strip $1) is not retired anymore~n"),
 			halt(0);
 		{ok, {Status, _, Errors}} ->
 			io:format("Error ~b: ~0p~n", [Status, Errors]),
@@ -187,7 +198,8 @@ endef
 
 hex-release-unretire: $(ERLANG_MK_TMP)/dep_built/hex_core
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
-	$(gen_verbose) $(call erlang,$(call hex_release_unretire.erl,$(HEX_SECRET),\
+	$(eval export HEX_SECRET)
+	$(gen_verbose) $(call erlang,$(call hex_release_unretire.erl,\
 		$(if $(HEX_VERSION),$(HEX_VERSION),$(PROJECT_VERSION))))
 
 HEX_DOCS_DOC_DIR ?= doc/
@@ -204,7 +216,7 @@ define hex_docs_publish.erl
 	{ok, _} = application:ensure_all_started(ssl),
 	{ok, _} = application:ensure_all_started(inets),
 	Config = $(hex_config.erl),
-	ConfigF = Config#{api_key => <<"$(strip $1)">>},
+	ConfigF = Config#{api_key => $(hex_api_key.erl)},
 	{ok, Tarball} = file:read_file("$(strip $(HEX_DOCS_TARBALL_OUTPUT_FILE))"),
 	case hex_api:post(ConfigF,
 			["packages", "$(strip $(PROJECT))", "releases", "$(strip $(PROJECT_VERSION))", "docs"],
@@ -220,15 +232,16 @@ endef
 
 hex-docs-publish: $(ERLANG_MK_TMP)/dep_built/hex_core hex-docs-tarball-create
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
-	$(gen_verbose) $(call erlang,$(call hex_docs_publish.erl,$(HEX_SECRET)))
+	$(eval export HEX_SECRET)
+	$(gen_verbose) $(call erlang,$(call hex_docs_publish.erl))
 
 define hex_docs_delete.erl
 	{ok, _} = application:ensure_all_started(ssl),
 	{ok, _} = application:ensure_all_started(inets),
 	Config = $(hex_config.erl),
-	ConfigF = Config#{api_key => <<"$(strip $1)">>},
+	ConfigF = Config#{api_key => $(hex_api_key.erl)},
 	case hex_api:delete(ConfigF,
-			["packages", "$(strip $(PROJECT))", "releases", "$(strip $2)", "docs"]) of
+			["packages", "$(strip $(PROJECT))", "releases", "$(strip $1)", "docs"]) of
 		{ok, {Status, _, _}} when Status >= 200, Status < 300 ->
 			io:format("Docs removed~n"),
 			halt(0);
@@ -240,5 +253,6 @@ endef
 
 hex-docs-delete: $(ERLANG_MK_TMP)/dep_built/hex_core
 	$(if $(HEX_SECRET),,$(eval HEX_SECRET := $(shell stty -echo; read -p "Secret: " secret; stty echo; echo $$secret) $(info )))
-	$(gen_verbose) $(call erlang,$(call hex_docs_delete.erl,$(HEX_SECRET),\
+	$(eval export HEX_SECRET)
+	$(gen_verbose) $(call erlang,$(call hex_docs_delete.erl,\
 		$(if $(HEX_VERSION),$(HEX_VERSION),$(PROJECT_VERSION))))
