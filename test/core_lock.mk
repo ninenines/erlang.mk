@@ -1548,6 +1548,10 @@ core-lock-hex-fetch-writes-lock: init
 	$i "Fetch the dependency"
 	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
 
+	$i "Check that the package was unpacked"
+	$t test -f $(APP)/deps/cowlib/Makefile
+	$t test -f $(APP)/deps/cowlib/hex_metadata.config
+
 	$i "Check that the tarball hash is what lock.mk records"
 	$t if [ -f $(APP)/.erlang.mk/hex/cowlib.tar ]; then \
 		$(call sha256,$(APP)/.erlang.mk/hex/cowlib.tar) | awk '{print $$1}' | tr -d '\n' > $(APP)/cowlib.checksum; \
@@ -1852,6 +1856,33 @@ core-lock-hex-transitive-hex-locked-fetch-uses-version: init
 	$t ! grep -q '{vsn, *"0.7.1"' $(APP)/deps/unicode_util_compat/src/unicode_util_compat.app.src
 	$t cmp $(APP)/lock.mk.before $(APP)/lock.mk
 	$t test `grep -c '^dep_unicode_util_compat := ' $(APP)/lock.mk` -eq 1
+
+core-lock-hex-unpack-failure: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Build a raw archive and pin its checksum"
+	$t mkdir -p $(APP)/fake/src $(CACHE_DIR)/hex
+	$t echo fake > $(APP)/fake/src/fake.erl
+	$t tar -C $(APP)/fake -czf $(APP)/contents.tar.gz src
+	$t tar -C $(APP) -cf $(CACHE_DIR)/hex/cowlib-2.12.1.tar contents.tar.gz
+	$t $(call sha256,$(CACHE_DIR)/hex/cowlib-2.12.1.tar) | awk '{print $$1}' | tr -d '\n' > $(APP)/cowlib.checksum
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\ndep_cowlib_checksum = '"$$(cat $(APP)/cowlib.checksum)"'\n"}' $(APP)/Makefile
+
+	$i "Check that the archive is rejected and Cowlib is not recorded"
+	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/unpack.log 2>&1
+ifdef CACHE_DEPS
+	$t grep -q 'missing files' $(APP)/unpack.log
+	$t grep -q 'Error 1' $(APP)/unpack.log
+else
+	$t grep -q 'Error: checksum mismatch for cowlib.' $(APP)/unpack.log
+	$t grep -q 'Error 101' $(APP)/unpack.log
+endif
+	$t test ! -e $(APP)/deps/cowlib
+	$t ! grep -q '^dep_cowlib' $(APP)/lock.mk
 
 core-lock-ignore-dep: init
 

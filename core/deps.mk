@@ -1000,6 +1000,16 @@ define hex_check_tarball.erl
 	end
 endef
 
+define hex_unpack_tarball.erl
+	case hex_tarball:unpack({file, "$1"}, "$2") of
+		{ok, _} ->
+			halt(0);
+		{error, Reason} ->
+			io:format(standard_error, "Error: ~s~n", [hex_tarball:format_error(Reason)]),
+			halt(1)
+	end
+endef
+
 ifeq ($(CACHE_DEPS),1)
 
 # Hex only has a package version. No need to look in the Erlang.mk packages.
@@ -1011,7 +1021,8 @@ define dep_fetch_hex
 		$(call erlang,$(call hex_get_tarball.erl,$(hex_pkg_name),$(call query_version_hex,$1),$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name))) &&) \
 	$(call erlang,$(call hex_check_tarball.erl,$1,$(call query_version_hex,$1),$(word 3,$(dep_$1)),$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name),$(dep_$1_checksum),$(call core_native_path,$(ERLANG_MK_LOCK_FILE)))) && \
 	{ mkdir -p $(DEPS_DIR)/$1 && \
-		tar -xOf $(CACHE_DIR)/hex/$(hex_tar_name) contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf - \
+		$(call erlang,$(call hex_unpack_tarball.erl,$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name),$(call core_native_path,$(DEPS_DIR)/$1))) && \
+		find $(DEPS_DIR)/$1 \( -type f -o -type d \) -exec chmod go-w {} + \
 		|| { rm -rf $(DEPS_DIR)/$1; exit 1; }; }
 endef
 
@@ -1024,7 +1035,8 @@ define dep_fetch_hex
 	$(call erlang,$(call hex_get_tarball.erl,$(hex_pkg_name),$(call query_version_hex,$1),$(NATIVE_ERLANG_MK_TMP)/hex/$1.tar)) && \
 	$(call erlang,$(call hex_check_tarball.erl,$1,$(call query_version_hex,$1),$(word 3,$(dep_$1)),$(NATIVE_ERLANG_MK_TMP)/hex/$1.tar,$(dep_$1_checksum),$(call core_native_path,$(ERLANG_MK_LOCK_FILE)))) && \
 	{ mkdir -p $(DEPS_DIR)/$1 && \
-		tar -xOf $(ERLANG_MK_TMP)/hex/$1.tar contents.tar.gz | tar -C $(DEPS_DIR)/$1 -xzf - \
+		$(call erlang,$(call hex_unpack_tarball.erl,$(NATIVE_ERLANG_MK_TMP)/hex/$1.tar,$(call core_native_path,$(DEPS_DIR)/$1))) && \
+		find $(DEPS_DIR)/$1 \( -type f -o -type d \) -exec chmod go-w {} + \
 		|| { rm -rf $(DEPS_DIR)/$1; exit 1; }; }
 endef
 

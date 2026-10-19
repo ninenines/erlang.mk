@@ -737,6 +737,23 @@ endif
 		{ok, \"0.6.0\"} = application:get_key(systemd, vsn), \
 		halt()"
 
+core-deps-fetch-hex-umask: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add ssl_verify_fun 1.1.7 to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = ssl_verify_fun\ndep_ssl_verify_fun = hex 1.1.7\nNO_AUTOPATCH = ssl_verify_fun\n"}' $(APP)/Makefile
+
+	$i "Fetch dependencies with umask 022"
+	$t umask 022 && $(MAKE) -C $(APP) fetch-deps $v
+
+	$i "Check that the archive did not leave group or other write bits"
+	$t test -f $(APP)/deps/ssl_verify_fun/src/ssl_verify_hostname.erl
+	$t writable=`find $(APP)/deps/ssl_verify_fun \( -type f -o -type d \) \( -perm -g+w -o -perm -o+w \) -print` && test -z "$$writable"
+
 core-deps-fetch-ln: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
