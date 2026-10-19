@@ -283,7 +283,7 @@ define dep_autopatch_detect
 endef
 
 define dep_autopatch_for_erlang.mk
-	rm -rf $(DEPS_DIR)/$1/ebin/; \
+	rm -rf $(DEPS_DIR)/$1/ebin; \
 	$(call erlang,$(call dep_autopatch_appsrc.erl,$1)); \
 	$(call dep_autopatch_erlang_mk,$1)
 endef

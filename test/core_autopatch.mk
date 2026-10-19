@@ -6,6 +6,36 @@ core_autopatch_TARGETS = $(call list_targets,core-autopatch)
 
 core-autopatch: $(core_autopatch_TARGETS)
 
+core-autopatch-erlang-mk-ebin-symlink: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Create an Erlang.mk dependency whose ebin is a symlink"
+	$t mkdir $(APP)/my_dep
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
+	$t mkdir -p $(APP)/keep
+	$t echo keep > $(APP)/keep/file
+	$t ln -s $(abspath $(APP)/keep) $(APP)/my_dep/ebin
+	$t cd $(APP)/my_dep && \
+		git init -q -b master && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Tests"
+
+	$i "Add my_dep to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git file://$(abspath $(APP)/my_dep) master\n"}' $(APP)/Makefile
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that autopatch removed the link and kept its target"
+	$t test -f $(APP)/keep/file
+
 core-autopatch-extended: init
 
 	$i "Bootstrap a new OTP library named $(APP)"

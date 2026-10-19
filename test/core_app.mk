@@ -285,6 +285,34 @@ endif
 		true = ID =/= [], \
 		halt()"
 
+core-app-clean-symlink: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Point ebin and priv/mibs at directories outside the application"
+	$t mkdir -p $(APP)/outside/ebin $(APP)/outside/mibs $(APP)/priv $(APP)/mibs
+	$t echo keep > $(APP)/outside/ebin/keep
+	$t echo keep > $(APP)/outside/mibs/keep
+	$t echo keep > $(APP)/priv/keep
+	$t echo keep > $(APP)/mibs/source.mib
+	$t ln -s outside/ebin $(APP)/ebin
+	$t ln -s ../outside/mibs $(APP)/priv/mibs
+
+	$i "Clean the application"
+	$t $(MAKE) -C $(APP) clean $v
+
+	$i "Check that the links were removed and the targets kept"
+	$t test ! -e $(APP)/ebin
+	$t test ! -e $(APP)/priv/mibs
+	$t test -d $(APP)/priv
+	$t test -f $(APP)/priv/keep
+	$t test -f $(APP)/mibs/source.mib
+	$t test -f $(APP)/outside/ebin/keep
+	$t test -f $(APP)/outside/mibs/keep
+
 core-app-compile-first: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
