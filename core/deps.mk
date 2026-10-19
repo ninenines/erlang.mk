@@ -935,15 +935,52 @@ define hex_check_tarball.erl
 	case file:read_file("$4") of
 		{ok, Bin} ->
 			Sum = binary:encode_hex(crypto:hash(sha256, Bin), lowercase),
+			Pkg = case "$3" of
+				"" -> <<"$1">>;
+				_ -> <<"$3">>
+			end,
+			IsPre = fun(V) ->
+				case string:split(V, <<"-">>) of
+					[_, _] -> true;
+					_ -> false
+				end
+			end,
+			Parts = fun(V) ->
+				[Core | _] = string:split(V, <<"-">>),
+				[binary_to_integer(N) || N <- string:split(Core, <<".">>, all)]
+			end,
+			Norm = fun(Ps) ->
+				lists:reverse(lists:dropwhile(fun(N) -> N =:= 0 end, lists:reverse(Ps)))
+			end,
+			WarnNewer = fun(Releases, Using) ->
+				Stable = [maps:get(version, R) || R <- Releases,
+					not maps:is_key(retired, R), not IsPre(maps:get(version, R))],
+				case Stable of
+					[] -> ok;
+					_ ->
+						Latest = lists:foldl(fun(V, Best) ->
+							case Norm(Parts(V)) > Norm(Parts(Best)) of
+								true -> V;
+								false -> Best
+							end
+						end, hd(Stable), tl(Stable)),
+						Newer = Norm(Parts(Latest)) > Norm(Parts(Using))
+							orelse (Norm(Parts(Latest)) =:= Norm(Parts(Using)) andalso IsPre(Using)),
+						case Newer of
+							true ->
+								io:format(standard_error,
+									"Warning: newer version ~s of ~s is available (using ~s).~n",
+									[Latest, Pkg, Using]);
+							false ->
+								ok
+						end
+				end
+			end,
 			case <<"$5">> of
 				<<>> ->
 					{ok, _} = application:ensure_all_started(ssl),
 					{ok, _} = application:ensure_all_started(inets),
 					Config = $(hex_config.erl),
-					Pkg = case "$3" of
-						"" -> <<"$1">>;
-						_ -> <<"$3">>
-					end,
 					LockSum = case hex_repo:get_package(Config, Pkg) of
 						{ok, {200, _, #{releases := Releases}}} ->
 							case [R || R <- Releases, maps:get(version, R) =:= <<"$(strip $2)">>] of
@@ -953,10 +990,13 @@ define hex_check_tarball.erl
 											io:format(standard_error,
 												"Warning: no outer checksum for ~s ~s.~n",
 												[Pkg, <<"$(strip $2)">>]),
+											WarnNewer(Releases, <<"$(strip $2)">>),
 											Sum;
 										Outer ->
 											case binary:encode_hex(Outer, lowercase) of
-												Sum -> Sum;
+												Sum ->
+													WarnNewer(Releases, <<"$(strip $2)">>),
+													Sum;
 												_ ->
 													io:format(standard_error,
 														"Error: checksum mismatch for ~s.~n",
@@ -990,6 +1030,17 @@ define hex_check_tarball.erl
 					ok = file:write_file("$6", Block, [append]),
 					halt(0);
 				Sum ->
+					try
+						true = "$7" =/= "cached",
+						{ok, _} = application:ensure_all_started(ssl),
+						{ok, _} = application:ensure_all_started(inets),
+						Config = $(hex_config.erl),
+						{ok, {200, _, #{releases := Releases}}} =
+							hex_repo:get_package(Config, Pkg),
+						WarnNewer(Releases, <<"$(strip $2)">>)
+					catch _:_ ->
+						ok
+					end,
 					halt(0);
 				_ ->
 					io:format(standard_error, "Error: checksum mismatch for ~s.~n", ["$1"]),
@@ -1019,7 +1070,7 @@ define dep_fetch_hex
 	$(eval hex_tar_name := $(hex_pkg_name)-$(strip $(call query_version_hex,$1)).tar) \
 	$(if $(wildcard $(CACHE_DIR)/hex/$(hex_tar_name)),,\
 		$(call erlang,$(call hex_get_tarball.erl,$(hex_pkg_name),$(call query_version_hex,$1),$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name))) &&) \
-	$(call erlang,$(call hex_check_tarball.erl,$1,$(call query_version_hex,$1),$(word 3,$(dep_$1)),$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name),$(dep_$1_checksum),$(call core_native_path,$(ERLANG_MK_LOCK_FILE)))) && \
+	$(call erlang,$(call hex_check_tarball.erl,$1,$(call query_version_hex,$1),$(word 3,$(dep_$1)),$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name),$(dep_$1_checksum),$(call core_native_path,$(ERLANG_MK_LOCK_FILE)),$(if $(wildcard $(CACHE_DIR)/hex/$(hex_tar_name)),cached))) && \
 	{ mkdir -p $(DEPS_DIR)/$1 && \
 		$(call erlang,$(call hex_unpack_tarball.erl,$(NATIVE_CACHE_DIR)/hex/$(hex_tar_name),$(call core_native_path,$(DEPS_DIR)/$1))) && \
 		find $(DEPS_DIR)/$1 \( -type f -o -type d \) -exec chmod go-w {} + \

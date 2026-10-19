@@ -1406,6 +1406,40 @@ core-lock-git-unlocked-fetch-follows-makefile: init
 	$t test `grep -c '^dep_my_dep ' $(APP)/lock.mk` -eq 2
 	$t test `grep -c '^ifdef ERLANG_MK_LOCK$$' $(APP)/lock.mk` -eq 2
 
+core-lock-hex-cached-no-newer: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Fetch Cowlib 2.12.1 and lock it"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
+	$t $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/fetch.log 2>&1
+	$t grep -q 'Warning: newer version .* of cowlib is available (using 2.12.1).' $(APP)/fetch.log
+	$t $(MAKE) -C $(APP) lock $v
+
+	$i "Fetch again; only a cache hit skips the warning"
+	$t rm -rf $(APP)/deps/cowlib
+	$t $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/cached.log 2>&1
+ifdef CACHE_DEPS
+	$t ! grep -q 'Warning: newer version .* of cowlib is available (using 2.12.1).' $(APP)/cached.log
+else
+	$t grep -q 'Warning: newer version .* of cowlib is available (using 2.12.1).' $(APP)/cached.log
+endif
+	$t grep -qx 'PROJECT_VERSION = 2.12.1' $(APP)/deps/cowlib/Makefile
+
+	$i "Drop the archive this recipe read and fetch again"
+ifdef CACHE_DEPS
+	$t rm -f $(CACHE_DIR)/hex/cowlib-2.12.1.tar
+else
+	$t rm -f $(APP)/.erlang.mk/hex/cowlib.tar
+endif
+	$t rm -rf $(APP)/deps/cowlib
+	$t $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/download.log 2>&1
+	$t grep -q 'Warning: newer version .* of cowlib is available (using 2.12.1).' $(APP)/download.log
+	$t grep -qx 'PROJECT_VERSION = 2.12.1' $(APP)/deps/cowlib/Makefile
+
 core-lock-hex-checksum-mismatch: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -1679,6 +1713,27 @@ core-lock-hex-makefile-checksum: init
 	$t test ! -e $(APP)/deps/cowlib/src
 	$t cmp $(APP)/lock.mk.before $(APP)/lock.mk
 	$t test `grep -c '^ERLANG_MK_LOCK := 1$$' $(APP)/lock.mk` -eq 0
+
+core-lock-hex-newer: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Fetch Cowlib 2.12.1 and keep that version"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
+	$t $(MAKE) -C $(APP) --no-print-directory fetch-deps CI_ERLANG_MK= V=0 >$(APP)/fetch.log 2>&1
+	$t grep -q 'Warning: newer version .* of cowlib is available (using 2.12.1).' $(APP)/fetch.log
+	$t grep -qx 'PROJECT_VERSION = 2.12.1' $(APP)/deps/cowlib/Makefile
+
+	$i "Fetch the locked dependency again"
+	$t $(MAKE) -C $(APP) lock CI_ERLANG_MK= $v
+	$t rm -rf $(APP)/deps/cowlib
+	$t rm -f $(CACHE_DIR)/hex/cowlib-2.12.1.tar $(APP)/.erlang.mk/hex/cowlib.tar
+	$t $(MAKE) -C $(APP) --no-print-directory fetch-deps CI_ERLANG_MK= V=0 >$(APP)/locked.log 2>&1
+	$t grep -q 'Warning: newer version .* of cowlib is available (using 2.12.1).' $(APP)/locked.log
+	$t grep -qx 'PROJECT_VERSION = 2.12.1' $(APP)/deps/cowlib/Makefile
 
 core-lock-hex-package-name: init
 
