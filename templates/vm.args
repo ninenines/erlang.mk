@@ -1,3 +1,5 @@
 -name project_name@127.0.0.1
 -setcookie project_name
+-kernel inet_dist_use_interface {127,0,0,1}
+-env ERL_EPMD_ADDRESS 127.0.0.1
 -heart
