@@ -19,7 +19,12 @@ $(foreach dep,$(TEST_DEPS),$(eval $(call dep_target,$(dep))))
 ifneq ($(SKIP_DEPS),)
 test-deps:
 else
-test-deps: $(ALL_TEST_DEPS_DIRS) | $(ERLANG_MK_TMP)/dep_built
+test-deps: deps | $(ERLANG_MK_TMP)/dep_built
+ifneq ($(ALL_TEST_DEPS_DIRS),)
+	$(verbose) missing=; for dep in $(ALL_TEST_DEPS_DIRS); do \
+		[ -e $$dep ] || missing="$$missing $$dep"; \
+	done; \
+	if [ -n "$$missing" ]; then $(MAKE) --no-print-directory $$missing; fi
 	$(verbose) set -e; for dep in $(ALL_TEST_DEPS_DIRS) ; do \
 		if [ -z "$(strip $(FULL))" ] && [ ! -L $$dep ] && [ -f $(ERLANG_MK_TMP)/dep_built/`basename $$dep` ]; then \
 			:; \
@@ -28,6 +33,7 @@ test-deps: $(ALL_TEST_DEPS_DIRS) | $(ERLANG_MK_TMP)/dep_built
 			if [ ! -L $$dep ] && [ -d $$dep/ebin ]; then touch $(ERLANG_MK_TMP)/dep_built/`basename $$dep`; fi; \
 		fi \
 	done
+endif
 endif
 
 ifneq ($(wildcard $(TEST_DIR)),)

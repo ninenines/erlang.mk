@@ -1628,3 +1628,104 @@ core-deps-test: init
 		{ok, Deps} = application:get_key($(APP), applications), \
 		false = lists:member(triq, Deps), \
 		halt()"
+
+core-deps-test-deps-empty: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Build test dependencies when TEST_DEPS is empty"
+	$t $(MAKE) -C $(APP) test-deps $v
+
+	$i "Check that the application was not built"
+	$t test ! -e $(APP)/ebin
+
+core-deps-test-deps-parallel: init
+
+	$i "Bootstrap a new OTP library named sub"
+	$t mkdir -p $(APP)/sub/
+	$t cp ../erlang.mk $(APP)/sub/
+	$t $(MAKE) -C $(APP)/sub/ -f erlang.mk bootstrap-lib $v
+
+	$i "Create a Git repository for sub"
+	$t echo '-module(sub).' > $(APP)/sub/src/sub.erl
+	$t git -C $(APP)/sub init -q -b master
+	$t git -C $(APP)/sub config user.email "testsuite@erlang.mk"
+	$t git -C $(APP)/sub config user.name "test suite"
+	$t git -C $(APP)/sub add .
+	$t git -C $(APP)/sub commit -q --no-gpg-sign -m "Initial commit"
+
+	$i "Bootstrap a new OTP library named dep"
+	$t mkdir -p $(APP)/dep/
+	$t cp ../erlang.mk $(APP)/dep/
+	$t $(MAKE) -C $(APP)/dep/ -f erlang.mk bootstrap-lib $v
+
+	$i "Add sub as a dependency of dep"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = sub\ndep_sub = git file://$(abspath $(APP)/sub) master\n"}' $(APP)/dep/Makefile
+
+	$i "Create a Git repository for dep"
+	$t echo '-module(dep).' > $(APP)/dep/src/dep.erl
+	$t rm $(APP)/dep/Makefile.bak
+	$t git -C $(APP)/dep init -q -b master
+	$t git -C $(APP)/dep config user.email "testsuite@erlang.mk"
+	$t git -C $(APP)/dep config user.name "test suite"
+	$t git -C $(APP)/dep add .
+	$t git -C $(APP)/dep commit -q --no-gpg-sign -m "Initial commit"
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add dep as a dependency and sub as a test dependency"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = dep\nTEST_DEPS = sub\ndep_dep = git file://$(abspath $(APP)/dep) master\ndep_sub = git file://$(abspath $(APP)/sub) master\n"}' $(APP)/Makefile
+
+	$i "Stall git checkout of the shared dependency"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'case $$PWD in */sub) [ "$$1" = checkout ] && sleep 5 ;; esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Build test dependencies in parallel"
+	$t PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) -j4 test-deps $v
+
+	$i "Check that both dependencies were built"
+	$t test -f $(APP)/deps/dep/ebin/dep.beam
+	$t test -f $(APP)/deps/sub/ebin/sub.beam
+
+core-deps-test-deps-uptodate: init
+
+	$i "Bootstrap a new OTP library named my_dep"
+	$t mkdir -p $(APP)/my_dep/
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
+
+	$i "Create a Git repository for my_dep"
+	$t echo '-module(my_dep).' > $(APP)/my_dep/src/my_dep.erl
+	$t git -C $(APP)/my_dep init -q -b master
+	$t git -C $(APP)/my_dep config user.email "testsuite@erlang.mk"
+	$t git -C $(APP)/my_dep config user.name "test suite"
+	$t git -C $(APP)/my_dep add .
+	$t git -C $(APP)/my_dep commit -q --no-gpg-sign -m "Initial commit"
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add my_dep as a test dependency"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "TEST_DEPS = my_dep\ndep_my_dep = git file://$(abspath $(APP)/my_dep) master\n"}' $(APP)/Makefile
+
+	$i "Fetch the test dependency"
+	$t $(MAKE) -C $(APP) test-deps $v
+
+	$i "Check that the test dependency was built"
+	$t test -f $(APP)/deps/my_dep/ebin/my_dep.beam
+
+	$i "Fetch test dependencies again"
+	$t $(MAKE) -C $(APP) test-deps V=0 >$(APP)/uptodate.log 2>&1
+
+	$i "Check that an existing test dependency is not reported as up to date"
+	$t ! grep -q 'is up to date' $(APP)/uptodate.log
