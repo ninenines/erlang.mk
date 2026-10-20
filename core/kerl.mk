@@ -14,7 +14,7 @@ KERL_DIR = $(ERLANG_MK_TMP)/kerl
 export KERL
 
 KERL_GIT ?= https://github.com/kerl/kerl
-KERL_COMMIT ?= master
+KERL_COMMIT ?= e2e0ac5dc3dd8f49ce65e3db87f06986127b478a # 4.4.0
 
 KERL_MAKEFLAGS ?=
 
@@ -28,12 +28,12 @@ $(KERL_INSTALL_DIR)/$1: $(KERL)
 	fi
 endef
 
-$(KERL): $(KERL_DIR)
-
-$(KERL_DIR): | $(ERLANG_MK_TMP)
-	$(gen_verbose) git clone --depth 1 $(KERL_GIT) $(ERLANG_MK_TMP)/kerl
-	$(verbose) cd $(ERLANG_MK_TMP)/kerl && git checkout $(KERL_COMMIT)
-	$(verbose) chmod +x $(KERL)
+$(KERL): | $(ERLANG_MK_TMP)
+	$(verbose) rm -rf $(KERL_DIR)
+	$(gen_verbose) git clone -q -n -- $(KERL_GIT) $(ERLANG_MK_TMP)/kerl \
+		&& cd $(ERLANG_MK_TMP)/kerl && git checkout -q $(KERL_COMMIT) \
+		&& chmod +x $(KERL) \
+		|| { rm -rf $(KERL_DIR); exit 1; }
 
 distclean:: distclean-kerl
 
