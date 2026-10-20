@@ -10,6 +10,9 @@ ifdef CONCUERROR_TESTS
 CONCUERROR_LOGS_DIR ?= $(CURDIR)/logs
 CONCUERROR_OPTS ?=
 
+CONCUERROR_GIT ?= https://github.com/parapluu/Concuerror
+CONCUERROR_COMMIT ?= 0cbd2fc2acd7e1e01dc92c41c303f7f37b13dcca # master @ 2026-06-24
+
 # Core targets.
 
 check:: concuerror
@@ -21,8 +24,15 @@ endif
 # Plugin-specific targets.
 
 $(ERLANG_MK_TMP)/Concuerror/bin/concuerror: | $(ERLANG_MK_TMP)
-	$(verbose) git clone https://github.com/parapluu/Concuerror $(ERLANG_MK_TMP)/Concuerror
-	$(verbose) $(MAKE) -C $(ERLANG_MK_TMP)/Concuerror
+	$(verbose) rm -rf $(ERLANG_MK_TMP)/Concuerror
+	$(verbose) git clone -q -n -- $(CONCUERROR_GIT) $(ERLANG_MK_TMP)/Concuerror \
+		&& cd $(ERLANG_MK_TMP)/Concuerror && git checkout -q $(CONCUERROR_COMMIT) \
+		|| { rm -rf $(ERLANG_MK_TMP)/Concuerror; exit 1; }
+	$(verbose) $(call dep_autopatch_fetch_rebar) \
+		&& test -x $(ERLANG_MK_TMP)/rebar3/rebar3 \
+		|| { rm -rf $(ERLANG_MK_TMP)/Concuerror; exit 1; }
+	$(verbose) $(MAKE) -C $(ERLANG_MK_TMP)/Concuerror REBAR=$(ERLANG_MK_TMP)/rebar3/rebar3 \
+		|| { rm -rf $(ERLANG_MK_TMP)/Concuerror; exit 1; }
 
 $(CONCUERROR_LOGS_DIR):
 	$(verbose) mkdir -p $(CONCUERROR_LOGS_DIR)
