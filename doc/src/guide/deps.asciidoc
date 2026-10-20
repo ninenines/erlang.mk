@@ -283,15 +283,24 @@ to force recompiling a dependency however:
 
 === Fetching and listing dependencies only
 
-You can fetch all dependencies recursively without building anything,
-with the `make fetch-deps` command. It follows the same rules described
-in the section above.
+You can fetch all dependencies recursively without building the
+project, with the `make fetch-deps` command. It follows the same rules
+described in the section above.
 
-You can list all dependencies recursively, again without building
-anything, with the `make list-deps` command. It will obviously need
+You can list all dependencies recursively, again without building the
+project, with the `make list-deps` command. It will obviously need
 to fetch all dependencies exactly like `make fetch-deps`. Once
 everything is fetched, it prints a sorted list of absolute paths to the
 dependencies.
+
+Fetching still runs code from dependencies. It runs `autoreconf` when
+'configure.ac' or 'configure.in' exists and 'configure' does not, then
+`configure` when that script exists. When converting a Rebar project it
+evaluates 'rebar.config.script' and 'src/*.app.src.script' and builds
+and runs Rebar plugins. When converting a Mix project it compiles
+'mix.exs' and runs `project/0` and `application/0`. It also runs `make
+fetch-deps` in each dependency whose Makefile includes Erlang.mk. Fetch
+only dependencies you trust.
 
 By default, `fetch-deps` and `list-deps` work on the `BUILD_DEPS`
 and `DEPS` lists only. To also fetch/list `TEST_DEPS`, `DOC_DEPS`,
