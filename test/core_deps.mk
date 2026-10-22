@@ -607,6 +607,47 @@ endif
 		{ok, \"2.12.0\"} = application:get_key(cowboy, vsn), \
 		halt()"
 
+core-deps-fetch-git-clone-failure: init
+
+	$i "Bootstrap a new OTP library named my_dep"
+	$t mkdir -p $(APP)/my_dep/
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
+
+	$i "Create a Git repository for my_dep"
+	$t echo '-module(my_dep).' > $(APP)/my_dep/src/my_dep.erl
+	$t git -C $(APP)/my_dep init -q -b master
+	$t git -C $(APP)/my_dep config user.email "testsuite@erlang.mk"
+	$t git -C $(APP)/my_dep config user.name "test suite"
+	$t git -C $(APP)/my_dep add .
+	$t git -C $(APP)/my_dep commit -q --no-gpg-sign -m "Initial commit"
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add my_dep as a dependency"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git file://$(abspath $(APP)/my_dep) master\n"}' $(APP)/Makefile
+
+	$i "Fail git clone after it creates the dependency directory"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'if [ "$$1" = clone ]; then' \
+			'  echo clone >> $(abspath $(APP)/clone.log)' \
+			"  $$real_git \"\$$@\"" \
+			'  exit 1' \
+			'fi' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) deps $v
+
+	$i "Check that the failed clone was attempted and removed"
+	$t grep -qx clone $(APP)/clone.log
+	$t test ! -e $(APP)/deps/my_dep
+
 core-deps-fetch-git-subfolder: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -647,6 +688,48 @@ endif
 		{ok, Deps} = application:get_key($(APP), applications), \
 		true = lists:member(my_dep, Deps), \
 		halt()"
+
+core-deps-fetch-git-subfolder-clone-failure: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Bootstrap a new OTP library named my_dep as a subfolder inside $(APP)"
+	$t mkdir -p $(APP)/git_repo/my_dep
+	$t cp ../erlang.mk $(APP)/git_repo/my_dep/
+	$t $(MAKE) -C $(APP)/git_repo/my_dep/ -f erlang.mk bootstrap-lib $v
+	$t touch $(APP)/git_repo/my_dep/src/README
+	$t cd $(APP)/git_repo && \
+		git init -q -b master && \
+		git config user.email "testsuite@erlang.mk" && \
+		git config user.name "test suite" && \
+		git add . && \
+		git commit -q --no-gpg-sign -m "Tests"
+
+	$i "Add my_dep to the list of dependencies"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git-subfolder file://$(abspath $(APP)/git_repo) master my_dep\n"}' $(APP)/Makefile
+
+	$i "Fail git clone after it creates the dependency directory"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'if [ "$$1" = clone ]; then' \
+			'  echo clone >> $(abspath $(APP)/clone.log)' \
+			"  $$real_git \"\$$@\"" \
+			'  exit 1' \
+			'fi' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) deps $v
+
+	$i "Check that the failed clone was attempted and removed"
+	$t grep -qx clone $(APP)/clone.log
+	$t test ! -e $(APP)/.erlang.mk/git-subfolder/my_dep
+	$t test ! -e $(APP)/deps/my_dep
 
 core-deps-fetch-git-submodule: init
 

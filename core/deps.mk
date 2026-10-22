@@ -863,8 +863,9 @@ define dep_cache_fetch_git
 	else \
 		git clone -q -n -- $(call query_repo_git,$1) $(join $(CACHE_DIR)/git/,$(call query_name,$1)); \
 	fi; \
-	git clone -q --single-branch -- $(join $(CACHE_DIR)/git/,$(call query_name,$1)) $2; \
-	cd $2 && git checkout -q $(call query_version_git,$1)
+	git clone -q --single-branch -- $(join $(CACHE_DIR)/git/,$(call query_name,$1)) $2 \
+		&& cd $2 && git checkout -q $(call query_version_git,$1) \
+		|| { rm -rf $2; exit 1; }
 endef
 
 define dep_fetch_git
@@ -883,20 +884,23 @@ endef
 else
 
 define dep_fetch_git
-	git clone -q -n -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1); \
-	cd $(DEPS_DIR)/$(call query_name,$1) && git checkout -q $(call query_version_git,$1) && \
-	$(call dep_lock_git,$1)
+	git clone -q -n -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1) \
+		&& cd $(DEPS_DIR)/$(call query_name,$1) && git checkout -q $(call query_version_git,$1) && \
+		$(call dep_lock_git,$1) \
+		|| { rm -rf $(DEPS_DIR)/$(call query_name,$1); exit 1; }
 endef
 
 define dep_fetch_git-subfolder
-	mkdir -p $(ERLANG_MK_TMP)/git-subfolder; \
+	mkdir -p $(ERLANG_MK_TMP)/git-subfolder && \
 	git clone -q -n -- $(call query_repo_git-subfolder,$1) \
-		$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1); \
-	cd $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) \
-		&& git checkout -q $(call query_version_git-subfolder,$1) && \
+		$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) && \
+	cd $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) && \
+	git checkout -q $(call query_version_git-subfolder,$1) && \
 	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)/$(word 4,$(dep_$1)) \
 		$(DEPS_DIR)/$(call query_name,$1) && \
-	$(call dep_lock_git-subfolder,$1)
+	$(call dep_lock_git-subfolder,$1) \
+	|| { rm -rf $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) \
+		$(DEPS_DIR)/$(call query_name,$1); exit 1; }
 endef
 
 endif
