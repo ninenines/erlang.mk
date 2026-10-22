@@ -24,7 +24,7 @@ export REBAR_DEPS_DIR
 # When testing Erlang.mk and updating these, make sure
 # to delete test/test_rebar_git before running tests again.
 REBAR3_GIT ?= https://github.com/erlang/rebar3
-REBAR3_COMMIT ?= 8723cb44fddb7ed66809d4dfbfc1da1ba6841456 # 3.27.3
+REBAR3_COMMIT ?= 183065cc3f7ec5a9d9d4936f7e1df6246178df40 # 3.28.0
 
 CACHE_DEPS ?= 0
 
