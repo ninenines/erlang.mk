@@ -136,7 +136,7 @@ help::
 		"  all           Run deps, app and rel targets in that order" \
 		"  app           Compile the project" \
 		"  deps          Fetch dependencies (if needed) and compile them" \
-		"  fetch-deps    Fetch dependencies recursively (if needed) without compiling them" \
+		"  fetch-deps    Fetch dependencies recursively (if needed) without building the project" \
 		"  lock          Enable the dependency lock recorded in lock.mk" \
 		"  unlock        Disable the dependency lock recorded in lock.mk" \
 		"  list-deps     List dependencies recursively on stdout" \

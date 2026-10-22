@@ -644,7 +644,7 @@ When fetching a dependency, the following operations are
 performed:
 
 * Fetch the dependency using the configured fetch method
-* If it contains a 'configure.ac' or 'configure.in' file, run `autoreconf -Wall -vif -I m4`
+* If it contains a 'configure.ac' or 'configure.in' file but no 'configure' script, run `autoreconf -Wall -vif -I m4`
 * If it contains a 'configure' script, run it
 * Run autopatch on the project
 
