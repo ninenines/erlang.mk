@@ -1449,14 +1449,14 @@ core-lock-hex-checksum-mismatch: init
 
 	$i "Fetch Cowlib 2.12.1 and lock it"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
-	$t $(MAKE) -C $(APP) lock CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
+	$t $(MAKE) -C $(APP) lock $v
 
 	$i "Replace the recorded checksum and fetch into an empty directory"
 	$t sed -i.bak 's/^dep_cowlib_checksum := .*/dep_cowlib_checksum := 0000000000000000000000000000000000000000000000000000000000000000/' $(APP)/lock.mk
 	$t cp $(APP)/lock.mk $(APP)/lock.mk.before
 	$t rm -rf $(APP)/deps/cowlib
-	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps CI_ERLANG_MK= V=0 >$(APP)/checksum.log 2>&1
+	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/checksum.log 2>&1
 
 	$i "Check that the checksum is rejected and the lock is left unchanged"
 	$t grep -q 'Error: checksum mismatch for cowlib.' $(APP)/checksum.log
@@ -1465,7 +1465,7 @@ core-lock-hex-checksum-mismatch: init
 	$t cmp $(APP)/lock.mk.before $(APP)/lock.mk
 
 	$i "Fetch again and check that the checksum is still rejected"
-	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps CI_ERLANG_MK= V=0 >$(APP)/checksum2.log 2>&1
+	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/checksum2.log 2>&1
 	$t grep -q 'Error: checksum mismatch for cowlib.' $(APP)/checksum2.log
 	$t test ! -e $(APP)/deps/cowlib
 	$t cmp $(APP)/lock.mk.before $(APP)/lock.mk
@@ -1529,8 +1529,8 @@ core-lock-hex-checksum-tarball: init
 
 	$i "Fetch Cowlib 2.12.1 into the cache and lock it"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= CACHE_DEPS=1 $v
-	$t $(MAKE) -C $(APP) lock CI_ERLANG_MK= CACHE_DEPS=1 $v
+	$t $(MAKE) -C $(APP) fetch-deps CACHE_DEPS=1 $v
+	$t $(MAKE) -C $(APP) lock CACHE_DEPS=1 $v
 	$t cp $(APP)/lock.mk $(APP)/lock.mk.before
 
 	$i "Replace the cached archive"
@@ -1542,7 +1542,7 @@ core-lock-hex-checksum-tarball: init
 	$t rm -rf $(APP)/deps/cowlib
 
 	$i "Check that the archive checksum is rejected"
-	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps CI_ERLANG_MK= CACHE_DEPS=1 V=0 >$(APP)/tarball.log 2>&1
+	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps CACHE_DEPS=1 V=0 >$(APP)/tarball.log 2>&1
 	$t grep -q 'Error: checksum mismatch for cowlib.' $(APP)/tarball.log
 	$t test ! -e $(APP)/deps/cowlib
 	$t cmp $(APP)/lock.mk.before $(APP)/lock.mk
@@ -1556,13 +1556,13 @@ core-lock-hex-download-failure: init
 
 	$i "Fetch Cowlib 2.12.1"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 	$t cp $(APP)/lock.mk $(APP)/lock.mk.before
 	$t rm -rf $(APP)/deps/cowlib
 
 	$i "Request a version Hex does not have"
 	$t sed -i.bak 's/^dep_cowlib = hex 2.12.1/dep_cowlib = hex 9.9.9/' $(APP)/Makefile
-	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps CI_ERLANG_MK= V=0 >$(APP)/download.log 2>&1
+	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/download.log 2>&1
 
 	$i "Check that the old archive was not extracted and the lock is unchanged"
 	$t test ! -e $(APP)/deps/cowlib
@@ -1580,7 +1580,7 @@ core-lock-hex-fetch-writes-lock: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
 
 	$i "Fetch the dependency"
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 
 	$i "Check that the package was unpacked"
 	$t test -f $(APP)/deps/cowlib/Makefile
@@ -1612,7 +1612,7 @@ core-lock-hex-fetch-writes-lock: init
 
 	$i "Fetch again and check that the lock appends another Cowlib block"
 	$t rm -rf $(APP)/deps/cowlib
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 	$t $(call lock_has_lines,$(APP)/lock.mk.expected)
 	$t test `grep -c '^dep_cowlib := ' $(APP)/lock.mk` -eq 2
 	$t test `grep -c '^dep_cowlib_checksum := ' $(APP)/lock.mk` -eq 2
@@ -1628,14 +1628,14 @@ core-lock-hex-locked-fetch-uses-version: init
 
 	$i "Fetch Cowlib 2.12.1 and lock it"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
-	$t $(MAKE) -C $(APP) lock CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
+	$t $(MAKE) -C $(APP) lock $v
 	$t cp $(APP)/lock.mk $(APP)/lock.mk.before
 
 	$i "Point the Makefile at 2.13.0 and fetch into an empty directory"
 	$t sed -i.bak 's/^dep_cowlib = hex 2.12.1/dep_cowlib = hex 2.13.0/' $(APP)/Makefile
 	$t rm -rf $(APP)/deps/cowlib $(APP)/.erlang.mk/hex/cowlib.tar
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 
 	$i "Check that the locked version is fetched and the lock is unchanged"
 	$t grep -qx 'PROJECT_VERSION = 2.12.1' $(APP)/deps/cowlib/Makefile
@@ -1653,14 +1653,14 @@ core-lock-hex-locked-makefile-after-include: init
 
 	$i "Fetch Cowlib 2.12.1 and lock it"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
-	$t $(MAKE) -C $(APP) lock CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
+	$t $(MAKE) -C $(APP) lock $v
 
 	$i "Override the commit after including Erlang.mk and fetch again"
 	$t cp $(APP)/lock.mk $(APP)/lock.mk.before
 	$t echo 'dep_cowlib_commit = 2.13.0' >> $(APP)/Makefile
 	$t rm -rf $(APP)/deps/cowlib $(APP)/.erlang.mk/hex/cowlib.tar
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 
 	$i "Check that an assignment after include erlang.mk leaves the locked version"
 	$t grep -qx 'PROJECT_VERSION = 2.12.1' $(APP)/deps/cowlib/Makefile
@@ -1672,7 +1672,7 @@ core-lock-hex-locked-makefile-after-include: init
 	$i "Clear the checksum after including Erlang.mk and fetch again"
 	$t echo 'dep_cowlib_checksum =' >> $(APP)/Makefile
 	$t rm -rf $(APP)/deps/cowlib $(APP)/.erlang.mk/hex/cowlib.tar
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 
 	$i "Check that clearing the checksum after include erlang.mk changes nothing"
 	$t grep -qx 'PROJECT_VERSION = 2.12.1' $(APP)/deps/cowlib/Makefile
@@ -1689,7 +1689,7 @@ core-lock-hex-makefile-checksum: init
 
 	$i "Fetch Cowlib 2.12.1"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 	$t if [ -f $(APP)/.erlang.mk/hex/cowlib.tar ]; then \
 		$(call sha256,$(APP)/.erlang.mk/hex/cowlib.tar) | awk '{print $$1}' | tr -d '\n' > $(APP)/cowlib.checksum; \
 	else \
@@ -1700,14 +1700,14 @@ core-lock-hex-makefile-checksum: init
 	$t cp $(APP)/lock.mk $(APP)/lock.mk.before
 	$t perl -ni.bak -e 'if (/^include erlang\.mk/) { print "dep_cowlib_checksum = '"$$(tr -d '\n' < $(APP)/cowlib.checksum)"'\n" } print' $(APP)/Makefile
 	$t rm -rf $(APP)/deps/cowlib $(APP)/.erlang.mk/hex/cowlib.tar
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 	$t grep -qx 'PROJECT_VERSION = 2.12.1' $(APP)/deps/cowlib/Makefile
 	$t cmp $(APP)/lock.mk.before $(APP)/lock.mk
 
 	$i "Replace the Makefile checksum and check that the fetch is rejected"
 	$t sed -i.bak 's/^dep_cowlib_checksum = .*/dep_cowlib_checksum = 0000000000000000000000000000000000000000000000000000000000000000/' $(APP)/Makefile
 	$t rm -rf $(APP)/deps/cowlib
-	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps CI_ERLANG_MK= V=0 >$(APP)/checksum.log 2>&1
+	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/checksum.log 2>&1
 	$t grep -q 'Error: checksum mismatch for cowlib.' $(APP)/checksum.log
 	$t grep -q 'Error 101' $(APP)/checksum.log
 	$t test ! -e $(APP)/deps/cowlib/src
@@ -1723,15 +1723,15 @@ core-lock-hex-newer: init
 
 	$i "Fetch Cowlib 2.12.1 and keep that version"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
-	$t $(MAKE) -C $(APP) --no-print-directory fetch-deps CI_ERLANG_MK= V=0 >$(APP)/fetch.log 2>&1
+	$t $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/fetch.log 2>&1
 	$t grep -q 'Warning: newer version .* of cowlib is available (using 2.12.1).' $(APP)/fetch.log
 	$t grep -qx 'PROJECT_VERSION = 2.12.1' $(APP)/deps/cowlib/Makefile
 
 	$i "Fetch the locked dependency again"
-	$t $(MAKE) -C $(APP) lock CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) lock $v
 	$t rm -rf $(APP)/deps/cowlib
 	$t rm -f $(CACHE_DIR)/hex/cowlib-2.12.1.tar $(APP)/.erlang.mk/hex/cowlib.tar
-	$t $(MAKE) -C $(APP) --no-print-directory fetch-deps CI_ERLANG_MK= V=0 >$(APP)/locked.log 2>&1
+	$t $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/locked.log 2>&1
 	$t grep -q 'Warning: newer version .* of cowlib is available (using 2.12.1).' $(APP)/locked.log
 	$t grep -qx 'PROJECT_VERSION = 2.12.1' $(APP)/deps/cowlib/Makefile
 
@@ -1746,7 +1746,7 @@ core-lock-hex-package-name: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = uuid\ndep_uuid = hex 1.8.0 uuid_erl\n"}' $(APP)/Makefile
 
 	$i "Fetch the dependency"
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 
 	$i "Check that the tarball hash is what lock.mk records"
 	$t if [ -f $(APP)/.erlang.mk/hex/uuid.tar ]; then \
@@ -1809,7 +1809,7 @@ core-lock-hex-transitive-fetch-writes-lock: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowboy\ndep_cowboy = hex 2.12.0\n"}' $(APP)/Makefile
 
 	$i "Fetch the dependency"
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 
 	$i "Check that Cowboy and its Git dependencies are recorded in the top-level lock"
 	$t test -d $(APP)/deps/cowboy
@@ -1855,7 +1855,7 @@ core-lock-hex-transitive-hex-fetch-writes-lock: init
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = idna\ndep_idna = hex 6.1.1\n"}' $(APP)/Makefile
 
 	$i "Fetch the dependency"
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 
 	$i "Check that the Hex dependency of idna is recorded in the top-level lock"
 	$t test -d $(APP)/deps/idna
@@ -1897,14 +1897,14 @@ core-lock-hex-transitive-hex-locked-fetch-uses-version: init
 
 	$i "Fetch idna 6.1.1 and lock it"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = idna\ndep_idna = hex 6.1.1\n"}' $(APP)/Makefile
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
-	$t $(MAKE) -C $(APP) lock CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
+	$t $(MAKE) -C $(APP) lock $v
 	$t cp $(APP)/lock.mk $(APP)/lock.mk.before
 
 	$i "Point unicode_util_compat at another version and fetch into an empty directory"
 	$t sed -i.bak 's/^dep_unicode_util_compat = hex 0.7.0 /dep_unicode_util_compat = hex 0.7.1 /' $(APP)/deps/idna/Makefile
 	$t rm -rf $(APP)/deps/unicode_util_compat
-	$t $(MAKE) -C $(APP) fetch-deps CI_ERLANG_MK= $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
 
 	$i "Check that the locked version is fetched and the lock is unchanged"
 	$t grep -q '{vsn, *"0.7.0"' $(APP)/deps/unicode_util_compat/src/unicode_util_compat.app.src
