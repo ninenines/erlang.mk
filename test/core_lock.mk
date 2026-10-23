@@ -1520,6 +1520,7 @@ core-lock-hex-checksum-registry-mismatch: init
 	$t test ! -e $(APP)/lock.mk
 endif
 
+ifdef CACHE_DEPS
 core-lock-hex-checksum-tarball: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
@@ -1529,8 +1530,8 @@ core-lock-hex-checksum-tarball: init
 
 	$i "Fetch Cowlib 2.12.1 into the cache and lock it"
 	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = hex 2.12.1\n"}' $(APP)/Makefile
-	$t $(MAKE) -C $(APP) fetch-deps CACHE_DEPS=1 $v
-	$t $(MAKE) -C $(APP) lock CACHE_DEPS=1 $v
+	$t $(MAKE) -C $(APP) fetch-deps $v
+	$t $(MAKE) -C $(APP) lock $v
 	$t cp $(APP)/lock.mk $(APP)/lock.mk.before
 
 	$i "Replace the cached archive"
@@ -1542,10 +1543,11 @@ core-lock-hex-checksum-tarball: init
 	$t rm -rf $(APP)/deps/cowlib
 
 	$i "Check that the archive checksum is rejected"
-	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps CACHE_DEPS=1 V=0 >$(APP)/tarball.log 2>&1
+	$t ! $(MAKE) -C $(APP) --no-print-directory fetch-deps V=0 >$(APP)/tarball.log 2>&1
 	$t grep -q 'Error: checksum mismatch for cowlib.' $(APP)/tarball.log
 	$t test ! -e $(APP)/deps/cowlib
 	$t cmp $(APP)/lock.mk.before $(APP)/lock.mk
+endif
 
 core-lock-hex-download-failure: init
 
