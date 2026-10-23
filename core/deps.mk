@@ -350,12 +350,14 @@ define dep_autopatch_fetch_rebar
 endef
 
 define dep_autopatch_fetch_rebar2
-	if [ ! -d $(ERLANG_MK_TMP)/rebar3 ]; then \
-		git clone -q -n -- $(REBAR3_GIT) $(ERLANG_MK_TMP)/rebar3; \
-		cd $(ERLANG_MK_TMP)/rebar3; \
-		git checkout -q $(REBAR3_COMMIT); \
-		./bootstrap; \
-		cd -; \
+	if [ ! -x $(ERLANG_MK_TMP)/rebar3/rebar3 ]; then \
+		rm -rf $(ERLANG_MK_TMP)/rebar3 && \
+		git clone -q -n -- $(REBAR3_GIT) $(ERLANG_MK_TMP)/rebar3 && \
+		cd $(ERLANG_MK_TMP)/rebar3 && \
+		git checkout -q $(REBAR3_COMMIT) && \
+		./bootstrap && \
+		{ test -x rebar3 || cp -f _build/prod/bin/rebar3 rebar3; } && \
+		cd - || { rm -rf $(ERLANG_MK_TMP)/rebar3; exit 1; }; \
 	fi
 endef
 
