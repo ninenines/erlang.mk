@@ -115,6 +115,9 @@ define hex_release_publish.erl
 		{ok, {200, _, #{}}} ->
 			io:format("Release replaced~n"),
 			halt(0);
+		{ok, {201, _, #{<<"status">> := <<"staged">>, <<"html_url">> := URL}}} ->
+			io:format("Release staged, it must be approved at ~s~n", [URL]),
+			halt(0);
 		{ok, {201, _, #{}}} ->
 			io:format("Release published~n"),
 			halt(0);
@@ -221,6 +224,9 @@ define hex_docs_publish.erl
 	case hex_api:post(ConfigF,
 			["packages", "$(strip $(PROJECT))", "releases", "$(strip $(PROJECT_VERSION))", "docs"],
 			{"application/octet-stream", Tarball}) of
+		{ok, {201, _, #{<<"status">> := <<"staged">>, <<"html_url">> := URL}}} ->
+			io:format("Docs staged, they must be approved at ~s~n", [URL]),
+			halt(0);
 		{ok, {Status, _, _}} when Status >= 200, Status < 300 ->
 			io:format("Docs published~n"),
 			halt(0);
