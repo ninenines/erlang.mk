@@ -266,6 +266,9 @@ jobs:
           diffutils
 
     - name: Setup local Hexpm
+      env:
+        # Publish API keys directly instead of staging them for approval.
+        HEXPM_WORKLOAD_IDENTITY_MODE: 'off'
       run: |
         git clone https://github.com/hexpm/hexpm
         cd hexpm
