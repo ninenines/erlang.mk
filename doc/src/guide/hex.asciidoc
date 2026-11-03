@@ -121,6 +121,14 @@ is already on Hex.
 $ make hex-release-replace
 ----
 
+Hex may require approval for releases and documentation
+published with an API key. Erlang.mk then prints the URL
+where they must be approved instead of reporting them as
+published. They only become available on Hex once approved.
+Please refer to the
+link:https://hex.pm/docs/publish[Hex publishing guide]
+for more information.
+
 `make hex-release-delete` removes `PROJECT_VERSION`.
 
 [source,bash]

@@ -266,6 +266,11 @@ jobs:
           diffutils
 
     - name: Setup local Hexpm
+      env:
+        # Stage API key publishes for approval only for the users
+        # of the *-staged tests. Other tests publish directly.
+        HEXPM_WORKLOAD_IDENTITY_MODE: beta
+        HEXPM_WORKLOAD_IDENTITY_BETA_USERS: test_hex_release_publish_staged,test_hex_docs_publish_staged
       run: |
         git clone https://github.com/hexpm/hexpm
         cd hexpm
