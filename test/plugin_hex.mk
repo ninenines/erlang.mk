@@ -3,6 +3,11 @@
 # In order to run these tests, a local Hex.pm instance must
 # be started and available on port 4000, and the HEX=1 variable
 # must be set.
+#
+# The *-staged tests also require publish approval for their
+# users only. Start Hex.pm with HEXPM_WORKLOAD_IDENTITY_MODE=beta
+# and HEXPM_WORKLOAD_IDENTITY_BETA_USERS set to
+# test_hex_release_publish_staged,test_hex_docs_publish_staged.
 
 hex_TARGETS = $(call list_targets,hex)
 
@@ -172,6 +177,32 @@ hex-release-publish: init
 
 	$i "Check that the release exists"
 	$t curl -sf http://localhost:4000/api/packages/$(APP)/releases/0.1.0 >/dev/null
+
+hex-release-publish-staged: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Configure a local Hex provider"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Add extra Hex metadata"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
+
+	$(call hex-create-user-and-key)
+
+	$i "Publish the release"
+	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` V=0 > $(APP)/publish.log 2>&1
+
+	$i "Check that the release was staged with its approval URL"
+	$t grep -q "^Release staged, it must be approved at http://localhost:4000/dashboard/staged-releases/hexpm/$(APP)/0.1.0$$" $(APP)/publish.log
+	$t ! grep -q "Release published" $(APP)/publish.log
+
+	$i "Check that the release is staged but not published"
+	$t curl -sf -H "authorization: `cat $(APP)/hex.key`" http://localhost:4000/api/packages/$(APP)/releases/0.1.0/staged | grep -q '"status":"staged"'
+	$t ! curl -sf http://localhost:4000/api/packages/$(APP)/releases/0.1.0 >/dev/null
 
 hex-release-publish-with-deps: init
 
@@ -378,6 +409,40 @@ hex-docs-publish: init
 
 	$i "Publish the documentation for the release"
 	$t $(MAKE) -C $(APP) hex-docs-publish HEX_SECRET=`cat $(APP)/hex.key` $v
+
+hex-docs-publish-staged: init
+
+	$i "Bootstrap a new OTP application named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap $v
+
+	$i "Generate a doc/overview.edoc file"
+	$t mkdir $(APP)/doc
+	$t printf "%s\n" \
+		"@author R. J. Hacker <rjh@acme.com>" \
+		"@copyright 2007 R. J. Hacker" \
+		"@version 1.0.0" \
+		"@title Welcome to the 'frob' application!" \
+		"@doc 'frob' is a highly advanced frobnicator with low latency," > $(APP)/doc/overview.edoc
+
+	$i "Configure a local Hex provider"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_CONFIG\n#{api_url => <<\"http://localhost:4000/api\">>}\nendef\n"}' $(APP)/Makefile
+
+	$i "Add extra Hex metadata"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "define HEX_TARBALL_EXTRA_METADATA\n#{licenses => [<<\"ISC\">>]}\nendef\n"}' $(APP)/Makefile
+
+	$(call hex-create-user-and-key)
+
+	$i "Publish the release"
+	$t $(MAKE) -C $(APP) hex-release-publish HEX_SECRET=`cat $(APP)/hex.key` $v
+
+	$i "Publish the documentation for the release"
+	$t $(MAKE) -C $(APP) hex-docs-publish HEX_SECRET=`cat $(APP)/hex.key` V=0 > $(APP)/docs.log 2>&1
+
+	$i "Check that the documentation was staged with the release and its approval URL"
+	$t grep -q "^Docs staged, they must be approved at http://localhost:4000/dashboard/staged-releases/hexpm/$(APP)/0.1.0$$" $(APP)/docs.log
+	$t ! grep -q "Docs published" $(APP)/docs.log
 
 hex-docs-publish-no-docs: init
 
