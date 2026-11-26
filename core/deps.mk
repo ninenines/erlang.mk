@@ -12,6 +12,9 @@ endif
 IGNORE_DEPS ?=
 export IGNORE_DEPS
 
+ALLOW_INSECURE_DEP_ORIGINS ?= 0
+export ALLOW_INSECURE_DEP_ORIGINS
+
 APPS_DIR ?= $(CURDIR)/apps
 export APPS_DIR
 
@@ -72,7 +75,7 @@ query_repo = $(call _qr,$1,$(call query_fetch_method,$1))
 _qr = $(if $(query_repo_$(2)),$(call query_repo_$(2),$1),$(call query_repo_git,$1))
 
 query_repo_default = $(if $(dep_$(1)),$(word 2,$(dep_$(1))),$(pkg_$(1)_repo))
-query_repo_git = $(patsubst git://github.com/%,https://github.com/%,$(call query_repo_default,$1))
+query_repo_git = $(patsubst git://github.com/%,https://github.com/%,$(patsubst http://github.com/%,https://github.com/%,$(call query_repo_default,$1)))
 query_repo_git-subfolder = $(call query_repo_git,$1)
 query_repo_git-submodule = -
 query_repo_cp = $(call query_repo_default,$1)
@@ -849,6 +852,26 @@ define dep_lock_git-subfolder
 		'endif' >> "$(ERLANG_MK_LOCK_FILE)"
 endef
 
+# A remote helper is <transport>::<address>. The bytes before the first ::
+# are an URL when they contain a slash, and scp-style IPv6 when they are git@[.
+define dep_check_origin
+	if [ "$(ALLOW_INSECURE_DEP_ORIGINS)" != 1 ]; then \
+		origin="$(call query_repo_git,$1)"; \
+		case "$$$$origin" in \
+			[gG][iI][tT]://*|[hH][tT][tT][pP]://*|[fF][tT][pP]://*) \
+				echo "Error: refusing insecure origin for $(call query_name,$1) ($$$$origin). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it." >&2; \
+				exit 80;; \
+			*::*) \
+				case "$$$${origin%%::*}" in \
+					*/*|git@[[]*) ;; \
+					*) \
+						echo "Error: refusing insecure origin for $(call query_name,$1) ($$$$origin). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it." >&2; \
+						exit 80;; \
+				esac;; \
+		esac; \
+	fi
+endef
+
 ifeq ($(CACHE_DEPS),1)
 
 define dep_cache_fetch_git
@@ -869,38 +892,46 @@ define dep_cache_fetch_git
 endef
 
 define dep_fetch_git
-	$(call dep_cache_fetch_git,$1,$(DEPS_DIR)/$(call query_name,$1)) && \
-	$(call dep_lock_git,$1)
+	$(call dep_check_origin,$1) && { \
+		$(call dep_cache_fetch_git,$1,$(DEPS_DIR)/$(call query_name,$1)) && \
+		$(call dep_lock_git,$1); \
+	}
 endef
 
 define dep_fetch_git-subfolder
-	mkdir -p $(ERLANG_MK_TMP)/git-subfolder; \
-	$(call dep_cache_fetch_git,$1,$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)) && \
-	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)/$(word 4,$(dep_$1)) \
-		$(DEPS_DIR)/$(call query_name,$1) && \
-	$(call dep_lock_git-subfolder,$1)
+	$(call dep_check_origin,$1) && { \
+		mkdir -p $(ERLANG_MK_TMP)/git-subfolder && \
+		$(call dep_cache_fetch_git,$1,$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)) && \
+		ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)/$(word 4,$(dep_$1)) \
+			$(DEPS_DIR)/$(call query_name,$1) && \
+		$(call dep_lock_git-subfolder,$1); \
+	}
 endef
 
 else
 
 define dep_fetch_git
-	git clone -q -n -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1) \
-		&& cd $(DEPS_DIR)/$(call query_name,$1) && git checkout -q $(call query_version_git,$1) && \
-		$(call dep_lock_git,$1) \
-		|| { rm -rf $(DEPS_DIR)/$(call query_name,$1); exit 1; }
+	$(call dep_check_origin,$1) && { \
+		git clone -q -n -- $(call query_repo_git,$1) $(DEPS_DIR)/$(call query_name,$1) \
+			&& cd $(DEPS_DIR)/$(call query_name,$1) && git checkout -q $(call query_version_git,$1) && \
+			$(call dep_lock_git,$1) \
+			|| { rm -rf $(DEPS_DIR)/$(call query_name,$1); exit 1; }; \
+	}
 endef
 
 define dep_fetch_git-subfolder
-	mkdir -p $(ERLANG_MK_TMP)/git-subfolder && \
-	git clone -q -n -- $(call query_repo_git-subfolder,$1) \
-		$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) && \
-	cd $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) && \
-	git checkout -q $(call query_version_git-subfolder,$1) && \
-	ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)/$(word 4,$(dep_$1)) \
-		$(DEPS_DIR)/$(call query_name,$1) && \
-	$(call dep_lock_git-subfolder,$1) \
-	|| { rm -rf $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) \
-		$(DEPS_DIR)/$(call query_name,$1); exit 1; }
+	$(call dep_check_origin,$1) && { \
+		mkdir -p $(ERLANG_MK_TMP)/git-subfolder && \
+		git clone -q -n -- $(call query_repo_git-subfolder,$1) \
+			$(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) && \
+		cd $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) && \
+		git checkout -q $(call query_version_git-subfolder,$1) && \
+		ln -s $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1)/$(word 4,$(dep_$1)) \
+			$(DEPS_DIR)/$(call query_name,$1) && \
+		$(call dep_lock_git-subfolder,$1) \
+		|| { rm -rf $(ERLANG_MK_TMP)/git-subfolder/$(call query_name,$1) \
+			$(DEPS_DIR)/$(call query_name,$1); exit 1; }; \
+	}
 endef
 
 endif

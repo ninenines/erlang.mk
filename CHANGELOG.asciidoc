@@ -52,3 +52,11 @@
             `ERLC_PER_FILE=1`. This feature is currently
             considered experimental. Make sure to `distclean`
             before trying it.
+
+2026/11/26: Git and git-subfolder fetches now refuse `git://`,
+            `http://`, and `ftp://` dependency origins, and any
+            `<transport>::` remote-helper origin.
+            `git://github.com` and `http://github.com` are
+            rewritten to `https://github.com` before the fetch.
+            Set `ALLOW_INSECURE_DEP_ORIGINS=1` to allow other
+            cleartext origins.
