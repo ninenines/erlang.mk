@@ -648,6 +648,632 @@ core-deps-fetch-git-clone-failure: init
 	$t grep -qx clone $(APP)/clone.log
 	$t test ! -e $(APP)/deps/my_dep
 
+core-deps-fetch-git-insecure-allowed: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Allow insecure origins and add a cleartext Git dependency"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ALLOW_INSECURE_DEP_ORIGINS = 1\nDEPS = my_dep\ndep_my_dep = git git://example.com/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[gG][iI][tT]://*|*[hH][tT][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the cleartext origin reached git and was not refused"
+	$t grep -q 'git://example.com/my_dep.git' $(APP)/git.log
+	$t ! grep -q 'refusing insecure origin' $(APP)/fetch.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-ftp: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with an ftp:// origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git ftp://example.com/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[fF][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the ftp:// origin was refused before git ran"
+	$t grep -q 'Error: refusing insecure origin for my_dep (ftp://example.com/my_dep.git). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t grep -q 'Error 80' $(APP)/fetch.log
+	$t test ! -e $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-ftps: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with an ftps:// origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git ftps://example.com/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records the fetch and fails it"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[fF][tT][pP][sS]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the ftps:// origin reached git and was not refused"
+	$t grep -q 'ftps://example.com/my_dep.git' $(APP)/git.log
+	$t ! grep -q 'refusing insecure origin' $(APP)/fetch.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-github-git: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib using a git://github.com origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git git://github.com/ninenines/cowlib 2.15.0\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowlib to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the origin was rewritten to https and recorded"
+	$t origin=`git -C $(APP)/deps/cowlib remote get-url origin` && \
+		if [ -d "$$origin" ]; then origin=`git -C "$$origin" remote get-url origin`; fi && \
+		test "$$origin" = https://github.com/ninenines/cowlib
+	$t grep -q 'dep_cowlib := git https://github.com/ninenines/cowlib ' $(APP)/lock.mk
+	$t ! grep -q 'git://' $(APP)/lock.mk
+	$t ! grep -q 'http://' $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-github-http: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add Cowlib using an http://github.com origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = cowlib\ndep_cowlib = git http://github.com/ninenines/cowlib 2.15.0\n"}' $(APP)/Makefile
+
+ifdef LEGACY
+	$i "Add Cowlib to the applications key in the .app.src file"
+	$t perl -ni.bak -e 'print;if ($$.==7) {print "\t\tcowlib,\n"}' $(APP)/src/$(APP).app.src
+endif
+
+	$i "Build the application"
+	$t $(MAKE) -C $(APP) $v
+
+	$i "Check that the origin was rewritten to https and recorded"
+	$t origin=`git -C $(APP)/deps/cowlib remote get-url origin` && \
+		if [ -d "$$origin" ]; then origin=`git -C "$$origin" remote get-url origin`; fi && \
+		test "$$origin" = https://github.com/ninenines/cowlib
+	$t grep -q 'dep_cowlib := git https://github.com/ninenines/cowlib ' $(APP)/lock.mk
+	$t ! grep -q 'git://' $(APP)/lock.mk
+	$t ! grep -q 'http://' $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-http: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with an http:// origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git http://example.com/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[gG][iI][tT]://*|*[hH][tT][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the http:// origin was refused before git ran"
+	$t grep -q 'Error: refusing insecure origin for my_dep (http://example.com/my_dep.git). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t grep -q 'Error 80' $(APP)/fetch.log
+	$t test ! -e $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-http-ipv6: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with an http:// origin and a compressed IPv6 address"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git http://[::1]/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[hH][tT][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the http:// IPv6 origin was refused before git ran"
+	$t grep -F -q 'Error: refusing insecure origin for my_dep (http://[::1]/my_dep.git). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t grep -q 'Error 80' $(APP)/fetch.log
+	$t test ! -e $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-lookalike: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency whose host only starts with github.com"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git http://github.com.evil/ninenines/cowlib master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[gG][iI][tT]://*|*[hH][tT][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the lookalike host was refused and not rewritten"
+	$t grep -q 'Error: refusing insecure origin for my_dep (http://github.com.evil/ninenines/cowlib). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t grep -q 'Error 80' $(APP)/fetch.log
+	$t test ! -e $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-refused: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with a git:// origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git git://example.com/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[gG][iI][tT]://*|*[hH][tT][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the git:// origin was refused before git ran"
+	$t grep -q 'Error: refusing insecure origin for my_dep (git://example.com/my_dep.git). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t grep -q 'Error 80' $(APP)/fetch.log
+	$t test ! -e $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-subfolder: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a git-subfolder dependency with a git:// origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git-subfolder git://example.com/repo.git master my_dep\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[gG][iI][tT]://*|*[hH][tT][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the git-subfolder origin was refused before git ran"
+	$t grep -q 'Error: refusing insecure origin for my_dep (git://example.com/repo.git). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t grep -q 'Error 80' $(APP)/fetch.log
+	$t test ! -e $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/.erlang.mk/git-subfolder/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-transitive: init
+
+	$i "Bootstrap a new OTP library named my_dep"
+	$t mkdir -p $(APP)/my_dep/
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
+
+	$i "Make my_dep depend on a cleartext Git origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = other\ndep_other = git git://example.com/other.git master\n"}' $(APP)/my_dep/Makefile
+	$t echo '-module(my_dep).' > $(APP)/my_dep/src/my_dep.erl
+	$t git -C $(APP)/my_dep init -q -b master
+	$t git -C $(APP)/my_dep config user.email "testsuite@erlang.mk"
+	$t git -C $(APP)/my_dep config user.name "test suite"
+	$t git -C $(APP)/my_dep add .
+	$t git -C $(APP)/my_dep commit -q --no-gpg-sign -m "Initial commit"
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add my_dep as a dependency"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git file://$(abspath $(APP)/my_dep) master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[gG][iI][tT]://*|*[hH][tT][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the dependency's cleartext origin was refused"
+	$t grep -q 'Error: refusing insecure origin for other (git://example.com/other.git). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t ! grep -q 'git://example.com/other.git' $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep/deps/other
+
+core-deps-fetch-git-insecure-transitive-allowed: init
+
+	$i "Bootstrap a new OTP library named my_dep"
+	$t mkdir -p $(APP)/my_dep/
+	$t cp ../erlang.mk $(APP)/my_dep/
+	$t $(MAKE) -C $(APP)/my_dep/ -f erlang.mk bootstrap-lib $v
+
+	$i "Make my_dep depend on a cleartext Git origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = other\ndep_other = git git://example.com/other.git master\n"}' $(APP)/my_dep/Makefile
+	$t echo '-module(my_dep).' > $(APP)/my_dep/src/my_dep.erl
+	$t git -C $(APP)/my_dep init -q -b master
+	$t git -C $(APP)/my_dep config user.email "testsuite@erlang.mk"
+	$t git -C $(APP)/my_dep config user.name "test suite"
+	$t git -C $(APP)/my_dep add .
+	$t git -C $(APP)/my_dep commit -q --no-gpg-sign -m "Initial commit"
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Allow insecure origins and add my_dep as a dependency"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ALLOW_INSECURE_DEP_ORIGINS = 1\nDEPS = my_dep\ndep_my_dep = git file://$(abspath $(APP)/my_dep) master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[gG][iI][tT]://*|*[hH][tT][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the dependency inherited the allow flag"
+	$t grep -q 'git://example.com/other.git' $(APP)/git.log
+	$t ! grep -q 'refusing insecure origin' $(APP)/fetch.log
+
+core-deps-fetch-git-insecure-transport: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with a remote-helper origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git ext_helper::https://example.com/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records helper fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *::*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the remote-helper origin was refused before git ran"
+	$t grep -q 'Error: refusing insecure origin for my_dep (ext_helper::https://example.com/my_dep.git). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t grep -q 'Error 80' $(APP)/fetch.log
+	$t test ! -e $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-transport-helper: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a remote helper whose address contains an IPv6 literal"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git ext_helper::https://[::1]/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records helper fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *::*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the remote helper was refused before git ran"
+	$t grep -F -q 'Error: refusing insecure origin for my_dep (ext_helper::https://[::1]/my_dep.git). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t grep -q 'Error 80' $(APP)/fetch.log
+	$t test ! -e $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-transport-ipv6: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with a compressed IPv6 origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git https://[::1]/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records the fetch and fails it"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *::*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the IPv6 origin reached git and was not refused"
+	$t grep -F -q 'https://[::1]/my_dep.git' $(APP)/git.log
+	$t ! grep -q 'refusing insecure origin' $(APP)/fetch.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-transport-ipv6-full: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with a compressed IPv6 address that does not start with ::"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git https://[2001:db8::1]/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records the fetch and fails it"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *::*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the IPv6 origin reached git and was not refused"
+	$t grep -F -q 'https://[2001:db8::1]/my_dep.git' $(APP)/git.log
+	$t ! grep -q 'refusing insecure origin' $(APP)/fetch.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-transport-scp: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with an scp-style compressed IPv6 origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git git@[::1]:my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records the fetch and fails it"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *::*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the scp-style IPv6 origin reached git and was not refused"
+	$t grep -F -q 'git@[::1]:my_dep.git' $(APP)/git.log
+	$t ! grep -q 'refusing insecure origin' $(APP)/fetch.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-transport-scp-full: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with an scp-style IPv6 origin that does not start with ::"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git git@[2001:db8::1]:my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records the fetch and fails it"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *::*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the scp-style IPv6 origin reached git and was not refused"
+	$t grep -F -q 'git@[2001:db8::1]:my_dep.git' $(APP)/git.log
+	$t ! grep -q 'refusing insecure origin' $(APP)/fetch.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-uppercase: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Add a dependency with an uppercase HTTP:// origin"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "DEPS = my_dep\ndep_my_dep = git HTTP://example.com/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[gG][iI][tT]://*|*[hH][tT][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that the uppercase origin was refused before git ran"
+	$t grep -q 'Error: refusing insecure origin for my_dep (HTTP://example.com/my_dep.git). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t grep -q 'Error 80' $(APP)/fetch.log
+	$t test ! -e $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
+core-deps-fetch-git-insecure-value: init
+
+	$i "Bootstrap a new OTP library named $(APP)"
+	$t mkdir $(APP)/
+	$t cp ../erlang.mk $(APP)/
+	$t $(MAKE) -C $(APP) -f erlang.mk bootstrap-lib $v
+
+	$i "Set the allow flag to a value other than 1 and add a cleartext Git dependency"
+	$t perl -ni.bak -e 'print;if ($$.==1) {print "ALLOW_INSECURE_DEP_ORIGINS = yes\nDEPS = my_dep\ndep_my_dep = git git://example.com/my_dep.git master\n"}' $(APP)/Makefile
+
+	$i "Install a git wrapper that records cleartext fetches and fails them"
+	$t mkdir -p $(APP)/bin
+	$t real_git=`command -v git`; \
+		printf '%s\n' '#!/bin/sh' \
+			'printf "%s\n" "$$*" >> $(abspath $(APP)/git.log)' \
+			'case "$$*" in' \
+			'  *[gG][iI][tT]://*|*[hH][tT][tT][pP]://*) exit 1;;' \
+			'esac' \
+			"exec $$real_git \"\$$@\"" > $(APP)/bin/git
+	$t chmod +x $(APP)/bin/git
+
+	$i "Fetch the dependency"
+	$t ! PATH="$(abspath $(APP)/bin):$$PATH" $(MAKE) -C $(APP) --no-print-directory deps V=0 >$(APP)/fetch.log 2>&1
+
+	$i "Check that only the value 1 allows a cleartext origin"
+	$t grep -q 'Error: refusing insecure origin for my_dep (git://example.com/my_dep.git). Set ALLOW_INSECURE_DEP_ORIGINS=1 to allow it.' $(APP)/fetch.log
+	$t grep -q 'Error 80' $(APP)/fetch.log
+	$t test ! -e $(APP)/git.log
+	$t test ! -e $(APP)/deps/my_dep
+	$t test ! -e $(APP)/lock.mk
+
 core-deps-fetch-git-subfolder: init
 
 	$i "Bootstrap a new OTP library named $(APP)"
