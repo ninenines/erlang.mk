@@ -92,7 +92,13 @@ all <code class="literal">README*</code> files
 </li></ul></div><p>Additional files can be included in the package, by
 appending to <code class="literal">HEX_TARBALL_FILES</code> after <code class="literal">include erlang.mk</code>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_publishing_a_release"></a>9.4. Publishing a release</h2></div></div></div><p><code class="literal">make hex-release-publish</code> publishes <code class="literal">PROJECT_VERSION</code>.
 The version must be new on Hex.</p><pre class="programlisting">$ make hex-release-publish</pre><p><code class="literal">make hex-release-replace</code> publishes over the version that
-is already on Hex.</p><pre class="programlisting">$ make hex-release-replace</pre><p><code class="literal">make hex-release-delete</code> removes <code class="literal">PROJECT_VERSION</code>.</p><pre class="programlisting">$ make hex-release-delete</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_retiring_a_release"></a>9.5. Retiring a release</h2></div></div></div><p><code class="literal">make hex-release-retire</code> retires a version. <code class="literal">HEX_VERSION</code>
+is already on Hex.</p><pre class="programlisting">$ make hex-release-replace</pre><p>Hex may require approval for releases and documentation
+published with an API key. Erlang.mk then prints the URL
+where they must be approved instead of reporting them as
+published. They only become available on Hex once approved.
+Please refer to the
+<a class="ulink" href="https://hex.pm/docs/publish" target="_top">Hex publishing guide</a>
+for more information.</p><p><code class="literal">make hex-release-delete</code> removes <code class="literal">PROJECT_VERSION</code>.</p><pre class="programlisting">$ make hex-release-delete</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_retiring_a_release"></a>9.5. Retiring a release</h2></div></div></div><p><code class="literal">make hex-release-retire</code> retires a version. <code class="literal">HEX_VERSION</code>
 selects the version and defaults to <code class="literal">PROJECT_VERSION</code>.
 <code class="literal">HEX_REASON</code> defaults to <code class="literal">invalid</code>. Hex also accepts
 <code class="literal">other</code>, <code class="literal">security</code>, <code class="literal">deprecated</code> and <code class="literal">renamed</code>.

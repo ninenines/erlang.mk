@@ -39,13 +39,13 @@ div.navfooter{margin-bottom:1em}
 
 <div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="eunit.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="proper.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="ct"></a>Chapter 24. Common Test</h2></div></div></div><p>Common Test is Erlang’s functional testing framework.
 Erlang.mk automates the discovery and running of Common
-Test suites.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_tests_2"></a>24.1. Writing tests</h2></div></div></div><p>The <a class="ulink" href="http://www.erlang.org/doc/apps/common_test/write_test_chapter.html" target="_top">Common Test user guide</a>
+Test suites.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_tests_2"></a>24.1. Writing tests</h2></div></div></div><p>The <a class="ulink" href="https://www.erlang.org/doc/apps/common_test/write_test_chapter.html" target="_top">Common Test user guide</a>
 is the best place to learn how to write tests. Erlang.mk
 requires that file names for test suites end with <span class="emphasis"><em>_SUITE.erl</em></span>
 and that the files be located in the <span class="emphasis"><em>$(TEST_DIR)</em></span> directory.
 This defaults to <span class="emphasis"><em>test/</em></span>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_7"></a>24.2. Configuration</h2></div></div></div><p>The <code class="literal">CT_OPTS</code> variable allows you to set extra Common Test
 options. Options are documented in the
-<a class="ulink" href="http://www.erlang.org/doc/apps/common_test/run_test_chapter.html" target="_top">Common Test user guide</a>.
+<a class="ulink" href="https://www.erlang.org/doc/apps/common_test/run_test_chapter.html" target="_top">Common Test user guide</a>.
 You can use it to set Common Test hooks, for example:</p><pre class="programlisting">CT_OPTS = -ct_hooks cowboy_ct_hook</pre><p>The <code class="literal">CT_SUITES</code> variable can be used to override what
 Common Test suites Erlang.mk will be aware of. It does
 not normally need to be set as Erlang.mk will find the

@@ -39,7 +39,7 @@ div.navfooter{margin-bottom:1em}
 
 <div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="shell.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ct.html">Next</a></td></tr></table><hr /></div><div class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="eunit"></a>Chapter 23. EUnit</h2></div></div></div><p>EUnit is the tool of choice for unit testing. Erlang.mk
 automates a few things on top of EUnit, including the
-discovery and running of unit tests.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_tests"></a>23.1. Writing tests</h2></div></div></div><p>The <a class="ulink" href="http://www.erlang.org/doc/apps/eunit/chapter.html" target="_top">EUnit user guide</a>
+discovery and running of unit tests.</p><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_writing_tests"></a>23.1. Writing tests</h2></div></div></div><p>The <a class="ulink" href="https://www.erlang.org/doc/apps/eunit/chapter.html" target="_top">EUnit user guide</a>
 is the best place to learn how to write tests. Of note is
 that all functions ending with <code class="literal">_test</code> or <code class="literal">_test_</code> will be
 picked up as EUnit test cases.</p><p>Erlang.mk will automatically pick up tests found in any of
@@ -64,7 +64,7 @@ compiled.</p><pre class="programlisting">-ifdef(TEST).
 -endif.</pre><p>Erlang.mk will automatically recompile your code when you
 perform a normal build after running tests, and vice versa.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuration_6"></a>23.2. Configuration</h2></div></div></div><p>The <code class="literal">EUNIT_OPTS</code> variable allows you to specify additional
 EUnit options. Options are documented in the
-<a class="ulink" href="http://www.erlang.org/doc/man/eunit.html#test-2" target="_top">EUnit manual</a>.
+<a class="ulink" href="https://www.erlang.org/doc/apps/eunit/eunit.html#test/2" target="_top">EUnit manual</a>.
 At the time of writing, the only available option is <code class="literal">verbose</code>:</p><pre class="programlisting">EUNIT_OPTS = verbose</pre><p>The <code class="literal">EUNIT_ERL_OPTS</code> variable allows you to specify options
 to be passed to <code class="literal">erl</code> when running EUnit tests. For example,
 you can load the <span class="emphasis"><em>vm.args</em></span> and <span class="emphasis"><em>sys.config</em></span> files:</p><pre class="programlisting">EUNIT_ERL_OPTS = -args_file config/vm.args -config config/sys.config</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_usage_4"></a>23.3. Usage</h2></div></div></div><p>To run all tests (including EUnit):</p><pre class="programlisting">$ make tests</pre><p>To run all tests and static checks (including EUnit):</p><pre class="programlisting">$ make check</pre><p>You can also run EUnit separately:</p><pre class="programlisting">$ make eunit</pre><p>EUnit will be quiet by default, only outputting errors.
